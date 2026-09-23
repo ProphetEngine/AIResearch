@@ -1,0 +1,28 @@
+# Bot / 协作工作记录 — 永不入库
+.work/
+90-meta/process/
+**/*.worklog.md
+**/_scratch/
+
+# 参考资料附件 — 永不入库（仅研究成果）
+assets/
+**/assets/
+**/*.pdf
+**/*.PDF
+**/_extract/
+.work/papers/
+**/papers/*.pdf
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.obsidian/workspace*
+.obsidian/workspace.json
+
+# 草稿与过程目录 — 永不入库
+drafts/
+*-drafts/
+agenda/
+**/agenda/
+process/
+**/process/
