@@ -43,6 +43,7 @@ status: active
 - [[VendingBench经营长程评测|Vending-Bench]]
 - [[WorfBench工作流基准|WorfBench]]
 - [[OrchBench多智能体编排评测|OrchBench]]
+- [[MCP协议与大规模工具导航评测]]
 
 ## 相关主题
 

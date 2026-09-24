@@ -22,6 +22,7 @@ status: active
 ## 增量节点
 
 - [[检索式注意力|RetrievalAttention]]
+- [[原生稀疏注意力NSA]]
 - [[DuoAttention与KVzip|DuoAttention / KVZip]]
 - [[上下文蒸馏|Context Distillation]]
 - [[Prompt前缀缓存|Prompt / Prefix Caching]]
