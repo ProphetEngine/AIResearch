@@ -23,6 +23,7 @@ status: active
 - [[图谱检索GraphRAG|Graph RAG]]
 - [[SelfRAG与CorrectiveRAG|Self-RAG / CRAG]]
 - [[HippoRAG2与CatRAG|HippoRAG 2 / CatRAG]]
+- [[AgenticRAG分层检索接口|Agentic RAG / A-RAG]]
 
 ## 相关主题
 
