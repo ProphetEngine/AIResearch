@@ -29,7 +29,7 @@ status: active
 - [[隐私与机器遗忘|Privacy / Unlearning]]
 - [[安全论证SafetyCases|Safety Cases]]
 - [[SHADEArena隐瞒与监控|SHADE-Arena]]
-- [[AIControl协议与Scheming倾向|AI Control / Scheming Propensity]]
+- [[AIControl协议与Scheming倾向]]
 - [[网络防御基准|Cyber Defense Benchmark]]
 - [[恶意软件分析评测|Malware Analysis Evals]]
 - [[LLM水印|LLM Watermarking]]
