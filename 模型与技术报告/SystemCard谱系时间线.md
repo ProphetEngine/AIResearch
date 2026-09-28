@@ -32,4 +32,4 @@ status: active
 
 ## 前沿折入说明
 
-- 维护期：[[ClaudeOpus55SystemCard短报]] · [[MiMoV26智能体强化学习短报]]（前沿笔记；稳定后并入本时间线与 [[MOC_模型与技术报告]]）
+- 前沿短报：[[ClaudeOpus55系统卡短报]] · [[MiMoV26智能体强化学习短报]]（见 [[MOC_前沿]]）

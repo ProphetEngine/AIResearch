@@ -1,7 +1,7 @@
 ---
 date: 2026-09-23
 status: archived
-topic: frontier-opus-5-5
+topic: ClaudeOpus55系统卡短报
 title: "Claude Opus 5.5 System Card（前沿短报）"
 retrieval_cutoff: 2026-09-23
 timezone: Asia/Shanghai (CST)

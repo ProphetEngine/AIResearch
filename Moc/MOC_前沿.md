@@ -16,7 +16,7 @@ status: active
 
 ## 当前条目
 
-- [[ClaudeOpus55SystemCard短报]]：2026-09-23
+- [[ClaudeOpus55系统卡短报]]：2026-09-23
 - [[MiMoV26智能体强化学习短报]]：2026-09-23
 
 ## 相关主题

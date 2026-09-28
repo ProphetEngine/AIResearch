@@ -2,8 +2,8 @@
 date: 2026-09-23
 status: archived
 archived: 2026-09-23
-topic: frontier-mimo-v2-6
-title: "B · MiMo-V2.6 技术报告（Agentic RL）轻量深读"
+topic: MiMoV26智能体强化学习短报
+title: "MiMo-V2.6 技术报告（Agentic RL）轻量深读"
 sources:
  blog: https://mimo.mi.com/docs/en-US/news/latest/v2-6
  pdf: https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL/resolve/main/MiMo_V2_6_technical_report.pdf
@@ -11,7 +11,7 @@ sources:
  hf_collection: https://huggingface.co/collections/XiaomiMiMo/mimo-v26
 ---
 
-# B · MiMo-V2.6：Scaling RL Towards Self-Improvement（Agentic RL）
+# MiMo-V2.6：Scaling RL Towards Self-Improvement（Agentic RL）
 
 > **跟读定位**：一页卡，只锁 **RL batch / agentic grader / multi-harness / 开源环境清单**。数字与机制均出自官博与技术报告。
 
