@@ -29,6 +29,7 @@ status: active
 - [[SimPO与ORPO偏好优化|SimPO / ORPO]]
 - [[测试时训练|Test-Time Training]]
 - [[潜空间推理Coconut|Coconut]]
+- [[SoftThinking连续概念空间推理]]
 - [[合成对齐数据Magpie|Magpie / ActiveUltraFeedback]]
 - [[可验证过程监督]]
 - [[SafeDPO与RePO|SafeDPO / RePO]]

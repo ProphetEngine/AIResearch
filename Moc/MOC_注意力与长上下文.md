@@ -27,6 +27,7 @@ status: active
 - [[DuoAttention与KVzip|DuoAttention / KVZip]]
 - [[上下文蒸馏|Context Distillation]]
 - [[Prompt前缀缓存|Prompt / Prefix Caching]]
+- [[HiCache层次化KV缓存]]
 
 ## 相关主题
 

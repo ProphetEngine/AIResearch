@@ -26,6 +26,7 @@ status: active
 - [[KV缓存量化与压缩|KV Cache 量化]]
 - [[连续批处理与Orca|Continuous Batching / Orca]]
 - [[PrefillDecode分离与统一服务]]
+- [[HiCache层次化KV缓存]]
 - [[EAGLE3投机解码|EAGLE-3]]
 - [[端侧小模型|On-device SLM]]
 - [[TEE机密推理|TEE Confidential Inference]]
