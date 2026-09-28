@@ -266,6 +266,6 @@ HQ 子集 = 最高分 **真实** + **Diverse QA** 合成（短程公平对照用
 
 ## 相关笔记
 
-- [[Inspect评测Harness|Inspect Eval Harness]]
-- [[NemotronCC数据策展|Nemotron-CC]]
+- [[Inspect评测Harness]]
+- [[NemotronCC数据策展]]
 
