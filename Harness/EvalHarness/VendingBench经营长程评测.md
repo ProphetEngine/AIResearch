@@ -22,7 +22,7 @@ archived: 2026-09-22
 > - **≠ [[AgentBazaar经济对齐]] Agent Bazaar**：多代理市场系统性对齐 → **文内仅索引一句**，不写 POSG / EAS / Crash·Lemon。
 > - **≠ [[SHADEArena隐瞒与监控]] SHADE**：本篇测 **经营连贯与资本积累**，不写 sabotage×monitor 合取。
 > - **≠ [[评测与排行榜可靠性]] 通史榜可靠性**：不写污染 / thinking 开关 / 第三方聚合榜；只取「协议未钉死则分数不可比」的自觉。
-> **主要来源**：[arXiv:2502.15840](https://arxiv.org/abs/2502.15840)、[Andon 官方页](https://andonlabs.com/evals/vending-bench)（2026-09-22 CST）。站点排行榜与论文 Table 1 口径不同，**分栏标注**。
+> **主要来源**：[Vending-Bench: A Benchmark for Long-Term Coherence of Autonomous Agents](https://arxiv.org/abs/2502.15840)；[Vending-Bench: Testing long-term coherence in agents](https://andonlabs.com/evals/vending-bench)（Andon 官方页）（2026-09-22 CST）。站点排行榜与论文 Table 1 口径不同，**分栏标注**。
 
 ---
 

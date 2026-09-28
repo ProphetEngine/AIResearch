@@ -23,7 +23,7 @@ archived: 2026-09-22
 > - **不重写** [[过程奖励模型PRM谱系]] 的 PRM 标注流水线 / ORM vs PRM 谱系 / Math-Shepherd 自动逐步标签（本篇不写「逐步奖励模型怎么训」）。
 > - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单，以及 [[DeepSeekR1推理训练深读]] 的 **R1 阶段表** / 规则奖励通史。
 > - **不重写** [[推理时扩展TestTimeScaling]] TTS 通史；AlphaProof 的 tree-search / TTRL 只作 **形式证明侧** 的 inference scaling，不串 o1/R1 产品叙事。
-> **主要来源**：官方 PDF 与 Nature 文 [doi:10.1038/s41586-025-09833-y](https://doi.org/10.1038/s41586-025-09833-y)（2026-09-22 CST）；VeriCoT 作者页 PDF 未另采。
+> **主要来源**：[VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks](https://arxiv.org/abs/2511.04662)；[Olympiad-level formal mathematical reasoning with reinforcement learning](https://doi.org/10.1038/s41586-025-09833-y)（2026-09-22 CST）；VeriCoT 作者页 PDF 未另采。
 
 ---
 

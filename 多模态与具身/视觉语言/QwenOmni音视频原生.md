@@ -21,7 +21,7 @@ archived: 2026-09-22
 > - **不重写** [[多模态架构脉络]] 视觉 LMM 通史、[[Qwen3技术报告深读]] 全文；仅取「Qwen3 / Qwen3.5 骨干初始化、Strong-to-Weak Distillation / GSPO」接口。
 > - 中间代 **Qwen2.5-Omni**（文内 Xu et al., 2025）本仓库未单独立档；本篇只记两篇 Omni TR **显式声明相对 2.5-Omni / 相对 3-Omni 的升级点**，不展开 2.5-Omni 未引用细节。
 > **与 [[SpeechLLM语音语言模型]] 的接口一句**：[[SpeechLLM语音语言模型]] 回答「如何把波形压成连续帧条件在 7B LLM 上出文本」；本篇回答「如何在 **MoE Thinker–Talker** 上做到 **音视频入 + 文本/语音出**、长上下文与低首包延迟，且文本/视觉相对同尺单模态 **不降级**」。
-> **主要来源**：[Qwen3-Omni TR](https://arxiv.org/abs/2509.17765)、[Qwen3.5-Omni TR](https://arxiv.org/abs/2604.15804) 与官方 README（2026-09-22 CST）；3.5 摘要写「数百亿参数」，但正文未给出 Plus/Flash 精确总参。
+> **主要来源**：[Qwen3-Omni Technical Report](https://arxiv.org/abs/2509.17765)；[Qwen3.5-Omni Technical Report](https://arxiv.org/abs/2604.15804)；[QwenLM/Qwen3-Omni README](https://github.com/QwenLM/Qwen3-Omni)（2026-09-22 CST）；3.5 摘要写「数百亿参数」，但正文未给出 Plus/Flash 精确总参。
 
 ---
 

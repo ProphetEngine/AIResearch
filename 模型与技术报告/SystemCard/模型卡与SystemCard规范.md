@@ -285,7 +285,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-*主要来源：Mitchell 字段与主张据 https://arxiv.org/abs/1810.03993 ；HF 结构据 Hub 文档与 Annotated Template 页；厂商差异仅用相邻 TR 笔记的元信息与目录级描述。*
+*主要来源：[Model Cards for Model Reporting](https://arxiv.org/abs/1810.03993)（字段与主张）；[Model Cards](https://huggingface.co/docs/hub/en/model-cards)；[Annotated Model Card Template](https://huggingface.co/docs/hub/en/model-card-annotated)（HF 结构）；厂商差异仅用相邻 TR 笔记的元信息与目录级描述。*
 
 ## 相关笔记
 

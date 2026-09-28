@@ -23,7 +23,7 @@ archived: 2026-09-24
 > - **≠ [[HippoRAG2与CatRAG]]**：不写 OpenIE+PPR、查询自适应边权；本文 **不做图索引算法**，关键词层甚至不做离线倒排。
 > - **≠ [[图谱检索GraphRAG]]**：不写 Leiden 社区摘要与 map-reduce QFS。
 > - **≠ Harness 工具环通史**：不写 MCP / 长程 harness / 生产 Memory API；对象是 **语料库上的检索工具面**。
-> **主要来源**：[arXiv:2602.03442v1](https://arxiv.org/abs/2602.03442)（2026-09-24 CST）。
+> **主要来源**：[A-RAG: Scaling Agentic Retrieval-Augmented Generation via Hierarchical Retrieval Interfaces](https://arxiv.org/abs/2602.03442)（v1；2026-09-24 CST）。
 
 ---
 

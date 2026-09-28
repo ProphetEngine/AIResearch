@@ -15,7 +15,7 @@ archived: 2026-09-22
 > **定位**：世界模型 / JEPA 表征预测横切——立 **世界模型 / JEPA 表征空间预测** 入门线，相对 LLM 自回归与像素生成式视频模型的平行轴。
 > **研究线**：**架构思想（主）**。
 > **刻意不写**：**robotics 控制 / MPC 部署 / Franka·Octo·Cosmos 对比表**（见 [[视觉语言动作谱系]]）；本篇只保留「action-conditioned 潜空间预测存在、为规划提供动力学」的接口一句。
-> **主要来源**：[V-JEPA 2 官方 PDF](https://arxiv.org/abs/2506.09985) 与 Meta 研究页/博文（2026-09-22 CST）；Meta 博文「1.2B」与论文 Table 12「ViT-g 1B」不一致处标 **待核实**，不擅自调和。
+> **主要来源**：[V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning](https://arxiv.org/abs/2506.09985)；[Introducing the V-JEPA 2 world model and new benchmarks for physical reasoning](https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/)（2026-09-22 CST）；Meta 博文「1.2B」与论文 Table 12「ViT-g 1B」不一致处标 **待核实**，不擅自调和。
 
 ---
 

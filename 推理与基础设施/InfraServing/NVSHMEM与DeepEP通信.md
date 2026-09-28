@@ -23,7 +23,7 @@ note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用
 > - **≠ [[混合专家架构]]**：不写 Switch→Mixtral→V3 的 MoE **路由/稀疏史线**（总参 vs 激活参、aux-loss、$M=4$ 等）；EP 只当「专家切分 → 稀疏 all-to-all」接口一句。
 > - **≠ [[DeepSeekV3训练与MoE基建]] / [[DeepSeekV4技术报告深读]] 通信小节全文重写**：不重写 DualPipe 气泡表、20 SM / 3.2 experts/node、dispatch 前 FP8 / combine BF16 等 **报告配方轴**；本卡只跟 NVSHMEM 运行时如何被 DeepEP **调用**，以及 HT/LL 内核如何叠在对称堆与 IBGDA 上。
 > **引用形态**：**DeepEP 无独立 arXiv 主文**——引用写 `github.com/deepseek-ai/DeepEP`（主文 References [33]）。主文分析对象为 **DeepEP V1（NVSHMEM）**；V2 已切 **NCCL Gin**，本卡只点一句边界，不升主轴。
-> **主要来源**：官方 PDF 与 [DeepEP README / legacy](https://github.com/deepseek-ai/DeepEP)（2026-09-22 CST）。
+> **主要来源**：[Demystifying NVSHMEM: A System-Level Analysis on Symmetric Memory and Device-Initiated Operations in GPU Communication](https://arxiv.org/abs/2606.05951)；[deepseek-ai/DeepEP README](https://github.com/deepseek-ai/DeepEP)；[DeepEP docs/legacy.md](https://github.com/deepseek-ai/DeepEP/blob/main/docs/legacy.md)（2026-09-22 CST）。
 
 ---
 

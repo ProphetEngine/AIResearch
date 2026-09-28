@@ -26,7 +26,7 @@ archived: 2026-09-22
 > - **≠ [[天气气候基础模型]] Aurora**：格点大气/海浪/气旋预报 ≠ 本篇卫星·航空 **影像解译**。
 > - **≠ [[MatterSim材料基础模型]] MatterSim**：原子势 / 材料物性，无接口。
 > - **≠ [[多模态架构脉络]] 通用视觉多模态通史**：不重写 CLIP/Flamingo；只取 RS 多传感器切片。
-> **主要来源**：官方 PDF 与 Nature **HTML**（2026-09-22 CST）；Nature **PDF** 未取到，Methods 标 **待核实**。
+> **主要来源**：[SkySense: A Multi-Modal Remote Sensing Foundation Model Towards Universal Interpretation for Earth Observation Imagery](https://arxiv.org/abs/2312.10115)；[A semantic-enhanced multi-modal remote sensing foundation model for Earth observation](https://doi.org/10.1038/s42256-025-01078-8)（Nature Machine Intelligence HTML）；[SkySense V2: A Unified Foundation Model for Multi-modal Remote Sensing](https://arxiv.org/abs/2507.13812)（2026-09-22 CST）；SkySense++ 期刊 PDF 未取到，Methods 标 **待核实**。
 
 ---
 
