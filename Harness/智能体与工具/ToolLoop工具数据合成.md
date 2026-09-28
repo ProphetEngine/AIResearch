@@ -60,7 +60,7 @@ timezone: Asia/Shanghai (CST)
 | **[[代码智能体Harness史线]]** | 「格式/执行失败要被看见」的工程直觉 | SWE-agent 命令面、OpenHands 四包 SDK、生产失败率 |
 | **经典合成（Self-Instruct / APIGen）** | generate-then-filter 是文内反面教材与 Table 对照 | 各家数据集构造通史 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|

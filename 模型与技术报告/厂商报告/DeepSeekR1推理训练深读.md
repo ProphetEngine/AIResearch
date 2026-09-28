@@ -277,7 +277,7 @@ $$
 3. **冷启动确切条数**：始终为 **thousands**，无更细公开 N。
 4. **B.4.2** 英文出现 “code-start SFT” 字样，上下文应为 **cold-start** 笔误（待官方勘误确认）。
 5. **arXiv 版本**：官方 PDF 抽取为 **v2 / 2026-01-04**；与首版（常见引用 2025-01）章节/数字若有漂移，复现时应以所读 PDF 页码为准。
-6. **未公开而不应编造**：过程奖励具体阈值、完整 RL prompt 全集、价值模型之外的未报告消融、各阶段精确 GPU 拆账（仅有 Table 7 汇总与 B.4.4 叙事小时数）。
+6. **未公开**：过程奖励具体阈值、完整 RL prompt 全集、价值模型之外的未报告消融、各阶段精确 GPU 拆账（仅有 Table 7 汇总与 B.4.4 叙事小时数）。
 
 ### 6.2 报告自述局限（§6，与训练相关者）
 
@@ -292,11 +292,9 @@ $$
 1. DeepSeek-AI et al. *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.* arXiv:2501.12948（本笔记据 arXiv v2 PDF）.
 2. Shao et al., 2024. *Group Relative Policy Optimization*（报告引用的 GRPO 来源；细节以 R1 文内重述为准）.
 3. Schulman et al., 2017. PPO；Schulman et al., 2015. GAE；Ouyang et al., 2022. InstructGPT/RLHF（A.3 对照背景）.
-4. 研究会内链：[[推理时扩展TestTimeScaling]]（势与 o1 对照）；本文件 [[DeepSeekR1推理训练深读]]。
+4. 研究会内链：[[推理时扩展TestTimeScaling]]（势与 o1 对照）。
 
 ---
-
-*起草说明：数字与公式均回溯自上述 PDF 对应节/表；未做外部榜单二次抓取。*
 
 ## 相关笔记
 

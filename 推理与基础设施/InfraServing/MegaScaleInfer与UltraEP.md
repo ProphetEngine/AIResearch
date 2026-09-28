@@ -28,7 +28,7 @@ timezone: Asia/Shanghai (CST)
 > **攻坚线**：**AI Infra / 服务架构（主）** + **文内吞吐 / 失衡字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[混合专家架构]]**：不写 Switch→Mixtral→V3 路由公式、aux-loss、总参/激活参通史；MoE 稀疏只当「每专家 batch 变稀 → 利用率塌」接口一句。
-> - **≠ [[NVSHMEM与DeepEP通信]]**：不写 NVSHMEM 对称堆 / IBGDA / DeepEP V1·V2 内核剖面；**禁止虚构 DeepEP 独立 arXiv 号**；本卡若点 DeepEP，只录「token all-to-all 后端 / 对照一句」。
+> - **≠ [[NVSHMEM与DeepEP通信]]**：不写 NVSHMEM 对称堆 / IBGDA / DeepEP V1·V2 内核剖面；**DeepEP 无独立 arXiv 号**；本卡若点 DeepEP，只录「token all-to-all 后端 / 对照一句」。
 > - **≠ [[ThunderKittens内核DSL]]**：不写 ThunderKittens tile DSL / 核编程抽象。
 > - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang/TRT-LLM 引擎选型通史、PagedAttention、投机解码族；基线名只作评测对照。
 
@@ -209,7 +209,7 @@ SLO：文设 **TBT = 150 ms**。异质表（Table 3）以 L20 归一化标价，
 
 **建议跟读顺序：** §二划界 → MegaScale Fig.3–4 + Alg.1 + Fig.8/9 吞吐表 → UltraEP Fig.1–2 + Alg.1 + Fig.11/12 → 需要通信基底时回 **[[NVSHMEM与DeepEP通信]]**，需要路由史时回 **[[混合专家架构]]**，需要引擎选型时回 **[[推理引擎生态]]**——**不要**反向把本卡写成其中任一续篇。
 
-**刻意不写：** Switch/Mixtral 路由公式重推；NVSHMEM/IBGDA/DeepEP V1·V2 内核；ThunderKittens DSL；vLLM PagedAttention / 投机解码通史；虚构 DeepEP arXiv。
+**刻意不写：** Switch/Mixtral 路由公式重推；NVSHMEM/IBGDA/DeepEP V1·V2 内核；ThunderKittens DSL；vLLM PagedAttention / 投机解码通史。
 
 ---
 

@@ -123,7 +123,7 @@ Algorithm 1 要点（原文步骤）：每外层 iteration 把 $\pi_{\mathrm{ref
 
 文内 GRPO 实验设定摘录（§4 训练段）：policy LR **1e-6**；KL 系数 **0.04**；**每题采样 64** outputs（相对后续 R1 的 $G{=}16$ 为 DeepSeekMath 原设定）。
 
-> **边界：** DeepSeekMath 阶段仍大量用 **奖励模型**；可验证规则奖励 + 大规模长 CoT 的叙事在 R1 TR——**勿把本篇写成 R1 管线复述**。
+> **边界：** DeepSeekMath 阶段仍大量用 **奖励模型**；可验证规则奖励 + 大规模长 CoT 的叙事在 R1 TR——**本篇不写成 R1 管线复述**。
 
 ---
 

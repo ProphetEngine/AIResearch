@@ -30,7 +30,7 @@ archived: 2026-09-22
 | 作者 | Carrie Chen（Cornell University；`cc2864@cornell.edu`） |
 | arXiv | **2606.27550v1** \[cs.CL\]（**25 Jun 2026**） |
 | 官方 PDF | `https://arxiv.org/abs/2606.27550`（**7** 页 letter；arXiv GenPDF） |
-| HTML | https://arxiv.org/html/2606.27550v1（议程备链；数字以官方 PDF 为准） |
+| HTML | https://arxiv.org/html/2606.27550v1（备链） |
 | 代码 | 正文 / 摘要 **未给出** GitHub 链接 |
 
 **一句话抓手：** 现有 MTP 头（Medusa / Hydra 路线）推理期锁死 **一张静态草稿树**——验证算力与推测深度不随上下文熵变化；EntMTP **不改**目标权重、**不松** Hydra 式接受条件，只在离线挑好的 **任务特异 Pareto 树** 上做 **O(1) 拓扑切换**，把推测深度对齐到局部可预测性。

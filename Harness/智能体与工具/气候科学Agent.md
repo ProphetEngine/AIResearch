@@ -62,7 +62,7 @@ timezone: Asia/Shanghai (CST)
 | **ClimateGPT** | 若需交代「专科气候 LLM ≠ 编排 Agent」 | 任何 ClimateGPT 架构/训练/榜单升主 |
 | **[[智能体工具与长程任务]] / [[代码智能体Harness史线]]** | 「LLM + 工具多步」抽象；ClimateAgents 文内点 OpenHands/SWE-Agent 作通用 agent 先例 | MCP 协议史、SWE-bench resolve 表 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|

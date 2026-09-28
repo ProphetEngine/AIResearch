@@ -106,7 +106,7 @@ $$
 ### 3.4 下游：工作流能干什么（§4 · 辅线）
 
 1. **结构化先验**：把生成工作流塞进提示，引导规划（Table 3）。ALFWorld 上 GPT-4 seen **27.14→40.71**（↑13.57）、unseen **28.36→47.01**（↑18.65）；WebShop 增益较小（**55.62→56.49**）。工作流由 **微调后的 Qwen-2-7B** 生成，仍能抬更高参数模型——文称 **weak-guide-strong**。
-2. **CoT 增强（function call）**：逐步按节点产 CoT，并用节点检索最相似 API，再决定如何调用；StableToolBench 上相对 ToolLlama / one-shot GPT-4 / Qwen-2-72B 有相对准确率优势（Fig.5，读图不臆造精确百分点）。
+2. **CoT 增强（function call）**：逐步按节点产 CoT，并用节点检索最相似 API，再决定如何调用；StableToolBench 上相对 ToolLlama / one-shot GPT-4 / Qwen-2-72B 有相对准确率优势（Fig.5）。
 3. **并行减耗时**：无依赖节点可并行；以关键路径（Critical Path）估完成时间，相对逐步 ToolLlama，平均耗时约减 **1/5～1/3**（Fig.6 文述）。
 4. **缩短规划步数**：先验减少盲目试错（Table 4：如 GPT-4 ALFWorld seen **17.19→15.64**）。
 

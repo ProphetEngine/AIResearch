@@ -58,7 +58,7 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 预测落在哪 | 交互 / 控制 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|---|
-| **[[世界模型与VJEPA]] V-JEPA** | **表征空间** mask-denoising | AC 后训练接口 | [[世界模型与VJEPA]] | **否**（禁 JEPA 入门重写） |
+| **[[世界模型与VJEPA]] V-JEPA** | **表征空间** mask-denoising | AC 后训练接口 | [[世界模型与VJEPA]] | **否**（不重写 JEPA 入门） |
 | **[[视频生成正式报告]]** | 文生视频旗舰「正式报告」缺口 | 多为离线生成 | [[视频生成正式报告]] | **否** |
 | **[[DiffusionForcing族]] Forcing 族** | 序列上 per-token 噪声 / 自 rollout | 训推对齐手法 | [[DiffusionForcing族]] | **否**（仅蒸馏引用） |
 | **[[视觉语言动作谱系]] VLA** | 观测→动作策略 | 闭环机器人 | [[视觉语言动作谱系]] | **否**（Cosmos 机器人后训练仅样例） |
@@ -66,7 +66,7 @@ timezone: Asia/Shanghai (CST)
 | **Cosmos WFM** | Text2World / Video2World（扩散或 AR） | 后训练接相机位姿 / 指令 / 多视角 | **本篇 B** | **是** |
 | **Genie 3** | 文生可导航交互世界 | 导航 + promptable events | **对照** | **索引 only** |
 
-跟读直觉：[[世界模型与VJEPA]] 问「**世界如何在表征里可预测**」；Matrix 问「**人在键鼠下能否实时流式滚出分钟级一致世界**」；Cosmos 问「**如何先训通用 WFM 再便宜地后训练到 Physical AI 任务**」；Genie 3 是闭源产品演示位。四者可叠在「world model」外壳下，但**旋钮不同**——本卡禁止滑回 JEPA / Sora 备忘 / Forcing 通史 / VLA 谱系。
+跟读直觉：[[世界模型与VJEPA]] 问「**世界如何在表征里可预测**」；Matrix 问「**人在键鼠下能否实时流式滚出分钟级一致世界**」；Cosmos 问「**如何先训通用 WFM 再便宜地后训练到 Physical AI 任务**」；Genie 3 是闭源产品演示位。四者可叠在「world model」外壳下，但**旋钮不同**——本卡不滑回 JEPA / Sora 备忘 / Forcing 通史 / VLA 谱系。
 
 ### 2.2 文内自划界（跟读）
 

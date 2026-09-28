@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 1　Attention / Transformer 核心思想转折
+# Attention / Transformer 核心思想转折
 
 入口论文：Vaswani et al., *Attention Is All You Need* (2017)。辅读：Harvard NLP *The Annotated Transformer*（逐行实现与重排讲解）。本笔记以**架构思想**为主线、**数学直觉**为辅线；公式与结论均据论文原文。
 
@@ -148,7 +148,7 @@ Transformer 把「可并行的全局注意力编码器 / 解码器」立成新�
 
 ### 归档备注
 
-- 摘要与 §1–§4、§3.2 公式、Table 1/2/3 要点经 ar5iv HTML 与 Annotated Transformer 交叉阅读；未编造未在原文出现的指标。
+- 摘要与 §1–§4、§3.2 公式、Table 1/2/3 要点经 ar5iv HTML 与 Annotated Transformer 交叉阅读。
 
 ### 局限与待核实
 

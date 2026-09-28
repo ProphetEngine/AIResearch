@@ -65,7 +65,7 @@ V4.1-Flash 把「长程 agent + 输入重」瓶颈从算力进一步压到 **HBM
 | MoE | DeepSeekMoE 完整配方 | 本报告未重开 MoE 表 | **保留** shared + fine-grained routed；本 PDF 给出本代配置（§4.2.1），**不重写 V3 MoE 全文** |
 
 **增量一句话：**
-相对 V3「造 MoE+MLA 基座」与 V3.2「DSA 继续训 + 加码 RL」，本卡公开增量几乎全部落在 **CED 半深 prefill**、**CSA2 三模式跨层复用 + 层次化 indexer**、**FP4 main KV QAT**、**SWA Bounded Replay 部署折中**——MoE 只给本代超参表，**禁止当新专家拓扑史重写**。
+相对 V3「造 MoE+MLA 基座」与 V3.2「DSA 继续训 + 加码 RL」，本卡公开增量几乎全部落在 **CED 半深 prefill**、**CSA2 三模式跨层复用 + 层次化 indexer**、**FP4 main KV QAT**、**SWA Bounded Replay 部署折中**——MoE 只给本代超参表，**不当新专家拓扑史重写**。
 
 ---
 
@@ -290,7 +290,7 @@ V3/V3.2 卡讲清「基座怎么训、DSA/RL 怎么叠加」；本卡讲清「�
 - [[DeepSeekV3训练与MoE基建]]
 - [[DeepSeekV32技术报告深读]]
 - [[混合专家架构]] / [[长上下文位置编码与系统侧]] / [[注意力效率族MQA到MLA]] / [[AI基础设施总览]] / [[智能体工具与长程任务]]：MoE 史、长上下文、注意力效率、Infra、agent
-- [[MOC_模型与技术报告]]；交叉 **[[KV缓存量化与压缩]]** KV 量化通史（勿在本卡展开）
+- [[MOC_模型与技术报告]]；交叉 **[[KV缓存量化与压缩]]** KV 量化通史（本卡不展开）
 
 ## 相关笔记
 

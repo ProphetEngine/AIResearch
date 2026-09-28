@@ -174,7 +174,7 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 文称：相对 **per-layer transcoder（PLT）** 与阈值神经元，CLT 在重构–稀疏–自动可解释性上呈 **Pareto 改进**；跨层的关键定性收益是 **缩短归因路径**（例：Zagreb:Croatia::Copenhagen: 上 PLT 长度 7 的 Copenhagen 链可塌到层 1），但也可能 **抹去** 底层「互相放大」的因果动力学 → 增加机制不忠实风险。
 
-**图充分性相关：** unpruned 图上 embedding 影响归一化因子即 **replacement score**；另报 completeness（特征节点 vs error nodes 影响占比）等——具体曲线以 HTML 图为准，本卡不臆造未列表格的逐点读数。
+**图充分性相关：** unpruned 图上 embedding 影响归一化因子即 **replacement score**；另报 completeness（特征节点 vs error nodes 影响占比）等——具体曲线以 HTML 图为准，未列表格的逐点读数从略。
 
 **影响 vs 干预：** 节点 logit influence 优于「仅直接边 / 仅激活幅度」基线；特征对影响与消融相对效应 **Spearman 0.72**（文内）。整体局部替换模型扰动：干预后 **一层** 约 **0.8 cosine / 0.4 NMSE**，跨层误差 **累积**；幅度偏差可能与冻结 LN 分母有关；方向相关但字典越大幅度 faithfulness 可更差。
 

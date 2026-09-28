@@ -34,7 +34,7 @@ archived: 2026-09-22
 
 **一句话抓手：** Astra 是 OpenAI 首个在 Preparedness 下达到 **Cyber Critical** 并广泛部署的模型；对齐与工作场景误操作显著好于 5.6 Sol（内部 Codex 仿真 severity≥3 约减半），但 **CoT monitorability 下降、CoT controllability 大幅上升**，迫使监控从「靠 CoT 可读」转向全轨迹 + 激活/动作监控与更强 cyber 护栏。
 
-**相对 GPT-5.6 Sol 的叙事增量（仅原文对比，非编造）：**
+**相对 GPT-5.6 Sol 的叙事增量（仅原文对比）：**
 
 | 维度 | GPT-5.6 Sol（已入库 TR） | GPT-6 Astra（本卡） |
 |---|---|---|

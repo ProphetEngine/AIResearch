@@ -42,7 +42,7 @@ timezone: Asia/Shanghai (CST)
 
 **一手 PDF：** **有**（arXiv 与 NVIDIA Labs 两源）；PDF Title（主）=`Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning`。
 
-**开源入口（文内明示，禁下权重）：**
+**开源入口（文内明示）：**
 - 配方仓：https://github.com/NVIDIA-NeMo/Nemotron
 - 评测示例：https://github.com/NVIDIA-NeMo/Evaluator/blob/main/examples/nemotron/nemotron-3-ultra
 - HF：文称开源 **Base / Post-Trained / NVFP4 量化** checkpoint，以及训练数据与 recipe（文内未给具体 repo ID）。
@@ -63,7 +63,7 @@ timezone: Asia/Shanghai (CST)
 | **[[MTP训练范式]] / [[混合专家架构]]** | MTP / MoE 名词与稀疏激活接口 | MTP 训练稳定性通史、通用 MoE 综述 |
 | **其他厂商 TR** | Table 2 / 10 中的对照分 | DeepSeek / Qwen / Kimi / GLM 架构与训练全文 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|

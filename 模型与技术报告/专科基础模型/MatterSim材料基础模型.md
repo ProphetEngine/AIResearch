@@ -22,6 +22,7 @@ archived: 2026-09-22
 > - 不重写 AF3 / ESM3 / Aurora（→ 只在接口表点名「科学 FM 平行轴」）。
 > - 不写成 DFT / MD / LAMMPS 作业手册或合成路径操作指南。
 > - 开源权重叙事以 **文档 + GitHub README** 为准，**不**回写覆盖论文主结果数字。
+> **主要来源**：官方 PDF 与 [官网文档](https://microsoft.github.io/mattersim/) / [GitHub README](https://github.com/microsoft/mattersim)（2026-09-22 CST）。
 
 ---
 
@@ -112,7 +113,7 @@ archived: 2026-09-22
 
 - **全部零样本原子模拟（除 MatBench Discovery）→ M3GNet**（推理速度）。
 - **MatBench Discovery + 端到端物性 → Graphormer**（精度）。
-- 开源文档当前释出的 **MatterSim-v1.0.0-1M / 5M** 均标注基于 **M3GNet**（与论文「零样本用 M3GNet」一致；**Graphormer 权重是否开源：文档未列 → 不臆造**）。
+- 开源文档当前释出的 **MatterSim-v1.0.0-1M / 5M** 均标注基于 **M3GNet**（与论文「零样本用 M3GNet」一致；**Graphormer 权重是否开源：文档未列**）。
 
 ---
 
@@ -149,7 +150,7 @@ ensemble 不确定性监视 → 批量主动学习（避免重标高置信）
 
 ---
 
-## 五、评测字段（辅线；禁读图编造）
+## 五、评测字段（辅线）
 
 ### 5.1 能量 / 力 / 应力（Table S1 摘要）
 
@@ -214,7 +215,7 @@ ensemble 不确定性监视 → 批量主动学习（避免重标高置信）
 | 安装 | `pip install mattersim`；或 git 源码；**Python ≥ 3.12** | 存在性；不写排错手册 |
 | 开放权重 | **MatterSim-v1.0.0-1M**（更快）、**v1.0.0-5M**（更准）；均为 **M3GNet** | 与论文零样本骨干一致 |
 | 文档能力页 | Installation / Getting Started / TorchSim / Finetune / LAMMPS；Examples：弛豫、声子、批量弛豫 | 仅索引 |
-| 闭源进阶 | 文档：「More advanced… available in **Azure Quantum Elements**」 | **不**编造其内部模型规格 |
+| 闭源进阶 | 文档：「More advanced… available in **Azure Quantum Elements**」 | 内部模型规格未公开 |
 | 论文正文 | 未见独立 “Code availability” 专节（至 Acknowledgements）；开源叙事以仓库/文档为准 | 版本关系钉清 |
 
 ---
@@ -266,7 +267,7 @@ MatterSim： 近平衡 + 离平衡主动学习 ──► 双骨干 ──► 零
 2. **架构一句**：**主动学习扩构型** + **M3GNet（零样本 MD）∥ Graphormer 182M（发现/物性）**；力由能量导数给出。
 3. **主数字**：~**17M** 结构；MPF-TP 能量 MAE **36 meV/atom**；MatBench Discovery **F1 = 0.83**；最大声子频率 MAE **0.87 THz**；相对实验 Gibbs 自由能 MAE **15 meV/atom**；水微调约 **1/30** 数据。
 4. **开源**：文档 **v1.0.0-1M / 5M（M3GNet）** + `pip install mattersim`；进阶在 Azure Quantum Elements。
-5. **禁区**：不是 DFT 作业手册；不是「已解决催化界面与长程有机」；不要和 AF3/Aurora 混写。
+5. **范围外**：不是 DFT 作业手册；不是「已解决催化界面与长程有机」；不要和 AF3/Aurora 混写。
 
 ---
 

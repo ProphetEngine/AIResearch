@@ -142,7 +142,7 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 
 ### 4.1 局限与待核实
 
-1. Figure **1–4**（幻觉）、**5–8**（bio）、**9–10**（CTF / CVE）、**11–16**（self-improve）图内精确百分点—— 未抽出，**禁止凭记忆填榜**；需人工读图或 OCR。
+1. Figure **1–4**（幻觉）、**5–8**（bio）、**9–10**（CTF / CVE）、**11–16**（self-improve）图内精确百分点—— 未读出；需人工读图或 OCR。
 2. 封面 **2025-12-11** vs **2025-12-12**——是否再导出；对照官方页 Last updated。
 3. §1「explained in our blog」的 **GPT-5.2 专属博客 URL**（本 PDF 未给；References [2] 指向 GPT-5 Introducing）。
 4. GPT-5.1 System Card / Addendum 原文页句与本卡「largely the same」的条款差分（5.1 Addendum PDF：https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf ；本卡未交叉深读）。

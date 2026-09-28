@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 11　注意力效率族：MHA → MQA/GQA → MLA
+# 注意力效率族：MHA → MQA/GQA → MLA
 
 入口论文 / 报告：
 

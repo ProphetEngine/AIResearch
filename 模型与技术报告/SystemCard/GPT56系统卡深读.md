@@ -34,7 +34,7 @@ archived: 2026-09-22
 | Change log（两卡共有） | 2026-08-19：更正 GPT-5.5 hard-negative protein binding **pass@4** 0.4%→**1.5%**（原为 pass@1） | 同左；**另增** 2026-08-03：加入 **GPT-Red** prompt-injection 评测结果 |
 | 参数量 / 层结构 / MoE | **全文未公开** | 同左 |
 
-**Preview → GA 结构差分（据目录/正文，非编造）：**
+**Preview → GA 结构差分（据目录/正文）：**
 
 1. GA 引言「最重要事项」由 Preview 的 **5** 条扩为 **6** 条：新增第 2 条——相对前代，**GPT-5.6 Sol cyber safeguards 拦截约 10×** 潜在有害活动；ChatGPT/Codex 提供一键改试更低能力模型；强调 iterative / conservative deployment。
 2. GA **§4.2** 在已知 connector/search/function-calling 注入表之外，增补 **GPT-Red**（self-play RL 自动红队）及 Direct / Indirect 注入成功率表（2026-08-03 changelog）。

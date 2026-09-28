@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 # 长程规划记忆：CHIME（信用感知分层演化；≠ Mem0 / HippoRAG）
 
 > **定位**：长程规划记忆主题轴——在已入库记忆轴（[[智能体长程记忆]] OS 分页、[[MemoryR1强化学习记忆维护]] RL 四操作、[[Mem0与Zep生产级记忆]] 生产记忆层、[[HippoRAG2与CatRAG]] 检索式非参记忆）之外，补「**长程 agentic planning × 自演化记忆的信用分配**」空位。主锚 **CHIME**（*Credit-Aware HIerarchical Memory Evolution*）：把终局成败拆成「计划质量 / 执行误差 / 环境噪声」，分设 **planning bank** 与 **execution bank**，先归因再写入（attribute-before-memorize）。
-> **攻坚线**：**架构思想（主）**——分层银行 + Credit Attribution Gate + 信用感知演化；**评测字段（辅）**——四榜 train/eval Avg@3 与消融 / RQ 表，禁外推未测场景。
+> **攻坚线**：**架构思想（主）**——分层银行 + Credit Attribution Gate + 信用感知演化；**评测字段（辅）**——四榜 train/eval Avg@3 与消融 / RQ 表，不外推未测场景。
 > **范围与相邻笔记**：
 > - **≠ [[Mem0与Zep生产级记忆]]**：不重写 Mem0 / Zep **生产对话记忆层** API、Graphiti 时序 episode、ADD/UPDATE tool-call 产品面。本卡对象是 **冻结策略上的自演化规划经验库**，不是会话事实抽取–更新服务。
 > - **≠ [[HippoRAG2与CatRAG]]**：不重写 HippoRAG 2 / CatRAG **文档语料上的检索图算法**（OpenIE+PPR、查询条件边权）。本卡是 **agent 交互轨迹 → 规划/执行经验**，不是非参文档记忆索引。
@@ -71,7 +71,7 @@ timezone: Asia/Shanghai (CST)
 | **[[智能体工具与长程任务]]** | 长程工具任务为何难 | MCP / 并行工具环 / 旗舰 System Card agent 叙事 |
 | **[[推理时树搜索ABMCTS]] AB-MCTS** | test-time search 是 CHIME §2 三种范式之一 | GEN 节点 / Thompson 宽深决策 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|

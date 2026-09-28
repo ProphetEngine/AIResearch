@@ -239,7 +239,7 @@ Figure 2 脚注限定：**out-of-the-box 有希望，但模型「is not meant to
 - Representational harms
 - **General medical harms**（信息质量、潜在有害/不准确回答）
 
-声称：相对既往 Gemma，上述类别达 **safe levels**；**无安全过滤器**下测能力；**主要是英语提示**（局限）。高层面发现反馈给模型组，prompt set **hold-out** 防过拟合。**本 PDF 未附各类别数值表** → 勿编造分数。
+声称：相对既往 Gemma，上述类别达 **safe levels**；**无安全过滤器**下测能力；**主要是英语提示**（局限）。高层面发现反馈给模型组，prompt set **hold-out** 防过拟合。**本 PDF 未附各类别数值表** → 无分数。
 
 ### 6.4 产品页适应路径（docs，高阶）
 
@@ -260,7 +260,7 @@ docs 允许的适应类型（须同等验证）：**prompt / ICL**、**fine-tuni
 
 ---
 
-## 8. 未公开 / 勿外推清单
+## 8. 未公开与外推边界
 
 | 项 | 状态 |
 |---|---|

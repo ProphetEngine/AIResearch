@@ -30,6 +30,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[DeepSeekV4技术报告深读]]**：不写成 **DeepSeek-V4**（CSA+HCA / mHC / 百万上下文）配方复述。本 PDF 虽保留 **Gated MLA** 与 **MoonEP↔DeepEP** 对照句，但 **主注意力是 KDA 混合栈**，残差是 **AttnRes**——不是「又一篇 DeepSeek 百万上下文 TR」。
 > - **≠ [[开源与闭源前沿模型谱系]]**：不写成开闭源谱系通史 / 代际叙事；本卡是 **单篇 TR 深读**，他厂型号只出现在 **文内 Table 2/3 数字转述**。
 > - **≠ [[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]**：K2 的 MuonClip / MLA-only / 1.04T 表、K1.5 的 RL 通史不重开；本卡只录 **相对 K2 的 ∆（Table 1）** 与 K3 新增件。
+> **主要来源**：官方 PDF 与 [辅博文](https://www.kimi.com/blog/kimi-k3)（2026-09-22 CST）。
 > 文内未给出精确总 token 账本 / GPU 小时 / 完整层宽公式推导。
 
 ---
@@ -73,8 +74,8 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|---|
 | **Nemotron 3 Ultra** | Hybrid Mamba–Attn + LatentMoE 开源旗舰 | **[[Nemotron3Ultra技术报告深读]]** | **否** |
 | **OLMo 3** | 全开放数据/配方旗舰 | **[[OLMo3全栈开放配方]]** | **否** |
-| **Qwen3-Coder-Next** | 代码专用 80A3 + 可执行反馈中训 | **[[Qwen3CoderNext技术报告深读]]** | **否**（禁滑成 Coder 卡） |
-| **DeepSeek-V4** | CSA+HCA / mHC / 1M 上下文 | **[[DeepSeekV4技术报告深读]]** | **否**（禁 DeepSeek 配方复述） |
+| **Qwen3-Coder-Next** | 代码专用 80A3 + 可执行反馈中训 | **[[Qwen3CoderNext技术报告深读]]** | **否**（不滑成 Coder 卡） |
+| **DeepSeek-V4** | CSA+HCA / mHC / 1M 上下文 | **[[DeepSeekV4技术报告深读]]** | **否**（不复述 DeepSeek 配方） |
 | **开闭源谱系** | 代际 / thinking 产品化通史 | **[[开源与闭源前沿模型谱系]]** | **否** |
 | **Kimi K2 / K1.5** | 前代 TR 全文 | **[[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]** | **否**（仅 ∆） |
 | **Kimi K3 开源前沿旗舰** | 3T 架构 + 1M agentic RL + Infra + 文内评测 | **本篇** | **是** |

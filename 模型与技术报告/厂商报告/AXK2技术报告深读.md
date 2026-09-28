@@ -67,7 +67,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 | 叙事身份 | 开源旗舰 / 推理 | 韩国前代 | **韩国 Sovereign AI**；韩语/文化 + 可控部署 |
 
 **增量一句话：**
-相对已入库「V3/Kimi 怎么把 MoE/MLA/优化器训稳」的通史，本卡公开增量几乎全部落在 **相对 K1 的专家扩容（192→256）+ SGA sparse warmup + GN 换 dual-norm + Think-Fusion + 固定 B200×70 天工程包**——**禁止当新 MoE 拓扑史或对照模型 Infra 重写**。
+相对已入库「V3/Kimi 怎么把 MoE/MLA/优化器训稳」的通史，本卡公开增量几乎全部落在 **相对 K1 的专家扩容（192→256）+ SGA sparse warmup + GN 换 dual-norm + Think-Fusion + 固定 B200×70 天工程包**——**不当新 MoE 拓扑史或对照模型 Infra 重写**。
 
 ---
 
@@ -260,7 +260,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 
 - [[DeepSeekV3训练与MoE基建]] / [[DeepSeekV32技术报告深读]] / [[KimiK2技术报告深读]] / [[GLM45技术报告深读]] / [[Qwen3技术报告深读]]
 - [[混合专家架构]] MoE；[[长上下文位置编码与系统侧]] 长上下文；[[注意力效率族MQA到MLA]] 注意力效率；[[智能体工具与长程任务]] agents
-- [[MOC_模型与技术报告]]；交叉 **[[EAGLE3投机解码]]** EAGLE-3 增量（勿在本卡展开）
+- [[MOC_模型与技术报告]]；交叉 **[[EAGLE3投机解码]]** EAGLE-3 增量（本卡不展开）
 
 ## 相关笔记
 

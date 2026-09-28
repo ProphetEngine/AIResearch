@@ -124,7 +124,7 @@ Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completi
 - 结构性格局（多套件重复出现）：**找洞（discovery）接近 Mythos 5；写利用（exploit）仍显著落后**。
 - 评测套件：沿用 **ExploitBench、OSS-Fuzz、Firefox 147**；新增 **CyScenarioBench、ExploitGym**；**CyberGym 因饱和退役**。另有 **UK AISI** cyber ranges 外部测试。
 
-### 4.2 可核对能力数字（护栏关闭评测；勿当「线上可复现攻击菜谱」）
+### 4.2 可核对能力数字（护栏关闭评测；非线上可复现攻击菜谱）
 
 | 评测 | Opus 5 要点 | 对照（卡内） |
 |---|---|---|
@@ -237,7 +237,7 @@ Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / com
 3. SHADE-Arena / LinuxArena 具体 stealth 百分数（§6.7 有叙述，本笔记未全表抄录）。
 4. 内部 AI R&D 套件任务定义与对外可复现材料。
 5. 参数量、预训练 token、具体 RL 算法超参：**卡中未给**。
-6. CDN 备链：Fable 5.1 文档页 HTML 内嵌 PDF；系统卡索引链到 `https://www.anthropic.com/claude-fable-5-1-mythos-5-1-system-card`（**未**使用编造哈希路径）。同页还出现其他模型 PDF 引用，下载时须核 `Content-Disposition` Title。
+6. CDN 备链：Fable 5.1 文档页 HTML 内嵌 PDF；系统卡索引链到 `https://www.anthropic.com/claude-fable-5-1-mythos-5-1-system-card`。同页还出现其他模型 PDF 引用，下载时须核 `Content-Disposition` Title。
 
 ### 8.2 推荐引用
 
@@ -250,7 +250,7 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 
 ---
 
-## 附录 A. Claude Fable 5.1 & Mythos 5.1 System Card — **仅索引**（勿当正文深读）
+## 附录 A. Claude Fable 5.1 & Mythos 5.1 System Card — **仅索引**（非正文深读）
 
 | 字段 | 核实值 |
 |---|---|

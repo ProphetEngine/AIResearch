@@ -167,7 +167,7 @@ Figure 2 举例：
 | VocalSound ACC ↑ | **0.9392** | 高于 Qwen-Audio **0.9289** |
 | AIR-Bench chat（Speech\|Sound\|Music\|Mixed） | **7.18 \| 6.99 \| 6.79 \| 6.77** | 高于表中 Qwen-Audio 与 Gemini-1.5-pro；Gemini 因 SAFETY 约少测 **1/5** 样本（§3.2） |
 
-**读表纪律：** 摘要写「outperformed previous SOTAs, such as Gemini-1.5-pro, in tests focused on audio-centric instruction-following」——对应的是 **AIR-Bench chat**，不是把 Table 2 每一格都说成全面 SOTA。
+**读表注意：** 摘要写「outperformed previous SOTAs, such as Gemini-1.5-pro, in tests focused on audio-centric instruction-following」——对应的是 **AIR-Bench chat**，不是把 Table 2 每一格都说成全面 SOTA。
 
 ### 5.3 明确边界 / 未声称项
 
@@ -184,7 +184,7 @@ Figure 2 举例：
 | 笔记 | 关系 |
 |---|---|
 | **[[多模态架构脉络]] 多模态** | 视觉：CLIP 对齐 → Flamingo/LLaVA 条件生成；本篇是 **音频连续特征条件生成** 的平行故事 |
-| **[[对齐脉络RLHF与偏好优化]] / [[对齐脉络RLHF与偏好优化]]** | DPO / 偏好优化算法族；本篇只消费「LALM 后训练用了 DPO」一层 |
+| **[[对齐脉络RLHF与偏好优化]]** | DPO / 偏好优化算法族；本篇只消费「LALM 后训练用了 DPO」一层 |
 | **[[世界模型与VJEPA]] World models** | 视频/世界动力学；本篇是感知-语言，不写规划控制 |
 | **[[视觉语言动作谱系]] Robotics VLA** | 观测→动作；本篇观测→**文本** |
 

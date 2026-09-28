@@ -204,7 +204,7 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 - KIVI Table 3 全模型逐格、LongBench 分任务、KVQuant RULER/Passkey 全表：本篇只摘主结论与代表性格。
 - 两文后续开源实现是否已并入 vLLM/SGLang 默认路径：**不跟代码默认值**。
-- MLA / DSA / CSA2 与「per-channel Key」在 **压缩 latent** 上是否同构：V4.1 PDF 未用 KIVI 术语复述 → **禁止类推证明**。
+- MLA / DSA / CSA2 与「per-channel Key」在 **压缩 latent** 上是否同构：V4.1 PDF 未用 KIVI 术语复述 → **不作类推证明**。
 - 权重 INT4 + KVQuant 联合表（KVQuant Table 5 等）未展开。
 
 ---
@@ -213,7 +213,7 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 1. Liu, Yuan, Jin, Zhong, Xu, Braverman, Chen, Hu, 2024. *KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache* — arXiv:**2402.02750**；ICML 2024；本地 `https://arxiv.org/abs/2402.02750`。
 2. Hooper, Kim, Mohammadzadeh, Mahoney, Shao, Keutzer, Gholami, 2024/2025. *KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization* — arXiv:**2401.18079**；NeurIPS 2024；本地 `https://arxiv.org/abs/2401.18079`。
-3. 交叉部署：DeepSeek-AI, *DeepSeek-V4.1-Flash* — arXiv:**2609.19969**；笔记 [[DeepSeekV41Flash深读]]（FP4 main KV / CSA2 / 890 B/token；**勿在本篇重写**）。
+3. 交叉部署：DeepSeek-AI, *DeepSeek-V4.1-Flash* — arXiv:**2609.19969**；笔记 [[DeepSeekV41Flash深读]]（FP4 main KV / CSA2 / 890 B/token；**本篇不重写**）。
 4. 背景交叉（不展开）：[[长上下文位置编码与系统侧]] 长上下文；[[推理引擎生态]] 推理引擎；Pope et al. 服务化 KV 体积论述（KIVI §1 转述）。
 
 ## 相关笔记

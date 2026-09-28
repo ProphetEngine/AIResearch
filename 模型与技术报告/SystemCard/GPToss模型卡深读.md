@@ -14,7 +14,7 @@ archived: 2026-09-22
 > - CDN：`https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf`（**35** 页 A4；Creator: LaTeX with hyperref；CreationDate **2025-08-12** CST）← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf
 > - arXiv：`https://arxiv.org/abs/2508.10925`（**35** 页；Title: *gpt-oss-120b & gpt-oss-20b Model Card*）← https://arxiv.org/pdf/2508.10925 ；API：**2508.10925v1** \[cs.CL\] published **2025-08-08** UTC（换算 Asia/Shanghai：**2025-08-09 03:24 CST**）
 > 对照：[[GPT6Astra系统卡深读]]（闭源旗舰 **System Card** / Preparedness 全章）；[[GPT5系统卡深读]] 等 GPT-5 系；开源 MoE 对照可点 [[混合专家架构]] / DeepSeek / Qwen 笔记，**不**外推参数拓扑
-> **划界：** 只写 **OpenAI 开源权重推理/agentic 增量**（可下载权重、公开 MoE/注意力配方、harmony、effort、工具 harness、Table 3 能力表）。**勿重写 [[GPT6Astra系统卡深读]] Astra 安全全章**（Cyber Critical、CoT controllability、misalignment monitoring 等）——本卡 §3–5 Preparedness 仅作 **开源风险剖面摘要 + 交叉链**。
+> **划界：** 只写 **OpenAI 开源权重推理/agentic 增量**（可下载权重、公开 MoE/注意力配方、harmony、effort、工具 harness、Table 3 能力表）。**不重写 [[GPT6Astra系统卡深读]] Astra 安全全章**（Cyber Critical、CoT controllability、misalignment monitoring 等）——本卡 §3–5 Preparedness 仅作 **开源风险剖面摘要 + 交叉链**。
 > 卡内未给预训练 token 总量、蒸馏配方细节、专家负载均衡损失，本卡不写相关主张。
 
 ---
@@ -61,7 +61,7 @@ Table 1 分项：120b — MLP 114.71B，Attention 0.96B，Embed+Unembed 1.16B；
 | Reasoning 旋钮 | o 系列 / 产品 thinking；Astra 另有监控叙事 | System 里 `"Reasoning: low|medium|high"`；Figure 3 显示 AIME/GPQA **随 effort 平滑 TTS** | 开源侧把 effort **写进可复现协议** |
 | 对话协议 | API roles | **harmony**：roles + **channels**（analysis / commentary / final）；指令层级 System>Developer>User>Assistant>Tool | 部署关键路径；多轮须去掉历史 assistant reasoning traces（§2.5.1） |
 | 工具 | 产品内置 browsing/code 等 | 显式训 **browsing / python(Jupyter) / 任意 developer functions**；可开关 | agentic 开源样本；参考 harness 随开源实现 |
-| 上下文 | 产品卡各自口号 | 稠密层 **YaRN 至 131,072**；博文写 **128k** | 以卡内 131,072 / 博文 128k 为准，**勿**抄 Astra 窗长 |
+| 上下文 | 产品卡各自口号 | 稠密层 **YaRN 至 131,072**；博文写 **128k** | 以卡内 131,072 / 博文 128k 为准，**不**抄 Astra 窗长 |
 | Preparedness | Astra：Cyber **Critical** 等（见 [[GPT6Astra系统卡深读]]） | 默认 **未达** 三类 Tracked 的 High；对抗 FT Bio/Cyber 亦 **未达 High**；并问「是否显著推进开源生物前沿」→ 卡内答 **否** | **只录开源结论句**；域评测表/红队方法 **交叉链 [[GPT6Astra系统卡深读]] / 本卡 §5，不重写** |
 
 **增量一句话：** 相对闭源旗舰「能力/安全产品字段」，gpt-oss 可研增量几乎全部落在 **可下载 MoE + MXFP4 部署配方 + harmony/effort/工具协议 + Table 3 开源对齐榜**；Astra 级安全监控与 Critical 叙事 **点到为止**。
@@ -152,7 +152,7 @@ arXiv **abstract** 另写「large-scale **distillation** and reinforcement learn
 
 ## 6. 能力评测（§2.6 + Table 2/3）——开源对齐字段
 
-> 主表 **Table 3**（low / medium / high）。对照叙事（Figure 1–2 图注 + 博文）：120b **surpasses o3-mini、approaches o4-mini**；20b **surprisingly competitive / matches or exceeds o3-mini**（部分域）。Figure 柱与 o3/o4 精确读数 ** 图轴乱码** → **不以读图编造友商分**；友商对比以正文定性 + 博文句为准。
+> 主表 **Table 3**（low / medium / high）。对照叙事（Figure 1–2 图注 + 博文）：120b **surpasses o3-mini、approaches o4-mini**；20b **surprisingly competitive / matches or exceeds o3-mini**（部分域）。Figure 柱与 o3/o4 精确读数 ** 图轴乱码** → **不读图给友商分**；友商对比以正文定性 + 博文句为准。
 
 ### 6.1 Table 3 精选（Accuracy % / Score % / Elo）
 

@@ -63,7 +63,7 @@ timezone: Asia/Shanghai (CST)
 | 检索增强与知识外挂 | 「长对话当文档切块检索」是 Mem0 Table 2 的对照轴 | 稠密双塔 / 向量库选型通史 |
 | 图谱检索GraphRAG | Zep community 层「受 GraphRAG 启发」一句；检索方法论与 map-reduce **不同**（Zep §2.3 自述） | Leiden 社区摘要 + 全局 QFS map-reduce 全文 |
 
-### 2.2 本文主轴 vs 禁区
+### 2.2 本文主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|
@@ -144,7 +144,7 @@ timezone: Asia/Shanghai (CST)
 | **Mem0** | **67.13±0.65** | **51.15±0.31** | 72.93±0.11 | 55.51±0.34 |
 | **Mem0<sup>g</sup>** | 65.71±0.45 | 47.19±0.67 | 75.71±0.21 | **58.13±0.44** |
 
-文内解读要点（§4.1–4.2，跟读勿改写）：
+文内解读要点（§4.1–4.2）：
 - 单跳 / 多跳：稠密自然语言记忆 **Mem0** 更强；图结构对「单轮事实」增益有限，多跳上 Mem0<sup>g</sup> 甚至略逊。
 - 时序：Mem0<sup>g</sup> 最高 J；OpenAI memory 因多数记忆缺时间戳而崩。
 - 开放域：同台 **Zep** 以 J=76.60 略胜 Mem0<sup>g</sup>（75.71）。
@@ -279,7 +279,7 @@ Community：用 **label propagation**（非 Leiden），便于新节点动态挂
 3. Mem0 Table 1/2、Zep Table 1/2/3 数字与原文一致。
 4. 摘要「26% / 2% / 91% / >90% token」与 Table 2 算术一致。
 
-**缺口 / 勿外推：**
+**缺口：**
 - 两文均未给出可复现的公开「客户生产 SLA」曲线；Mem0 §4.5 与 Zep 延迟测量条件不同，**不可直接比绝对秒数决胜负**。
 - Zep 称可合成 **structured business data**，但本文实验主轴仍是对话记忆；业务 JSON 摄入效果**无同台数字**。
 - Mem0 代码入口给的是 https://mem0.ai/research ；具体开源 commit / SDK API 面本篇不跟。

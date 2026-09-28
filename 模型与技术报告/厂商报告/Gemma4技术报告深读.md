@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）
 > 对照笔记：[[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]；[[Gemini37Flash模型卡深读]]
-> **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**勿重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
+> **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**不重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
 > 专家数/路由算法、层宽表、训练 token 总量、视频管线细节 TR 未写者标「未公开 / 仅 docs」。
 
 ---
@@ -57,10 +57,10 @@ archived: 2026-09-22
 | 权重 | API / 产品；**无**可下载权重 | **Apache 2.0** 权重；Kaggle / HF（docs） | **本议题核心增量** |
 | 参数 / MoE | 仅写 sparse MoE；**总参/激活/专家未公开** | Dense 给出 effective/total；MoE 给出 **26B-A4B** 与 Table 1 active 列（口径见上） | 首次在 Google 近月线给出**可下载族**的参量表；**仍无**专家数/路由超参 |
 | Thinking | 2.5：Dynamic + **budget**；3 Pro：**Deep Think** optional；3.7：customizable configurations（无数值表） | **thinking mode**：先输出 reasoning trace；IT 用 `<\|think\|>` 等控制符（Table 11） | 开源侧首次把 thinking **格式化进对话协议**；**无** budget 数值曲线 / Deep Think 专名 |
-| 上下文 | 卡内 **up to 1M** / 64K out | docs：小尺寸 **128K**、中尺寸 **256K**；Table 9 评到 **~256k**（MTOB full book）；TR **未**写 1M | **勿**把 Gemini 1M 窗抄到 Gemma；以 docs + Table 9 为准 |
+| 上下文 | 卡内 **up to 1M** / 64K out | docs：小尺寸 **128K**、中尺寸 **256K**；Table 9 评到 **~256k**（MTOB full book）；TR **未**写 1M | **不**把 Gemini 1M 窗抄到 Gemma；以 docs + Table 9 为准 |
 | 多模态 | text/image/audio/video（产品卡） | TR：text + image + audio；**12B encoder-free**；docs 另写 Video（E2B/E4B/12B）→ **Video 管线细节 TR 未展开** | 开源增量在 **编码器规格 + 12B 无编码器范式**；视频留给 docs/待核实 |
 | Infra | 2.5：TPUv5p + Pathways 细节；3.x 卡多概括 | Table 2：**TPUv4 / v6e** 芯片数与 data/seq/replica 分片；Slice-Granularity Elasticity；JAX + Pathways + GSPMD + MegaScale XLA；ZeRO-3 | 开源 TR 给出**每型号芯片表**；弹性叙事引用 Gemini Team 2025，**不重写** 2.5 SDC 段 |
-| 安全文档 | 3 Pro / 3.7：FSF 版本号 + 外链 Frontier Safety 报告 | §5：与 Gemini **同级 safety evaluations**；列内容政策；相对 Gemma 3/3n 各安全类「major improvements」；FSF 引用 Google DeepMind 2024 介绍文 | **无**本 PDF 内 CCL/域分数表 → **勿**复制 3 Pro/3.7 的 FSF 结论表到本卡 |
+| 安全文档 | 3 Pro / 3.7：FSF 版本号 + 外链 Frontier Safety 报告 | §5：与 Gemini **同级 safety evaluations**；列内容政策；相对 Gemma 3/3n 各安全类「major improvements」；FSF 引用 Google DeepMind 2024 介绍文 | **无**本 PDF 内 CCL/域分数表 → **不**复制 3 Pro/3.7 的 FSF 结论表到本卡 |
 
 **增量一句话：** 相对闭源 Gemini 卡「能力/安全产品字段」，Gemma 4 的可研增量几乎全部落在 **可下载权重 + 公开架构/效率旋钮（PLE、local/global、p-RoPE、KV=K、encoder-free 12B、QAT、MTP）+ vs Gemma 3 的可复现榜**；Gemini 旗舰推理/FSF 叙事 **点到为止、不重写**。
 

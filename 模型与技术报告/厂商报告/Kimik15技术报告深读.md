@@ -101,7 +101,7 @@ archived: 2026-09-22
 | Vanilla SFT 规模 | 文本约 **1M**（QA 500k / code 200k / math+science 200k / creative 5k / long-context 20k）+ 视觉文本 **1M** |
 | Vanilla SFT 调度 | 先 **32k × 1 epoch**（LR $2\times10^{-5}\to2\times10^{-6}$），再 **128k × 1 epoch**（re-warmup 到 $1\times10^{-5}$ 再降到 $1\times10^{-6}$）；例级 packing |
 
-**明确未给出（勿编造）**：总参数量、层数、hidden dim、注意力变体名称、视觉塔结构、预训练总 token 数。
+**明确未给出**：总参数量、层数、hidden dim、注意力变体名称、视觉塔结构、预训练总 token 数。
 
 ---
 

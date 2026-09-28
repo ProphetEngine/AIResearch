@@ -80,7 +80,7 @@ BASE (Qwen3.5-9B / Qwen3.6-27B)
 `
 
 - **Stage I**：异构合成 + 交互轨迹 mid-training；查询由 curated seed 条件生成；轨迹经 **human–discriminator 协同** + 自动轨迹级评估过滤无效/歧义/低质样本（§2.2）。
-- **Stage II**：在 mid-trained 模型上做 **离线 RL**。Mobile/OS/Web 用大规模 **step-level** 轨迹；CAPTCHA/Grounding 用程序化合成嵌入真实页面/App 背景，以获得 **稠密、难度可控、动作级正确性可验** 的监督（§2.3）。具体 RL 损失沿用 **UI-Venus-1.5** 配方——**本 TR 正文未重写算法式，勿填 GRPO/PPO 名**。
+- **Stage II**：在 mid-trained 模型上做 **离线 RL**。Mobile/OS/Web 用大规模 **step-level** 轨迹；CAPTCHA/Grounding 用程序化合成嵌入真实页面/App 背景，以获得 **稠密、难度可控、动作级正确性可验** 的监督（§2.3）。具体 RL 损失沿用 **UI-Venus-1.5** 配方——**本 TR 正文未重写算法式，不填 GRPO/PPO 名**。
 - **Stage III · MOPD**：多教师 on-policy distillation，把分域专家并入学生，同时尽量保留基座多模态推理（§2.4；引用 Xiao et al. 2026；Yan et al. 2026）。
 
 ### 3.3 MOPD：把蒸馏压在「会改环境的那一小段动作」上
@@ -195,7 +195,7 @@ CAPTCHA 在叙事上还有数据缩放作用：避免登录/注册等流程卡�
 
 ## 七、评测字段（摘主表；对照声明保留）
 
-**读表纪律（Figure 1 / 各表注）：** 偏 standalone 端到端、最近似任务子集与步数预算；源报告的 **action scaffold 可能不同**；`*` = 作者复现。本笔记只摘与「跨端闭环 + 验证叙事」相关的锚点分，不抄全表。
+**读表注意（Figure 1 / 各表注）：** 偏 standalone 端到端、最近似任务子集与步数预算；源报告的 **action scaffold 可能不同**；`*` = 作者复现。本笔记只摘与「跨端闭环 + 验证叙事」相关的锚点分，不抄全表。
 
 ### 7.1 Mobile（Table 1）
 
@@ -242,12 +242,12 @@ CAPTCHA 在叙事上还有数据缩放作用：避免登录/注册等流程卡�
 |---|---|
 | **[[智能体工具与长程任务]]** | 同属「长程 agent 可靠性」；本篇对象是 **GUI 像素控件闭环**，不是工具 API / MCP |
 | **[[视觉语言动作谱系]]** | 同属「观测→动作」；本篇动作空间是 **Click/Type/Hotkey…**，不是机器人连续控制 |
-| **[[GRPO与DAPO算法族]]** | Stage II 是离线 RL，但损失式指向 UI-Venus-1.5；勿在此重写 GRPO/DAPO 清单 |
+| **[[GRPO与DAPO算法族]]** | Stage II 是离线 RL，但损失式指向 UI-Venus-1.5；此处不重写 GRPO/DAPO 清单 |
 | **[[多模态架构脉络]]** | 基座是多模态理解模型；本篇增量在 **交互轨迹 + 可验奖励 + 动作结构蒸馏** |
 
 ---
 
-## 九、附录索引：BlueLM-GUI（勿升正文）
+## 九、附录索引：BlueLM-GUI（不升正文）
 
 | 项 | 核验（arXiv API，2026-09-22） |
 |---|---|

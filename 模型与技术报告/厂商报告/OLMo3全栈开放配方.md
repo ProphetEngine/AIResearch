@@ -59,7 +59,7 @@ timezone: Asia/Shanghai (CST)
 | **[[Nemotron3Ultra技术报告深读]]** Nemotron 3 Ultra | 「工业开源性能旗舰」对照位一句 | Hybrid Mamba–Transformer MoE、Nemotron agent 表、CC 语料清洗 |
 | **[[GPToss模型卡深读]]** gpt-oss | 「另一路开源权重推理卡」对照 | harmony / MXFP4 / effort 旋钮 / OpenAI Preparedness 开源剖面 |
 | **[[Gemma4技术报告深读]]** Gemma 4 | 「Google 开源权重族」对照 | PLE / QAT / encoder-free / Gemma thinking 符 |
-| **[[Qwen3技术报告深读]] / DeepSeek-V3 / Llama-4-pending** | 文内基线名与 Table 数字对照 | 其 MoE/MTP/GRPO 配方正文；禁止用其未公开字段「补全」Olmo |
+| **[[Qwen3技术报告深读]] / DeepSeek-V3 / Llama-4-pending** | 文内基线名与 Table 数字对照 | 其 MoE/MTP/GRPO 配方正文；不用其未公开字段「补全」Olmo |
 | **[[对齐脉络RLHF与偏好优化]] / [[推理时扩展TestTimeScaling]]** | SFT–DPO–RLVR / thinking traces 作接口槽 | RLHF 通史、TTS 通史全文 |
 
 ### 2.2 文内自划界：fully-open vs open-weight
@@ -204,7 +204,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 ---
 
-## 七、评测字段摘录（辅；禁跨表硬比绝对分）
+## 七、评测字段摘录（辅；不跨表硬比绝对分）
 
 > 协议、解码、是否 thinking、是否 Avg@k 均不同源表自洽；不宜与 [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] / Qwen3 TR 表直接「决胜负」。
 

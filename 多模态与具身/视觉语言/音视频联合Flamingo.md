@@ -97,7 +97,7 @@ timezone: Asia/Shanghai (CST)
 4. **LLM 骨干**：**Qwen2.5-7B**（Team, 2025）——文内写 **7B 参数、36 hidden layers、16 attention heads**；前缀为交错 AV 嵌入 + 文本指令，自回归出文本。长视频（文称最长约 **15 min**）训练用 **hybrid sequence parallelism**（Ulysses 节点内 + Ring-Attention 节点间）+ FSDP/ZeRO。
 5. **Streaming TTS（可选）**：decoder-only，条件于 LLM 子词与已生成音频 token；细节 **显式外指** Goel et al. 2025（Audio Flamingo 3），本卡不展开声码器。
 
-**与 [[QwenOmni音视频原生]] 接口一句（勿展开）**：Qwen Omni 走 Thinker–Talker + AuT 原生全模态产品栈；本卡是 **OmniVinci 系「双编码器 + 时序交错 + 7B 文本 LLM」** 路线，TTS 为可选外接式模块叙述。
+**与 [[QwenOmni音视频原生]] 接口一句（不展开）**：Qwen Omni 走 Thinker–Talker + AuT 原生全模态产品栈；本卡是 **OmniVinci 系「双编码器 + 时序交错 + 7B 文本 LLM」** 路线，TTS 为可选外接式模块叙述。
 
 ### 3.2 数据：AV-Skills 与 AV-Think（§3.2）
 

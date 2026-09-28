@@ -153,7 +153,7 @@ $$
 
 ### 4.3 缩放与泛化（§4.3；图为主）
 
-- **Figure 3：** Qwen-2.5 **3B / 7B / 14B** 上 PPO/GRPO 均持续高于 base（**逐点数字以图为准，不臆造**）。Appendix Table 3 给出扩展数值表可核对。
+- **Figure 3：** Qwen-2.5 **3B / 7B / 14B** 上 PPO/GRPO 均持续高于 base（**逐点数字以图为准**）。Appendix Table 3 给出扩展数值表可核对。
 - **Figure 4：** 仅 LoCoMo 训练的管线在 **MSC、LongMemEval** 上仍一致增益。
 - **LongMemEval Overall（Table 5）：** 例 LLaMA 上 GRPO **45.20 / 39.30 / 55.40**（F1/B1/J）高于 Memory-SFT **43.89 / 36.72 / 54.80** 与 A-Mem **38.36 / 33.30 / 54.20**；Qwen 上 GRPO **46.70 / 41.10 / 57.80**。分任务（SSU/SSP/OD/MS/KU/TR）见 Table 4。
 

@@ -65,7 +65,7 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
-| **教学法对齐（模型侧）** | pedagogical IF、SFT/RM/RL 共训进 Gemini、专家场景偏好 | **[[LearnLM教育辅导]] LearnLM** | **否**（禁第二张模型卡） |
+| **教学法对齐（模型侧）** | pedagogical IF、SFT/RM/RL 共训进 Gemini、专家场景偏好 | **[[LearnLM教育辅导]] LearnLM** | **否**（不写第二张模型卡） |
 | **合成用户 / 工具仿真** | LM 仿用户策略一致性、ToolEmu 风险 | **[[合成用户仿真]]** | **否**（τ-bench 仅 TeachArena 相关工作点名） |
 | **榜单可靠性通史** | 污染、路由、thinking 配置 | **[[评测与排行榜可靠性]]** | **否** |
 | **开源评测运行时** | Inspect Task/Solver/Scorer/sandbox | **[[Inspect评测Harness]]** | **否** |
@@ -308,7 +308,7 @@ Table 1 定位：τ-bench / TheAgentCompany / Toolathlon 有工具与状态，�
 2. **TutorBench 全文数据**：截至 2026-09-22 仍为「soon」；榜数字以论文 Table 1 为准，勿用 30 样本子集外推。
 3. **TeachArena HF slug**：仅有 commit `cbd99fcca76b`；入库脚本需补全 repo 路径后再 `git checkout` 钉死。
 4. **学习收益外环**：三文均声明不替代真人学习实验；与 [[LearnLM教育辅导]] 早期报告的课堂/Study Hall 线正交，本卡不并写。
-5. **Agent 产品叙事**：勿滑入 [[智能体工具与长程任务]] MCP/长程 System Card；TeachArena 工具面是 **教学状态契约**，不是通用工具环通史。
+5. **Agent 产品叙事**：不滑入 [[智能体工具与长程任务]] MCP/长程 System Card；TeachArena 工具面是 **教学状态契约**，不是通用工具环通史。
 
 ---
 

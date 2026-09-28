@@ -1,5 +1,5 @@
 ---
-title: "EAGLE-3 投机解码增量切片（相对 [[推理引擎生态]]）"
+title: "EAGLE-3 投机解码增量切片（相对推理引擎生态）"
 topic: EAGLE3投机解码
 date: 2026-09-22
 lines: [AI Infra, 数学原理]
@@ -13,7 +13,7 @@ related: ["推理引擎生态", "AI基础设施总览", "投机解码发展时�
 archived: 2026-09-22
 ---
 
-# EAGLE-3 投机解码增量切片（相对 [[推理引擎生态]]）
+# EAGLE-3 投机解码增量切片（相对推理引擎生态）
 
 > **定位**：EAGLE-3 投机解码切片——在 **[[推理引擎生态]]** 已立的投机解码**基线**（Leviathan / Chen / Medusa / Lookahead 与引擎选型轴）之上，只补 **EAGLE-3** 相对 **EAGLE / EAGLE-2** 的可核对增量。
 > **攻坚线**：**AI Infra（主）** + **数学原理（接受长度 / 推测接受率，辅）**。
@@ -46,7 +46,7 @@ archived: 2026-09-22
 |---|---|
 | 投机采样「草稿—并行校验、同分布」思想；Medusa / Lookahead 等入口 PDF | **不**重写；Table 1 有对照列时只录 EAGLE-2 vs EAGLE-3 |
 | 引擎选型：vLLM / SGLang / TRT-LLM；投机为 decode 轴因子 | **SGLang 集成表**（§4.3 Table 3–4）；vLLM Table 5 仅作附录交叉一句 |
-| 「勿编造未归档 EAGLE 倍率」 | 倍率全部出自官方 PDF 摘要 / Table 1–4 |
+| EAGLE 倍率出处 | 倍率全部出自官方 PDF 摘要 / Table 1–4 |
 
 **EAGLE → EAGLE-2 → EAGLE-3（论文自述，一句链）：**
 

@@ -97,7 +97,7 @@ archived: 2026-09-22
 
 ---
 
-## 3. 安全与评测附录要点（可核对案例；勿编造能力榜分）
+## 3. 安全与评测附录要点（可核对案例）
 
 > 比较轴（§3）：**gpt-5-thinking ↔ OpenAI o3**；**gpt-5-main ↔ GPT-4o**。
 > gpt-5-thinking-pro 未单独重跑安全评测：作者认定 thinking 结果为强 proxy。
@@ -163,7 +163,7 @@ archived: 2026-09-22
 
 **总注：** 评测含 helpful-only 等 elicitation；作者强调结果为 **lower bound**。
 
-| 域 | 官方结论（原文） | 可核对案例（非榜分编造） |
+| 域 | 官方结论（原文） | 可核对案例 |
 |---|---|---|
 | **Biological & Chemical** | 将本 launch 作 **High capability** 处理并激活 safeguards；「remains on the cusp」；thinking-pro 亦测 | 长文 biorisk / ProtocolQA / TroubleshootingBench 等（Table 14）；SecureBio：mitigated thinking **拒绝全部** agent/long-form 危险提示；helpful-only 与 o3-helpful-only 能力接近（Table 15 等） |
 | **Cybersecurity** | 「The gpt-5 model series **does not meet** the threshold for **high cyber risk**.」 | Cyber Range：thinking **unaided 解不出**任何场景；mini 有提升但仍不达「significant cyber risk」条；Pattern Labs：easy 17/18、medium 8/14、**hard 0/4**；结论「limited assistance to a moderately skilled… operator」 |

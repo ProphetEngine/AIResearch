@@ -20,7 +20,7 @@ timezone: Asia/Shanghai (CST)
 # 浏览/深研 Agent 基准：BrowseComp + Online-Mind2Web（Illusion of Progress）
 
 > **定位**：浏览评测主题轴——补仓库里缺的两条**基准论文本身**：OpenAI **BrowseComp**（深研多跳、难找易验的短答案浏览竞赛）与 OSU/Berkeley **Online-Mind2Web**（*An Illusion of Progress?*，在线真实站点任务 + 人工金标揭「WebVoyager 自报高分」幻象，并给出 **WebJudge** 自动评测）。
-> **攻坚线**：**评测字段（主）**——题型构造 / 难度轴 / 主指标 / 校准与算力缩放 / 自动评 vs 人工一致率；禁外推未测产品 SLA。
+> **攻坚线**：**评测字段（主）**——题型构造 / 难度轴 / 主指标 / 校准与算力缩放 / 自动评 vs 人工一致率；不外推未测产品 SLA。
 > **范围与相邻笔记**：
 > - **≠ [[UIVenus2GUI智能体]] UI-Venus-2**：不重写跨端 GUI foundation 训练管线、MOPD、SGV；[[UIVenus2GUI智能体]] 卡内若出现 Online-Mind2Web **分数行**，本卡只写**基准定义与协议**，不写 Venus 训练/权重。
 > - **≠ [[计算机使用智能体]] CUA**：不重写 Operator System Card 安全栈、OSWorld 2.0 长程桌面、StateAct；本卡若点到 Operator，仅作 Online-Mind2Web **人工 SR 表内一列**，不写截图键鼠产品安全。
@@ -61,7 +61,7 @@ timezone: Asia/Shanghai (CST)
 | **[[VendingBench经营长程评测]]** Vending-Bench | （无接口；仅划界） | 经营净值 / meltdown |
 | **[[评测与排行榜可靠性]]** | 评测可靠性 / 榜单通胀通史可交叉一句 | 不重写 leaderboard 方法论通史 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|
@@ -242,7 +242,7 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 五、两基准对照（评测字段并置，禁硬对齐分数）
+## 五、两基准对照（评测字段并置，不硬对齐分数）
 
 | 维 | BrowseComp | Online-Mind2Web |
 |---|---|---|
