@@ -24,7 +24,7 @@ archived: 2026-09-22
 > - **不重写** NeRF 全谱（MipNeRF / Instant-NGP / DMTet 等）——仅在「表示对照」表点名。
 > - **不写成** [[视频生成正式报告]] 视频 / 时序生成正式报告备忘。
 > - SDS / ISM / DreamFusion 只取 **接口句**，不展开 2D→3D 蒸馏通史。
-> **主要来源**：[GaussianDreamer: Fast Generation from Text to 3D Gaussians by Bridging 2D and 3D Diffusion Models](https://arxiv.org/abs/2310.08529)（[项目页](https://taoranyi.com/gaussiandreamer/)）；[GaussianDreamerPro: Text to Manipulable 3D Gaussians with Highly Enhanced Quality](https://arxiv.org/abs/2406.18462)（[项目页](https://taoranyi.com/gaussiandreamerpro/)）（2026-09-22 CST）。
+> **主要来源**：[GaussianDreamer: Fast Generation from Text to 3D Gaussians by Bridging 2D and 3D Diffusion Models](https://arxiv.org/abs/2310.08529)（[项目页](https://taoranyi.com/gaussiandreamer/)）；[GaussianDreamerPro: Text to Manipulable 3D Gaussians with Highly Enhanced Quality](https://arxiv.org/abs/2406.18462)（[项目页](https://taoranyi.com/gaussiandreamerpro/)）（截至 2026-09-22）。
 
 ---
 

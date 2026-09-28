@@ -33,7 +33,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等）。本卡对象是 **交互/流式 WM + Physical AI WFM 平台**，非「无可核长 TR」产品备忘。
 > - **≠ [[DiffusionForcing族]]**：不重写 Diffusion Forcing → Self Forcing → Causal Forcing **训推对齐 forcing 族通史**。Matrix 文内引用 Self-Forcing / DMD / Causal Forcing 仅作 **蒸馏接口一句**，不展开族谱。
 > - **≠ [[视觉语言动作谱系]]**：不写成 **Robotics VLA 控制部署通史**（RT-2 / OpenVLA / π0）。Cosmos 后训练含机器人 manipulation **样例**，本卡只录「预训练 WFM → 域内后训练」平台接口，不写闭环 VLA 策略谱系。
-> **主要来源**：[Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2604.08995)；[Cosmos World Foundation Model Platform for Physical AI](https://arxiv.org/abs/2501.03575)；[Genie 3: A new frontier for world models](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/)（2026-09-22 CST）；文内未给出算力明细与完整配方。
+> **主要来源**：[Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2604.08995)；[Cosmos World Foundation Model Platform for Physical AI](https://arxiv.org/abs/2501.03575)；[Genie 3: A new frontier for world models](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/)（截至 2026-09-22）；文内未给出算力明细与完整配方。
 
 ---
 

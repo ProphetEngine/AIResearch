@@ -37,7 +37,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[SiLVR与ChainOfFrames]]**：不写成 **SiLVR / Chain-of-Frames 视频理解推理框架**；本卡是 **生成侧统一模型 + 编辑/世界建模**，不是纯语言管道 VideoQA。
 > - **≠ [[QwenOmni音视频原生]]**：不写成 **Qwen Omni Thinker–Talker 音视频产品卡**；BAGEL 主轴是 **视觉理解+图像生成/编辑**，非流式语音合成 Omni。
 > - **谱系一句、不升主**：**Chameleon**（早期融合）过旧 → 仅 Table 4/5 对照与设计空间一句。**Foley-Omni**（音轨统一生成）→ **后置**。
-> **主要来源**：[Emerging Properties in Unified Multimodal Pretraining](https://arxiv.org/abs/2505.14683)；[ByteDance-Seed/Bagel README](https://github.com/ByteDance-Seed/Bagel)（2026-09-22 CST）；文内未给出精确 GPU 小时与完整层宽公式。
+> **主要来源**：[Emerging Properties in Unified Multimodal Pretraining](https://arxiv.org/abs/2505.14683)；[ByteDance-Seed/Bagel README](https://github.com/ByteDance-Seed/Bagel)（截至 2026-09-22）；文内未给出精确 GPU 小时与完整层宽公式。
 
 ---
 

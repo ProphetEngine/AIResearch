@@ -30,7 +30,7 @@ archived: 2026-09-24
 > - **≠ [[智能体工具与长程任务]]**：不写 Claude / GPT 旗舰产品通史、System Card 长程叙事、并行工具产品化；MCP 在彼文是产品挂载点，在本文是 **评测对象的协议底座**。
 > - **≠ [[ToRL工具集成强化学习]]**：不写从 base 做工具进 RL 环、数学解释器沙箱、AIME 增益；本文是 **MCP 工具海上的导航评测**，不是工具集成 RL 算法。
 > - **协议深度止于公告级稳定要点**：client/server、tools / resources / prompts；不展开 JSON-RPC / 传输层全文规范。
-> **主要来源**：[LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?](https://arxiv.org/abs/2508.01780)（v2）；[MCP-Universe: Benchmarking Large Language Models with Real-World Model Context Protocol Servers](https://arxiv.org/abs/2508.14704)（v1）（2026-09-24 CST）。文内人机一致率两处表述（约 79% 与 81%）并列标注，不择一抹平。
+> **主要来源**：[LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?](https://arxiv.org/abs/2508.01780)（v2）；[MCP-Universe: Benchmarking Large Language Models with Real-World Model Context Protocol Servers](https://arxiv.org/abs/2508.14704)（v1）（截至 2026-09-24）。文内人机一致率两处表述（约 79% 与 81%）并列标注，不择一抹平。
 
 ---
 

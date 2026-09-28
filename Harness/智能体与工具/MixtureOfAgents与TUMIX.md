@@ -23,7 +23,7 @@ archived: 2026-09-22
 > - **不重写** [[ToRL工具集成强化学习]] ToRL 的「从 base 把解释器嵌进 RL env」；本篇工具在 **推理期 agent 池**，不训工具策略。
 > - **不重写** [[混合专家架构]] 激活级 MoE 门控全文；MoA 仅作「模型级 MoE 类比」一句。
 > - **不重写** [[智能体工具与长程任务]] MCP / 旗舰工具环产品叙事。
-> **主要来源**：[Mixture-of-Agents Enhances Large Language Model Capabilities](https://arxiv.org/abs/2406.04692)；[TUMIX: Multi-Agent Test-Time Scaling with Tool-Use Mixture](https://arxiv.org/abs/2510.01279)；[TUMIX: Augmenting LLM Reasoning with a Dynamic Tool-Use Mixture](https://research.google/pubs/tumix-augmenting-llm-reasoning-with-a-dynamic-tool-use-mixture/)（Google Research 摘要页）（2026-09-22 CST）。
+> **主要来源**：[Mixture-of-Agents Enhances Large Language Model Capabilities](https://arxiv.org/abs/2406.04692)；[TUMIX: Multi-Agent Test-Time Scaling with Tool-Use Mixture](https://arxiv.org/abs/2510.01279)；[TUMIX: Augmenting LLM Reasoning with a Dynamic Tool-Use Mixture](https://research.google/pubs/tumix-augmenting-llm-reasoning-with-a-dynamic-tool-use-mixture/)（Google Research 摘要页）（截至 2026-09-22）。
 
 ---
 

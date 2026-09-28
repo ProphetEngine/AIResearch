@@ -32,7 +32,7 @@ archived: 2026-09-22
 > **范围与相邻笔记**：
 > - **不重写** [[硬件软件协同部署]] 的 Blackwell / TPU7x Ironwood / NVL72 选型地图与部署成本叙事。
 > - **不写成「已证实碾压商业工具」**：Nature 主张、独立评估（Kahng 等 / MacroPlacement）、Markov 元分析、作者 Addendum / 辩护文须**并列呈现**，不替任一侧下最终裁判。
-> - **主要来源**：[Chip Placement with Deep Reinforcement Learning](https://arxiv.org/abs/2004.10746)；[A graph placement methodology for fast chip design](https://www.nature.com/articles/s41586-021-03544-w)（Nature 着陆页摘要 / Change history）（2026-09-22 CST）；Nature 全文 PDF 需登录，未读。
+> - **主要来源**：[Chip Placement with Deep Reinforcement Learning](https://arxiv.org/abs/2004.10746)；[A graph placement methodology for fast chip design](https://www.nature.com/articles/s41586-021-03544-w)（Nature 着陆页摘要 / Change history）（截至 2026-09-22）；Nature 全文 PDF 需登录，未读。
 
 ---
 

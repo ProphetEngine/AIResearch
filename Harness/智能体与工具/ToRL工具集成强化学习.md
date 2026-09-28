@@ -19,7 +19,7 @@ archived: 2026-09-22
 > - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单（Clip-Higher / Dynamic Sampling / token-level loss / Overlong 等）。本篇只用到「**用 GRPO 做组相对 RL**」这一抽象槽位；超参见 §3.1，不展开目标函数变体。
 > - **不重写** [[代码智能体Harness史线]] 的 SWE-agent ACI / OpenHands SDK（编辑器命令面、lint guardrail、生产 harness）。本篇沙箱是 **数学题上的 Python 解释器（Sandbox Fusion）**，不是软件工程 ACI。
 > - **不重写** [[智能体工具与长程任务]] 旗舰工具环 / MCP / System Card 长程；[[DeepSeekR1推理训练深读]] 多阶段管线表；[[推理时扩展TestTimeScaling]] TTS 通史。
-> **主要来源**：[ToRL: Scaling Tool-Integrated RL](https://arxiv.org/abs/2503.23383)；[GAIR-NLP/ToRL README](https://github.com/GAIR-NLP/ToRL)（2026-09-22 CST）。
+> **主要来源**：[ToRL: Scaling Tool-Integrated RL](https://arxiv.org/abs/2503.23383)；[GAIR-NLP/ToRL README](https://github.com/GAIR-NLP/ToRL)（截至 2026-09-22）。
 
 ---
 

@@ -29,7 +29,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[激活操控与表征工程]]（RepE / Activation Steering）**：本卡 **不** 主写推理期「加/减概念向量」操控行为；只在对照句点出「读表征」与「发现电路」正交。不把 CircuitLasso / 归因图写成 ActAdd/CAA/ITI 续作。
 > - **≠ [[机制可解释性入门]]（MI 通史）**：不重写 polysemanticity → SAE → sparse feature circuits 的 **入门阶梯叙事**；[[机制可解释性入门]] 已立概念骨架与 Circuit Tracing **证据结构摘要**。本卡下沉到 **可扩展电路学习算法接口 + 归因图方法细节与 faithfulness 字段**。
 > - **≠ [[审慎对齐与断路器]]（Deliberative Alignment + Circuit Breakers）**：[[审慎对齐与断路器]] 的「circuit」是 **安全产品 / Representation Rerouting 熔断**；本卡「circuit」是 **机制可解释性子图**。不把熔断训练写成电路发现。
-> **主要来源**：[Scalable Circuit Learning for Interpreting Large Language Models](https://arxiv.org/abs/2606.16939)；[Circuit Tracing: Revealing Computational Graphs in Language Models](https://transformer-circuits.pub/2025/attribution-graphs/methods.html)；[On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html)（2026-09-22 CST 核对）；Anthropic 两文无 arXiv PDF。
+> **主要来源**：[Scalable Circuit Learning for Interpreting Large Language Models](https://arxiv.org/abs/2606.16939)；[Circuit Tracing: Revealing Computational Graphs in Language Models](https://transformer-circuits.pub/2025/attribution-graphs/methods.html)；[On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html)（截至 2026-09-22）；Anthropic 两文无 arXiv PDF。
 
 ---
 

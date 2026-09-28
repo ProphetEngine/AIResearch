@@ -15,7 +15,7 @@ archived: 2026-09-22
 > **定位**：语音/音频→LLM 横切——立 **语音/音频 → LLM** 独立模态栈；相对 **[[多模态架构脉络]]**（偏视觉指令）的平行轴。
 > **研究线**：**架构思想（主）**。
 > **刻意不写**：GPT-4o / 商用「原生语音对话」产品评测灌水（无稳定长 TR → 待核实，本篇不展开）；TTS 声学合成细节；实时流式协议。
-> **主要来源**：[Qwen2-Audio Technical Report](https://arxiv.org/abs/2407.10759)；[Qwen2-Audio: Chat with Your Voice!](https://qwenlm.github.io/blog/qwen2-audio/)（2026-09-22 CST）；Figure 3 小时柱图正文未给合计数。
+> **主要来源**：[Qwen2-Audio Technical Report](https://arxiv.org/abs/2407.10759)；[Qwen2-Audio: Chat with Your Voice!](https://qwenlm.github.io/blog/qwen2-audio/)（截至 2026-09-22）；Figure 3 小时柱图正文未给合计数。
 
 ---
 

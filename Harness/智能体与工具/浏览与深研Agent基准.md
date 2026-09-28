@@ -26,7 +26,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[计算机使用智能体]] CUA**：不重写 Operator System Card 安全栈、OSWorld 2.0 长程桌面、StateAct；本卡若点到 Operator，仅作 Online-Mind2Web **人工 SR 表内一列**，不写截图键鼠产品安全。
 > - **≠ [[WorfBench工作流基准]] WorfBench**：不重写 agentic **workflow 图生成**与 WorFEval；本卡对象是 **浏览问答 / 在线网页操作完成**，不是 DAG 工作流合成。
 > - **≠ [[VendingBench经营长程评测]] Vending-Bench**：不重写经营仿真净值 / meltdown；介质与目标完全不同。
-> **主要来源**：[BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents](https://arxiv.org/abs/2504.12516)；[An Illusion of Progress? Assessing the Current State of Web Agents](https://arxiv.org/abs/2504.01382)；[BrowseComp: a benchmark for browsing agents](https://openai.com/index/browsecomp)（2026-09-22 CST）。两文主张差异标为**该文主张**，不升跨文「谁更真实」裁决。
+> **主要来源**：[BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents](https://arxiv.org/abs/2504.12516)；[An Illusion of Progress? Assessing the Current State of Web Agents](https://arxiv.org/abs/2504.01382)；[BrowseComp: a benchmark for browsing agents](https://openai.com/index/browsecomp)（截至 2026-09-22）。两文主张差异标为**该文主张**，不升跨文「谁更真实」裁决。
 
 ---
 

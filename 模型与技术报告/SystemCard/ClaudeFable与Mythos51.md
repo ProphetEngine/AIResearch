@@ -21,7 +21,7 @@ archived: 2026-09-22
 > - **≠ [[宪法分类器防御]] Classifiers 通史**：本卡 cyber 护栏「probe → LLM classifier」只记**本部署形态与覆盖字段**；不写 Constitutional Classifiers / Classifiers++ 论文架构通史。
 > - **≠ [[安全论证SafetyCases]] safety cases 通史**：本篇是 **system card 字段清单 + 访问边界**，不写 CAE 树 / scheming inability / Assurance 2.0。
 > - 不复述可操作攻击 / 利用步骤。
-> **主要来源**：[System Card: Claude Fable 5.1 & Claude Mythos 5.1](https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf)；[Introducing Claude Fable 5.1 and Claude Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1)（2026-09-22 CST）。
+> **主要来源**：[System Card: Claude Fable 5.1 & Claude Mythos 5.1](https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf)；[Introducing Claude Fable 5.1 and Claude Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1)（截至 2026-09-22）。
 
 ---
 

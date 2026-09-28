@@ -22,7 +22,7 @@ archived: 2026-09-22
 > - **相对 [[模型卡与SystemCard规范]]**：不重写卡字段谱系；水印可作为「溯源/披露」邻接字段一句交叉。
 > - **相对 [[训练数据污染检测]]**：不写 quiz / n-gram / canary 污染探针；本篇 = **生成后文本是否带水印**，≠ 训练语料是否见过评测集。
 > - 不写「如何彻底去水印」操作手册；鲁棒性章节 **只报告公开攻击面分类与检测指标**（不展开可复现 scrubbing 配方）。
-> **主要来源**：[Scalable watermarking for identifying large language model outputs](https://doi.org/10.1038/s41586-024-08025-4)（Nature 14 页正文 + Extended Data）；[On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation](https://arxiv.org/abs/2603.03410)；[Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID](https://arxiv.org/abs/2508.20228)（2026-09-22 CST）；两篇 arXiv 为理论 / 鲁棒性近窗复核。
+> **主要来源**：[Scalable watermarking for identifying large language model outputs](https://doi.org/10.1038/s41586-024-08025-4)（Nature 14 页正文 + Extended Data）；[On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation](https://arxiv.org/abs/2603.03410)；[Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID](https://arxiv.org/abs/2508.20228)（截至 2026-09-22）；两篇 arXiv 为理论 / 鲁棒性近窗复核。
 
 ---
 

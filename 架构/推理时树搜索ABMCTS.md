@@ -23,7 +23,7 @@ archived: 2026-09-22
 > - **≠ [[过程奖励模型PRM谱系]]**：不写过程奖励模型怎么训 / ORM vs PRM 谱系；AB-MCTS 的 $R$ 是 **可执行外部评分**（测例通过率、验证集分数等），不是逐步神经判别器。
 > - **≠ [[形式化验证与LLM]]**：不写 Lean 形式证明搜索 / TTRL；本卡是 **自然语言+代码答案树**，宿主是测试/验证反馈，不是证明器内核。
 > - **≠ [[EAGLE3投机解码]] 投机解码**：不写草稿模型–目标模型 token 级加速；本卡是 **答案级** 宽深搜索，不是解码器内部并行。
-> **主要来源**：[Wider or Deeper? Scaling LLM Inference-Time Compute with Adaptive Branching Tree Search](https://arxiv.org/abs/2503.04412)；[SakanaAI/treequest README](https://github.com/SakanaAI/treequest)；[Inference-Time Scaling and Collective Intelligence for Frontier AI](https://sakana.ai/ab-mcts/)（2026-09-22 CST）。
+> **主要来源**：[Wider or Deeper? Scaling LLM Inference-Time Compute with Adaptive Branching Tree Search](https://arxiv.org/abs/2503.04412)；[SakanaAI/treequest README](https://github.com/SakanaAI/treequest)；[Inference-Time Scaling and Collective Intelligence for Frontier AI](https://sakana.ai/ab-mcts/)（截至 2026-09-22）。
 
 ---
 

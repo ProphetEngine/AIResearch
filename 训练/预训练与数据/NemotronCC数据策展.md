@@ -27,7 +27,7 @@ archived: 2026-09-22
 > - **≠ [[合成数据与教科书式数据]]**：不写 phi / Textbooks Are All You Need 式 **教科书/代码合成预训练** 主文；本文合成是 **对已有网页的改写/蒸馏/QA**，不是从知识库造新教材。
 > - **≠ 数据源引用**：Ax-K2 等只把 Nemotron-CC **当数据源点名**；本篇才是管线主锚。
 > - **≠ [[合成对齐数据Magpie]]**：Magpie / ActiveUF 是 **对齐侧**指令/偏好合成；本篇是 **预训练侧** CC 策展 + 合成改写。
-> **主要来源**：[Nemotron-CC: Transforming Common Crawl into a Refined Long-Horizon Pretraining Dataset](https://arxiv.org/abs/2412.02595)；[Nemotron-CC](https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html)（Common Crawl 索引页）；[Announcing Nemotron-CC: A Trillion-Token English Language Dataset for LLM Pretraining](https://developer.nvidia.com/blog/announcing-nemotron-cc-a-trillion-token-english-language-dataset-for-llm-pretraining/)（辅）（2026-09-22 CST）。
+> **主要来源**：[Nemotron-CC: Transforming Common Crawl into a Refined Long-Horizon Pretraining Dataset](https://arxiv.org/abs/2412.02595)；[Nemotron-CC](https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html)（Common Crawl 索引页）；[Announcing Nemotron-CC: A Trillion-Token English Language Dataset for LLM Pretraining](https://developer.nvidia.com/blog/announcing-nemotron-cc-a-trillion-token-english-language-dataset-for-llm-pretraining/)（辅）（截至 2026-09-22）。
 
 ---
 

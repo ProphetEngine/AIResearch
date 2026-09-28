@@ -22,7 +22,7 @@ archived: 2026-09-22
 > - 不重写 AF3 / ESM3 / Aurora（→ 只在接口表点名「科学 FM 平行轴」）。
 > - 不写成 DFT / MD / LAMMPS 作业手册或合成路径操作指南。
 > - 开源权重叙事以 **文档 + GitHub README** 为准，**不**回写覆盖论文主结果数字。
-> **主要来源**：[MatterSim: A Deep Learning Atomistic Model Across Elements, Temperatures and Pressures](https://arxiv.org/abs/2405.04967)；[MatterSim 1.0.0 documentation](https://microsoft.github.io/mattersim/)；[microsoft/mattersim README](https://github.com/microsoft/mattersim)（2026-09-22 CST）。
+> **主要来源**：[MatterSim: A Deep Learning Atomistic Model Across Elements, Temperatures and Pressures](https://arxiv.org/abs/2405.04967)；[MatterSim 1.0.0 documentation](https://microsoft.github.io/mattersim/)；[microsoft/mattersim README](https://github.com/microsoft/mattersim)（截至 2026-09-22）。
 
 ---
 
