@@ -27,7 +27,7 @@ archived: 2026-09-22
 | 文档自我定位 | Model Cards「essential information… known limitations, mitigation approaches, and safety performance」；可随模型改进更新 |
 | Published | **August 2026**（PDF）；卡页 **13 August 2026** |
 | 页数 | **9**（A4 596×842 pts） |
-| 本地路径 | `https://deepmind.google/models/model-cards/gemini-3-7-flash/`（386,307 bytes） |
+| 卡页 / PDF | https://deepmind.google/models/model-cards/gemini-3-7-flash/ · https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-7-Flash-Model-Card.pdf |
 | 能力评测方法外链 | `deepmind.com/models/evals-methodology/gemini-3-7-flash`（卡页另有 `deepmind.google/...` 同源路径） |
 | Frontier Safety 外链 | 「The Gemini 3.7 Frontier Safety Framework Report is available here.」（本 PDF **未附**报告正文；本库未另存该报告正文） |
 | FSF 版本 | 「latest Frontier Safety Framework (**April-2026**)」 |
@@ -201,7 +201,7 @@ archived: 2026-09-22
 | # | 项 | 原因 |
 |---|---|---|
 | 1 | Gemini **3.6 Flash** Model Card 全文 | 本卡架构/数据/硬件/软件/政策均 defer；本库未另存 3.6 PDF |
-| 2 | *Gemini 3.7 Frontier Safety Framework Report* | 本卡仅「available here」；本地未见 PDF |
+| 2 | *Gemini 3.7 Frontier Safety Framework Report* | 本卡仅「available here」；报告 PDF 未见 |
 | 3 | `deepmind.com` vs `deepmind.google` evals URL | 与 3 Pro 卡同类域名写法差；方法页两种均可开 |
 | 4 | 「algorithmic improvements to… core reasoning foundation」具体内容 | 仅口号；无层/路由/损失名 |
 | 5 | 「customizable thinking configurations」与 2.5 Thinking budget / 3 Pro Deep Think 的 API 映射 | 本卡无旋钮名与数值 |
@@ -211,7 +211,7 @@ archived: 2026-09-22
 | 9 | HLE-Verified vs 3 Pro HLE | 集合定义不同（方法页 1,811 verified）；禁直接纵向比 |
 | 10 | 引入价到期后价格与 3.6 博文标价关系 | 本卡脚注 2027-01-01 起 $1.50/$7.50；与公开 3.6 博文常驻价叙述需产品页再核 |
 
-### 5.2 主要引用（本地可核对）
+### 5.2 主要引用
 
 | 类型 | 路径 / 标识 |
 |---|---|

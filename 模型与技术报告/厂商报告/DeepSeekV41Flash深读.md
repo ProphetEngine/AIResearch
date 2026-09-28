@@ -26,7 +26,7 @@ archived: 2026-09-22
 | 作者 / 联系 | DeepSeek-AI；`research@deepseek.com`；长名单见封面与附录作者页 | 封面 |
 | arXiv 页眉 | **arXiv:2609.19969v1** \[cs.CL\] **17 Sep 2026** | PDF 第 1 页页眉 |
 | PDF 页数 | **51**（A4） | |
-| 本地路径 | `https://arxiv.org/abs/2609.19969`（1,663,475 bytes） | 仓库 |
+| PDF 链接 | `https://arxiv.org/abs/2609.19969` | arXiv |
 | 权重入口 | https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash | Abstract 末句 |
 | 摘要四关键词 | (1) **CED**（prefill **8B** / decode **16B**）；(2) **CSA2** 跨层 KV/索引复用；(3) **FP4** global KV；(4) **SWA Bounded Replay** | Abstract |
 | 骨干规模（摘要/§2.1） | **552B** backbone；上下文至 **1M** tokens；预训练多模态语料 **45T** tokens | Abstract；§2.1；§4.2 |
@@ -283,7 +283,6 @@ V3/V3.2 卡讲清「基座怎么训、DSA/RL 怎么叠加」；本卡讲清「�
 - DeepSeek-AI. *DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression*. arXiv:**2609.19969v1** \[cs.CL\], **17 Sep 2026**.
  Abs：https://arxiv.org/abs/2609.19969
  PDF：https://arxiv.org/pdf/2609.19969
- 本地：`https://arxiv.org/abs/2609.19969`
  权重：https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash
 
 ### 7.3 关联笔记

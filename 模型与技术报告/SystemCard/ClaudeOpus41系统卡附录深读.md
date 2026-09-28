@@ -220,13 +220,6 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 （见 模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md）
 ```
 
-### 5.3 相关路径
-
-| 路径 | 说明 |
-|---|---|
-| `https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf` | 官方 PDF（23 页） |
-| 模型与技术报告/SystemCard/ClaudeOpus41系统卡附录深读.md | 本深读卡（draft） |
-
 ---
 
 *草稿状态：draft。修订时优先同步 Addendum Changelog 与 Claude 4 / Opus 4.5 卡更正（尤其 reward-hack 脚注 3、Synthesis Screening 脚注 4）；数字禁止离开原文脚注单独传播。*

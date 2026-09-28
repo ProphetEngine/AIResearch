@@ -28,7 +28,7 @@ archived: 2026-09-22
 | PDF 页数 | **32**（letter） | |
 | Creator / Producer | arXiv GenPDF (tex2pdf:57610bf)；pikepdf 8.15.1 | |
 | 权利声明（XMP） | `http://creativecommons.org/licenses/by-nc-nd/4.0/` | XMP |
-| 本地路径 | `https://arxiv.org/abs/2507.20534` | 仓库 |
+| PDF 链接 | `https://arxiv.org/abs/2507.20534` | arXiv |
 | 权重（摘要脚注） | https://huggingface.co/moonshotai/Kimi-K2-Instruct | Abstract 脚注 1 |
 | Checkpoint engine（§3.3） | https://github.com/MoonshotAI/checkpoint-engine | §3.3.2 脚注 4 |
 | 摘要规模一句话 | MoE；摘要写 **32B activated / 1T total**；MuonClip；预训练 **15.5T** tokens、「zero loss spike」；后训练含 agentic 数据合成 + 联合 RL | Abstract |
@@ -193,8 +193,6 @@ archived: 2026-09-22
 
 - Kimi Team. *Kimi K2: Open Agentic Intelligence* (Technical Report). arXiv:2507.20534v2 \[cs.LG\], 3 Feb 2026.
  PDF：https://arxiv.org/pdf/2507.20534
- 本地：`https://arxiv.org/abs/2507.20534`
- （2026-09-22，Asia/Shanghai）
 
 ### 6.3 关联笔记
 

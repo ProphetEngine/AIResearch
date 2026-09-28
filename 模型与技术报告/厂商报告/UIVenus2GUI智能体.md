@@ -10,7 +10,7 @@ arxiv: ["2609.00028"]
 related: ["智能体工具与长程任务", "视觉语言动作谱系", "GRPO与DAPO算法族"]
 appendix_index:
  - arxiv: "2609.12394"
- title: "BlueLM-GUI Technical Report"
+   title: "BlueLM-GUI Technical Report"
 archived: 2026-09-22
 ---
 
@@ -26,7 +26,7 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主文** | Venus Team (Ant Group), *UI-Venus-2 Technical Report* | arXiv:**2609.00028v1** \[cs.AI\] **27 Aug 2026**；`https://arxiv.org/abs/2609.00028`（**37** 页） | 跨端 GUI foundation agent；环境–任务–验证三轴共扩 |
 | **发布入口（文内）** | Code / Model / Project | https://github.com/inclusionAI/UI-Venus ；https://huggingface.co/collections/inclusionAI/ui-venus ；https://ui-venus.github.io/UI-Venus-2 | 权重与评测基建（本篇不跟 commit） |

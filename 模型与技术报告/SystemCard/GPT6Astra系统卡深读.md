@@ -306,20 +306,10 @@ SecureBio 外部评测：正文有专门小节（§10.1.1.4）；细节数字以
 
 ---
 
-## 10. 路径清单
-
-| 类型 | 路径 |
-|---|---|
-| 本深读卡 | 模型与技术报告/SystemCard/GPT6Astra系统卡深读.md |
-| 官方 PDF | `https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf` |
-| 文本抽取 | |
-| Hub | https://deploymentsafety.openai.com/gpt-6-astra |
-| PDF URL | https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf |
-| 对照深读（相对增量基准） | 模型与技术报告/SystemCard/GPT56系统卡深读.md |
-
 ## 相关笔记
 
 - [[GPT6Astra系统卡深读]]
+- [[GPT56系统卡深读]]
 - [[DeepSeekV41Flash深读]]
 - [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]

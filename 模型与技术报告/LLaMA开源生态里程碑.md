@@ -232,7 +232,6 @@ Llama 4 把 LLaMA（2023）开启的路径推到新阶段：**开放权重 + MoE
 `text
 [1] Hugo Touvron et al. LLaMA: Open and Efficient Foundation Language Models.
  arXiv:2302.13971, 2023. PDF: https://arxiv.org/pdf/2302.13971
- 本地：https://arxiv.org/abs/2302.13971
 
 [2] Meta AI. The Llama 4 herd: The beginning of a new era of natively multimodal AI innovation.
  https://ai.meta.com/blog/llama-4-multimodal-intelligence/ (2025-04-05)
@@ -265,13 +264,6 @@ Llama 4 把 LLaMA（2023）开启的路径推到新阶段：**开放权重 + MoE
 2. 扫 §3 的 Table 3/8/9，建立「13B vs GPT-3 / 65B vs PaLM」的数量级直觉。
 3. 读 Llama 4 博文 Takeaways + Pre-training + Behemoth 蒸馏段；对照 Model Card 参数表。
 4. 回到本文第一、三节，用「可下载权重」框架串起复现–微调–评测–蒸馏。
-
-## 附录 B　文件路径
-
-| 产物 | 路径 |
-|------|------|
-| 本笔记 | 模型与技术报告/LLaMA开源生态里程碑.md |
-| LLaMA PDF | `https://arxiv.org/abs/2302.13971` |
 
 ## 相关笔记
 

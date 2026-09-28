@@ -11,7 +11,7 @@ archived: 2026-09-22
 
 > 攻坚线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：Qwen Team, *Qwen3 Technical Report*（arXiv:2505.09388）
-> 官方 PDF：`https://arxiv.org/abs/2505.09388`（复用已下载；pdfTeX CreationDate 2025-05-15 CST；35 页）
+> 官方 PDF：`https://arxiv.org/abs/2505.09388`（pdfTeX CreationDate 2025-05-15 CST；35 页）
 > 许可（报告摘要）：**Apache 2.0**；权重入口：Hugging Face / ModelScope / GitHub QwenLM/Qwen3
 
 ---
@@ -23,7 +23,7 @@ archived: 2026-09-22
 | 标题 | Qwen3 Technical Report |
 | 作者 | Qwen Team（正文 §6 列 Core Contributors / Contributors） |
 | arXiv | **2505.09388**（页眉 arXiv:2505.09388v1 [cs.CL] **14 May 2025**） |
-| PDF 本地 | `https://arxiv.org/abs/2505.09388` |
+| PDF 链接 | `https://arxiv.org/abs/2505.09388` |
 | HTML / PDF | https://arxiv.org/abs/2505.09388 ；https://arxiv.org/pdf/2505.09388 |
 | 系列定位 | Qwen 家族最新一代开源权重 LLM；Dense + MoE；参数量约 **0.6B–235B** |
 | 相对 Qwen2.5 | 多语从 **29 → 119** 语言/方言；预训练约 **36T** tokens（报告称相对 Qwen2.5 约 **2×** tokens、**3×** 语言覆盖） |
@@ -229,7 +229,6 @@ Table 21（Qwen3-8B，自同一 off-policy 检查点起，仅数学/代码查询
 | 编号 | 文献 | 日期 | URL / 路径 |
 |---|---|---|---|
 | [QWEN3] | Qwen3 Technical Report | arXiv Submitted **2025-05-14**（v1 页眉） | https://arxiv.org/abs/2505.09388 ；PDF https://arxiv.org/pdf/2505.09388 |
-| [QWEN3-PDF] | 本地副本 | CreationDate 2025-05-15 CST | `https://arxiv.org/abs/2505.09388` |
 | [[开源与闭源前沿模型谱系]] | 开源与闭源前沿模型谱系 | 笔记 date 2026-09-22 | [[开源与闭源前沿模型谱系]] |
 
 ### 6.3 跟读一句话

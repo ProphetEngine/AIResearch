@@ -25,8 +25,8 @@ archived: 2026-09-22
 | arXiv | **2508.06471v1** \[cs.CL\] **8 Aug 2025** | PDF 第 1 页页眉 |
 | PDF 页数 | **26**（letter） | |
 | PDF Creator / Producer | arXiv GenPDF (tex2pdf:)；pikepdf 8.15.1 | |
-| PDF CreationDate | 本机 **未给出** CreationDate/ModDate（pikepdf 重打包） | |
-| 本地路径 | `https://arxiv.org/abs/2508.06471` | 仓库 |
+| PDF CreationDate | PDF **未给出** CreationDate/ModDate（pikepdf 重打包） | |
+| PDF 链接 | `https://arxiv.org/abs/2508.06471` | arXiv |
 | 系列定位 | 开源 MoE；面向 **Agentic / Reasoning / Coding (ARC)** 统一能力；**hybrid reasoning**（thinking + direct/non-thinking） | Abstract；§1 |
 | 发布型号 | **GLM-4.5**（355B total / 32B activated）；**GLM-4.5-Air**（106B total / **12B** activated，Table 1） | Abstract；Table 1 |
 | 预训练体量（摘要） | multi-stage training on **23T** tokens | Abstract |
@@ -224,7 +224,6 @@ Base（Table 2）：GLM-4.5-Base 355B/32B；内部评测框架；未训指令数
 | 编号 | 文献 | 日期 | URL / 路径 |
 |---|---|---|---|
 | [GLM45] | GLM-4.5: Agentic, Reasoning, and Coding (ARC) Foundation Models | arXiv **2508.06471v1**，页眉 **8 Aug 2025** | https://arxiv.org/abs/2508.06471 ；PDF https://arxiv.org/pdf/2508.06471 |
-| [GLM45-PDF] | 本地副本 | 26 页；Creator arXiv GenPDF | `https://arxiv.org/abs/2508.06471` |
 | [GLM45-GH] | 权重与代码入口（报告） | — | https://github.com/zai-org/GLM-4.5 ；https://huggingface.co/zai-org/GLM-4.5 |
 | [SLIME] | RL 框架（报告脚注） | — | https://github.com/THUDM/slime |
 | [EVALS] | 评测复现工具（报告） | — | https://github.com/zai-org/glm-simple-evals |

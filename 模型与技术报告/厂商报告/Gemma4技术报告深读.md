@@ -10,7 +10,7 @@ archived: 2026-09-22
 
 > 攻坚线：**架构思想（主）** + **AI Infra / 效率·量化（辅）**
 > 锚点：Gemma Team, Google DeepMind, *Gemma 4 Technical Report*（arXiv **2607.02770v2**；页眉日期 **2026-06-19**；API published **2026-07-02**，updated **2026-07-24**）
-> 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*；741,872 bytes）
+> 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）
 > 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md；模型与技术报告/SystemCard/Gemini37Flash模型卡深读.md
 > **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**勿重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
@@ -20,13 +20,13 @@ archived: 2026-09-22
 
 ## 1. 元信息与一句话抓手
 
-| 字段 | 核实值（PDF / / arXiv API / docs） |
+| 字段 | 核实值（PDF / arXiv API / docs） |
 |---|---|
 | 标题 | Gemma 4 Technical Report |
 | 作者 | Gemma Team, Google DeepMind；联系 `gemma4report@gmail.com` |
 | arXiv | **2607.02770v2** \[cs.CL\]（v1 published **2026-07-02**；v2 **2026-07-24**；comment: *17 pages, 2 figures, technical report, updated*） |
 | 页数 | **17**（A4） |
-| 本地路径 | `https://arxiv.org/abs/2607.02770` |
+| PDF 链接 | `https://arxiv.org/abs/2607.02770` |
 | 许可 | 正文：**Apache 2.0**（Introduction 末句） |
 | 分发（docs） | Kaggle / Hugging Face；官方 QAT 集合见 docs |
 | 对照闭源线 | Gemini 2.5 TR / 3 Pro Model Card / 3.7 Flash Model Card **已入库** → 本卡不复述其能力表与 FSF 域结论 |
@@ -286,12 +286,11 @@ Gemma 4 把 Google 近月的「多模态 + 推理」能力，落成一套 **可�
 
 ---
 
-## 11. 来源与抽取
+## 11. 来源
 
 | 源 | 路径 / URL |
 |---|---|
 | 一手 PDF | `https://arxiv.org/abs/2607.02770` ← https://arxiv.org/pdf/2607.02770 |
-| 文本抽取 | |
 | 辅 docs | https://ai.google.dev/gemma/docs/core （2026-07-08） |
 | 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md；模型与技术报告/SystemCard/Gemini37Flash模型卡深读.md |
 

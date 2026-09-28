@@ -30,7 +30,7 @@ archived: 2026-09-22
 | arXiv 页眉 | **arXiv:2608.30320v1** \[cs.CL\] **31 Aug 2026** | PDF 第 1 页页眉 |
 | PDF 页数 | **28**（A4） | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:4af3385) | |
-| 本地路径 | `https://arxiv.org/abs/2608.30320` | 本仓库（2026-09-22 自 arXiv 下载） |
+| PDF 链接 | `https://arxiv.org/abs/2608.30320` | arXiv |
 | 镜像 | GitHub `QwenLM/Qwen3.8-Flash-Next` · `tech_report.pdf` | 议程入口 |
 | 产品名（正文） | **Qwen3.8-Flash-Next**（稀疏 MoE base）；评测表写作 **Qwen3.8-Flash-Next-Base** | Abstract / §4 / Tab. 11 |
 | 摘要四支柱 | (1) **GDN + 全局注意力**混合；(2) CPT 期换 **QSA**；(3) **Gated Residual (GR)**；(4) 主机侧 **n-gram embedding** + **Muon** | Abstract |
@@ -286,7 +286,6 @@ Fig. 4：Stage 2 与全注意力 LM loss 差约 **$10^{-4}$** 量级。
 | 编号 | 文献 | 日期 | URL / 路径 |
 |---|---|---|---|
 | [Q38N] | On the Design of Qwen3.8-Next Architecture… | arXiv **2026-08-31**（v1） | https://arxiv.org/abs/2608.30320 ；PDF https://arxiv.org/pdf/2608.30320 |
-| [Q38N-PDF] | 本地副本 | 2026-09-22 下载 | `https://arxiv.org/abs/2608.30320` |
 | [Q38N-GH] | QwenLM/Qwen3.8-Flash-Next（含 tech_report.pdf） | — | https://github.com/QwenLM/Qwen3.8-Flash-Next |
 | [QWEN3] | Qwen3 Technical Report（对照锚，勿重写） | 2025-05 | 模型与技术报告/厂商报告/Qwen3技术报告深读.md |
 | [B4] | 优化器与训练稳定性 | 2026-09-22 | 训练/持续与技巧/优化器与训练稳定性.md |

@@ -25,8 +25,7 @@ archived: 2026-09-22
 | 封面日期 | **December 11, 2025** |
 | 页数 | **27**（A4）；目录 §1–4 + References；正文止于 §4.2 Sandbagging |
 | PDF 元数据 | Creator: LaTeX with hyperref；CreationDate/ModDate：**2025-12-12** 00:46:24 CST（晚于封面约 1 日） |
-| 本地路径 | `https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf` |
-| 官方 PDF（扫描清单；本卡未再 WebFetch） | `https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf` |
+| 官方 PDF | `https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf` |
 | 本文型号标签（§1） | **GPT-5.2 Instant** = `gpt-5.2-instant`；**GPT-5.2 Thinking** = `gpt-5.2-thinking` |
 | 安全缓解总口径（§1） | 「largely the same as」**GPT-5 System Card** 与 **GPT-5.1 System Card** |
 | 博客关系（§1） | 「explained in our blog」——本卡未给博客 URL；References [2] 为 *Introducing GPT-5*（Aug 2025，Accessed 2025-12-10），**非** 5.2 专属 launch 链 |
@@ -147,9 +146,9 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 1. Figure **1–4**（幻觉）、**5–8**（bio）、**9–10**（CTF / CVE）、**11–16**（self-improve）图内精确百分点—— 未抽出，**禁止凭记忆填榜**；需人工读图或 OCR。
 2. 封面 **2025-12-11** vs **2025-12-12**——是否再导出；对照官方页 Last updated。
 3. §1「explained in our blog」的 **GPT-5.2 专属博客 URL**（本 PDF 未给；References [2] 指向 GPT-5 Introducing）。
-4. GPT-5.1 System Card / Addendum 原文页句与本卡「largely the same」的条款差分（本地有 `https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`，本卡未交叉深读）。
+4. GPT-5.1 System Card / Addendum 原文页句与本卡「largely the same」的条款差分（5.1 Addendum PDF：https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf ；本卡未交叉深读）。
 5. Cyber Range 脚注「Fixed since gpt-5.1-codex-max release」对应哪一场景缺陷。
-6. Irregular「Cryptographic Challenge Case Study」独立报告链接与是否落盘。
+6. Irregular「Cryptographic Challenge Case Study」独立报告链接。
 7. Apollo Research 完整 scheming 评估报告归档。
 8. 年龄预测模型 rollout 范围、误报/漏报与地区政策——本卡仅「early stages」。
 9. CVE-Bench 未跑的 **6/40** 题原因是否影响 +8/−11 pp 解读。

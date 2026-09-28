@@ -240,7 +240,7 @@ Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚�
 
 | 标签 | 内容 |
 |---|---|
-| [G25-TR] | Gemini Team, Google. *Gemini 2.5: Pushing the Frontier…* arXiv:2507.06261v6, 19 Dec 2025. 本地：`https://arxiv.org/abs/2507.06261` |
+| [G25-TR] | Gemini Team, Google. *Gemini 2.5: Pushing the Frontier…* arXiv:2507.06261v6, 19 Dec 2025. arXiv：https://arxiv.org/abs/2507.06261 |
 | Table 1–6 | 型号对照；API ID；核心能力；跨模型；音频；视频 |
 | §2.1–2.7 | 架构 / 数据 / Infra / 后训练 / Thinking / 能力专项 / 路径型号 |
 | §3 | 定量评测与方法论 |
@@ -261,9 +261,9 @@ Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚�
 
 ---
 
-## 附：抽取与写作约束备忘
+## 附：写作约束备忘
 
-- 原文 https://arxiv.org/abs/2507.06261`
+- 原文 https://arxiv.org/abs/2507.06261
 - 数字与断言均来自上述 PDF；未在报告出现的参数量、层图、训练 FLOPs **未写入正文表**。
 - 安全章（CBRN / cyber CTF 风格评测图等）仅作「未达 CCL」元结论索引，**不**转写攻击步骤。
 

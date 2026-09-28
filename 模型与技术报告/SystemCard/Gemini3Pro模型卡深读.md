@@ -27,7 +27,7 @@ archived: 2026-09-22
 | Last Updated | **May 2026** |
 | 页数 | **10**（letter 612×792 pts） |
 | PDF 元数据 Title | Gemini 3 Pro Model Card (May 2026) |
-| 本地路径 | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
+| PDF 链接 | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
 | 能力评测方法外链 | 正文：`deepmind.com/models/evals-methodology/gemini-3-pro`；页脚另写 `deepmind.google/models/evals-methodology/gemini-3-pro`（**同一路径、域名写法不同** → 见 §4 待核实） |
 | Frontier Safety 外链 | 「Gemini 3 Pro Frontier Safety Framework Report」（本 PDF **未附**该报告正文） |
 | FSF 版本 | 「latest Frontier Safety Framework (**September-2025**)」 |
@@ -191,8 +191,8 @@ Deep Think 的 FSF 评测：「consistent with the original Gemini 3 Pro assessm
 | # | 项 | 原因 |
 |---|---|---|
 | 1 | `deepmind.com` vs `deepmind.google` evals-methodology URL | 正文与页脚域名写法不一致；需浏览器确认最终落地页 |
-| 2 | 第 5 页全部榜分的官方可复制表 | 主表为图；本卡数字来自 `pdftoppm` 读图；建议与 evals-methodology 页交叉 |
-| 3 | *Gemini 3 Pro Frontier Safety Framework Report* | 本卡仅引用标题；本地  **未见**该 PDF |
+| 2 | 第 5 页全部榜分的官方可复制表 | 主表为图；本卡数字来自读图；建议与 evals-methodology 页交叉 |
+| 3 | *Gemini 3 Pro Frontier Safety Framework Report* | 本卡仅引用标题；该报告 PDF **未见** |
 | 4 | Deep Think 算法 / 与 Thinking budget 关系 | 本卡仅「optional setting」；2.5 报告 Deep Think 细节亦外链 Doshi 2025b——机制仍缺 |
 | 5 | 「architecture developments」具体是什么 | 仅有贡献声明，无层/路由/注意力改动名 |
 | 6 | TPU 代数与集群规模 | 本卡只写 TPUs；2.5 报告的 TPUv5p / 8960-chip pods **不能**自动继承到 3 Pro |
@@ -201,7 +201,7 @@ Deep Think 的 FSF 评测：「consistent with the original Gemini 3 Pro assessm
 | 9 | 与 2.5 技术报告 Table 3 同名榜的口径差 | 例：2.5 笔记 SWE-bench Verified **67.2%（multiple attempts）** vs 本卡 2.5 Pro **59.6%（single attempt）**——**不可无脚注合并** |
 | 10 | CharXiv 拼写 | 读图为 CharXiv Reasoning；若官方页写 ChartXiv 需再核 |
 
-### 4.2 主要引用（本地可核对）
+### 4.2 主要引用
 
 | 类型 | 路径 / 标识 |
 |---|---|

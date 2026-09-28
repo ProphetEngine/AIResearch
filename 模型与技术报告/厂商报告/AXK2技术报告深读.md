@@ -31,7 +31,7 @@ archived: 2026-09-22
 | XMP MetadataDate | 2026-09-01T01:54:40+00:00（→ **2026-09-01 09:54 CST**） | XMP |
 | PDF 页数 | **35**（A4） | |
 | 权利声明（XMP） | `http://creativecommons.org/licenses/by/4.0/` | XMP |
-| 本地路径 | `https://arxiv.org/abs/2608.30181`（2,203,433 bytes） | 仓库 |
+| PDF 链接 | `https://arxiv.org/abs/2608.30181` | arXiv |
 | 权重入口 | https://huggingface.co/skt/A.X-K2 | Abstract 脚注；封面 |
 | 摘要四关键词 | (1) **688B MoE** agentic 基座；(2) **~8.5T** tokens（少于 K1）token 效率；(3) **SGA** + **GN**；(4) **Think-Fusion** 可切换 thinking | Abstract |
 
@@ -254,8 +254,6 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 - SK Telecom. *A.X K2 Technical Report*. arXiv:**2608.30181v1** \[cs.AI\], **31 Aug 2026**.
  Abs：https://arxiv.org/abs/2608.30181
  PDF：https://arxiv.org/pdf/2608.30181
- 本地：`https://arxiv.org/abs/2608.30181`
- （2026-09-22 CST / Asia/Shanghai）
  权重：https://huggingface.co/skt/A.X-K2
 
 ### 7.3 关联笔记

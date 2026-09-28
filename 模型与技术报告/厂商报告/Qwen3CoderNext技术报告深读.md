@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 训练—agent 反馈接口, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2603.00729 # 2.55M / 23p；≪20MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2603.00729
 aux:
  - https://arxiv.org/abs/2603.00729
  - https://arxiv.org/pdf/2603.00729
@@ -33,24 +33,23 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
 | 项 | 报告原文 / 元数据 | 出处 |
 |---|---|---|
-| 标题 | Qwen3-Coder-Next Technical Report | 封面； Title |
+| 标题 | Qwen3-Coder-Next Technical Report | 封面；PDF 元数据 Title |
 | 作者 | Qwen Team；Core：Ruisheng Cao, Mouxiang Chen, … Fan Zhou（字母序姓）；Contributors 另列 | §7 Author |
 | arXiv | **arXiv:2603.00729v1** \[cs.CL\] **28 Feb 2026** | PDF 页眉 |
-| 文首日期栏 | **2026-03-03** | 抽取第 1 行 |
+| 文首日期栏 | **2026-03-03** | PDF 首页首行 |
 | 产品字段 | **80B** total / **3B** active（文称 **80A3**）；基于 **Qwen3-Next** hybrid attention + MoE | Abstract / §1 / §6 |
 | 发布入口 | HF / ModelScope `Qwen/Qwen3-Coder-Next`；代码 `github.com/QwenLM/Qwen3-Coder` | 封面 |
 | PDF 页数 / 尺寸 | **23** 页 A4 | |
 | Producer | pikepdf 8.15.1；Creator: arXiv GenPDF (tex2pdf:57610bf) | |
 
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| **主 PDF（arXiv）** | `https://arxiv.org/abs/2603.00729` | **2.55M**（2,678,546 B） | **23** | **官方 HTTPS 外链**（≪20MB；页数远 <80） |
-| **官方镜像（辅）** | https://raw.githubusercontent.com/QwenLM/Qwen3-Coder/main/qwen3_coder_next_tech_report.pdf | `curl -sI`→**200**（2026-09-22 CST） | — | 与 arXiv 对照用；**默认可不另存**二进制（主文已入库） |
-| **抽取** | | 111,365 B | — | 全文检索 |
+| 文件 | 链接 | 页数 | 备注 |
+|---|---|---|---|
+| **主 PDF（arXiv）** | `https://arxiv.org/abs/2603.00729` | **23** | — |
+| **官方镜像（辅）** | https://raw.githubusercontent.com/QwenLM/Qwen3-Coder/main/qwen3_coder_next_tech_report.pdf | — | 与 arXiv 对照用 |
 
 **一句话抓手：**
 在 **小激活脚印（3B）** 上，用「**可验证可执行任务合成 × 环境反馈中训/RL × 多专家再蒸馏**」把编码 agent 能力推到可与 **数量级更大激活** 的开源旗舰同台（SWE-Bench Verified ≈ **70.6–71.3%**，三 scaffold；Table 3），并公开 base + instruct 开权重。
@@ -221,12 +220,9 @@ Qwen3-Next base（架构细部 → [[Qwen38Next架构深读]] / 官方博文，�
 **跟读口诀：**
 [[Qwen38Next架构深读]] = 通用 Next 怎么省怎么稳 → [[Qwen3CoderNext技术报告深读]] = 3B 激活上如何用可执行反馈练成编码 agent → [[SWEBenchPro代码修复评测]]/[[代码智能体Harness史线]] = 测什么 / 沙箱怎么转（本卡只借分数与名字）。
 
-1. **二进制**：`https://arxiv.org/abs/2603.00729`（**2.55MB / 23p**）→ **官方 HTTPS 外链**；GitHub 官方镜像 **辅链**，不必强制双存。
-2. **抽取**：已落 。
-3. **笔记路径**：[[Qwen3CoderNext技术报告深读]]（本文件）。
-4. **交叉链**：`related` → [[Qwen38Next架构深读]] / [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]] / [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]] / [[Qwen3技术报告深读]] / [[ToolLoop工具数据合成]]；正文禁止展开其主课。
-5. **待核实 / 禁外推**：中训精确总 token（仅「trillions」）；Figure 1 柱高；80A3 的层/专家/隐宽细表（**本 PDF 未给**）；勿把「基于 Qwen3-Next」误写成「Qwen3.8-Next 架构附录」。
-6. **勿混并**：SWE-Bench Pro **分数**（本卡）≠ Pro **基准设计**（[[SWEBenchPro代码修复评测]]）；Table 10 与 Table 11 任务量 **分表引用**。
+1. **交叉链**：`related` → [[Qwen38Next架构深读]] / [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]] / [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]] / [[Qwen3技术报告深读]] / [[ToolLoop工具数据合成]]；正文禁止展开其主课。
+2. **待核实 / 禁外推**：中训精确总 token（仅「trillions」）；Figure 1 柱高；80A3 的层/专家/隐宽细表（**本 PDF 未给**）；勿把「基于 Qwen3-Next」误写成「Qwen3.8-Next 架构附录」。
+3. **勿混并**：SWE-Bench Pro **分数**（本卡）≠ Pro **基准设计**（[[SWEBenchPro代码修复评测]]）；Table 10 与 Table 11 任务量 **分表引用**。
 
 ---
 

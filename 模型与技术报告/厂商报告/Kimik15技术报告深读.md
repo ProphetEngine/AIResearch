@@ -28,7 +28,7 @@ archived: 2026-09-22
 | PDF 页数 | **25**（letter） | |
 | Creator / Producer | arXiv GenPDF (tex2pdf:)；pikepdf 8.15.1 | |
 | 权利声明（XMP） | `http://creativecommons.org/licenses/by-nc-nd/4.0/` | XMP |
-| 本地路径 | `https://arxiv.org/abs/2501.12599` | 仓库 |
+| PDF 链接 | `https://arxiv.org/abs/2501.12599` | arXiv |
 | 官方镜像（检索到） | arXiv PDF：https://arxiv.org/pdf/2501.12599 ；GitHub：https://github.com/MoonshotAI/Kimi-k1.5 （含 `Kimi_k1.5.pdf`） | 检索 |
 | 一句话主张（Abstract） | 多模态 LLM + RL；**long context scaling** + **improved policy optimization**；**不依赖** MCTS / value functions / process reward models；long-CoT 对标 o1；另给 **long2short** | Abstract |
 
@@ -227,15 +227,13 @@ Appendix C 注明：Table 3 的 IF-Eval 来自 **intermediate** 模型，将更�
 4. LiveCodeBench 版本口径：摘要写 v 相关分数；Table 2/3 与 Figure 轴标签需逐表核对后再对外引用。
 5. IF-Eval：Appendix C 承认 Table 3 数字来自 intermediate checkpoint。
 6. 「up to +550%」相对 GPT-4o / Claude 3.5 的具体分母基准对：摘要口号级，精细对比应回到 Table 3 单格。
-7. GitHub `MoonshotAI/Kimi-k1.5` 页面 README 与 PDF 是否始终同版：本卡以本地 arXiv v4 PDF 为准。
+7. GitHub `MoonshotAI/Kimi-k1.5` 页面 README 与 PDF 是否始终同版：本卡以 arXiv v4 PDF 为准。
 8. XMP 权利 **BY-NC-ND 4.0**；若后续另发权重，许可证以发布页为准（本 PDF 未写死 Apache 等）。
 
 ### 7.2 引用
 
 - Kimi Team. *Kimi k1.5: Scaling Reinforcement Learning with LLMs* (Technical Report). arXiv:2501.12599v4 \[cs.AI\], 3 Jun 2025.
  PDF：https://arxiv.org/pdf/2501.12599
- 本地：`https://arxiv.org/abs/2501.12599`
- （2026-09-22，Asia/Shanghai）
 
 ### 7.3 关联笔记
 

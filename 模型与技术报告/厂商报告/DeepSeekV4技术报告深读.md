@@ -27,7 +27,7 @@ archived: 2026-09-22
 | arXiv 页眉 | **arXiv:2606.19348v1** \[cs.CL\] **26 Apr 2026** | PDF 第 1 页页眉 |
 | PDF 页数 | **58**（A4） | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:a6404ea) | |
-| 本地路径 | `https://arxiv.org/abs/2606.19348`（4,713,349 bytes） | 仓库 |
+| PDF 链接 | `https://arxiv.org/abs/2606.19348` | arXiv |
 | 权重入口 | https://huggingface.co/collections/deepseek-ai/deepseek-v4 | Abstract 末句 |
 | 推理参考实现 | https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/tree/main/inference | §2.3 脚注 1 |
 | 摘要级关键词 | (1) **CSA+HCA 混合注意力**；(2) **mHC**；(3) **Muon**；(4) **≥32T** PT + 后训练；(5) **1M** 上下文 | Abstract |
@@ -299,7 +299,7 @@ V3/V3.2 卡讲清「基座与 DSA/RL」；[[DeepSeekV41Flash深读]] 讲清「�
 3. **「相对 BF16 GQA8 ≈ 2% KV」** 的逐字段字节账：正文定性+比例，未给拆解表。
 4. **Table 6/7 对照模型 API / scaffold：** 部分空缺因 API 繁忙；跨 scaffold 引用须标明设置（§5.3.1）。
 5. **Terminal-Bench 2.0 Verified ≈72.0（Pro）：** 正文补充句；主表仍报原版 **67.9**。
-6. **Preview vs 正式产品差异、HF 许可、定价、新闻站日期：** 以本 PDF 页眉 **2026-04-26** 与本地归档为准。
+6. **Preview vs 正式产品差异、HF 许可、定价、新闻站日期：** 以本 PDF 页眉 **2026-04-26** 为准。
 7. 文中外部型号（GPT-5.4、Gemini-3.1-Pro、Kimi-K2.6、GLM-5.1、Opus-4.6 等）为作者对比叙事；**本卡不核验其独立卡**。
 
 ### 8.2 引用
@@ -308,8 +308,6 @@ V3/V3.2 卡讲清「基座与 DSA/RL」；[[DeepSeekV41Flash深读]] 讲清「�
  Abs：https://arxiv.org/abs/2606.19348
  PDF：https://arxiv.org/pdf/2606.19348
  HTML：https://arxiv.org/html/2606.19348
- 本地：`https://arxiv.org/abs/2606.19348`
- （2026-09-22 CST / Asia/Shanghai）
  权重集合：https://huggingface.co/collections/deepseek-ai/deepseek-v4
  推理参考：https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/tree/main/inference
 

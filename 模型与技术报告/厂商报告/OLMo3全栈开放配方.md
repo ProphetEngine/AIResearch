@@ -31,11 +31,11 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[GPToss模型卡深读]]**：禁止重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
 > - **≠ [[Gemma4技术报告深读]]**：禁止重写 **Gemma 4** TR（Google Apache 开源权重族 / PLE / QAT）；本卡是 AI2 dense 7B/32B + Dolma/Dolci 全栈。
 > - **≠ 已入库 Qwen / DeepSeek / Llama pending**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），**禁止**把其架构/训练配方抄入本卡当 Olmo 主张。
-> **禁止编造**：型号、token 量、表数字、算力日一律锚定本地抽取（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
+> **禁止编造**：型号、token 量、表数字、算力日一律锚定官方 PDF（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
 | 字段 | 核实值（PDF arXiv API / 封面，2026-09-22 CST） |
 |---|---|
@@ -44,11 +44,7 @@ timezone: Asia/Shanghai (CST)
 | arXiv | **2512.13961**v2 \[cs.CL / cs.LG\]；v1 published **2025-12-15 23:41 UTC** → **2025-12-16 07:41 CST**；v2 updated **2026-04-14 15:12 UTC** → **2026-04-14 23:12 CST**；comment: *minor edit updates* |
 | 页数 / 版式 | **118** 页 letter（612×792 pts） |
 | 官方深读 PDF | [arXiv:2512.13961](https://arxiv.org/abs/2512.13961) |
-| `ls -lh` / `stat` | **6.6M**（**6,817,890** B ≈ **6.50 MiB**） |
-| 抽取 | `*.txt`（章节化；见同目录 `README.md`） |
 | 官方入口 | abs https://arxiv.org/abs/2512.13961 · PDF https://arxiv.org/pdf/2512.13961 |
-
-**体积判定：** **<10MB 且 <20MB**，但 **118 页极长** → 按议程 **「强烈建议正式外链（或只抽选定章节），不默认整本二进制入库」**。本轮已下载供深读，**验收建议：**；文本抽取 **应入库**。
 
 **一句话抓手：** Olmo 3 = AI2 在 **7B / 32B dense** 上把 **Base → Think / Instruct / RL-Zero** 整条 **model flow**（数据池+实际 mix+中间 ckpt+训练/评测代码）全部公开的 **fully-open** 旗舰；旗舰点 **Olmo 3.1 Think 32B** 在文内后训练套件上自称 **best fully-open @32B**，并以 **约 6× 更少 token** 逼近同规模最强 **open-weight** thinking（Qwen 3 32B 系）——**不是** Nemotron Ultra 那种工业 MoE 性能旗舰，也不是 gpt-oss / Gemma 4 那种「开源权重卡」。
 
@@ -252,7 +248,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 | Stage 2 Soup（mid） | 5.7T | **69.7** | **39.7** |
 | Stage 3 LC | 6.2T | 61.4 | 39.7 |
 
-→ Midtrain 对 Math/Code 拉升显著；LC 阶段部分合成分回落——文仍强调长文能力解锁（细节见 Table 12，本抽取已落 `03-*.txt`，逐格未全抄）。
+→ Midtrain 对 Math/Code 拉升显著；LC 阶段部分合成分回落——文仍强调长文能力解锁（细节见 Table 12，逐格未全抄）。
 
 ---
 
@@ -297,9 +293,8 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 | 项 | 内容 |
 |---|---|
-| 笔记路径 | [[OLMo3全栈开放配方]] |
 | 页数 | **118** |
-| 深读 PDF | [arXiv:2512.13961](https://arxiv.org/abs/2512.13961)（**6,817,890 B / 118p**） |
+| 深读 PDF | [arXiv:2512.13961](https://arxiv.org/abs/2512.13961) |
 | 备注 | 正式引用 arXiv HTTPS（页数较长，跟读以章节为准） |
 | 主结论 | AI2 **fully-open model flow** 旗舰：Dolma 3 三阶段 Base（至 ~6T 级 + 65K）→ Dolci 后训练三角（Think / Instruct / RL-Zero）；旗舰 **Olmo 3.1 Think 32B** 文内称 strongest fully-open thinking @32B，并以更少 token 逼近 Qwen 3 开源权重 thinking |
 | 划界 | ≠ [[Nemotron3Ultra技术报告深读]]；≠ [[GPToss模型卡深读]]；≠ [[Gemma4技术报告深读]]；≠ Qwen/DeepSeek/Llama pending 正文 |

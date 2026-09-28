@@ -12,7 +12,7 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）**（agentic / thinking / 工具面与 RSP 安全评测如何写进产品旋钮）
 > 锚点：Anthropic, *System Card: Claude Opus 4.5*（封面 **November 2025**；Changelog 至 **December 5, 2025**）
 > 官方 PDF：`https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf`（**153** 页；Title: Claude Opus 4.5 System Card）
-> 对照笔记：[[智能体工具与长程任务]]、[[评测与排行榜可靠性]]；Claude 4 主卡本地：`https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf`
+> 对照笔记：[[智能体工具与长程任务]]、[[评测与排行榜可靠性]]；Claude 4 主卡 PDF：https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf
 > **禁止编造**：下文数字与主张均锚定原文；未在卡中出现的训练细节 / 未给出的 GitHub URL 标「待核实」。
 
 ---
@@ -207,18 +207,11 @@ Claude Opus 4.5 是 Anthropic 在 ASL-3 下部署的 hybrid 旗舰；本卡相�
 
 `text
 Anthropic. System Card: Claude Opus 4.5. November 2025
-（本地：https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf；
+（PDF：https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf；
  Changelog 核对至 December 5, 2025；153 pp.）
 `
 
 引用分数时建议附带：**thinking on/off、thinking budget、effort、context、harness、avg trials、grader**。
-
-### 5.3 本地产物
-
-| 路径 | 说明 |
-|---|---|
-| `https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf` | 官方 PDF |
-| 模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md | 本深读卡（draft） |
 
 ---
 

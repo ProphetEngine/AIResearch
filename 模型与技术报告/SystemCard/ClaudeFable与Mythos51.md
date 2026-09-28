@@ -5,7 +5,6 @@ date: 2026-09-22
 lines: [评测字段, 架构思想]
 status: archived
 sources:
- # slim: url+extract — system card PDF removed (>15MB)
  - https://www.anthropic.com/claude-fable-and-mythos-5-1
 related: ["ClaudeOpus5系统卡深读", "宪法分类器防御", "安全论证SafetyCases", "B5", "ClaudeOpus45系统卡深读"]
 retrieval_cutoff: 2026-09-22
@@ -27,11 +26,11 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 抓取 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Anthropic, *System Card: Claude Fable 5.1 & Claude Mythos 5.1* | 封面 **September 1, 2026**；https://www.anthropic.com/claude-fable-and-mythos-5.1 ；（**212** 页 letter） | 预部署七域评测；双配置定义；RSP / cyber / 护栏 / agentic / alignment |
-| **辅·产品公告** | https://www.anthropic.com/claude-fable-and-mythos-5-1 | WebFetch 2026-09-22 CST | 定价/EFS/CVP·LSVP/Claude Security 产品表述；与卡交叉核验访问边界 |
-| **备链 CDN**（用户指定） | `https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf` | 原官方 ；以 CDN + 为准 | 缺抽取时回落 CDN |
+| **主文** | Anthropic, *System Card: Claude Fable 5.1 & Claude Mythos 5.1* | 封面 **September 1, 2026**；https://www.anthropic.com/claude-fable-and-mythos-5.1 （**212** 页 letter） | 预部署七域评测；双配置定义；RSP / cyber / 护栏 / agentic / alignment |
+| **辅·产品公告** | https://www.anthropic.com/claude-fable-and-mythos-5-1 | 2026-09-22 CST 核对 | 定价/EFS/CVP·LSVP/Claude Security 产品表述；与卡交叉核验访问边界 |
+| **备链 CDN**（用户指定） | `https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf` | 以 CDN PDF 为准 | 备用 PDF 链接 |
 
 **交叉索引（勿当正文）：** 模型与技术报告/SystemCard/ClaudeOpus5系统卡深读.md 附录 A
 
@@ -129,7 +128,7 @@ identical weights
 
 ### 4.3 公告页补边界（与卡交叉；非替代卡）
 
-公告（2026-09 WebFetch）与卡一致处：同模型不同护栏；Fable 通用、Mythos 受信；允许 **发现漏洞、不开发 exploit**；Claude Security ← Mythos 5.1。
+公告（2026-09 核对）与卡一致处：同模型不同护栏；Fable 通用、Mythos 受信；允许 **发现漏洞、不开发 exploit**；Claude Security ← Mythos 5.1。
 
 公告**额外**产品旋钮（卡正文未必同粒度，引用时分源）：
 
@@ -298,14 +297,6 @@ https://www.anthropic.com/claude-fable-and-mythos-5-1
 `
 
 引用分数时附带：**配置（Fable/Mythos）、safeguards on/off、effort/thinking、是否含 fallback、trials、harness**。Cyber 能力数字默认 **Mythos + safeguards off**。
-
-### 7.3 本地产物
-
-| 路径 | 说明 |
-|---|---|
-| https://www.anthropic.com/claude-fable-and-mythos-5.1 · CDN PDF | 官方入口（本地） |
-| | 入库抽取 |
-| 模型与技术报告/SystemCard/ClaudeFable与Mythos51.md | 本笔记 |
 
 ---
 

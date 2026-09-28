@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, AI Infra, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2607.24653 # 1.71MiB / 47p；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2607.24653
 aux:
  - https://arxiv.org/abs/2607.24653
  - https://arxiv.org/pdf/2607.24653
@@ -41,7 +41,7 @@ timezone: Asia/Shanghai (CST)
 | 标题 | Kimi K3: Open Frontier Intelligence（页内另标 *Technical Report of Kimi K3*） | 封面； Title |
 | 作者 | Kimi Team（XMP `dc:creator` 另列大量具名贡献者） | 封面；XMP |
 | arXiv | **arXiv:2607.24653v2** \[cs.CL\] **7 Aug 2026** | PDF 页眉 |
-| XMP identifier | `https://arxiv.org/abs/2607.24653v2` | ` -meta` |
+| XMP identifier | `https://arxiv.org/abs/2607.24653v2` | XMP |
 | XMP MetadataDate | 2026-08-10T00:33:42+00:00（→ 用户时区 **2026-08-10 08:33 CST**） | XMP |
 | 权利 | `http://creativecommons.org/licenses/by-nc-nd/4.0/` | XMP |
 | 产品字段（摘要） | **2.8T** MoE；**104B** activated；原生视觉；**1M** 上下文；相对 K2 约 **2.5×** scaling efficiency | Abstract |
@@ -49,16 +49,15 @@ timezone: Asia/Shanghai (CST)
 | PDF 页数 / 尺寸 | **47** 页 letter | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:8def8d8) | XMP |
 
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| **主 PDF（arXiv）** | `https://arxiv.org/abs/2607.24653` | **1.71MiB**（1,790,685 B） | **47** | **官方 HTTPS 外链**（≪10MB；页数适中） |
-| **抽取** | | 265K | — | 全文检索 |
-| **辅博文** | https://www.kimi.com/blog/kimi-k3 | — | — | 产品案例 / 可用性 / 局限；**不替代** TR 数字源 |
+| 文件 | 链接 | 页数 | 备注 |
+|---|---|---|---|
+| **主 PDF（arXiv）** | `https://arxiv.org/abs/2607.24653` | **47** | — |
+| **辅博文** | https://www.kimi.com/blog/kimi-k3 | — | 产品案例 / 可用性 / 局限；**不替代** TR 数字源 |
 
 **一句话抓手：**
 把开源预训练规模推到 **3T 级（Table 1：2.78T / 104.2B 激活）**，用 **KDA+AttnRes+Stable LatentMoE** 换约 **2.5×** 相对 K2 的 scaling efficiency，再在 **1M 上下文**上做多域多努力度 RL → **MOPD** 合并，公开全权重；整体仍落后 Claude Fable 5 / GPT-5.6 Sol，但文内套件上 consistently 领先其余对照（含 GLM-5.2）。
 
-**辅博文（产品层，非 TR 权威数字源）要点（2026-09-22 WebFetch）：**
+**辅博文（产品层，非 TR 权威数字源）要点（2026-09-22）：**
 - 自称「world's first open 3T-class model」；权重计划 **July 27, 2026** 全量释放（博文句；与 TR Abstract「we release」并存——以落地 HF 为准）。
 - 产品入口：Kimi.ai / Work / Code / API（`kimi-k3`）；launch 默认 **max thinking**；low/high 后续。
 - API 价（博文）：cache-hit input **$0.30**/MTok、cache-miss **$3.00**/MTok、output **$15.00**/MTok；称 Mooncake 分离推理、coding 场景 cache hit >90%。
@@ -287,10 +286,6 @@ timezone: Asia/Shanghai (CST)
 4. §5.1–5.3（FlashKDA/KCP、MoonEP、AgentENV）—Infra 可迁移字段
 5. Table 2/3—评测口径与 harness 脚注
 6. 辅博文：产品可用、案例、局限（与 TR 交叉，不以博文覆盖 Table）
-
-- PDF **1,790,685 B ≈ 1.71MiB ≪10MB** → **官方 HTTPS 外链** `https://arxiv.org/abs/2607.24653`。
-- 抽取已存 （及 镜像）。
-- 笔记路径：模型与技术报告/厂商报告/KimiK3技术报告.md（本文件）。
 
 ---
 

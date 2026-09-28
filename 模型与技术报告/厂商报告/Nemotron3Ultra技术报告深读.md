@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2606.15007 # 3.8M / 65p；≪10MB → 官方 HTTPS 外链
- - https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf # 3.7M / 65p；辅 Labs → ，仅 URL+抽取
+ - https://arxiv.org/abs/2606.15007
+ - https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf
 aux:
  - https://arxiv.org/abs/2606.15007
  - https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf
@@ -32,16 +32,16 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主文** | *Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning* | arXiv:**2606.15007**v1 \[cs.CL\] **12 Jun 2026**（PDF 页眉 **2026-6-16**） | `https://arxiv.org/abs/2606.15007` | **3.8M**（3,973,681 B ≈ **3.79MiB**） | **65** A4 | |
-| **辅·NVIDIA Labs** | 同题 TR（页眉 **2026-6-9**；无 arXiv 水印） | https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf | —（未入库；[`Labs TR`](https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf)） | **3.7M**（3,876,804 B ≈ **3.70MiB**） | **65** A4 | |
+| 角色 | 标题 / 版本 | 标识 | 页数 |
+|---|---|---|---|
+| **主文** | *Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning* | arXiv:**2606.15007**v1 \[cs.CL\] **12 Jun 2026**（PDF 页眉 **2026-6-16**）；`https://arxiv.org/abs/2606.15007` | **65** A4 |
+| **辅·NVIDIA Labs** | 同题 TR（页眉 **2026-6-9**；无 arXiv 水印） | https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf | **65** A4 |
 
-**体积判定（2026-09-22 CST，`stat` ）：** 主 **3,973,681 B**、辅 **3,876,804 B**，均 **≪10MB** → **官方 HTTPS 外链**。md5 不同（`dc78208b…` vs `5685e668…`）→ 视为 **近同文两版**；主张以 **arXiv 主文抽取**为准，辅仅作交叉核验。
+**版本关系：** 主文与辅版文件不同，视为 **近同文两版**；主张以 **arXiv 主文**为准，辅仅作交叉核验。
 
-**一手 PDF：** **有** — 两源 `curl` → 200； Title（主）=`Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning`。
+**一手 PDF：** **有**（arXiv 与 NVIDIA Labs 两源）；PDF Title（主）=`Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning`。
 
 **开源入口（文内明示，禁下权重）：**
 - 配方仓：https://github.com/NVIDIA-NeMo/Nemotron
@@ -213,15 +213,8 @@ Base (1M 扩展)
 ## 六、开放清单与本卡未覆盖
 
 **文内声称开源：** Base BF16、Post-Trained BF16、Post-Trained NVFP4、GenRM；若干预训练 / 后训练数据集；训练 recipe；RL environments（NeMo Gym 等链接见文）。
-**本卡未写：** 完整教师列表与 RL 环境失败归因表（Table 7–9）、量化逐层 bit 表、全部附录评测协议。需要时回 PDF / 。
+**本卡未写：** 完整教师列表与 RL 环境失败归因表（Table 7–9）、量化逐层 bit 表、全部附录评测协议。需要时回 PDF。
 
 ---
-
-| 资产 | 路径 | 体积 | 建议 |
-|---|---|---|---|
-| 主 PDF | `https://arxiv.org/abs/2606.15007` | **3.79MiB / 65p** | **入库二进制**（≪10MB） |
-| 辅 PDF | [`NVIDIA Labs TR`](https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf) | **3.70MiB / 65p** | ****（近同文辅；仅 URL + ；主张以 arXiv 为准） |
-| 抽取 | （+ `nvidia-labs.txt`） | ~281KB / ~279KB 文本 | **优先保留**（页数长，抽取优先） |
-| 笔记 | [[Nemotron3Ultra技术报告深读]] | 本文件 | status:**archived** |
 
 **禁止入库：** 模型权重、量化包、原始数据集 shard。

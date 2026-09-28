@@ -57,14 +57,14 @@ archived: 2026-09-22
 | 条目 | 说明 |
 |------|------|
 | arXiv:**2601.11659**（*The Llama 4 Herd: … Notes*） | **第三方汇编**；arXiv 管理员已撤稿（虚假作者名单）；**非** Meta 正式 TR |
-| Zenodo / HF Papers 同名合成稿 | 同上族第三方整理，**不入库** `papers/` |
+| Zenodo / HF Papers 同名合成稿 | 同上族第三方整理，**不入库** |
 | GitHub/HF `MODEL_CARD.md` | 官方，但是 **MD/网页卡**，**不是** PDF technical report |
 
 ---
 
-## 4. 本地动作与后续
+## 4. 现状与后续
 
-- **未下载** PDF 至 `papers/` / （无可核官方 PDF URL）。
+- **无**可核官方 PDF URL。
 - **未写** Llama 4 深读卡（无 PDF 锚点）。
 - 若 Meta 后续放出 herd PDF / 正式 model-card PDF：再下载并改写为深读卡；届时更新 模型与技术报告/SystemCard与TR扫描2025至2026.md 中 Llama 4 行。
 

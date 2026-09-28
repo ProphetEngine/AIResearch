@@ -11,8 +11,8 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主：开源权重 MoE + harmony/可变 reasoning effort + agentic 工具）** + **评测字段（辅：推理/编码/工具/健康，开源对齐）**
 > 锚点：OpenAI, *gpt-oss-120b & gpt-oss-20b Model Card*（封面日期 **August 5, 2025**）
 > 官方 PDF（同源卡，文件哈希不同）：
-> - CDN：`https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf`（**35** 页 A4；Creator: LaTeX with hyperref；CreationDate **2025-08-12** CST；3,144,103 bytes）← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf
-> - arXiv：`https://arxiv.org/abs/2508.10925`（**35** 页；Title: *gpt-oss-120b & gpt-oss-20b Model Card*；3,049,591 bytes）← https://arxiv.org/pdf/2508.10925 ；API：**2508.10925v1** \[cs.CL\] published **2025-08-08** UTC（换算 Asia/Shanghai：**2025-08-09 03:24 CST**）
+> - CDN：`https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf`（**35** 页 A4；Creator: LaTeX with hyperref；CreationDate **2025-08-12** CST）← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf
+> - arXiv：`https://arxiv.org/abs/2508.10925`（**35** 页；Title: *gpt-oss-120b & gpt-oss-20b Model Card*）← https://arxiv.org/pdf/2508.10925 ；API：**2508.10925v1** \[cs.CL\] published **2025-08-08** UTC（换算 Asia/Shanghai：**2025-08-09 03:24 CST**）
 > 对照：模型与技术报告/SystemCard/GPT6Astra系统卡深读.md（闭源旗舰 **System Card** / Preparedness 全章）；模型与技术报告/SystemCard/GPT5系统卡深读.md 等 GPT-5 系；开源 MoE 对照可点 [[混合专家架构]] / DeepSeek / Qwen 笔记，**不**外推参数拓扑
 > **划界：** 只写 **OpenAI 开源权重推理/agentic 增量**（可下载权重、公开 MoE/注意力配方、harmony、effort、工具 harness、Table 3 能力表）。**勿重写 [[GPT6Astra系统卡深读]] Astra 安全全章**（Cyber Critical、CoT controllability、misalignment monitoring 等）——本卡 §3–5 Preparedness 仅作 **开源风险剖面摘要 + 交叉链**。
 > **禁止编造：** 未给的预训练 token 总量、蒸馏配方细节、专家负载均衡损失、未读清的 Figure 柱高，一律不写主张；数字锚定 Table 1/2/3 与正文句。
@@ -243,7 +243,7 @@ OpenAI 在 **2025-08-05** 放出 **gpt-oss-120b / 20b**：Apache 2.0、纯文本
 
 ---
 
-## 10. 来源与抽取
+## 10. 来源
 
 | 源 | 路径 / URL |
 |---|---|

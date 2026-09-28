@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想]
 status: archived
 sources:
- - `https://arxiv.org/pdf/2405.04967`；
+ - https://arxiv.org/pdf/2405.04967
 arxiv: ["2405.04967"]
 related: ["生物学基础模型", "天气气候基础模型"]
 blog: "https://www.microsoft.com/en-us/research/publication/mattersim-a-deep-learning-atomistic-model-across-elements-temperatures-and-pressures/"
@@ -28,12 +28,12 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Yang et al., *MatterSim: A Deep Learning Atomistic Model Across Elements, Temperatures and Pressures* | arXiv:**2405.04967v2** \[cond-mat.mtrl-sci\] **10 May 2024**；`https://arxiv.org/pdf/2405.04967`；（**86** 页；38,910,922 bytes） | 一手：主动学习数据、双骨干、零样本 MLFF、自由能/相图、微调与 MatBench |
-| **辅（发布页）** | MSR Publication 页（摘要口径与主文一致） | https://www.microsoft.com/en-us/research/publication/mattersim-a-deep-learning-atomistic-model-across-elements-temperatures-and-pressures/ → | 入口与作者列表；**不**替代 PDF 数字 |
-| **辅（文档）** | MatterSim **1.0.0** Sphinx 文档 | https://microsoft.github.io/mattersim/ → | 可安装预训练：**v1.0.0-1M / 5M**（**M3GNet**）；进阶权重指向 Azure Quantum Elements |
-| **辅（代码）** | `microsoft/mattersim` README | https://github.com/microsoft/mattersim → | `pip install mattersim`；**Python ≥ 3.12**；预训练目录说明 |
+| **主文** | Yang et al., *MatterSim: A Deep Learning Atomistic Model Across Elements, Temperatures and Pressures* | arXiv:**2405.04967v2** \[cond-mat.mtrl-sci\] **10 May 2024**；`https://arxiv.org/pdf/2405.04967`（**86** 页） | 一手：主动学习数据、双骨干、零样本 MLFF、自由能/相图、微调与 MatBench |
+| **辅（发布页）** | MSR Publication 页（摘要口径与主文一致） | https://www.microsoft.com/en-us/research/publication/mattersim-a-deep-learning-atomistic-model-across-elements-temperatures-and-pressures/ | 入口与作者列表；**不**替代 PDF 数字 |
+| **辅（文档）** | MatterSim **1.0.0** Sphinx 文档 | https://microsoft.github.io/mattersim/ | 可安装预训练：**v1.0.0-1M / 5M**（**M3GNet**）；进阶权重指向 Azure Quantum Elements |
+| **辅（代码）** | `microsoft/mattersim` README | https://github.com/microsoft/mattersim | `pip install mattersim`；**Python ≥ 3.12**；预训练目录说明 |
 
 **一句话抓手：** MatterSim 不是「再做一个近平衡晶体能量回归器」，而是用 **主动学习 + 第一性原理监督** 把训练分布推到 **0–5000 K、0–1000 GPa** 的离平衡构型，开箱即用当 **通用 MLFF**（前 **89** 元素），并可 **微调换理论层级** 或做 **结构→物性** 端到端预测。
 
@@ -278,7 +278,6 @@ MatterSim： 近平衡 + 离平衡主动学习 ──► 双骨干 ──► 零
 - [x] 评测数字均有句点或表号；MatBench Discovery 正文 25 meV 与 Table S2 MAE 0.03 **并存标注**，未擅自「统一」。
 - [x] 开源权重仅用文档/README；Azure 进阶仅存在性。
 - [x] 中文可跟读；禁编造；YAML `date: 2026-09-22status: draft`。
-- [x] PDF 已落盘：`https://arxiv.org/pdf/2405.04967`；抽取在 。
 
 ## 相关笔记
 

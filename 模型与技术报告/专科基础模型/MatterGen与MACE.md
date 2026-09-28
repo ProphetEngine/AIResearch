@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 任务接口]
 status: archived
 sources:
- - https://arxiv.org/abs/2510.25380 # 1.60MB / 22p → 外链引用
+ - https://arxiv.org/abs/2510.25380
 arxiv: ["2312.03687", "2510.25380", "2401.00096"]
 doi:
  - "10.1038/s41586-025-08628-5" # MatterGen Nature 正式刊
@@ -29,28 +29,22 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[生物学基础模型]]**：不写 AF3 坐标扩散 / ESM3 多轨道蛋白 LM。
 > - **≠ [[天气气候基础模型]]**：不写 Aurora / Earth-system 场预报。
 > - **≠ [[蛋白质设计]]**：不写 RFdiffusion / BindCraft 蛋白 binder 设计。
-> **禁止编造**：主张与数字一律锚定本地抽取（2026-09-22 CST）。MatterGen **主数字以 arXiv:2312.03687v2 抽取为准**；Nature 正式刊作刊发线 / 实验验证存在性补链（摘要口径「>10× 更近能量最低点」与 arXiv「>15×」不一致处标清来源，**不以刊发页覆盖本地抽取表数字**）。
+> **禁止编造**：主张与数字一律锚定官方 PDF（2026-09-22 CST）。MatterGen **主数字以 arXiv:2312.03687v2 抽取为准**；Nature 正式刊作刊发线 / 实验验证存在性补链（摘要口径「>10× 更近能量最低点」与 arXiv「>15×」不一致处标清来源，**不以刊发页覆盖 arXiv 表数字**）。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A · MatterGen** | Zeni, Pinsler, Zügner, Fowler, Horton, … Tomioka\*, Xie\*（MSR AI4Science）*MatterGen: a generative model for inorganic materials design* | arXiv:**2312.03687v2** \[cond-mat.mtrl-sci\] **29 Jan 2024**；PDF https://arxiv.org/pdf/2312.03687（**12,150,197 B ≈ 11.59MB**；**56** 页 A4）→ **未入库二进制**；抽取 | **生成式**无机材料：联合扩散 (A,X,L) + adapter 条件微调；S.U.N. / RMSD / 化学·对称·标量物性 |
-| **正式刊（同工作）** | *A generative model for inorganic materials design* | *Nature* **639**, **624–632**（2025）；Published **16 Jan 2025**；DOI **10.1038/s41586-025-08628-5**；Open access；https://www.nature.com/articles/s41586-025-08628-5 | 审稿定稿 + **实验合成验证**（刊发页摘要：合成一样品，测得物性在目标 **20%** 内）。**Nature PDF 未另落盘** |
-| **主文 B · MACE 跨域** | Batatia\*, Lin\*, Hart, Kasoar, Elena, Norwood, Wolf, Csányi *Cross Learning between Electronic Structure Theories for Unifying Molecular, Surface, and Inorganic Crystal Foundation Force Fields* | arXiv:**2510.25380v1** \[physics.chem-ph\] **29 Oct 2025**（文内 Dated **October 30, 2025**）；`https://arxiv.org/abs/2510.25380`（**1,677,606 B ≈ 1.60MB**；**22** 页 letter） | **跨域统一 MLIP**：MACE 架构增强 + multi-head replay；OMAT 预训练 → 分子/表面/晶体头 |
-| **基线 · MACE-MP-0** | Batatia†, Benner†, Chiang†, … Csányi\* *A foundation model for atomistic materials chemistry* | arXiv:**2401.00096v3** \[physics.chem-ph\] **4 Sep 2025**（文内 **September 8, 2025**）；PDF https://arxiv.org/pdf/2401.00096（**84,050,464 B ≈ 80.16MB**；**153** 页）；官方 PDF 外链 | MACE **foundation** 力场（MPtrj）；稳定 MD 广谱演示；fine-tune + multi-head replay 协议源头 |
+| **主文 A · MatterGen** | Zeni, Pinsler, Zügner, Fowler, Horton, … Tomioka\*, Xie\*（MSR AI4Science）*MatterGen: a generative model for inorganic materials design* | arXiv:**2312.03687v2** \[cond-mat.mtrl-sci\] **29 Jan 2024**；PDF https://arxiv.org/pdf/2312.03687（**56** 页 A4） | **生成式**无机材料：联合扩散 (A,X,L) + adapter 条件微调；S.U.N. / RMSD / 化学·对称·标量物性 |
+| **正式刊（同工作）** | *A generative model for inorganic materials design* | *Nature* **639**, **624–632**（2025）；Published **16 Jan 2025**；DOI **10.1038/s41586-025-08628-5**；Open access；https://www.nature.com/articles/s41586-025-08628-5 | 审稿定稿 + **实验合成验证**（刊发页摘要：合成一样品，测得物性在目标 **20%** 内） |
+| **主文 B · MACE 跨域** | Batatia\*, Lin\*, Hart, Kasoar, Elena, Norwood, Wolf, Csányi *Cross Learning between Electronic Structure Theories for Unifying Molecular, Surface, and Inorganic Crystal Foundation Force Fields* | arXiv:**2510.25380v1** \[physics.chem-ph\] **29 Oct 2025**（文内 Dated **October 30, 2025**）；`https://arxiv.org/abs/2510.25380`（**22** 页 letter） | **跨域统一 MLIP**：MACE 架构增强 + multi-head replay；OMAT 预训练 → 分子/表面/晶体头 |
+| **基线 · MACE-MP-0** | Batatia†, Benner†, Chiang†, … Csányi\* *A foundation model for atomistic materials chemistry* | arXiv:**2401.00096v3** \[physics.chem-ph\] **4 Sep 2025**（文内 **September 8, 2025**）；PDF https://arxiv.org/pdf/2401.00096（**153** 页） | MACE **foundation** 力场（MPtrj）；稳定 MD 广谱演示；fine-tune + multi-head replay 协议源头 |
 
 **代码（文内 / 刊发页明示，本篇不展开部署）：**
 - MatterGen → https://github.com/microsoft/mattergen（Nature Data/Code availability）
 - MACE → https://github.com/ACEsuit/mace ；foundations → https://github.com/ACEsuit/mace-foundations ；MP 系列 → https://github.com/ACEsuit/mace-mp/
-
-| 文件 | 体积 | 备注 |
-|---|---|---|
-| MatterGen PDF（arxiv.org） | **≈11.59MB** / 56 页 | **建议正式外链**（>10MB 且页数偏长；本仓**未**落  二进制） |
-| `2510.25380-mace-cross.pdf` | **1.60MB** / 22 页 | **官方 HTTPS 外链**（≪20MB） |
-| MACE-MP-0 PDF（arxiv.org） | **≈80.16MB** / 153 页 | https://arxiv.org/pdf/2406.17867 |
 
 **一句话抓手：**
 - **MatterGen**：别再「筛已知结构」——用 **(A,X,L) 联合扩散** 直接生成跨周期表稳定晶体，再用 **adapter + CFG** 把生成推向化学 / 对称 / 磁密·带隙·体模等约束。
@@ -104,7 +98,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 3.3 数据与 S.U.N. 口径（arXiv v2 抽取）
 
-| 字段 | 文内口径（本地抽取） |
+| 字段 | 文内口径（arXiv v2） |
 |---|---|
 | 预训练集 **Alex-MP-20** | **607,684** 条稳定结构（≤20 原子；自 MP + Alexandria 重算） |
 | 稳定 | DFT 弛豫后相对参考凸包 **≤ 0.1 eV/atom** |
@@ -115,12 +109,12 @@ timezone: Asia/Shanghai (CST)
 **无条件生成质量（抽取 Fig. 2 / §2.2）：**
 - 相对 MP 凸包：约 **78%** 在 0.1 eV/atom 下（**13%** 在 0 下）；相对 Alex-MP-ICSD：**75%** / **3%**。
 - **95%** 结构相对 DFT 弛豫构型 RMSD **< 0.076 Å**。
-- 生成 1000 条时 unique **100%**；至 **一百万** 条约 **86%** unique；novelty 约稳定在 **~68%**。（*Nature 刊发页对更大规模饱和曲线有不同数字；本卡不覆盖本地抽取。*）
+- 生成 1000 条时 unique **100%**；至 **一百万** 条约 **86%** unique；novelty 约稳定在 **~68%**。（*Nature 刊发页对更大规模饱和曲线有不同数字；本卡不覆盖 arXiv 数字。*）
 
 **相对 CDVAE 等（抽取 Fig. 2e–f）：**
 - **MatterGen-MP**（仅 MP-20，与基线同数据）：相对 CDVAE → S.U.N. 比例 **↑1.8×**，平均 RMSD **↓3.1×**。
 - 全量 **MatterGen** 相对 MatterGen-MP：再 **↑1.6×** S.U.N.、**↓5.5×** RMSD（数据扩容）。
-- 摘要口径：相对先前生成模型，结构 **>2×** 更可能 novel+stable，且 **>15×** 更接近局域能量最低点（arXiv；Nature 摘要写 **>10×**——**以本地 arXiv 抽取为准并双记**）。
+- 摘要口径：相对先前生成模型，结构 **>2×** 更可能 novel+stable，且 **>15×** 更接近局域能量最低点（arXiv；Nature 摘要写 **>10×**——**以 arXiv 为准并双记**）。
 
 ### 3.4 条件生成任务切片（文内）
 
@@ -135,9 +129,9 @@ timezone: Asia/Shanghai (CST)
 
 极端约束预算实验（抽取）：在有限 DFT 物性计算预算下，MatterGen 可找到至多约 **47** 条磁密度 **>0.2 Å⁻³** 的 S.U.N.（相对微调集中仅 **26** 条同类）；体模极端约束下相对 screening 持续发现更多候选（Fig. 5g 等；柱高未全抽出者标「待核实读图」）。
 
-### 3.5 Nature 增补（刊发页；本地无 Nature PDF）
+### 3.5 Nature 增补（刊发页）
 
-刊发页相对 arXiv 的**可核存在性**（非覆盖本地表数字）：
+刊发页相对 arXiv 的**可核存在性**（非覆盖 arXiv 表数字）：
 - 增加 **实验合成验证**：筛选后尝试合成 4 候选，成功 1 例 **TaCr₂O₆**（相对生成有序结构的成分无序变体）；纳米压痕估计体模相对目标口径摘要称测得物性在目标 **20%** 内。
 - 基线名单显式含 **DiffCSP**；数据/代码指向 `microsoft/mattergen`。
 跟读：**实验细节与合成操作不写**；只立「生成 → 可合成验证」这一任务接口。
@@ -152,7 +146,7 @@ timezone: Asia/Shanghai (CST)
 
 ## 四、MACE-MP-0：原子材料化学 foundation 力场（谱系基线）
 
-> 角色：为 **2510.25380 跨域统一** 提供「foundation MLIP + multi-head replay」谱系起点；**禁止**把 153 页 / ~80MB 巨本当默认。
+> 角色：为 **2510.25380 跨域统一** 提供「foundation MLIP + multi-head replay」谱系起点；**禁止**把 153 页巨本当默认。
 
 ### 4.1 主张与训练设定（抽取摘要 / Methods）
 
@@ -252,10 +246,9 @@ Stage 2 Multi-Head Replay Post-Training
 
 ## 七、跟读清单 / 待核实
 
-1. MatterGen：**本地以 arXiv v2 抽取为准**；若需 Nature 表数字 / Extended Data，另抽 Nature PDF（本仓未落）。注意摘要 **15×（arXiv）vs 10×（Nature）**。
+1. MatterGen：**以 arXiv v2 为准**；若需 Nature 表数字 / Extended Data，需另读 Nature PDF。注意摘要 **15×（arXiv）vs 10×（Nature）**。
 2. MatterGen 化学体系实验中 **MatterSim 仅过滤接口**——细节回链 [[MatterSim材料基础模型]]。
-3. MACE-MP-0 巨本案例图大量「待核实读图」；跨域文 Table 细分 MAE 未尽录——需要时按 定点补。
-4. 二进制纪律：确认  **无** `2312.03687*` / `2401.00096*`；**有** `2510.25380-mace-cross.pdf`。
+3. MACE-MP-0 巨本案例图大量「待核实读图」；跨域文 Table 细分 MAE 未尽录——需要时定点补。
 
 ---
 
@@ -263,8 +256,8 @@ Stage 2 Multi-Head Replay Post-Training
 
 | 文档 | 用途 |
 |---|---|
-| | MatterGen 方法 / S.U.N. / 条件任务主数字 |
+| https://arxiv.org/pdf/2312.03687 | MatterGen 方法 / S.U.N. / 条件任务主数字 |
 | https://www.nature.com/articles/s41586-025-08628-5 | Nature 刊发线、实验验证存在性、Code/Data availability |
-| `https://arxiv.org/abs/2510.25380` + 同名 `.txt` | 跨域架构、数据头、全局分 |
-| | MP-0 foundation 设定与 replay 协议源头 |
+| `https://arxiv.org/abs/2510.25380` | 跨域架构、数据头、全局分 |
+| https://arxiv.org/pdf/2401.00096 | MP-0 foundation 设定与 replay 协议源头 |
 | [[MatterSim材料基础模型]] | 预测势主轴；本卡禁重写 |

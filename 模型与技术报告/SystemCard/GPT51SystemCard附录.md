@@ -26,8 +26,7 @@ archived: 2026-09-22
 | 封面日期 | **November 12, 2025** |
 | 页数 | **5**（A4）；§1 Introduction → §2 Baseline Model Safety Evaluations → §3 Preparedness Framework → References |
 | PDF 元数据 | Creator: LaTeX with hyperref；CreationDate/ModDate：**2025-11-13** 00:38:05 CST（晚于封面约 1 天） |
-| 本地路径 | `https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf` |
-| 官方入口（扫描清单已记；本卡未再 WebFetch） | 页：`https://deploymentsafety.openai.com/gpt-5-1`；CDN PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`（见 模型与技术报告/SystemCard与TR扫描2025至2026.md） |
+| 官方入口 | 页：`https://deploymentsafety.openai.com/gpt-5-1`；CDN PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`（见 模型与技术报告/SystemCard与TR扫描2025至2026.md） |
 
 **本卡自身定位（§1，仅原文）：**
 
@@ -171,7 +170,6 @@ archived: 2026-09-22
 5. Table 3「attack planning」gpt-5.1-instant 单元格为 **1.00**（两位）而其行列多为三位——是否排版截断，读图/再抽取确认。
 6. StrongReject 改编细节（插入哪些 jailbreak、harm 覆盖面）相对主卡 Table 5 是否同协议——本卡仅称「adaptation of … StrongReject [1]」。
 7. 与 GPT-5.2 / 后续 addendum、ChatGPT agent System Card 的条款差分（扫描清单 P1 项；本卡未交叉深读）。
-8. CDN 文件名 `5_1_system_card.pdf` 与本地 `gpt-5.1-system-card-addendum.pdf` 是否逐页一致（扫描已记来源；本卡未做哈希对照）。
 
 ### 4.2 本卡主要引用锚点（PDF 内）
 

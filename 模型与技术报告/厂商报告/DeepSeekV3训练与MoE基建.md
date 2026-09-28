@@ -25,7 +25,7 @@ archived: 2026-09-22
 | PDF 页数 | **53**（A4） | |
 | PDF CreationDate / ModDate | Wed Feb 19 10:11:22 **2025 CST** | |
 | Producer | pdfTeX-1.40.25；LaTeX with hyperref | |
-| 本地路径 | `https://arxiv.org/abs/2412.19437` | 仓库 |
+| PDF 链接 | `https://arxiv.org/abs/2412.19437` | arXiv |
 | 权重仓库（摘要） | https://github.com/deepseek-ai/DeepSeek-V3 | Abstract |
 | 摘要规模一句话 | 671B total / **37B activated** per token；预训练 **14.8T** tokens；全流程 **2.788M H800 GPU hours**；auxiliary-loss-free 负载均衡 + MTP；训练过程「未出现 irrecoverable loss spikes / 未做 rollbacks」 | Abstract；§1 |
 
@@ -262,8 +262,6 @@ $$
 
 - DeepSeek-AI. *DeepSeek-V3 Technical Report*. arXiv:2412.19437v2 \[cs.CL\], 18 Feb 2025.
  PDF：https://arxiv.org/pdf/2412.19437
- 本地：`https://arxiv.org/abs/2412.19437`
- （2026-09-22）
 
 ### 6.3 关联笔记
 

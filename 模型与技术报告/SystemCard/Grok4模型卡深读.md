@@ -15,14 +15,14 @@ archived: 2026-09-22
 > 官方 URL：https://data.x.ai/2025-08-20-grok-4-model-card.pdf
 > **禁止编造**：参数量、层数、训练算力、学术能力榜（如 MMLU / SWE-bench）等**全文未披露**；下文数字与主张均锚定原文表格/段落。
 
-**同族已另卡（均已本地下载，见 §三）：**
+**同族已另卡（见 §三）：**
 
-| 文档 | 日期 | 本地路径 | 官方 URL |
-|---|---|---|---|
-| Grok 4 Model Card（主） | 2025-08-20 | `https://data.x.ai/2025-08-20-grok-4-model-card.pdf` | https://data.x.ai/2025-08-20-grok-4-model-card.pdf |
-| Grok 4 Fast Model Card | 2025-09-19 | `https://data.x.ai/2025-09-19-grok-4-fast-model-card.pdf` | https://data.x.ai/2025-09-19-grok-4-fast-model-card.pdf |
-| Grok 4.1 Model Card | 2025-11-17 | `https://data.x.ai/2025-11-17-grok-4-1-model-card.pdf` | https://data.x.ai/2025-11-17-grok-4-1-model-card.pdf |
-| Grok 4.20 System Card | 2026-04-07 | `https://data.x.ai/2026-04-07-grok-4-20-model-card.pdf` | https://data.x.ai/2026-04-07-grok-4-20-model-card.pdf |
+| 文档 | 日期 | 官方 URL |
+|---|---|---|
+| Grok 4 Model Card（主） | 2025-08-20 | https://data.x.ai/2025-08-20-grok-4-model-card.pdf |
+| Grok 4 Fast Model Card | 2025-09-19 | https://data.x.ai/2025-09-19-grok-4-fast-model-card.pdf |
+| Grok 4.1 Model Card | 2025-11-17 | https://data.x.ai/2025-11-17-grok-4-1-model-card.pdf |
+| Grok 4.20 System Card | 2026-04-07 | https://data.x.ai/2026-04-07-grok-4-20-model-card.pdf |
 
 ---
 
@@ -35,7 +35,6 @@ archived: 2026-09-22
 | Last updated | **August 20, 2025**（封面） |
 | CreationDate | **2025-08-22 15:02:14 CST**（pdfTeX-1.40.26 / LaTeX+hyperref） |
 | 页数 | **8**（letter） |
-| 文件大小 | 252686 bytes |
 | 部署面（§1） | **Grok 4 Web**（consumer）+ **Grok 4 API**（enterprise）；含 EU 客户评测报告 |
 | 能力定性（§1） | 「latest reasoning model」：advanced reasoning + tool-use；称在 challenging academic / industry benchmarks 上达 SOTA——**无具体榜分数** |
 | 风险框架 | **Risk Management Framework (RMF)**；两大主风险轴：**malicious use**、**loss of control** |
@@ -130,12 +129,12 @@ Grok 4 卡是一份 **8 页、几乎纯安全评测** 的 model card：能力侧
 
 ### 3.1 结论（已核实 PDF）
 
-| 版本 | 是否独立官方卡 | 文档标题 | 日期 | 页数 | 官方 PDF 状态 |
-|---|---|---|---|---:|---|
-| **Grok 4** | 是（本卡） | Grok 4 Model Card | 2025-08-20 | 8 | **已下载** |
-| **Grok 4 Fast** | 是（效率变体） | Grok 4 Fast Model Card | 2025-09-19 | 7 | **已下载**（顺带；非用户主问） |
-| **Grok 4.1** | **是，独立卡** | Grok 4.1 Model Card | 2025-11-17 | 6 | **已下载** |
-| **Grok 4.20** | **是，独立卡**（封面称 *System Card*） | Grok 4.20 System Card | 2026-04-07 | 8 | **已下载** |
+| 版本 | 是否独立官方卡 | 文档标题 | 日期 | 页数 |
+|---|---|---|---|---:|
+| **Grok 4** | 是（本卡） | Grok 4 Model Card | 2025-08-20 | 8 |
+| **Grok 4 Fast** | 是（效率变体） | Grok 4 Fast Model Card | 2025-09-19 | 7 |
+| **Grok 4.1** | **是，独立卡** | Grok 4.1 Model Card | 2025-11-17 | 6 |
+| **Grok 4.20** | **是，独立卡**（封面称 *System Card*） | Grok 4.20 System Card | 2026-04-07 | 8 |
 
 → **4.1 与 4.20 均另有独立官方 PDF**，不是仅网页一句更新说明。URL 均在 `data.x.ai`。
 
@@ -229,8 +228,8 @@ Grok 4 卡是一份 **8 页、几乎纯安全评测** 的 model card：能力侧
 5. **MakeMeSay**：Grok 4 卡 0.12 vs 4.1 表中 Grok 4 列 0.13——微小差异，**待核实是否同一协议/对手模型**。
 6. **RMF / FAIF 全文**：卡内引用 `xAI, 2025` Risk Management Framework / Frontier Artificial Intelligence Framework；完整政策 PDF（如 media.x.ai 上 FAIF 草案）**未纳入本笔记深读**。
 7. **第三方评估方名称与报告**：4.20 称提供 early checkpoint 给第三方，**未点名机构**。
-8. **Grok 4 Fast**：已下载独立卡，但本笔记未做等深对照；需要时可另开 Grok 4 Fast 专项卡。
-9. **4.6 / 4.7 等更新卡**：检索曾出现 `media.x.ai` 上 Grok 4.6 Model Card（2026-08）等；**不在本次用户指定的 4 / 4.1 / 4.20 范围内**，未下载、未深读。
+8. **Grok 4 Fast**：有独立卡，但本笔记未做等深对照；需要时可另开 Grok 4 Fast 专项卡。
+9. **4.6 / 4.7 等更新卡**：检索曾出现 `media.x.ai` 上 Grok 4.6 Model Card（2026-08）等；**不在本次用户指定的 4 / 4.1 / 4.20 范围内**，未深读。
 
 ### 4.2 直接引用（官方 PDF）
 

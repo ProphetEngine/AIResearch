@@ -10,7 +10,7 @@ archived: 2026-09-22
 # DeepSeek-R1 推理训练专项深读（技术报告级）
 
 > 攻坚线：**架构思想（主）** + **数学原理（辅）**
-> 锚点材料：DeepSeek-AI, *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning*（arXiv:2501.12948；本仓库 PDF `https://arxiv.org/abs/2501.12948`，抽取页眉为 **v2 / 2026-01-04**）
+> 锚点材料：DeepSeek-AI, *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning*（arXiv:2501.12948；PDF `https://arxiv.org/abs/2501.12948`，抽取页眉为 **v2 / 2026-01-04**）
 > **本笔记聚焦报告中的训练管线、奖励设计与公开算法形式**；test-time scaling「势」叙事、与 o1 对照的产品轴见 **[[推理时扩展TestTimeScaling]]**，此处不重复。
 > 只据 PDF 已读内容写要点；未在原文出现的超参、未核对的外部复现一律标「待核实」或不写。
 
@@ -23,7 +23,7 @@ archived: 2026-09-22
 | 标题 | DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning |
 | 作者机构 | DeepSeek-AI；通讯 `research@deepseek.com` |
 | 标识 | arXiv:**2501.12948**（抽取文本页眉：**v2 [cs.CL] 4 Jan 2026**） |
-| 本地路径 | `https://arxiv.org/abs/2501.12948`（约 86 页） |
+| PDF 链接 | `https://arxiv.org/abs/2501.12948`（约 86 页） |
 | 核心主张（摘要） | LLM 推理能力可通过**纯强化学习**激励，**无需人类标注的推理轨迹**；RL 框架促进自我反思、验证、动态换策略等行为涌现；涌现出的推理模式可再系统蒸馏到更小模型 |
 | 底座 | DeepSeek-**V3-Base**（R1-Zero / R1 冷启动起点；Supplementary A.1） |
 | 产品线 | **DeepSeek-R1-Zero**（无 SFT 直接 RL）→ **DeepSeek-R1**（多阶段：冷启动 SFT + RL + 拒绝采样 SFT + 二次 RL）→ **Distill-*** 开源小模型系列 |
@@ -289,7 +289,7 @@ $$
 
 ### 6.3 引用
 
-1. DeepSeek-AI et al. *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.* arXiv:2501.12948（本笔记据仓库 PDF v2 抽取）.
+1. DeepSeek-AI et al. *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.* arXiv:2501.12948（本笔记据 arXiv v2 PDF）.
 2. Shao et al., 2024. *Group Relative Policy Optimization*（报告引用的 GRPO 来源；细节以 R1 文内重述为准）.
 3. Schulman et al., 2017. PPO；Schulman et al., 2015. GAE；Ouyang et al., 2022. InstructGPT/RLHF（A.3 对照背景）.
 4. 研究会内链：架构/推理时扩展TestTimeScaling.md（势与 o1 对照）；本文件 模型与技术报告/厂商报告/DeepSeekR1推理训练深读.md。

@@ -25,8 +25,7 @@ archived: 2026-09-22
 | 封面日期 | **August 13, 2025** |
 | 页数 | **60**（A4）；目录含 §1–5 + Appendix 1/2 + References |
 | PDF 元数据 | Creator: LaTeX with hyperref；CreationDate/ModDate：**2025-08-20** 03:33:37 CST（晚于封面日约一周，或为再导出） |
-| 本地路径 | `https://cdn.openai.com/gpt-5-system-card.pdf` |
-| 官方入口（扫描清单已记；本卡未再 WebFetch） | 页：`https://openai.com/index/gpt-5-system-card/`；CDN PDF：`https://cdn.openai.com/gpt-5-system-card.pdf`（见 [[SystemCard与TR扫描2025至2026]]） |
+| 官方入口 | 页：`https://openai.com/index/gpt-5-system-card/`；CDN PDF：`https://cdn.openai.com/gpt-5-system-card.pdf`（见 [[SystemCard与TR扫描2025至2026]]） |
 
 **与博客 / 姊妹材料的关系（仅原文可核对处）：**
 
@@ -223,7 +222,7 @@ archived: 2026-09-22
 2. Figure 1–3、8、19、22–27 等**图内精确百分点**（ 未可靠抽出）——需人工读图或后续 OCR，**禁止凭记忆填榜**。
 3. System Card 内 SWE-bench Verified pass@1（max verbosity）与博客 **74.9%**（medium）的数值差。
 4. *From Hard Refusals to Safe-Completions* 正式 URL / arXiv 号（本卡仅给论文名）。
-5. Gray Swan ART、METR full report、Apollo 报告的独立归档链接与是否已落盘。
+5. Gray Swan ART、METR full report、Apollo 报告的独立归档链接。
 6. 与 ChatGPT agent System Card、GPT-5.1/5.2 addendum 的条款差分（扫描清单已列 PDF，本卡未交叉深读）。
 7. arXiv 镜像 `2601.03267`（扫描清单）是否与本 PDF 逐页一致。
 

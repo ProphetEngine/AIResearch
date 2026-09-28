@@ -26,8 +26,8 @@ archived: 2026-09-22
 | arXiv 页眉 | **arXiv:2512.02556v1** \[cs.CL\] **2 Dec 2025** | PDF 第 1 页页眉 |
 | PDF 页数 | **23**（A4） | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:4177c2c) | |
-| 本地路径 | `https://arxiv.org/abs/2512.02556` | 仓库 |
-| 扫描登记 | [[SystemCard与TR扫描2025至2026]] 表：DeepSeek-V3.2 · arXiv 2025-12-02 · 本地已归档 | 模型与技术报告/SystemCard与TR扫描2025至2026.md |
+| PDF 链接 | `https://arxiv.org/abs/2512.02556` | arXiv |
+| 扫描登记 | [[SystemCard与TR扫描2025至2026]] 表：DeepSeek-V3.2 · arXiv 2025-12-02 · 已归档 | 模型与技术报告/SystemCard与TR扫描2025至2026.md |
 | 开源推理参考实现（脚注） | https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp/tree/main/inference | §2.1 脚注 2 |
 | 摘要三突破 | (1) **DeepSeek Sparse Attention (DSA)**；(2) **Scalable RL**（称可比 GPT-5；**Speciale** 金奖级 IMO/IOI）；(3) **Large-Scale Agentic Task Synthesis** | Abstract |
 
@@ -185,8 +185,6 @@ V3.2 从 **V3.1-Terminus（已扩到 128K）** 继续训入 **DSA**，再用大�
 - DeepSeek-AI. *DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models*. arXiv:**2512.02556v1** \[cs.CL\], **2 Dec 2025**.
  PDF：https://arxiv.org/pdf/2512.02556
  Abs：https://arxiv.org/abs/2512.02556
- 本地：`https://arxiv.org/abs/2512.02556`
- （2026-09-22 CST / Asia/Shanghai）
 
 ### 5.3 关联笔记
 

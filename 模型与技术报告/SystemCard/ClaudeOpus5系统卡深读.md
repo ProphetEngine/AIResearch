@@ -10,8 +10,8 @@ archived: 2026-09-22
 
 > 攻坚线：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
 > 主锚点：Anthropic, *System Card: Claude Opus 5*（封面 **July 24, 2026**）
-> 官方/CDN PDF（本地）：见下；（**193** 页；Title: Claude Opus 5 System Card）
-> 官方 PDF（用户指定 CDN，已 curl 核验）：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
+> 官方/CDN PDF：见下（**193** 页；Title: Claude Opus 5 System Card）
+> 官方 PDF（用户指定 CDN）：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
 > 索引页：https://www.anthropic.com/system-cards（条目 **Claude Opus 5 / July 2026**）
 > 公告：https://www.anthropic.com/news/claude-opus-5（**Jul 24, 2026**）
 > 对照笔记：模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md（相对增量）；安全与评测/安全红队与对抗评测.md（**勿重写**红队方法全文）
@@ -248,15 +248,6 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 
 引用分数时附带：**thinking/effort、是否关护栏、trials、harness、grader**。Cyber 数字多为 **safeguards off**。
 
-### 8.3 本地产物
-
-| 路径 | 说明 |
-|---|---|
-| https://www.anthropic.com/system-cards · Opus 5 CDN PDF | Opus 5 官方 PDF（本地） |
-| | Opus 5 入库抽取 |
-| https://www.anthropic.com/claude-fable-and-mythos-5.1 · | 5.1 卡 URL+抽取 |
-| 模型与技术报告/SystemCard/ClaudeOpus5系统卡深读.md | 本深读卡 |
-
 ---
 
 ## 附录 A. Claude Fable 5.1 & Mythos 5.1 System Card — **仅索引**（勿当正文深读）
@@ -268,7 +259,7 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 | Title | **Claude Fable 5.1 & Claude Mythos 5.1 System Card** |
 | 封面日期 | **September 1, 2026** |
 | 页数 | **212** |
-| 本地/抽取 |  |
+| 公告页 | https://www.anthropic.com/claude-fable-and-mythos-5.1 |
 | 产品双轨 | **Fable 5.1**：通用，生物/cyber 等高风险双用途额外护栏；**Mythos 5.1**：同模型、护栏更松，受信访问；并支撑 **Claude Security**（Enterprise） |
 | RSP 摘要（Exec） | CB-1、**未达** CB-2（含不确定性）；AI R&D 风险 **low**（METR 外部一致）；**对齐灾难风险由 very low 调为 low**（指向 2026-08 Risk Report / cyber 评测相关事件披露后的不确定性↑） |
 | Cyber 摘要（Exec） | 发布以来最强 cyber；≥ Mythos 5；**几乎全面强于 Opus 5**（ExploitBench / OSS-Fuzz / Firefox 147 / ExploitGym）；Fable 5.1 **同样放开源码漏洞发现**；因能力↑取**更宽安全边际**（误伤仍高于 Opus 5，但假阳性少于 Fable 5 发布时）；**未发现 critical severity jailbreak** |

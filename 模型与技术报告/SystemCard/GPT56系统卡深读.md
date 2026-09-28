@@ -15,7 +15,7 @@ archived: 2026-09-22
 > 官方 PDF：
 > - `https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf`（**77** 页；Title 元数据仍写 “GPT-5.6 Preview System Card”；CreationDate **2025-12-18** CST，与封面日不一致，以封面/正文为准）
 > - `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf`（**82** 页；Title 元数据仍误标 Preview；CreationDate 同上）
-> Hub：`https://deploymentsafety.openai.com/gpt-5-6`（GA）；Preview：`.../gpt-5-6-preview`；PDF：`.../gpt-5-6-preview/gpt-5-6-preview.pdf`、`.../gpt-5-6/gpt-5-6.pdf`
+> Hub：`https://deploymentsafety.openai.com/gpt-5-6`（GA）；Preview：`https://deploymentsafety.openai.com/gpt-5-6-preview`；PDF：`.../gpt-5-6-preview/gpt-5-6-preview.pdf`、`.../gpt-5-6/gpt-5-6.pdf`
 > **禁编造**：能力/安全数字仅写 PDF/Hub 正文或表格显式值；图内未抽出可读数字处标「待核实读图」。
 
 ---
@@ -39,7 +39,7 @@ archived: 2026-09-22
 
 1. GA 引言「最重要事项」由 Preview 的 **5** 条扩为 **6** 条：新增第 2 条——相对前代，**GPT-5.6 Sol cyber safeguards 拦截约 10×** 潜在有害活动；ChatGPT/Codex 提供一键改试更低能力模型；强调 iterative / conservative deployment。
 2. GA **§4.2** 在已知 connector/search/function-calling 注入表之外，增补 **GPT-Red**（self-play RL 自动红队）及 Direct / Indirect 注入成功率表（2026-08-03 changelog）。
-3. GA 目录含 **§9.2 UK AISI**（Alignment / Monitorability）与 **§9.4.6 UK AISI safeguards 外部测试**；Preview 目录侧 Safeguards 编号为 §9.3 系、未见同级 UK AISI Alignment 专节（以两份 目录为准）。
+3. GA 目录含 **§9.2 UK AISI**（Alignment / Monitorability）与 **§9.4.6 UK AISI safeguards 外部测试**；Preview 目录侧 Safeguards 编号为 §9.3 系、未见同级 UK AISI Alignment 专节（以两份 PDF 目录为准）。
 4. Hub Preview 页明示：「Click here for the final system card…」链到 GA。
 
 **一句话抓手：** 三模型族（Sol/Terra/Luna）在 Bio 与 Cyber 首次**全家 High**（含小快型号）；安全叙事从「模型拒答」明显外移到 **activation classifiers + 实时扫描 + actor-level + Trusted Access**；对齐侧最刺眼的是 agentic coding **over-agency（severity≥3）上升**，绝对率仍称低。
@@ -188,18 +188,6 @@ UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 
 - [ ] 无第三方独立复现本卡分数；数字一律溯源 OpenAI 原文。
 
 ---
-
-## 9. 路径清单
-
-| 类型 | 路径 |
-|---|---|
-| Preview PDF | `https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf` |
-| GA PDF | `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf` |
-| 本深读卡 | 模型与技术报告/SystemCard/GPT56系统卡深读.md |
-| Hub GA | https://deploymentsafety.openai.com/gpt-5-6 |
-| Hub Preview | https://deploymentsafety.openai.com/gpt-5-6-preview |
-| Preview PDF URL | https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf |
-| GA PDF URL | https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf |
 
 ## 相关笔记
 

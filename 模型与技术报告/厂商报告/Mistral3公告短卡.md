@@ -27,9 +27,6 @@ Mistral AI 于 **2025-12-02** 发布 Mistral 3：包含面向边缘/本地的 Mi
 3. 公告直链研究论文摘要：<https://arxiv.org/abs/2601.08584>
 4. PDF：<https://arxiv.org/pdf/2601.08584>
 
-## 本地材料
-- PDF：`https://arxiv.org/abs/2601.08584`
-
 ## 相关笔记
 
 ### 技术报告专项
