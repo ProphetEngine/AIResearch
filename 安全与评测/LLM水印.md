@@ -28,9 +28,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主锚（一手）** | Dathathri, See, Ghaisas, Huang, McAdam et al. (Google DeepMind / Google), *Scalable watermarking for identifying large language model outputs* | **Nature** **634**, 818–823 (2024)；doi:**10.1038/s41586-024-08025-4**；Received 8 Apr 2024 / Accepted 5 Sep 2024 / Published **23 Oct 2024**；Open access；`https://doi.org/10.1038/s41586-024-08025-4`（**14** 页；CreationDate **2024-10-14** CST；4,313,074 bytes） | SynthID-Text：Tournament 采样、非失真/失真配置、检测分数、与 speculative sampling 结合、Gemini 直播质量实验、开源入口 |
+| **主锚（一手）** | Dathathri, See, Ghaisas, Huang, McAdam et al. (Google DeepMind / Google), *Scalable watermarking for identifying large language model outputs* | **Nature** **634**, 818–823 (2024)；doi:**10.1038/s41586-024-08025-4**；Received 8 Apr 2024 / Accepted 5 Sep 2024 / Published **23 Oct 2024**；Open access；`https://doi.org/10.1038/s41586-024-08025-4`（**14** 页；CreationDate **2024-10-14** CST） | SynthID-Text：Tournament 采样、非失真/失真配置、检测分数、与 speculative sampling 结合、Gemini 直播质量实验、开源入口 |
 | **理论复核** | Omidi, Dong & Wang, *On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation* | arXiv:**2603.03410v2** \[cs.CR\] **15 Mar 2026**；`https://arxiv.org/abs/2603.03410`（**34** 页 letter） | MS/BS 的 TPR@FPR 闭式趋势；Bernoulli(0.5) 最优；layer inflation **攻击面**与 MS 脆弱性（本笔记只取分类+指标） |
 | **鲁棒性复核** | Han, Li, Ni & Zulkernine, *Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID* | arXiv:**2508.20228v2** \[cs.CR\] **21 Oct 2025**；`https://arxiv.org/abs/2508.20228`（**12** 页 letter） | 四类 **意义保持**变换下 SynthID 检测指标；SynGuard 混合增强（对比数字，非去水印手册） |
 | **代码/数据（文内）** | SynthID-Team | https://github.com/google-deepmind/synthid-text （Nature ref. 7，2024） | 生成/检测参考实现；本篇不展开工程细节 |
@@ -193,7 +193,7 @@ $$
 
 ## 七、待核实 / 未读
 
-- Nature **Supplementary Information**（A–I：打分细节、复杂度、speculative 证明、C.6 编辑评估等）本抽取仅覆盖主 PDF 14 页正文 + Extended Data；补读 Suppl. 前相关细节标「待核实」。
+- Nature **Supplementary Information**（A–I：打分细节、复杂度、speculative 证明、C.6 编辑评估等）本篇仅据主 PDF 14 页正文 + Extended Data；补读 Suppl. 前相关细节标「待核实」。
 - 生产 Gemini 实际 $m$、密钥管理、对外检测 API 是否开放：主文未给可复现数字 → **待核实**。
 - 2603.03410 / 2508.20228 均为 arXiv；若日后正式出版以版本页为准。
 

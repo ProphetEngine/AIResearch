@@ -27,10 +27,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A（模板 + 证据）** | Phuong, Zimmermann, Wang et al. (Google DeepMind), *Evaluating Frontier Models for Stealth and Situational Awareness* | arXiv:**2505.01420v4** \[cs.LG\] **3 Jul 2025**；`https://arxiv.org/abs/2505.01420`（**45** 页 A4；1,176,012 bytes） | Scheming **inability** safety case 模板；5 stealth + 11 situational awareness 评测；Gemini 2.5 / GPT-4o / o1 / Claude 3.7 结果 |
-| **主文 B（外部评审）** | Barrett, Campos Zabala, Fillingham et al., *Lessons from External Review of DeepMind’s Scheming Inability Safety Case* | arXiv:**2604.21964v1** \[cs.CY\] **23 Apr 2026**；`https://arxiv.org/abs/2604.21964`（**39** 页 letter；1,371,219 bytes） | Assurance 2.0 + CAE Declare；对主文 A 的外部评审；过程建议与三则 counter-case |
+| **主文 A（模板 + 证据）** | Phuong, Zimmermann, Wang et al. (Google DeepMind), *Evaluating Frontier Models for Stealth and Situational Awareness* | arXiv:**2505.01420v4** \[cs.LG\] **3 Jul 2025**；`https://arxiv.org/abs/2505.01420`（**45** 页 A4） | Scheming **inability** safety case 模板；5 stealth + 11 situational awareness 评测；Gemini 2.5 / GPT-4o / o1 / Claude 3.7 结果 |
+| **主文 B（外部评审）** | Barrett, Campos Zabala, Fillingham et al., *Lessons from External Review of DeepMind’s Scheming Inability Safety Case* | arXiv:**2604.21964v1** \[cs.CY\] **23 Apr 2026**；`https://arxiv.org/abs/2604.21964`（**39** 页 letter） | Assurance 2.0 + CAE Declare；对主文 A 的外部评审；过程建议与三则 counter-case |
 | **可选 C（基础再校准）** | Feakins, Habli, Morgan (York / SAINTS), *Clear, Compelling Arguments: Rethinking the Foundations of Frontier AI Safety Cases* | IASEAI’26；White Rose ePrints **238521**；`https://eprints.whiterose.ac.uk/id/eprint/238521/`（**22** 页 A4；CreationDate **2026-09-16** CST） | 对齐社区「alignment safety case」相对安全保证学的基础落差；危害识别 / 风险降低 / 通篇生命周期 |
 
 **一句话抓手：** Safety case ≠ 又一份评测报告——是把 **「即便误对齐也不会造成严重 scheming 伤害」** 拆成可评审的 **主张树**，用能力评测当 **证据节点**，再用外部 Assurance 2.0 审查 **范围、系统模型、证据确证强度与残余怀疑**。
@@ -246,15 +246,6 @@ Top claim（inability）
 2. **合取必要性是否过强**：评审质疑路径是否总需要 stealth∧SA；若存在不需二者的严重伤害路径，理论枝坍塌。
 3. **行为评测天花板**：高临界性下，黑箱代理任务能否单独到达 indefeasible confidence，还是必须叠加过程保证与异质证据（解释、训练过程、组织控制）？
 4. **公开性 vs 受控披露**：主文 B 主张公开评审有规范价值，同时承认部分证据需受控访问——门槛如何随临界性上升？
-
----
-
-## 九、本地路径速查
-
-| 类型 | 路径 |
-|---|---|
-| 笔记 | 安全与评测/安全论证SafetyCases.md |
-| PDF | `https://arxiv.org/abs/2505.01420` · `https://arxiv.org/abs/2604.21964` · `https://eprints.whiterose.ac.uk/id/eprint/238521/` |
 
 ## 相关笔记
 

@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [评测字段, 架构思想]
 status: archived
 sources:
- - https://arxiv.org/abs/2608.25490 # 3.4M / 15p
- - https://arxiv.org/abs/2512.06589 # 1.6M / 19p
+ - https://arxiv.org/abs/2608.25490
+ - https://arxiv.org/abs/2512.06589
 arxiv: ["2608.25490", "2512.06589"]
 related: ["B5", "宪法分类器防御", "审慎对齐与断路器", "StatutoryAI法律规范对齐", "多模态架构脉络", "QwenOmni音视频原生"]
 retrieval_cutoff: 2026-09-22
@@ -29,17 +29,17 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A** | Wang, Wang, Huang, Li, Li & Zhu, *MMJailBench: A Factorized Benchmark for Disentangling Multimodal Jailbreak Vulnerabilities* | arXiv:**2608.25490**v1 \[cs.CR\] **26 Aug 2026**；`https://arxiv.org/abs/2608.25490`（**3.4M** = 3,560,369 B，**15** 页 letter） | **因子化基准**：272 intents × 6 framing × 5 visual × 2 carrier → 16,320 实例；16 MLLM；ASR/CASR |
-| **主文 B** | Jia, Liao, Guo, Ma, Qin et al., *OmniSafeBench-MM: A Unified Benchmark and Toolbox for Multimodal Jailbreak Attack–Defense Evaluation* | arXiv:**2512.06589**v1 \[cs.CR\] **6 Dec 2025**；`https://arxiv.org/abs/2512.06589`（**1.6M** = 1,650,787 B，**19** 页 letter） | **统一工具箱**：9 大风险域 / 50 细类 × 3 询问类型；13 攻击 + 15 防御；H–A–D → Jailbreak Success Score |
+| **主文 A** | Wang, Wang, Huang, Li, Li & Zhu, *MMJailBench: A Factorized Benchmark for Disentangling Multimodal Jailbreak Vulnerabilities* | arXiv:**2608.25490**v1 \[cs.CR\] **26 Aug 2026**；`https://arxiv.org/abs/2608.25490`（**15** 页 letter） | **因子化基准**：272 intents × 6 framing × 5 visual × 2 carrier → 16,320 实例；16 MLLM；ASR/CASR |
+| **主文 B** | Jia, Liao, Guo, Ma, Qin et al., *OmniSafeBench-MM: A Unified Benchmark and Toolbox for Multimodal Jailbreak Attack–Defense Evaluation* | arXiv:**2512.06589**v1 \[cs.CR\] **6 Dec 2025**；`https://arxiv.org/abs/2512.06589`（**19** 页 letter） | **统一工具箱**：9 大风险域 / 50 细类 × 3 询问类型；13 攻击 + 15 防御；H–A–D → Jailbreak Success Score |
 | **开源（文内明示，本篇不展开实现）** | OmniSafeBench-MM | https://github.com/jiaxiaojunQAQ/OmniSafeBench-MM | 数据加载 / 攻防 / 评测 API 入口索引 |
 
-**体积判定（2026-09-22 CST，`ls -lh` ）：** 3.4M / 1.6M，**远低于 20MB** → 按 Wave10 验收规矩 ****。**禁**入库攻击载荷全集 / 模型权重 / 数据集原始有害样本包。
+本篇**不收**攻击载荷全集 / 模型权重 / 数据集原始有害样本包。
 
-**一手 PDF：** **有** — `curl` → 200；Title 分别为 `MMJailBench: A Factorized Benchmark…` 与 `OmniSafeBench-MM: A Unified Benchmark and Toolbox…`。
+**一手 PDF：** **有**（arXiv）；Title 分别为 `MMJailBench: A Factorized Benchmark…` 与 `OmniSafeBench-MM: A Unified Benchmark and Toolbox…`。
 
 **一句话抓手：** MMJailBench 回答「**同一有害意图下，哪类上下文因子把拒答打穿**」；OmniSafeBench-MM 回答「**在统一风险分类与三维打分下，公开攻防方法如何对照、安全与效用如何权衡**」——二者互补，前者重 **因子归因**，后者重 **攻防平台化**。
 

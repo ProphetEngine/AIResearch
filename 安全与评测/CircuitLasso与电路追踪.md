@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 方法接口, 干预 faithfulness 字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2606.16939 # 1.42MB / 19p（主 A）
+ - https://arxiv.org/abs/2606.16939
 urls:
  - https://arxiv.org/abs/2606.16939
  - https://arxiv.org/pdf/2606.16939
@@ -29,19 +29,19 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[激活操控与表征工程]]（RepE / Activation Steering）**：本卡 **不** 主写推理期「加/减概念向量」操控行为；只在对照句点出「读表征」与「发现电路」正交。禁止把 CircuitLasso / 归因图写成 ActAdd/CAA/ITI 续作。
 > - **≠ [[机制可解释性入门]]（MI 通史）**：禁止重写 polysemanticity → SAE → sparse feature circuits 的 **入门阶梯叙事**；[[机制可解释性入门]] 已立概念骨架与 Circuit Tracing **证据结构摘要**。本卡下沉到 **可扩展电路学习算法接口 + 归因图方法细节与 faithfulness 字段**。
 > - **≠ [[审慎对齐与断路器]]（Deliberative Alignment + Circuit Breakers）**：[[审慎对齐与断路器]] 的「circuit」是 **安全产品 / Representation Rerouting 熔断**；本卡「circuit」是 **机制可解释性子图**。禁止把熔断训练写成电路发现。
-> **禁止编造**：主张、表号、百分比、页数一律锚定官方 PDF与 2026-09-22 CST 抓取的官方 HTML；**Anthropic 两文无 arXiv PDF → 禁止虚构 arXiv 号**。
+> **禁止编造**：主张、表号、百分比、页数一律锚定官方 PDF 与 2026-09-22 CST 核对的官方 HTML；**Anthropic 两文无 arXiv PDF → 禁止虚构 arXiv 号**。
 
 ---
 
 ## 一、材料元信息
 
-| 角色 | 标识 | 一手形态 | 本地 | 体积 | 页数 / 日期 | 备注 |
-|---|---|---|---|---|---|---|
-| **主 A** | Yin et al., *Scalable Circuit Learning for Interpreting Large Language Models*（CircuitLasso） | arXiv:**2606.16939v1** \[cs.LG\] **Submitted 15 Jun 2026**；MI Workshop @ ICML 2026 | `https://arxiv.org/abs/2606.16939` | **1.42MB**（1,490,729 B） | **19** 页 letter | **官方 HTTPS 外链**（≪10MB） |
-| **主 B** | Ameisen, Lindsey, Pearce, Gurnee, Turner, Chen, Citro et al., *Circuit Tracing: Revealing Computational Graphs in Language Models* | **官方 HTML**（**无 arXiv PDF**）；Published **March 27, 2025** | `{html,txt}` | HTML **271K** / txt **191K** | HTML 方法页 | **正式外链**；**禁止虚构 arXiv** |
-| **补链 C** | Lindsey, Gurnee, Ameisen et al., *On the Biology of a Large Language Model* | **官方 HTML**；Published **March 27, 2025**（methods 同伴） | `{html,txt}` | HTML **241K** / txt **180K** | Claude 3.5 Haiku 案 | **补链抽取**；不升主写全案 |
+| 角色 | 标识 | 一手形态 | 链接 | 页数 / 日期 | 备注 |
+|---|---|---|---|---|---|
+| **主 A** | Yin et al., *Scalable Circuit Learning for Interpreting Large Language Models*（CircuitLasso） | arXiv:**2606.16939v1** \[cs.LG\] **Submitted 15 Jun 2026**；MI Workshop @ ICML 2026 | `https://arxiv.org/abs/2606.16939` | **19** 页 letter | **官方 HTTPS 外链** |
+| **主 B** | Ameisen, Lindsey, Pearce, Gurnee, Turner, Chen, Citro et al., *Circuit Tracing: Revealing Computational Graphs in Language Models* | **官方 HTML**（**无 arXiv PDF**）；Published **March 27, 2025** | https://transformer-circuits.pub/2025/attribution-graphs/methods.html | HTML 方法页 | **正式外链**；**禁止虚构 arXiv** |
+| **补链 C** | Lindsey, Gurnee, Ameisen et al., *On the Biology of a Large Language Model* | **官方 HTML**；Published **March 27, 2025**（methods 同伴） | https://transformer-circuits.pub/2025/attribution-graphs/biology.html | Claude 3.5 Haiku 案 | **补链**；不升主写全案 |
 
-**一手 URL（核验 2026-09-22 CST，`curl`→200）：**
+**一手 URL（2026-09-22 CST 核对）：**
 - CircuitLasso：https://arxiv.org/abs/2606.16939 · PDF https://arxiv.org/pdf/2606.16939
 - Methods：https://transformer-circuits.pub/2025/attribution-graphs/methods.html
 - Biology：https://transformer-circuits.pub/2025/attribution-graphs/biology.html
@@ -241,23 +241,12 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 1. 本卡 §二划界表（确认不是 [[机制可解释性入门]]/[[激活操控与表征工程]]/[[审慎对齐与断路器]]）。
 2. CircuitLasso：摘要 + §3 框架 + Figure 2 / Table 1–2。
-3. Circuit Tracing methods：Introduction → Building Replacement Model → Attribution Graphs → Validating… → Limitations（HTML 或 `.txt`）。
+3. Circuit Tracing methods：Introduction → Building Replacement Model → Attribution Graphs → Validating… → Limitations（官方 HTML）。
 4. Biology：只读 Contents + 与自身问题相关的一案；勿把九案抄进通史。
 5. 需要概念阶梯时跳转 **[[机制可解释性入门]]**，不要在本卡重写。
 
 ---
 
-| 路径 | 体积（2026-09-22 CST） | 建议 |
-|---|---|---|
-| `https://arxiv.org/abs/2606.16939` | **1.42MB** / 19p | **入库二进制** |
-| | **116K** | 入库抽取 |
-| | **271K** | **入库抽取**（一手；无 PDF） |
-| | **191K** | 入库抽取 |
-| | **241K** | 补链抽取 |
-| | **180K** | 补链抽取 |
-| Anthropic arXiv PDF | **无** | **禁止虚构 arXiv 号**；笔记用 `urls:` 字段 |
-
-**笔记路径：** [[CircuitLasso与电路追踪]]（本文件）
 **状态：** `archived` · `date: 2026-09-22`
 
 ---

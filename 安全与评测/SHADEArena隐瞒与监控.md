@@ -27,9 +27,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Kutasov, Sun, Colognese, van der Weij, Petrini, Zhang, Hughes, Deng, Sleight, Tracy, Shlegeris, Benton et al. (Anthropic / Scale AI / Redwood / …), *SHADE-Arena: Evaluating Sabotage and Monitoring in LLM Agents* | arXiv:**2506.15740v2** \[cs.AI\] **8 Jul 2025**；`https://arxiv.org/abs/2506.15740`（**44** 页 letter；3,703,037 bytes） | 17 任务对；14 个 sabotage agent；监控者 AUC / 逐步监控 / 微调 |
+| **主文** | Kutasov, Sun, Colognese, van der Weij, Petrini, Zhang, Hughes, Deng, Sleight, Tracy, Shlegeris, Benton et al. (Anthropic / Scale AI / Redwood / …), *SHADE-Arena: Evaluating Sabotage and Monitoring in LLM Agents* | arXiv:**2506.15740v2** \[cs.AI\] **8 Jul 2025**；`https://arxiv.org/abs/2506.15740`（**44** 页 letter） | 17 任务对；14 个 sabotage agent；监控者 AUC / 逐步监控 / 微调 |
 | **公开代码（文内）** | https://github.com/safety-research/SHADE-Arena | 公开 **5/17** 任务对；余者按需申请 | 防训练泄漏的数据发布策略 |
 | **环境起点（文内）** | AgentDojo（Debenedetti et al., 2024） | 工具环 / 环境脚手架起点；本篇大幅扩工具与合成数据 | 不展开 AgentDojo 注入攻防全文 |
 

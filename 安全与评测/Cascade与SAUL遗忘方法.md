@@ -5,9 +5,9 @@ date: 2026-09-22
 lines: [方法接口, 遗忘—效用权衡, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2609.16890 # 1.38MiB / 27p；≪10MB → 官方 HTTPS 外链
- - https://arxiv.org/abs/2608.16249 # 0.63MiB / 29p；≪10MB → 官方 HTTPS 外链
- - https://arxiv.org/abs/2608.26743 # 1.24MiB / 17p；补链；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2609.16890
+ - https://arxiv.org/abs/2608.16249
+ - https://arxiv.org/abs/2608.26743
 aux:
  - https://arxiv.org/abs/2609.16890
  - https://arxiv.org/pdf/2609.16890
@@ -40,22 +40,13 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A · Cascade** | Yu, Duan, Li, Wang, Li, Zhou, Sun & Fan, *Cascade: Hierarchical Recoverability Control for Large Language Model Unlearning* | arXiv:**2609.16890v1** \[cs.CL\] **15 Sep 2026**；XMP MetadataDate 2026-09-16T00:58:14Z（→ **2026-09-16 08:58 CST**）；`https://arxiv.org/abs/2609.16890`（**1,450,150 B ≈ 1.38MiB** / **27** 页 A4） | 主锚：三级可恢复性控制 |
-| **主文 B · SAUL** | Choi, Yang & Park, *SAUL: Sharpness-Aware Augmented-Lagrangian Unlearning* | arXiv:**2608.16249v1** \[cs.LG\] **17 Aug 2026**；XMP MetadataDate 2026-08-18T01:46:15Z（→ **2026-08-18 09:46 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2608.16249`（**661,815 B ≈ 0.63MiB** / **29** 页 A4） | 主锚：显式 forget 约束 + ALM |
-| **补链 · GRAPHSU** | Khan, Sarwar, Cong, Yi & He, *Graph-Guided Selective Unlearning for Language Models: Controlling Support Routes Beyond Forget Seeds* | arXiv:**2608.26743v1** \[cs.AI\] **27 Aug 2026**；XMP MetadataDate 2026-08-28T00:39:19Z（→ **2026-08-28 08:39 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2608.26743`（**1,295,420 B ≈ 1.24MiB** / **17** 页 A4） | 补链：支持路径图扩 scope |
-
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| Cascade PDF | `https://arxiv.org/abs/2609.16890` | **1.38MiB** | **27** | **官方 HTTPS 外链**（≪10MB；页数适中） |
-| Cascade 抽取 | | 186K | — | 全文检索 |
-| SAUL PDF | `https://arxiv.org/abs/2608.16249` | **0.63MiB** | **29** | **官方 HTTPS 外链** |
-| SAUL 抽取 | | 118K | — | 全文检索 |
-| GRAPHSU PDF | `https://arxiv.org/abs/2608.26743` | **1.24MiB** | **17** | **官方 HTTPS 外链**（补链；仍 ≪10MB） |
-| GRAPHSU 抽取 | | 101K | — | 全文检索 |
+| **主文 A · Cascade** | Yu, Duan, Li, Wang, Li, Zhou, Sun & Fan, *Cascade: Hierarchical Recoverability Control for Large Language Model Unlearning* | arXiv:**2609.16890v1** \[cs.CL\] **15 Sep 2026**；XMP MetadataDate 2026-09-16T00:58:14Z（→ **2026-09-16 08:58 CST**）；`https://arxiv.org/abs/2609.16890`（**27** 页 A4） | 主锚：三级可恢复性控制 |
+| **主文 B · SAUL** | Choi, Yang & Park, *SAUL: Sharpness-Aware Augmented-Lagrangian Unlearning* | arXiv:**2608.16249v1** \[cs.LG\] **17 Aug 2026**；XMP MetadataDate 2026-08-18T01:46:15Z（→ **2026-08-18 09:46 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2608.16249`（**29** 页 A4） | 主锚：显式 forget 约束 + ALM |
+| **补链 · GRAPHSU** | Khan, Sarwar, Cong, Yi & He, *Graph-Guided Selective Unlearning for Language Models: Controlling Support Routes Beyond Forget Seeds* | arXiv:**2608.26743v1** \[cs.AI\] **27 Aug 2026**；XMP MetadataDate 2026-08-28T00:39:19Z（→ **2026-08-28 08:39 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2608.26743`（**17** 页 A4） | 补链：支持路径图扩 scope |
 
 **代码入口（文内明示，2026-09-22 未做线上可用性核验）：**
 - Cascade：`github.com/Noryxen/Cascade`
@@ -297,10 +288,8 @@ SAUL Bio **0.268±0.012**、Cyber **0.251±0.010**、MMLU **0.542±0.003**（≈
 
 | 项 | 建议 |
 |---|---|
-| 笔记路径 | 安全与评测/Cascade与SAUL遗忘方法.md |
-| PDF | 三篇均 **≪10MB** 且页数 ≤29 → **以官方 HTTPS 外链为准**至 （已落盘）；`*.txt` |
 | 与 [[隐私与机器遗忘]] | 双链交叉即可；**不要**把本卡合并进 [[隐私与机器遗忘]] 通史 |
 | 升主下一项 | 若遗忘轴继续加密，优先 **BLADE** 或 Cascade×SAUL **联合协议**（均未做，仅备忘） |
 
 **摘要（≤6 句）：**
-[[Cascade与SAUL遗忘方法]] 在 [[隐私与机器遗忘]] 通史/OpenUnlearning 之外，深读 2026 近窗两篇遗忘方法：Cascade（2609.16890）以路径—双曲—解码三级代理最小化内部可辨识性，TOFU Forget10 上 Llama-3.2-3B 达 CFI 0.7165 / BUS 0.6616，并保持改写下低 ASR；SAUL（2608.16249）以 forget-loss 约束 + ALM 在满足 $\alpha$ 后关闭 forget 更新，配合非对称 SAM 与双优化器，TOFU 1% 匹配遗忘下 GPT-HM 72.79。补链 GRAPHSU（2608.26743）用支持路径图扩展删除 scope，PISTOL Complete 上 soft leakage 相对 Seed-Only 降约 49.5 pp（PPL 仍 ≤10）。三 PDF 均 <1.5MiB，以官方 HTTPS 外链为准；本卡禁止写成 OpenUnlearning 复读。
+[[Cascade与SAUL遗忘方法]] 在 [[隐私与机器遗忘]] 通史/OpenUnlearning 之外，深读 2026 近窗两篇遗忘方法：Cascade（2609.16890）以路径—双曲—解码三级代理最小化内部可辨识性，TOFU Forget10 上 Llama-3.2-3B 达 CFI 0.7165 / BUS 0.6616，并保持改写下低 ASR；SAUL（2608.16249）以 forget-loss 约束 + ALM 在满足 $\alpha$ 后关闭 forget 更新，配合非对称 SAM 与双优化器，TOFU 1% 匹配遗忘下 GPT-HM 72.79。补链 GRAPHSU（2608.26743）用支持路径图扩展删除 scope，PISTOL Complete 上 soft leakage 相对 Seed-Only 降约 49.5 pp（PPL 仍 ≤10）。本卡禁止写成 OpenUnlearning 复读。

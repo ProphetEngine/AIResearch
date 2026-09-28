@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 系统接口, 安全—效用字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2402.06363 # 0.64MiB / 20p；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2402.06363
 aux:
  - https://arxiv.org/abs/2503.18813
  - https://arxiv.org/pdf/2503.18813
@@ -36,25 +36,17 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[宪法分类器防御]]**：禁止重写 Constitutional Classifiers 部署侧分类器护栏工程。
 > - **≠ [[SHADEArena隐瞒与监控]]**：禁止重写 SHADE-Arena sabotage×monitor 双角色评测（AgentDojo 在本篇只作 **CaMeL 评测入口**，不展开隐瞒/破坏剧本）。
 > - **禁止写成注入攻击百科**：不枚举攻击族配方、不侧写可复现注入/越狱步骤或载荷；评测轴只保留 **族名 + 聚合 ASR/效用数字**。
-> **禁止编造**：主张与表数字一律锚定本地抽取（2026-09-22 CST）与 arXiv 元数据。文内未列表的读图点不外推。
+> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）与 arXiv 元数据。文内未列表的读图点不外推。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A · CaMeL** | Debenedetti, Shumailov, Fan, Hayes, Carlini, Fabian, Kern, Shi, Terzis & Tramèr (Google / DeepMind / ETH Zurich), *Defeating Prompt Injections by Design* | arXiv:**2503.18813v2** \[cs.CR\] **24 Jun 2025**；XMP MetadataDate 2025-06-25T00:35:04Z（→ **2025-06-25 08:35 CST**）；CC-BY-4.0；官方 PDF：https://arxiv.org/pdf/2503.18813；（**125** 页 A4 / **5,531,468 B ≈ 5.53MiB**） | 主锚：系统层控制/数据流 + capability 策略 |
-| **主文 B · StruQ** | Chen, Piet, Sitawarin & Wagner (UC Berkeley), *StruQ: Defending Against Prompt Injection with Structured Queries* | arXiv:**2402.06363v2** \[cs.CR\] **25 Sep 2024**；CreationDate **2024-09-27 08:08 CST**；`https://arxiv.org/abs/2402.06363`（**644,650 B ≈ 0.64MiB** / **20** 页 letter）；USENIX Security 2025 | 主锚：结构化查询 API + 结构化指令微调 |
-| **补链 · Adaptive Attacks** | Zhan, Fang, Panchal & Kang, *Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents* | arXiv:**2503.00061v2** \[cs.CR\] **4 Mar 2025**；CreationDate **2025-03-05 09:28 CST**；官方 PDF：https://arxiv.org/pdf/2503.00061；（**17** 页 A4 / **3,621,352 B ≈ 3.62MiB**） | 补链：启发式/检测类防御脆弱性；**不升主** |
-
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| CaMeL PDF | （仅 arXiv 链接） | **≈5.53MiB** | **125** | （>80 页；议程「强烈建议正式外链」） |
-| StruQ PDF | `https://arxiv.org/abs/2402.06363` | **0.64MiB** | **20** | **官方 HTTPS 外链**（≪10MB；页数适中） |
-| StruQ 抽取 | | ≈134K | — | 全文检索 |
-| Adaptive PDF | （仅 arXiv 链接） | **≈3.62MiB** | **17** | **可链可不入二进制**；补链不升主 |
-| Adaptive 抽取 | | ≈81K | — | 可选瘦身检索 |
+| **主文 A · CaMeL** | Debenedetti, Shumailov, Fan, Hayes, Carlini, Fabian, Kern, Shi, Terzis & Tramèr (Google / DeepMind / ETH Zurich), *Defeating Prompt Injections by Design* | arXiv:**2503.18813v2** \[cs.CR\] **24 Jun 2025**；XMP MetadataDate 2025-06-25T00:35:04Z（→ **2025-06-25 08:35 CST**）；CC-BY-4.0；官方 PDF：https://arxiv.org/pdf/2503.18813（**125** 页 A4） | 主锚：系统层控制/数据流 + capability 策略 |
+| **主文 B · StruQ** | Chen, Piet, Sitawarin & Wagner (UC Berkeley), *StruQ: Defending Against Prompt Injection with Structured Queries* | arXiv:**2402.06363v2** \[cs.CR\] **25 Sep 2024**；CreationDate **2024-09-27 08:08 CST**；`https://arxiv.org/abs/2402.06363`（**20** 页 letter）；USENIX Security 2025 | 主锚：结构化查询 API + 结构化指令微调 |
+| **补链 · Adaptive Attacks** | Zhan, Fang, Panchal & Kang, *Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents* | arXiv:**2503.00061v2** \[cs.CR\] **4 Mar 2025**；CreationDate **2025-03-05 09:28 CST**；官方 PDF：https://arxiv.org/pdf/2503.00061（**17** 页 A4） | 补链：启发式/检测类防御脆弱性；**不升主** |
 
 **代码入口（文内 / USENIX 明示，2026-09-22 未做线上可用性核验）：**
 - CaMeL：`https://github.com/google-research/camel-prompt-injection`
@@ -308,23 +300,9 @@ CaMeL 解释器执行
 
 ---
 
-| 资产 | 建议 | 理由（2026-09-22 CST ） |
-|---|---|---|
-| CaMeL PDF | **链接 + ** | 125 页 / 5.53MB；议程 >80 页优先抽取 |
-| StruQ PDF | **`https://arxiv.org/abs/2402.06363` 入库** | 20 页 / 0.64MB ≪10MB |
-| Adaptive PDF | **可链；二进制可选不入** | 补链不升主；3.62MB |
-| 本笔记 | 安全与评测/Prompt注入架构防御.md | status:**archived**；date:**2026-09-22** |
-
----
-
 ## 九、开放问题（文内，非外推）
 
 1. **优化攻击残差（StruQ）** 与 **侧信道 / 策略疲劳（CaMeL）** 仍开放；二者都把「完全解决 prompt injection」明确标为否。
 2. **形式化验证解释器与策略冲突消解**（CaMeL §10）；换用显式错误类型语言以减异常侧信道。
 3. **提供商开放 base 模型**（StruQ）以便结构化指令微调；系统提示进入多级 structured query（与 instruction hierarchy 对齐）。
 4. 本波收口后：与 [[宪法分类器防御]]/[[审慎对齐与断路器]] 的 **defense-in-depth** 拼装属维护期补注，不新开攻击百科波次。
-
----
-
-**成稿路径：** `/workspace/AIResearch-drafts/安全与评测/Prompt注入架构防御.md
-**入库二进制：** 仅 `https://arxiv.org/abs/2402.06363`（CaMeL / Adaptive 按议程不默认入库）。
