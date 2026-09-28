@@ -25,12 +25,11 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：地球系统基础模型增量——在 **[[天气气候基础模型]] Aurora**（地球系统 foundation **预报骨干**）与 **[[气候科学Agent]] ClimateAgent**（气候数据科学 / 政策 **Agent 编排**）已立之后，本卡只写 **ESFM**（*Earth System Foundation Model*，arXiv:**2605.00850**v1）作为 **异构缺失数据整合、多分辨率 tokenizer、站点/卫星、AdaLN 概率集合** 的 **统一框架增量**。
 > **攻坚线**：**架构思想 / 数据接口（主）** + **文内预报字段（辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ [[天气气候基础模型]]**：禁止重写 Aurora **1.3B** 骨干表、3D Perceiver + 3D Swin U-Net 层表、四域微调通史、Aurora 1.5 产品增量。本卡承认 ESFM **显式复用 Aurora 的 3D Swin UNet backbone**（文内引用 Bodnar et al. 2025），但只录 **ESFM 相对 Aurora 的接口增量**（逐变量 tokenization、NaN token、多分辨率 bin、axial attention、AdaLN-Zero 集合、掩码训练、KD 对齐），**禁止把本卡写成 Aurora 复读**。
-> - **≠ [[气候科学Agent]]**：禁止写成 ClimateAgent / ClimateAgents / ClimAgent 多代理编排、报告流水线、政策仿真。ESFM 是 **格点/站点场预报 FM**，不是 LLM Agent。
-> - **≠ [[SkySense遥感基础模型]]**：禁止写成 SkySense / SkySense++ / V2 遥感 **影像解译** EO FM。ESFM 吃的是大气/地表物理变量场与站点序列，不是高分光学+SAR 语义分割主轴。
-> - **≠ [[表格与时序基础模型]]**：禁止写成 TabPFN / TimesFM / Chronos 表格·通用时序 foundation。站点实验只是 ESFM 统一骨干下的 **点数据接口**，不是独立 tabular/TS FM 谱系。
-> **禁止编造**：参数量、MAE/CRPS、掩码概率、页数一律锚定官方 PDF（2026-09-22 CST）；图柱未抽出标「待核实读图」。
+> **范围与相邻笔记**：
+> - **≠ [[天气气候基础模型]]**：不重写 Aurora **1.3B** 骨干表、3D Perceiver + 3D Swin U-Net 层表、四域微调通史、Aurora 1.5 产品增量。本卡承认 ESFM **显式复用 Aurora 的 3D Swin UNet backbone**（文内引用 Bodnar et al. 2025），但只录 **ESFM 相对 Aurora 的接口增量**（逐变量 tokenization、NaN token、多分辨率 bin、axial attention、AdaLN-Zero 集合、掩码训练、KD 对齐），本卡不做 Aurora 复读。
+> - **≠ [[气候科学Agent]]**：不写成 ClimateAgent / ClimateAgents / ClimAgent 多代理编排、报告流水线、政策仿真。ESFM 是 **格点/站点场预报 FM**，不是 LLM Agent。
+> - **≠ [[SkySense遥感基础模型]]**：不写成 SkySense / SkySense++ / V2 遥感 **影像解译** EO FM。ESFM 吃的是大气/地表物理变量场与站点序列，不是高分光学+SAR 语义分割主轴。
+> - **≠ [[表格与时序基础模型]]**：不写成 TabPFN / TimesFM / Chronos 表格·通用时序 foundation。站点实验只是 ESFM 统一骨干下的 **点数据接口**，不是独立 tabular/TS FM 谱系。
 
 ---
 
@@ -49,12 +48,12 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 四向对照（跟读）
 
-| 邻卡 | 邻卡主锚 | 本卡只取 / 禁止 |
+| 邻卡 | 邻卡主锚 | 本卡只取 / 不写 |
 |---|---|---|
-| **[[天气气候基础模型]]** | Aurora 1.3B；预训练→多域微调；Nature Earth-system FM | **只取**：ESFM 声明「builds on … Aurora」与 KD 对齐 small Aurora encoder；**禁止**重写 Aurora 骨干层表、参数缩放表、四域评测全文 |
-| **[[气候科学Agent]]** | ClimateAgent 多代理气候数据科学 / ClimateAgents 社会—气候 | **禁止**任何 LLM 角色分层、工具调用编排、报告质量分 |
-| **[[SkySense遥感基础模型]]** | SkySense 谱系：光学+多光谱+SAR 影像解译 | **禁止** RS 语义分割 / few-shot EO benchmark 主文 |
-| **[[表格与时序基础模型]]** | TabPFN-3.5 + TimesFM / Chronos | **禁止**把 Weather-5K / 11k 站点写成独立 tabular/TS FM；站点是 ESFM **统一 backbone 的点数据 bin** |
+| **[[天气气候基础模型]]** | Aurora 1.3B；预训练→多域微调；Nature Earth-system FM | **只取**：ESFM 声明「builds on … Aurora」与 KD 对齐 small Aurora encoder；**不写** Aurora 骨干层表、参数缩放表、四域评测全文 |
+| **[[气候科学Agent]]** | ClimateAgent 多代理气候数据科学 / ClimateAgents 社会—气候 | **不写**任何 LLM 角色分层、工具调用编排、报告质量分 |
+| **[[SkySense遥感基础模型]]** | SkySense 谱系：光学+多光谱+SAR 影像解译 | **不写** RS 语义分割 / few-shot EO benchmark 主文 |
+| **[[表格与时序基础模型]]** | TabPFN-3.5 + TimesFM / Chronos | **不把** Weather-5K / 11k 站点写成独立 tabular/TS FM；站点是 ESFM **统一 backbone 的点数据 bin** |
 
 ### 2.2 文内自我定位（可核）
 
@@ -124,7 +123,7 @@ $$
 
 Decoder：气压层 perceiver 可query **与观测不同的目标层** → 再 AdaLN 出各成员 → 每变量 detokenizer。
 
-### 3.6 ESFM s 规模锚定（禁止写成 Aurora 1.3B 表）
+### 3.6 ESFM s 规模锚定（不写成 Aurora 1.3B 表）
 
 - 正文：比较实验统一用 **∼110 M** 的 **ESFM s**（「corresponds to small size Aurora」）。
 - 附录 A.3：**115 M** parameters，「corresponding to Aurora small (Aurora s)」；默认沿用 Aurora 发布配置中的：embed dim **256**（backbone 输出因 skip 成 **512**）、backbone **3** 级 merge/split、drop path $p=0.2$；encoder perceiver 用后续 Aurora 仓库提出的 pre-LN on Q/K。
@@ -256,7 +255,7 @@ Decoder：气压层 perceiver 可query **与观测不同的目标层** → 再 A
 
 ---
 
-## 八、开放问题（文内已标 / 抽取未见则不填）
+## 八、开放问题（文内已标）
 
 - 随机 37→13 气压层集合上的 **perceiver 瓶颈**（Table 11）如何改。
 - ESFM **large** 是否兑现「保留灵活性同时追上 Aurora l」。

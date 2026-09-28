@@ -1,5 +1,5 @@
 ---
-title: "Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni（相对 11）"
+title: "Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni"
 topic: QwenOmni音视频原生
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -12,16 +12,16 @@ related: ["SpeechLLM语音语言模型", "多模态架构脉络", "Qwen3技术�
 archived: 2026-09-22
 ---
 
-# Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni（相对 11）
+# Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni
 
 > **定位**：原生 Omni 模态横切增量——相对 **[[SpeechLLM语音语言模型]]**（以 Qwen2-Audio 为锚的 Speech-LLM / Audio→Text）已入库的「编码器连续特征 ⊕ LLM 下一文本 token」栈，本篇只收 **原生 Omni**：同一 Thinker–Talker 端到端统一 **文本·图像·音频·视频**，并 **流式合成语音**。
 > **攻坚线**：**架构思想（主）**——AuT 替换 Whisper、Thinker/Talker MoE、多码本 RVQ + MTP + Code2Wav、TM-RoPE / 显式时间戳、ARIA；**评测字段（辅）**——36 / 215 音视频基准、VoiceBench、首包延迟、非降级对照同尺 Qwen。
-> **硬划界（禁止重写）**：
-> - **禁止重抄** [[SpeechLLM语音语言模型]] 的 Qwen2-Audio 章节：Whisper-large-v3 前端、40 ms/帧、三阶段（多任务预训练 / 联合 SFT / DPO）、Voice Chat vs Audio Analysis 接口表、ASR/S2TT 表内逐格数字。本篇仅在对照句点名「[[SpeechLLM语音语言模型]] = 音频理解→文本输出」前置。
-> - **禁止重写** [[多模态架构脉络]] 视觉 LMM 通史、[[Qwen3技术报告深读]] 全文；仅取「Qwen3 / Qwen3.5 骨干初始化、Strong-to-Weak Distillation / GSPO」接口。
-> - 中间代 **Qwen2.5-Omni**（文内 Xu et al., 2025）本仓库未单独立档；本篇只记两篇 Omni TR **显式声明相对 2.5-Omni / 相对 3-Omni 的升级点**，不编造 2.5-Omni 未引用细节。
+> **范围与相邻笔记**：
+> - **不重抄** [[SpeechLLM语音语言模型]] 的 Qwen2-Audio 章节：Whisper-large-v3 前端、40 ms/帧、三阶段（多任务预训练 / 联合 SFT / DPO）、Voice Chat vs Audio Analysis 接口表、ASR/S2TT 表内逐格数字。本篇仅在对照句点名「[[SpeechLLM语音语言模型]] = 音频理解→文本输出」前置。
+> - **不重写** [[多模态架构脉络]] 视觉 LMM 通史、[[Qwen3技术报告深读]] 全文；仅取「Qwen3 / Qwen3.5 骨干初始化、Strong-to-Weak Distillation / GSPO」接口。
+> - 中间代 **Qwen2.5-Omni**（文内 Xu et al., 2025）本仓库未单独立档；本篇只记两篇 Omni TR **显式声明相对 2.5-Omni / 相对 3-Omni 的升级点**，不展开 2.5-Omni 未引用细节。
 > **与 [[SpeechLLM语音语言模型]] 的接口一句**：[[SpeechLLM语音语言模型]] 回答「如何把波形压成连续帧条件在 7B LLM 上出文本」；本篇回答「如何在 **MoE Thinker–Talker** 上做到 **音视频入 + 文本/语音出**、长上下文与低首包延迟，且文本/视觉相对同尺单模态 **不降级**」。
-> **禁止编造**：机制、参数量、小时数、延迟、表内分数一律锚定官方 PDF（2026-09-22 CST）与官方 README；图内未表格化的曲线点 **不读点**；3.5 摘要写「数百亿参数」但正文未给出 Plus/Flash 精确总参 → **不臆造 B 数**。
+> **主要来源**：[Qwen3-Omni TR](https://arxiv.org/abs/2509.17765)、[Qwen3.5-Omni TR](https://arxiv.org/abs/2604.15804) 与官方 README（2026-09-22 CST）；3.5 摘要写「数百亿参数」，但正文未给出 Plus/Flash 精确总参。
 
 ---
 

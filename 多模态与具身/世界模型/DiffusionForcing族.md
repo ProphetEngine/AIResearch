@@ -21,12 +21,11 @@ archived: 2026-09-22
 
 > **定位**：Forcing 族谱——立 **序列生成里「噪声当软掩码 / 因果去噪」** 的一条族谱：**Diffusion Forcing（DF，NeurIPS 2024）** 把每 token 独立噪声级与因果 next-token 预测合成；**Self Forcing（SF，NeurIPS 2025）** 把 AR 视频扩散的训练对齐到推理期 **自 rollout + 视频级分布匹配**；附录 **Causal Forcing（CF，ICML 2026）** 指出 SF 式「双向教师 → AR 学生」的 ODE 初始化破坏 **帧级 injectivity**，改用 **AR 教师做因果 ODE 初始化再接 DMD**。
 > **攻坚线**：**架构思想（主）**——Teacher / Diffusion / Self / Causal Forcing 各自训什么条件分布、训练–推理是否同分布；**评测字段（辅）**——迷宫规划奖励、VBench / VisionReward / 吞吐–时延。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[扩散语言模型]] 文本扩散**：不写 LLaDA / Dream 的 **离散 [MASK] MDM**；本卡是 **连续序列（视频 / 轨迹 / 时序）上的高斯噪声级**。
 > - **≠ [[视频生成正式报告]] Sora 备忘**：不写旗舰正式报告缺口 / System Card；本卡只跟学术 **AR–扩散杂交 forcing 族**。
-> - **≠ B10 图像 LDM 通史**：不重写 LDM→DiT 图像潜扩散史；只用「去噪 / 引导 / DiT 骨干」作接口。
+> - **≠ [[扩散生成式视觉与LLM]] 图像 LDM 通史**：不重写 LDM→DiT 图像潜扩散史；只用「去噪 / 引导 / DiT 骨干」作接口。
 > - **≠ [[世界模型与VJEPA]] V-JEPA**：世界模型是 **表征空间非生成预测**；本卡是 **像素/潜视频与轨迹的生成式 forcing**。
-> - **禁止编造**：主张、表数字、步数、FPS/时延一律锚定官方 PDF（2026-09-22 CST）。
 
 ---
 
@@ -58,7 +57,7 @@ archived: 2026-09-22
 |---|---|---|
 | **[[扩散语言模型]] 文本 MDM** | 「扩散」一词与掩码直觉的对照 | LLaDA/Dream、离散词表吸收态、MMLU 表 |
 | **[[视频生成正式报告]] 视频旗舰备忘** | 「视频生成存在正式报告 / 产品线缺口」的存在性 | Sora 2 System Card、零样本推理黑盒评测通史 |
-| **B10 图像 LDM/DiT** | 潜空间去噪、classifier / score 引导、DiT 作骨干 | LDM 层图、DiT 算力–质量缩放全书 |
+| **[[扩散生成式视觉与LLM]] 图像 LDM/DiT** | 潜空间去噪、classifier / score 引导、DiT 作骨干 | LDM 层图、DiT 算力–质量缩放全书 |
 | **[[世界模型与VJEPA]] V-JEPA** | 「世界模型 / 交互仿真」叙事可与 AR 视频相遇 | JEPA 表征预测、IntPhys、非生成式动力学 |
 
 ### 2.2 跟读口诀（四范式对照）

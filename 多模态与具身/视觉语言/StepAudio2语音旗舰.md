@@ -20,13 +20,13 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：语音旗舰切片——StepFun Audio Team *Step-Audio 2 Technical Report*（arXiv:**2507.16632v3** \[cs.CL\]，页眉 **27 Aug 2025**）。立「**非 Qwen 系**、工业强度端到端 **音→交织音文 token→波形**」旗舰 TR：latent 音频编码器 + 适配器 + 单 LLM 解码器输出 **离散文本/音频交织 token**，再经 CosyVoice 2 tokenizer 系 detokenizer（Flow Matching + HiFi-GAN）；并接 **RAG / 工具调用**（含独有 **audio search**）。
 > **攻坚线**：**架构思想 / 训练数据接口（主）** + **文内 ASR / 副语言 / MMAU / 翻译 / Toolcall / URO-Bench 字段（辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ [[SpeechLLM语音语言模型]]**：禁止重写 Speech-LLM **入门**（Qwen2-Audio：Whisper 编码器 ⊕ LLM **只出文本**、Voice Chat / Audio Analysis 接口表、三阶段训练全文）。本卡对象是 **音入 + 音文交织出** 的端到端对话旗舰，不是「音频理解→文本」栈入门。
-> - **≠ [[QwenOmni音视频原生]]**：禁止写成 **Qwen3/3.5-Omni Thinker–Talker** 复述（AuT、TM-RoPE、多码本 RVQ+MTP、ARIA、首包延迟产品卡）。Step-Audio 2 是 **单 LLM 解码器 + 固定比交织 token**，文内对比 Qwen-Omni / Qwen2.5-Omni 仅作 **基线表**，不展开 Omni 架构正文。
-> - **≠ [[SeamlessM4T语音翻译]]**：禁止写成 SeamlessM4T / UnitY **百语翻译 FM + EMMA 同传**通史。本卡 CoVoST 2 / CVSS 只作 **中英双向** 评测字段；翻译不是主架构轴。
-> - **≠ [[多模态架构脉络]]**：禁止重写 CLIP→Flamingo→LLaVA→「原生多模态」**视觉—语言通史**；本卡主轴是 **语音/音频 LALM**，视觉不在范围。
-> - **禁止 Omni Thinker–Talker 复述**：不得把 Step 的编码器–适配器–LLM–detokenizer 改写成 Thinker/Talker 双塔叙事。
-> **禁止编造**：参数量（全文 **未**给出 Step-Audio 2 完整总参，仅称少于 Step-Audio 的 **130B**）、未表格化图点、未公开超参网格 → **不得外推**。主张与表数字一律锚定官方 PDF（2026-09-22 CST）。
+> **范围与相邻笔记**：
+> - **≠ [[SpeechLLM语音语言模型]]**：不重写 Speech-LLM **入门**（Qwen2-Audio：Whisper 编码器 ⊕ LLM **只出文本**、Voice Chat / Audio Analysis 接口表、三阶段训练全文）。本卡对象是 **音入 + 音文交织出** 的端到端对话旗舰，不是「音频理解→文本」栈入门。
+> - **≠ [[QwenOmni音视频原生]]**：不写成 **Qwen3/3.5-Omni Thinker–Talker** 复述（AuT、TM-RoPE、多码本 RVQ+MTP、ARIA、首包延迟产品卡）。Step-Audio 2 是 **单 LLM 解码器 + 固定比交织 token**，文内对比 Qwen-Omni / Qwen2.5-Omni 仅作 **基线表**，不展开 Omni 架构正文。
+> - **≠ [[SeamlessM4T语音翻译]]**：不写成 SeamlessM4T / UnitY **百语翻译 FM + EMMA 同传**通史。本卡 CoVoST 2 / CVSS 只作 **中英双向** 评测字段；翻译不是主架构轴。
+> - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」**视觉—语言通史**；本卡主轴是 **语音/音频 LALM**，视觉不在范围。
+> - **不做 Omni Thinker–Talker 复述**：不把 Step 的编码器–适配器–LLM–detokenizer 改写成 Thinker/Talker 双塔叙事。
+> 全文 **未**给出 Step-Audio 2 完整总参，仅称少于 Step-Audio 的 **130B**。
 
 ---
 
@@ -101,7 +101,7 @@ timezone: Asia/Shanghai (CST)
 
 ## 四、训练数据接口（主读）
 
-### 4.1 总口径（文内两套并行说法，不调和编造）
+### 4.1 总口径（文内两套并行说法，并列）
 
 | 口径 | 文内表述 | 位置 |
 |---|---|---|
@@ -144,7 +144,7 @@ timezone: Asia/Shanghai (CST)
 | 2 | **PPO** | 改为 **学得偏好打分**（训练好的 reward model）；再 **120** iter；batch/lr 同上 |
 | 3 | **GRPO** | 再 **400** iter，强化音频感知 |
 
-**跟读注意（不编造修正）：** 正文 PPO/GRPO 均标引用 **[54]**，而文末 References [54] 条目为 Rafailov et al. *Direct preference optimization*——属文内引用与书目不一致；本卡只记 **算法名与超参**，不替作者改引用。
+**引用不一致：** 正文 PPO/GRPO 均标引用 **[54]**，而文末 References [54] 条目为 Rafailov et al. *Direct preference optimization*——属文内引用与书目不一致；本卡只记 **算法名与超参**，不替作者改引用。
 
 ---
 
@@ -206,7 +206,7 @@ ASR 中介（Whisper）+ GPT-4o-mini 评判。
 | 定位 | 更利于与 Qwen-Omni / Kimi-Audio 等比参对照的开发者友好版 |
 | 表内趋势 | ASR / 副语言 / MMAU / 翻译 / URO 多表与满血版接近（如 MMAU avg **73.2**；副语言 avg **80.00**；CoVoST avg **39.29**） |
 
-满血版 **精确总参数未给出** → 不得用 mini 的 7B 反推满血 B 数。
+满血版 **精确总参数未给出** → 不宜用 mini 的 7B 反推满血 B 数。
 
 ---
 
@@ -220,9 +220,9 @@ ASR 中介（Whisper）+ GPT-4o-mini 评判。
 
 ---
 
-## 八、未写 / 待核实
+## 八、局限与待核实
 
-- Step-Audio 2 **满血总参数、层宽、专家数**（若 MoE）——正文未给 → **待核实 / 不编造**。
+- Step-Audio 2 **满血总参数、层宽、专家数**（若 MoE）——正文未给 → **待核实**。
 - 交织固定比的具体数字、实时首包延迟毫秒数——正文未表格化 → **不读点**。
 - PPO/GRPO 的 [54] 书目与算法名不一致——记为文内问题，不外补标准引用冒充原文。
 - GitHub 权重/commit、商业 API 可用性——2026-09-22 **未做线上核验**。
@@ -234,4 +234,4 @@ ASR 中介（Whisper）+ GPT-4o-mini 评判。
 
 - 主 PDF：`https://arxiv.org/abs/2507.16632`（PDF https://arxiv.org/pdf/2507.16632；**21** 页）。
 - 检索截止：**2026-09-22 CST**。
-- 相邻划界：多模态与具身/视觉语言/SpeechLLM语音语言模型.md · 多模态与具身/视觉语言/QwenOmni音视频原生.md · 多模态与具身/视觉语言/SeamlessM4T语音翻译.md · 多模态与具身/视觉语言/多模态架构脉络.md。
+- 相邻划界：[[SpeechLLM语音语言模型]] · [[QwenOmni音视频原生]] · [[SeamlessM4T语音翻译]] · [[多模态架构脉络]]。

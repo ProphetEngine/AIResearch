@@ -22,11 +22,11 @@ archived: 2026-09-22
 
 > **定位**：遥感多模态增量——相对 **[[天气气候基础模型]] Aurora**（地球系统**格点预报**）补一块仍空的 **遥感多模态 EO 影像基础模型**。主锚 Guo et al. *SkySense*（arXiv **2312.10115v2**；Nature ++ 引为 **CVPR 2024**）；对照两支后继——Nature MI **SkySense++**（DOI **10.1038/s42256-025-01078-8**）与 arXiv **SkySense V2**（**2507.13812v1**）。
 > **攻坚线**：**架构思想（主）**——因子化多模态时空编码器 →（++）渐进语义增强 /（V2）统一 Transformer；**评测字段（辅）**——16×7（SkySense/V2）vs 12×7 域（++）。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[天气气候基础模型]] Aurora**：格点大气/海浪/气旋预报 ≠ 本篇卫星·航空 **影像解译**。
 > - **≠ [[MatterSim材料基础模型]] MatterSim**：原子势 / 材料物性，无接口。
 > - **≠ [[多模态架构脉络]] 通用视觉多模态通史**：不重写 CLIP/Flamingo；只取 RS 多传感器切片。
-> **禁止编造**：参数、序列数、GPU 小时、平均增益锚定官方 PDF（2026-09-22 CST）与 Nature **HTML**；Nature **PDF** 本环境未取到，Methods 标 **待核实**。
+> **主要来源**：官方 PDF 与 Nature **HTML**（2026-09-22 CST）；Nature **PDF** 未取到，Methods 标 **待核实**。
 
 ---
 
@@ -37,7 +37,7 @@ archived: 2026-09-22
 | **主文（原点）** | Guo, Lao, Dang, Zhang, Yu, Ru, Zhong, Huang, Wu, Hu, He, Wang, Chen, Yang, Zhang, Li, *SkySense: A Multi-Modal Remote Sensing Foundation Model Towards Universal Interpretation for Earth Observation Imagery* | arXiv:**2312.10115v2** \[cs.CV\] **22 Mar 2024**；`https://arxiv.org/pdf/2312.10115`；（**29** 页；CreationDate **2024-03-25 CST**）；单位 **Ant Group / Wuhan University / MYBank**；Nature ++ 引用为 **CVPR 2024** | 因子化 MM-RSFM；**2.06B** 参；**21.5M** 时序样本 |
 | **后继 A（语义增强）** | Wu, Zhang, Ru, et al., *A semantic-enhanced multi-modal remote sensing foundation model for Earth observation*（**SkySense++**） | DOI **10.1038/s42256-025-01078-8**；*Nat Mach Intell* **7**, **1235–1249**（2025）；Published **04 Aug 2025**；Nature 全文 PDF 需登录（idp.nature.com），未读；HTML 摘要已核（见 §八） | 因子化骨架 + **二阶段**预训练；**27M** 图；**12** 任务 × **7** 域；few-shot |
 | **后继 B（统一骨干）** | Zhang, Ru, Wu, Yu, Liang, Li, Chen, *SkySense V2: A Unified Foundation Model for Multi-modal Remote Sensing* | arXiv:**2507.13812v1** \[cs.CV\] **18 Jul 2025**；`https://arxiv.org/abs/2507.13812`（**20** 页）；**Ant Group / Wuhan University** | 统一骨干 **665M**；APM + modality prompt + MoE；平均超 SkySense **1.8** |
-| **代码（++）** | kang-wu/SkySensePlusPlus（Nature Code availability）；议程亦列 LotusWhu/SkySensePlusPlus | 两仓 README **同文** → [kang-wu/SkySensePlusPlus README](https://github.com/kang-wu/SkySensePlusPlus) · [LotusWhu/SkySensePlusPlus README](https://github.com/LotusWhu/SkySensePlusPlus) | 自 SkySense ckpt 续训；RS-Semantic / EO Benchmark 表；Zenodo 数据入口 |
+| **代码（++）** | kang-wu/SkySensePlusPlus（Nature Code availability）；另列 LotusWhu/SkySensePlusPlus | 两仓 README **同文** → [kang-wu/SkySensePlusPlus README](https://github.com/kang-wu/SkySensePlusPlus) · [LotusWhu/SkySensePlusPlus README](https://github.com/LotusWhu/SkySensePlusPlus) | 自 SkySense ckpt 续训；RS-Semantic / EO Benchmark 表；Zenodo 数据入口 |
 
 **一句话抓手：** 地理对齐的 **高分光学 + Sentinel-2 时序多光谱 + Sentinel-1 时序 SAR** → 可拆装的 **十亿级因子化** SkySense；后继分两支——**++** 加语义掩码第二阶段换 few-shot，**V2** 把三骨干收成 **统一 665M** 并改对比学习以适配「一幅 RS 图多主题」。
 
@@ -74,7 +74,7 @@ SkySense V2：统一骨干 + Adaptive Patch Merging + modality prompt + MoE
 2. 下游任务爆炸（作物、灾害、海洋、大气、生物、测绘…），各从零训代价高。
 3. 后继动机分叉：**++** → 标注稀缺 / 时效（如快速洪水）；**V2** → 分骨干参数冗余 + 自然图像对比直接搬到「一图多语义」RS 图的失配。
 
-### 2.3 谱系关系（禁编造成单一路线）
+### 2.3 谱系关系（非单一路线）
 
 | 节点 | 时间锚（可核） | 相对 SkySense 主增量 |
 |---|---|---|
@@ -244,7 +244,7 @@ SkySense V2：统一骨干 + Adaptive Patch Merging + modality prompt + MoE
 
 ---
 
-## 九、可撤回主张 / 待核实
+## 九、局限与待核实
 
 1. Nature **Methods、Extended Data、few-shot 精确曲线**：仅 HTML 摘要级，**待 PDF**。
 2. 「21.5M sequences / ~21M sets / 27M images」——**计数单位不同**，未在公开摘要中声明为同一语料简单增量。

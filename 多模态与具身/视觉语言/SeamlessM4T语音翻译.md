@@ -20,11 +20,11 @@ archived: 2026-09-22
 
 > **定位**：语音翻译与同传增量——仓库缺 **统一语音↔文本多任务翻译 FM** 与 **streaming / 同传** 叙事。主锚 Seamless Communication et al. *SeamlessM4T: Massively Multilingual & Multimodal Machine Translation*（arXiv **2308.11596v3**）；定稿对照 Nature *Joint speech and text machine translation for up to 100 languages*（DOI **10.1038/s41586-024-08359-z**）；流式同传族以姊妹文 *Seamless: Multilingual Expressive and Streaming Speech Translation*（arXiv **2312.05187v1**）+ Meta 发布页 + `seamless_communication` 仓库为辅。
 > **攻坚线**：**架构思想（主）**——w2v-BERT 2.0 → X2T → UnitY / UnitY2 → HiFi-GAN；**评测字段（辅）**——S2ST/S2TT 覆盖与流式策略（EMMA、AL/LAAL）。
-> **硬划界（禁止重写）**：
+> **范围与相邻笔记**：
 > - **≠ [[SpeechLLM语音语言模型]] Qwen2-Audio**：那边是 **音→文对话 LLM**（Whisper 编码器 ⊕ Qwen 下一文本 token）；本篇是 **speech↔speech / speech↔text 翻译 FM**，不是聊天助手。
-> - **≠ `B9` 多语言文本通史**：XLM-R / BLOOM / 语种配比旋钮不重写；本篇只取 NLLB 作 **T2TT 初始化块** 的接口一句。
+> - **≠ [[多语言与跨语种]] 多语言文本通史**：XLM-R / BLOOM / 语种配比旋钮不重写；本篇只取 NLLB 作 **T2TT 初始化块** 的接口一句。
 > - **≠ [[QwenOmni音视频原生]] Qwen Omni 全文**：Thinker–Talker / AuT / 流式 TTS 产品栈不展开；本篇流式是 **同传策略（EMMA）**，不是 Omni 原生多模态对话。
-> **禁止编造**：语种覆盖、BLEU/ASR-BLEU、小时数、参数量一律锚定官方 PDF（2026-09-22 CST）；不虚构 Meta CDN 哈希；Nature 与 arXiv 数字不一致时 **并列表出，不调和编造**。
+> Nature 与 arXiv 数字不一致时 **并列表出**。
 
 ---
 
@@ -64,7 +64,7 @@ EMMA：单调多头注意力同传策略 → AL / LAAL / Ending Offset
 | 已入库 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[SpeechLLM语音语言模型]]** Speech-LLM | 「音频可进大模型」的相邻意识 | Whisper→Qwen、Voice Chat / Audio Analysis、DPO 对话配方 |
-| **B9** 多语言文本 | NLLB 作 **T2TT 初始化 / 语种覆盖对标** | XLM-R curse、BLOOM/ROOTS、当代旗舰语种配比通史 |
+| **[[多语言与跨语种]]** 多语言文本 | NLLB 作 **T2TT 初始化 / 语种覆盖对标** | XLM-R curse、BLOOM/ROOTS、当代旗舰语种配比通史 |
 | **[[QwenOmni音视频原生]]** Omni | 「端到端可出语音」的产品压力面 | Thinker–Talker MoE、AuT、ARIA、Qwen3.5-Omni 全文 |
 
 ### 2.2 本篇立轴的问题（据 2308 摘要 / §1；Nature 开篇）
@@ -255,16 +255,11 @@ EMMA：单调多头注意力同传策略 → AL / LAAL / Ending Offset
 ## 九、交叉引用
 
 - ← **[[SpeechLLM语音语言模型]]**：音→文对话 LLM（Qwen2-Audio）对照「翻译 FM」。
-- ← **B9**：多语文本表征 / NLLB 语种覆盖短史。
+- ← **[[多语言与跨语种]]**：多语文本表征 / NLLB 语种覆盖短史。
 - ← **[[QwenOmni音视频原生]]**：原生 Omni 流式语音出（产品另一轴）。
-- → 若后续单开「表达力 S2ST / 语音水印」可从 2312 §4 / §安全章拆篇；本 [[SeamlessM4T语音翻译]] 保持 **翻译 FM + 同传策略** 主轴。
+- → 若后续单开「表达力 S2ST / 语音水印」可从 2312 §4 / §安全章拆篇；本卡保持 **翻译 FM + 同传策略** 主轴。
 
 ---
-
-## 十、核对清单（2026-09-22 CST）
-
-- [x] 划界句写入：≠ [[SpeechLLM语音语言模型]] / ≠ B9 / ≠ [[QwenOmni音视频原生]]
-- [x] 未编造 CDN；Nature vs arXiv 覆盖数字并列表出
 
 ## 相关笔记
 

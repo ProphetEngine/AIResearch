@@ -1,5 +1,5 @@
 ---
-title: "MedGemma 1.5 Technical Report（医学专科多模态，12）"
+title: "MedGemma 1.5 Technical Report（医学专科多模态）"
 topic: MedGemma医学专科
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -9,7 +9,7 @@ sources:
  - https://developers.google.com/health-ai-developer-foundations/medgemma
  - https://developers.google.com/health-ai-developer-foundations/medgemma/model-card
 arxiv: ["2604.05081"]
-related: ["多模态架构脉络", "Gemma4技术报告深读", "B11"]
+related: ["多模态架构脉络", "Gemma4技术报告深读", "模型卡与SystemCard规范"]
 archived: 2026-09-22
 ---
 
@@ -17,10 +17,10 @@ archived: 2026-09-22
 
 > **定位**：医学专科短线——相对 **[[多模态架构脉络]] 通用多模态**（CLIP 对齐 → Flamingo 条件生成 → 指令对话 → 原生多模态主张），本卡写 **高监管医学域** 的开源权重向 TR：同一套 decoder-only + 冻结医学视觉编码器，如何把 **3D CT/MRI、WSI、纵向 CXR、解剖定位、实验室报告/EHR** 塞进统一生成式接口。
 > **攻坚线**：**架构思想（主）** + **评测字段 / 安全与intended-use 边界（辅）**。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **相对 [[多模态架构脉络]]**：只取「通用多模态接口已成立」为前提；**不重写** CLIP/Flamingo/LLaVA/Gemini 2.5 原生多模态史线。
-> - **Legal specialty** 窗内无稳定长 TR → **本项不硬凑法律模型**（agenda 已明示）。
-> - **禁止编造**：专家数/未给训练 token 总量、未公开的临床部署效果、监管批准状态——TR/卡未写则标「未公开」。数字锚定 Abstract / Table 3–6 / Model Card；摘要措辞与表内口径若不一致，**照录并并列**。
+> - **Legal specialty** 窗内无稳定长 TR → **本项不硬凑法律模型**。
+> - 专家数、训练 token 总量、临床部署效果、监管批准状态：TR/卡未写者标「未公开」；摘要措辞与表内口径不一致时**照录并并列**。
 > - 产品页主张：**非 clinical-grade**；须验证与适配后再部署（docs / Model Card）。
 
 ---
@@ -38,7 +38,7 @@ archived: 2026-09-22
 | 辅·Model Card | [MedGemma 1.5 model card](https://developers.google.com/health-ai-developer-foundations/medgemma/model-card)（Last updated **2026-04-21** UTC；**4B multimodal IT = 1.5.0**，**Model created: Jan 13, 2026**） |
 | 资源入口 | TR：`https://goo.gle/medgemma`；HAI-DEF：`https://goo.gle/hai-def` |
 | 许可 / ToU | 使用受 **Health AI Developer Foundations terms of use** 约束（Model Card；**非**「随便当诊断工具」） |
-| 对照笔记 | 多模态与具身/视觉语言/多模态架构脉络.md（通用多模态脉络）；[[Gemma4技术报告深读]]（同系开源 TR 体例，**本卡骨干是 Gemma 3 而非 Gemma 4**） |
+| 对照笔记 | [[多模态架构脉络]]（通用多模态脉络）；[[Gemma4技术报告深读]]（同系开源 TR 体例，**本卡骨干是 Gemma 3 而非 Gemma 4**） |
 
 **集合内型号（Figure 1 + docs，勿混）：**
 
@@ -62,7 +62,7 @@ archived: 2026-09-22
 | 视觉编码 | CLIP / NFNet / 通用 SigLIP 等 | **MedSigLIP**（医学去标识数据上预训练的 SigLIP 变体）；本版 **冻结** |
 | 输出责任 | 一般助手错误可纠正 | **输出不得直接用于诊断/治疗**；须独立验证与临床相关性（Model Card Limitations） |
 | 评测 | VQA / caption / 通用榜 | **医学 MCQ + 专科影像分类/报告/定位/纵向 + 文档 JSON 抽取**；另有 **内容安全 / 医疗伤害** 类别（Model Card） |
-| 本卡不写 | — | **法律 LLM / 判例检索 / 合同审查**（无稳定长 TR；agenda 禁硬凑） |
+| 本卡不写 | — | **法律 LLM / 判例检索 / 合同审查**（无稳定长 TR；不硬凑） |
 
 跟读口诀：**[[多模态架构脉络]] 解决「能不能看图说话」；[[MedGemma医学专科]] 解决「在监管敏感域里，看哪些图、怎么切片、评什么、以及不能声称什么」。**
 
@@ -132,7 +132,7 @@ Model Card 技术规格（与 TR 对齐、作部署字段）：
 
 ## 4. 训练数据增量（Table 1，相对 MedGemma 1）
 
-> 仅录报告给出的 **No. Train Examples** 与阶段标签（PT / Distill / RL）；**不**臆造总 token。
+> 仅录报告给出的 **No. Train Examples** 与阶段标签（PT / Distill / RL）；报告**未**给总 token。
 
 | 模态 | 数据集（报告名） | 规模（Train） | 阶段 |
 |---|---|---|---|
@@ -165,7 +165,7 @@ Model Card 技术规格（与 TR 对齐、作部署字段）：
 | EHRQA | **+22%** | Table 3：67.6 → **89.6** |
 | Lab report 抽取 | 摘要：「4 个数据集上平均 **18%** macro F1」 | Table 4 绝对 Macro F1：91 / 71 / 64 / 85；相对 1.0 的增益约 +13/+21/+39/+0 → **平均约 +18pp**（摘要「achieves … 18%」更像增益口径；**勿把 18 当成绝对分数**） |
 
-Figure 2 脚注硬约束：**out-of-the-box 有希望，但模型「is not meant to be deployed without the necessary clinical fine-tuning」。**
+Figure 2 脚注限定：**out-of-the-box 有希望，但模型「is not meant to be deployed without the necessary clinical fine-tuning」。**
 
 ### 5.2 原任务表节选（Table 3，Small Models 列）
 
@@ -273,13 +273,13 @@ docs 允许的适应类型（须同等验证）：**prompt / ICL**、**fine-tuni
 
 ---
 
-## 9. 五句话摘要（回报用）
+## 9. 五句话摘要
 
 1. **MedGemma 1.5 4B**（arXiv **2604.05081v2**，23 页）是 Google 医学开源多模态集合的增量 TR：骨干 = **Gemma 3**，视觉 = **冻结 400M MedSigLIP**。
 2. 相对 [[多模态架构脉络]] 通用多模态，增量不在新耦合算子，而在 **高监管专科接口**：CT/MRI 轴向切片（≤85）、WSI patch 序列（≤126）、纵向 CXR、bbox 定位、实验室 PDF→JSON / EHR。
 3. 训练路径 = 医学数据上的 **继续 PT + 专科教师蒸馏 + RL**；评测上 MRI 分类 **+11pp**、定位 IoU **3.1→38.0**、EHRQA **+22pp**，同时 SLAKE / MMLU Pro 等出现 **可预期回退**。
 4. 官方定位是 **开发者基础模型**（须验证与微调），**不是**开箱临床决策；安全卡列 child/content/representational/**medical harms**，PDF 无细分数。
-5. **不写法律模型**；材料以官方 PDF + HAI-DEF docs/Model Card 为限，禁编造未公开超参与监管状态。
+5. **不写法律模型**；材料以官方 PDF + HAI-DEF docs/Model Card 为限。
 
 ## 相关笔记
 

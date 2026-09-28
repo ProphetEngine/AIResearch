@@ -1,5 +1,5 @@
 ---
-title: "Open robotics stacks 增量：LeRobot（相对 12）"
+title: "Open robotics stacks 增量：LeRobot"
 topic: LeRobot开源栈
 date: 2026-09-22
 lines: [架构思想]
@@ -12,14 +12,13 @@ related: ["视觉语言动作谱系", "代码智能体Harness史线"]
 archived: 2026-09-22
 ---
 
-# Open robotics stacks 增量：LeRobot（相对 12）
+# Open robotics stacks 增量：LeRobot
 
 > **定位**：开源机器人学习栈横切——在 **[[视觉语言动作谱系]]**（VLA 策略谱系：RT-2 → OpenVLA → π₀）之上，补一条 **开源端到端机器人学习栈 + 数据集标准** 增量轴；主锚为 Hugging Face **LeRobot**（arXiv **2602.22818**，ICLR 2026），对照锚为 **Open X-Embodiment（OXE）** 数据集仓（arXiv **2310.08864**）。
 > **攻坚线**：**架构思想（主）**——垂直集成（middleware → 数据 → 算法 → 异步推理）；**数据集标准（辅）**——`LeRobotDataset` vs OXE 的 **RLDS**。
-> **硬划界**：
-> - **禁止重写** [[视觉语言动作谱系]] 中 **RT-2 / OpenVLA / π₀** 的策略全文（动作离散化、co-fine-tune、flow matching、成功率表等只允许 **一句交叉指针**）。
+> **范围与相邻笔记**：
+> - **不重写** [[视觉语言动作谱系]] 中 **RT-2 / OpenVLA / π₀** 的策略全文（动作离散化、co-fine-tune、flow matching、成功率表等只允许 **一句交叉指针**）。
 > - **OpenHands / 软件工程 coding agent** → **[[代码智能体Harness史线]]**；本项 **不混入**。
-> - **禁止编造**：下载量、数据集数、参数量、延迟、成本等一律取自官方 PDF（2026-09-22 CST）。
 > - 本卡写的是 **库与数据标准**，不是再写一篇「新 VLA 论文复述」。
 
 ---
@@ -44,7 +43,7 @@ archived: 2026-09-22
 | 主对象 | VLA **策略架构**（离散 token vs flow） | **库栈 + 数据集 schema + 推理部署** |
 | 典型问题 | $o, \text{lang} \to a$ 怎么表示与训练 | 电机接口、遥操作采集、流式大数据、action chunk 异步执行怎么工程化 |
 | RT-2 / OpenVLA / π₀ | **正文** | 只作「库内已挂载的算法名」或「OXE 上曾训过 RT-X」的 **指针** |
-| OpenHands 等 SE agent | 无关 | **禁止混入**（→ [[代码智能体Harness史线]]） |
+| OpenHands 等 SE agent | 无关 | **不收**（→ [[代码智能体Harness史线]]） |
 
 ### 2.2 刻意不写什么
 
@@ -115,7 +114,7 @@ Table 1a 给出带公开 BOM 的成本量级（美元量级，文内写法）：
 
 社区上传趋势（Figure 7）：**ACT** 因体量小、推理快、约 **50** 条真实轨迹即可得到可用策略而占上传主导；作为单任务模型，条件一变需重训。**SmolVLA** 文内定位为较小规模、语言条件可控的真机 VLA，适用面更宽。
 
-**相对 [[视觉语言动作谱系]] 的硬停：** π₀ / 离散 VLA 的架构与训练配方 **不在此复述**——此处只记录「LeRobot 把它们收成可跑的库组件」。Table 2/3 给出 fp32、扩散/flow **10** 步去噪设定下的峰值显存与平均推理延迟（CPU / MPS / RTX 4090 / A100）；例如 ACT **52M** 在 4090 上约 **5 ms** 量级延迟，π₀ **3.5B** 明显更重且在低端设备上可超时。跟读用途：**部署成本对照**，不是策略 SOTA 表。
+**相对 [[视觉语言动作谱系]] 的范围：** π₀ / 离散 VLA 的架构与训练配方 **不在此复述**——此处只记录「LeRobot 把它们收成可跑的库组件」。Table 2/3 给出 fp32、扩散/flow **10** 步去噪设定下的峰值显存与平均推理延迟（CPU / MPS / RTX 4090 / A100）；例如 ACT **52M** 在 4090 上约 **5 ms** 量级延迟，π₀ **3.5B** 明显更重且在低端设备上可超时。跟读用途：**部署成本对照**，不是策略 SOTA 表。
 
 ### 4.4 异步推理（§3.4 / Figure 8）
 
@@ -172,11 +171,11 @@ Figure 2 侧写：Franka 场景多样性高；xArm 与 Google Robot 因若干大
 
 ## 七、跟读清单（可闭卷复述）
 
-1. **相对 [[视觉语言动作谱系]]：** 那边是 VLA **策略谱系**；这边是开源 **端到端学习栈 + 数据标准**；禁止把 RT-2/OpenVLA/π₀ 正文搬过来；OpenHands 不进本卡。
+1. **相对 [[视觉语言动作谱系]]：** 那边是 VLA **策略谱系**；这边是开源 **端到端学习栈 + 数据标准**；不搬 RT-2/OpenVLA/π₀ 正文；OpenHands 不进本卡。
 2. **LeRobot 四块：** 统一 middleware ↔ `LeRobotDataset`（+ 流式）↔ PyTorch SOTA 参考实现 ↔ 异步 chunk 推理（物理+逻辑解耦）。
 3. **数据快照：** 2025-09 口径 **16K+** 集 / **2.2K+** 贡献者；存储 = parquet + mp4。
 4. **OXE 对照：** **1M+** 轨迹、**22** 具身、**RLDS/tfrecord** 的跨机构聚合仓；与 LeRobot 是「标准/仓」vs「垂直栈」互补，不是互相替代的同一篇策略论文。
-5. **禁编造：** 延迟/显存/成本以文内 Table 为准；不把库内挂载名写成「本笔记新训出的 SOTA」。
+5. **数字口径：** 延迟/显存/成本以文内 Table 为准；库内挂载名 ≠ 新训出的 SOTA。
 
 ---
 
@@ -189,8 +188,8 @@ Figure 2 侧写：Franka 场景多样性高；xArm 与 Google Robot 因若干大
  - abs: https://arxiv.org/abs/2310.08864
  - pdf: https://arxiv.org/pdf/2310.08864
  - 项目页: https://robotics-transformer-x.github.io/
-- （指针，不展开）[[视觉语言动作谱系]]：多模态与具身/机器人与VLA/视觉语言动作谱系.md — RT-2 / OpenVLA / π₀ 策略正文。
-- （划界）[[代码智能体Harness史线]]：Harness/智能体与工具/代码智能体Harness史线.md — OpenHands 等软件工程 agent，**本项不混入**。
+- （指针，不展开）[[视觉语言动作谱系]]— RT-2 / OpenVLA / π₀ 策略正文。
+- （划界）[[代码智能体Harness史线]]— OpenHands 等软件工程 agent，**本项不混入**。
 
 ## 相关笔记
 

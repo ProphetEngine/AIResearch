@@ -30,14 +30,14 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：统一多模态生成报告——ByteDance Seed *Emerging Properties in Unified Multimodal Pretraining*（arXiv:**2505.14683**v3 \[cs.CV\]，页眉 **27 Jul 2025**；正文 Date **July 29, 2025**）。立「**开源理解+生成统一 decoder-only（MoT）**」：在 **交错文本/图像/视频/网页** 万亿级 token 上预训练，报告 **涌现式** 复杂多模态推理（自由形式图像操纵、未来帧、3D、世界导航等）。
 > **攻坚线**：**架构思想（主）**——MoT / 双编码器（SigLIP2 + FLUX VAE）/ 广义因果注意力 / NTP⊕Rectified Flow；**评测字段（辅）**——Table 4–10 与 IntelligentBench 文内数字转述。
-> **硬划界（开篇钉死）**：
-> - **≠ B10**：禁止写成 **LDM / DiT 图像潜扩散层图通史**。本卡只写 BAGEL 的 **统一 MoT + RF 视觉头**；LDM/DiT 仅作谱系对照一句，不重写感知压缩 / U-Net→ViT 规模化。
-> - **≠ [[视频生成正式报告]]**：禁止写成 **文生视频旗舰正式报告缺口备忘**（Sora 等无可核长 TR）。本卡对象是 **统一理解+生成基础模型**；文内「视频交错数据 / 多帧生成」只作为 **训练源与世界建模定性展示**，不升「视频生成正式报告」主轴。
-> - **≠ [[多模态架构脉络]]**：禁止重写 CLIP→Flamingo→LLaVA→「原生多模态」**理解/对话通史**；经典祖先仅 related-work 接口。
-> - **≠ [[SiLVR与ChainOfFrames]]**：禁止写成 **SiLVR / Chain-of-Frames 视频理解推理框架**；本卡是 **生成侧统一模型 + 编辑/世界建模**，不是纯语言管道 VideoQA。
-> - **≠ [[QwenOmni音视频原生]]**：禁止写成 **Qwen Omni Thinker–Talker 音视频产品卡**；BAGEL 主轴是 **视觉理解+图像生成/编辑**，非流式语音合成 Omni。
-> - **谱系一句、不升主**：**Chameleon**（早期融合）过旧 → 仅 Table 4/5 对照与设计空间一句。**Foley-Omni**（音轨统一生成）→ **后置**（议程明示）。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）与 GitHub README 明示句。文内未给出的精确 GPU 小时 / 完整层宽公式 / 未表格化图点 → **不得外推**。
+> **范围与相邻笔记**：
+> - **≠ [[扩散生成式视觉与LLM]]**：不写成 **LDM / DiT 图像潜扩散层图通史**。本卡只写 BAGEL 的 **统一 MoT + RF 视觉头**；LDM/DiT 仅作谱系对照一句，不重写感知压缩 / U-Net→ViT 规模化。
+> - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等无可核长 TR）。本卡对象是 **统一理解+生成基础模型**；文内「视频交错数据 / 多帧生成」只作为 **训练源与世界建模定性展示**，不升「视频生成正式报告」主轴。
+> - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」**理解/对话通史**；经典祖先仅 related-work 接口。
+> - **≠ [[SiLVR与ChainOfFrames]]**：不写成 **SiLVR / Chain-of-Frames 视频理解推理框架**；本卡是 **生成侧统一模型 + 编辑/世界建模**，不是纯语言管道 VideoQA。
+> - **≠ [[QwenOmni音视频原生]]**：不写成 **Qwen Omni Thinker–Talker 音视频产品卡**；BAGEL 主轴是 **视觉理解+图像生成/编辑**，非流式语音合成 Omni。
+> - **谱系一句、不升主**：**Chameleon**（早期融合）过旧 → 仅 Table 4/5 对照与设计空间一句。**Foley-Omni**（音轨统一生成）→ **后置**。
+> **主要来源**：官方 PDF 与 [GitHub README](https://github.com/ByteDance-Seed/Bagel)（2026-09-22 CST）；文内未给出精确 GPU 小时与完整层宽公式。
 
 ---
 
@@ -72,7 +72,7 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
-| **LDM / DiT 图像扩散** | 潜空间去噪、U-Net→DiT 规模化 | **B10** | **否**（禁层图通史） |
+| **LDM / DiT 图像扩散** | 潜空间去噪、U-Net→DiT 规模化 | **[[扩散生成式视觉与LLM]]** | **否**（禁层图通史） |
 | **视频生成正式报告缺口** | Sora 等无可核长 TR 备忘 | **[[视频生成正式报告]]** | **否** |
 | **多模态理解/对话通史** | CLIP→Flamingo→LLaVA→原生主张 | **[[多模态架构脉络]]** | **否** |
 | **视频—语言推理框架** | SiLVR 语言管道 / CoF 帧锚定 | **[[SiLVR与ChainOfFrames]]** | **否** |
@@ -89,7 +89,7 @@ timezone: Asia/Shanghai (CST)
 | **External Diffuser** | LLM/VLM 经轻适配器接外部扩散；LLM 压成少量 latent 作语义条件 | 收敛快、数据省；但 **显式瓶颈**，长上下文多模态推理信息损失风险大 |
 | **Integrated Transformer** | 同一 Transformer 内切换 AR 理解与扩散式生成；全层无瓶颈上下文 | **本文选择**；算力更高，但利于大规模交错缩放与长上下文推理 / 后续 RL |
 
-> **跟读提醒**：本卡写的是 **Integrated + MoT 硬路由** 这一具体配方，不是 B10 的「如何训一个独立 LDM/DiT」，也不是 [[视频生成正式报告]] 的「有无 Sora 级正式 TR」。
+> **跟读提醒**：本卡写的是 **Integrated + MoT 硬路由** 这一具体配方，不是 [[扩散生成式视觉与LLM]] 的「如何训一个独立 LDM/DiT」，也不是 [[视频生成正式报告]] 的「有无 Sora 级正式 TR」。
 
 ---
 
@@ -289,7 +289,7 @@ README（2025-06-15）称已修正 KRIS/RISE 评测结果，并称在这些推�
 
 ---
 
-## 八、跟读清单与禁区
+## 八、阅读重点与范围外
 
 **应记住：**
 1. **MoT + 双编码器 + 无瓶颈共享注意力** 是相对 External Diffuser / 纯离散 AR 的主架构选择。
@@ -297,8 +297,8 @@ README（2025-06-15）称已修正 KRIS/RISE 评测结果，并称在这些推�
 3. 能力顺序：**理解/生成 → 经典编辑 → 智能编辑**；IntelligentBench / Self-CoT 是文内用来暴露组合推理的探针。
 4. 开源落点：**7B/14B MoT 权重 + Apache 代码**；项目页 bagel-ai.org。
 
-**禁止：**
-- 把本卡写成 B10 LDM/DiT 教程或 [[视频生成正式报告]] 视频 TR 缺口复述。
+**范围外：**
+- 把本卡写成 [[扩散生成式视觉与LLM]] LDM/DiT 教程或 [[视频生成正式报告]] 视频 TR 缺口复述。
 - 把视频交错/多帧定性展示写成「BAGEL = 开源 Sora」。
 - 把 [[QwenOmni音视频原生]] Omni 语音栈或 [[SiLVR与ChainOfFrames]] VideoQA 框架配方塞进正文。
 - 外推未给的总 GPU 时、层配置细节、或把 Fig 柱未对齐读数当表。

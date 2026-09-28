@@ -26,14 +26,14 @@ timezone: Asia/Shanghai (CST)
 > **定位**：交互生成式世界模型增量——在 **[[世界模型与VJEPA]]** 已立「非生成式 JEPA 表征预测」之后，本卡只写 **交互 / 流式生成式世界模型** 增量切片：
 > - **Matrix-Game 3.0**（Skywork AI）：**实时流式交互 WM** + **相机感知长程记忆** + 工业数据引擎 + few-step 蒸馏部署（720p / 至约 40 FPS）。
 > - **Cosmos World Foundation Model Platform**（NVIDIA）：**Physical AI 世界基础模型平台**——视频策展 / 连续·离散 tokenizer / 扩散与自回归预训练 WFM / 后训练样例 / guardrail。
-> **对照（不升主）**：**Genie 3** 仅有 DeepMind 博文（2025-08-05）、**无正式 PDF TR** → 本波不作主锚，仅作产品对照一句。
+> **对照（不升主）**：**Genie 3** 仅有 DeepMind 博文（2025-08-05）、**无正式 PDF TR** → 不作主锚，仅作产品对照一句。
 > **攻坚线**：**架构思想 / 平台接口（主）** + **文内交互一致性 / 吞吐字段（辅）**。
-> **硬划界（开篇钉死，禁止滑向相邻卡）**：
-> - **≠ [[世界模型与VJEPA]]**：禁止重写 JEPA **mask-denoising 表征预测**入门、V-JEPA 2 probe / VidQA / AC 后训练长文。本卡预测落在 **像素 / 潜视频生成**（动作条件交互或 Video2World），与表征空间 JEPA **正交**。
-> - **≠ [[视频生成正式报告]]**：禁止写成 **文生视频旗舰正式报告缺口备忘**（Sora 等）。本卡对象是 **交互/流式 WM + Physical AI WFM 平台**，非「无可核长 TR」产品备忘。
-> - **≠ [[DiffusionForcing族]]**：禁止重写 Diffusion Forcing → Self Forcing → Causal Forcing **训推对齐 forcing 族通史**。Matrix 文内引用 Self-Forcing / DMD / Causal Forcing 仅作 **蒸馏接口一句**，不展开族谱。
-> - **≠ [[视觉语言动作谱系]]**：禁止写成 **Robotics VLA 控制部署通史**（RT-2 / OpenVLA / π0）。Cosmos 后训练含机器人 manipulation **样例**，本卡只录「预训练 WFM → 域内后训练」平台接口，不写闭环 VLA 策略谱系。
-> **禁止编造**：主张与表数字一律锚定官方 PDF 与博文（2026-09-22 CST）。文内未给出的算力明细 / 未披露配方 → **不得外推**。
+> **范围与相邻笔记**：
+> - **≠ [[世界模型与VJEPA]]**：不重写 JEPA **mask-denoising 表征预测**入门、V-JEPA 2 probe / VidQA / AC 后训练长文。本卡预测落在 **像素 / 潜视频生成**（动作条件交互或 Video2World），与表征空间 JEPA **正交**。
+> - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等）。本卡对象是 **交互/流式 WM + Physical AI WFM 平台**，非「无可核长 TR」产品备忘。
+> - **≠ [[DiffusionForcing族]]**：不重写 Diffusion Forcing → Self Forcing → Causal Forcing **训推对齐 forcing 族通史**。Matrix 文内引用 Self-Forcing / DMD / Causal Forcing 仅作 **蒸馏接口一句**，不展开族谱。
+> - **≠ [[视觉语言动作谱系]]**：不写成 **Robotics VLA 控制部署通史**（RT-2 / OpenVLA / π0）。Cosmos 后训练含机器人 manipulation **样例**，本卡只录「预训练 WFM → 域内后训练」平台接口，不写闭环 VLA 策略谱系。
+> **主要来源**：官方 PDF 与 [Genie 3 博文](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/)（2026-09-22 CST）；文内未给出算力明细与完整配方。
 
 ---
 
@@ -242,23 +242,22 @@ pre-Guard 拦有害输入、post-Guard 拦有害输出——本卡不展开分�
 | Promptable world events；与 SIMA agent 联调 | 产品能力索引 |
 | 限制：动作空间有限、多 agent、真实地点精度、时长「数分钟非数小时」等 | 跟读时勿夸大 |
 
-**议程裁定（2026-09-22）**：无正式 PDF TR → **本波不升主**；仅对照一句。
+无正式 PDF TR（截至 2026-09-22）→ **不升主**；仅对照一句。
 
 ---
 
-## 六、跟读清单与禁止项
+## 六、阅读重点与范围外
 
 **优先跟：**
 
 1. Matrix：**error buffer + 相机记忆同注意力 + 多段 DMD** 如何共同服务「流式分钟级」；Table 1/2 吞吐与 VAE 代价。
 2. Cosmos：**策展 → 因果 tokenizer → 扩散/AR 双轨预训练 → 小数据后训练** 的平台分层；Table 10 模型地图。
-3. 划界自检：文中是否误入 JEPA mask 损失、Sora 缺口叙事、Forcing 族公式堆叠、或 VLA 成功率表。
 
-**禁止：**
+**范围外：**
 
 - 把 Cosmos 写成「又一个文生视频模型评测」或把 Matrix 写成「又一个离线 DiT 视频」。
 - 把 Genie 3 博文数字当作已 peer-review 的可复现配方。
-- 编造未在抽取中出现的 FLOPs 明细、未公开的 Genie 训练预算、或「已验证 MPC/RL 收益」。
+- 未在原文出现的 FLOPs 明细、未公开的 Genie 训练预算、或「已验证 MPC/RL 收益」。
 
 ---
 

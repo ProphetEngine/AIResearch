@@ -22,13 +22,13 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：开源音视频联合旗舰增量——补仓库在 **[[QwenOmni音视频原生]] Qwen Omni 产品线 TR** 之外仍缺的 **「非 Qwen 栈」开源长视频音视联合理解（AV-LLM）** 锚点。主文：Ghosh, Goel, et al., *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos*（arXiv **2607.16107v1**）。
 > **攻坚线**：**架构思想（主）**——OmniVinci 初始化 + SigLip/AF-Whisper + 时序交错与 CRTE + 三阶段课程 + TAVIT/AV-Think；**评测字段（辅）**——文内 Omni / Audio / Video / ASR 表（Table 1）与 AV-Skills 消融（Table 6）。
-> **硬划界（开篇钉死）**：
-> - **≠ [[QwenOmni音视频原生]] Qwen Omni**：禁止重写 Thinker–Talker MoE、AuT、ARIA、Qwen3/3.5-Omni 产品栈与 36/215 基准表；本卡仅在「同题相邻的闭源/开权 omni 对照」处点名，**不**展开 Qwen Omni 配方。
-> - **≠ [[SpeechLLM语音语言模型]] Speech-LLM**：禁止重写 Qwen2-Audio / Whisper→LLM 音频→文本对话栈；本卡是 **音视频联合理解 + 可选流式 TTS**，不是 Voice Chat / Audio Analysis 接口史。
-> - **≠ [[SeamlessM4T语音翻译]] SeamlessM4T**：禁止重写 UnitY / EMMA 语音翻译与同传；本卡 **不做** S2ST/S2TT 翻译 FM。
-> - **≠ [[多模态架构脉络]] 多模态通史**：禁止重写 CLIP→Flamingo→LLaVA→「原生多模态」阶梯；经典 Flamingo（Alayrac 2022）仅作 related-work 一句祖先，**不**升主。
+> **范围与相邻笔记**：
+> - **≠ [[QwenOmni音视频原生]] Qwen Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、Qwen3/3.5-Omni 产品栈与 36/215 基准表；本卡仅在「同题相邻的闭源/开权 omni 对照」处点名，**不**展开 Qwen Omni 配方。
+> - **≠ [[SpeechLLM语音语言模型]] Speech-LLM**：不重写 Qwen2-Audio / Whisper→LLM 音频→文本对话栈；本卡是 **音视频联合理解 + 可选流式 TTS**，不是 Voice Chat / Audio Analysis 接口史。
+> - **≠ [[SeamlessM4T语音翻译]] SeamlessM4T**：不重写 UnitY / EMMA 语音翻译与同传；本卡 **不做** S2ST/S2TT 翻译 FM。
+> - **≠ [[多模态架构脉络]] 多模态通史**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」阶梯；经典 Flamingo（Alayrac 2022）仅作 related-work 一句祖先，**不**升主。
 > - **≠ [[视频生成正式报告]] 视频生成正式报告备忘**：本卡是 **理解 / 推理 AV-LLM**，不是文生视频 / Sora 缺口备忘。
-> **禁止编造**：参数量、小时数、表内 ACC/WER、训练超参一律锚定官方 PDF（2026-09-22 CST）；页眉 Code / Model / Project Page / Dataset / Demo **按钮在 PDF 二进制中未抽出可核 URI**（仅见 `arxiv.org/abs/2607.16107v1`）→ **不臆造 GitHub / HF 链接**；文内写「fully open」与 Broader Impacts「non-commercial research use only」**并列表出，不调和**。
+> 页眉 Code / Model / Project Page / Dataset / Demo **按钮在 PDF 中未见可核 URI**（仅见 `arxiv.org/abs/2607.16107v1`），故不列 GitHub / HF 链接；文内写「fully open」与 Broader Impacts「non-commercial research use only」**并列表出**。
 
 ---
 
@@ -73,7 +73,7 @@ timezone: Asia/Shanghai (CST)
 | **[[多模态架构脉络]]** | related work 中 Flamingo / LLaVA / InternVL 作视觉 LMM 前史一句 | CLIP→指令微调通史重写 |
 | **[[视频生成正式报告]]** | 无接口（生成 ≠ 理解） | Sora / 文生视频正式报告缺口 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|
@@ -214,5 +214,3 @@ Broader Impacts：正向（无障碍音频描述、讲座/纪录片理解、内�
 | 主 PDF | `https://arxiv.org/abs/2607.16107`（**47** 页） |
 | arXiv | https://arxiv.org/abs/2607.16107 · https://arxiv.org/pdf/2607.16107 |
 | 核验日 | 2026-09-22 CST |
-
-**交付状态：** draft。数字与机制均跟读官方 PDF；开源仓链与商业许可以作者后续正式页为准，**禁止**用二手博客补 URI。
