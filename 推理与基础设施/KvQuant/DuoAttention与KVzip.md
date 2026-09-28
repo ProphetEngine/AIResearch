@@ -14,14 +14,13 @@ archived: 2026-09-22
 
 # KV 新方法：DuoAttention（头分工）+ KVzip（query-agnostic 压缩）
 
-> **定位**：**P1 Infra**——相对 **[[KV缓存量化与压缩]]**（KV 低比特量化）与 **[[检索式注意力]]**（检索式注意力近似全注意力）补一条近窗横切：**头级分工（retrieval vs streaming）** 与 **与查询无关、可跨 query 复用的 KV 驱逐**。主锚两篇一手 PDF：**DuoAttention**（2410.10819）与 **KVzip**（2505.23416）。
+> **定位**：**Infra**——相对 **[[KV缓存量化与压缩]]**（KV 低比特量化）与 **[[检索式注意力]]**（检索式注意力近似全注意力）补一条近窗横切：**头级分工（retrieval vs streaming）** 与 **与查询无关、可跨 query 复用的 KV 驱逐**。主锚两篇一手 PDF：**DuoAttention**（2410.10819）与 **KVzip**（2505.23416）。
 > **攻坚线**：**架构思想（主）**——谁必须全 KV、谁可 sink+近窗 / 谁可按重构分数驱逐；**显存 / 延迟—精度字段（辅）**——NIAH、LongBench、SCBench 多 query、A100 上的 decode/prefill 数字。
-> **硬划界（禁止重写）**：
+> **范围与相邻笔记**：
 > - **≠ [[KV缓存量化与压缩]]**：不写 K/V 非对称量化、残差窗、outlier 比特轴；两文均称量化可叠加，本篇只录「组合后容量」一句。
 > - **≠ [[检索式注意力]]**：不写 KV 向量 ANNS / 句级 token 缓存；本篇是 **头分工** 与 **prefill 期 query-agnostic 驱逐**，不是 decode 期检索近似。
 > - **≠ [[长上下文位置编码与系统侧]]**：不重写 YaRN / PagedAttention / vLLM 调度通史。
 > - **SnapKV / PyramidKV / H2O / StreamingLLM / TOVA / FastGen**：仅作文内基线槽，**不另开**方法课。
-> **禁止编造**：公式骨架、表数字、倍率一律取自官方 PDF（2026-09-22 CST）。
 
 ---
 
@@ -198,7 +197,7 @@ $$
 
 ---
 
-## 六、可跟读结论（禁外推未写实验）
+## 六、可跟读结论
 
 1. **头不匀是 DuoAttention 的第一性原理**：先用优化门控找出「剪掉会改输出」的头，再只给它们全 KV——比统一 Streaming / 统一 profiling 更能保 NIAH 与 LongBench。
 2. **GQA 比 MHA 更难压 retrieval 比例**：文内默认 50% vs 25%，Fig.4 与效率上限（1.67× vs 2.55× 显存）一致——跟读时勿把 MHA 倍率直接套到 GQA 服务。

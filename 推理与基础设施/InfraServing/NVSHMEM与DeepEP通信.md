@@ -11,19 +11,19 @@ sources:
 arxiv: ["2606.05951"]
 related: ["AI基础设施总览", "混合专家架构", "DeepSeekV3训练与MoE基建"]
 github_deepep: "https://github.com/deepseek-ai/DeepEP"
-note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用；禁止虚构 DeepEP paper arXiv 号"
+note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用"
 ---
 
 # 分布式集合通信 Demystifying NVSHMEM（DeepEP 案例）
 
-> **定位**：**P1 Infra / 通信横切**——立「**GPU 端发起、对称内存、一侧 put/get**」这条与 **NCCL 主机侧集体**互补的通信模型。主文是 Ma / Shen / Chen 等 *Demystifying NVSHMEM*（arXiv:**2606.05951**）；**DeepEP** 仅作主文 §VIII 案例 + GitHub 工程辅读（README / `docs/legacy.md`），**不是**本卡第二篇论文。
+> **定位**：**Infra / 通信横切**——立「**GPU 端发起、对称内存、一侧 put/get**」这条与 **NCCL 主机侧集体**互补的通信模型。主文是 Ma / Shen / Chen 等 *Demystifying NVSHMEM*（arXiv:**2606.05951**）；**DeepEP** 仅作主文 §VIII 案例 + GitHub 工程辅读（README / `docs/legacy.md`），**不是**本卡第二篇论文。
 > **攻坚线**：**AI Infra（主）**——对称堆、P2P 快路径 / IBGDA 慢路径、设备侧集体与 LL/LL128；**架构思想（辅）**——为何稀疏 EP 的数据依赖 all-to-all 更适合在 NVSHMEM 基底上自建 dispatch/combine，而不是直接套现成集体。
-> **硬划界（开篇钉死）**：
+> **范围与相邻笔记**：
 > - **≠ [[AI基础设施总览]]**：不写 Megatron TP/PP/DP 通论、FlashAttention、PagedAttention、FP8 训练栈全文；本卡只取「通信库 / 设备侧 RMA」一层。
 > - **≠ [[混合专家架构]]**：不写 Switch→Mixtral→V3 的 MoE **路由/稀疏史线**（总参 vs 激活参、aux-loss、$M=4$ 等）；EP 只当「专家切分 → 稀疏 all-to-all」接口一句。
 > - **≠ [[DeepSeekV3训练与MoE基建]] / [[DeepSeekV4技术报告深读]] 通信小节全文重写**：不重写 DualPipe 气泡表、20 SM / 3.2 experts/node、dispatch 前 FP8 / combine BF16 等 **报告配方轴**；本卡只跟 NVSHMEM 运行时如何被 DeepEP **调用**，以及 HT/LL 内核如何叠在对称堆与 IBGDA 上。
-> **硬约束**：**DeepEP 无独立 arXiv 主文**——引用只写 `github.com/deepseek-ai/DeepEP`（主文 References [33]）；**禁止虚构** DeepEP paper arXiv 号。主文分析对象为 **DeepEP V1（NVSHMEM）**；V2 已切 **NCCL Gin**，本卡只点一句边界，不升主轴。
-> **禁止编造**：带宽、延迟、算法名一律锚定官方 PDF（2026-09-22 CST）与公开 README/legacy；未在源出现的对比表不写。
+> **引用形态**：**DeepEP 无独立 arXiv 主文**——引用写 `github.com/deepseek-ai/DeepEP`（主文 References [33]）。主文分析对象为 **DeepEP V1（NVSHMEM）**；V2 已切 **NCCL Gin**，本卡只点一句边界，不升主轴。
+> **主要来源**：官方 PDF 与 [DeepEP README / legacy](https://github.com/deepseek-ai/DeepEP)（2026-09-22 CST）。
 
 ---
 
@@ -231,7 +231,7 @@ $$
 
 ## 九、案例：DeepEP 如何「薄用」NVSHMEM（§VIII + GitHub 辅）
 
-> **再次钉死：**DeepEP **没有**独立 arXiv 主文。下列机制描述以 **2606.05951 §VIII** 为准；带宽表与 API 形态以 GitHub **README / `docs/legacy.md`** 为辅，不编造论文号。
+> **说明：**DeepEP **没有**独立 arXiv 主文。下列机制描述以 **2606.05951 §VIII** 为准；带宽表与 API 形态以 GitHub **README / `docs/legacy.md`** 为辅。
 
 ### 9.1 问题形态
 
@@ -299,7 +299,7 @@ $$
 
 ---
 
-## 十一、跟读清单与反幻觉
+## 十一、主张与锚点
 
 | 主张 | 锚点 |
 |---|---|
@@ -311,15 +311,3 @@ $$
 | 临界 NVSHMEM 调用 | `nvshmemi_ibgda_put_nbi_warp`、`nvshmemi_ibgda_amo_nonfetch_add` |
 | 微基准数字 | §VII / Fig.4–5；上表照录 |
 | legacy 带宽表 | `docs/legacy.md`（GitHub），非 arXiv |
-
-**自检三问：**
-1. 是否误给 DeepEP 捏造了 arXiv 号？→ 必须否。
-2. 是否把 DualPipe / 路由损失写进本卡主文？→ 必须否。
-3. 是否把 V2 Gin 性能表与主文 H200 NVSHMEM 微基准混为一谈？→ 必须否。
-
----
-
-## 十二、回报摘要（给编排用）
-
-- **PDF**：`https://arxiv.org/abs/2606.05951`
-- **摘要**：主文系统拆解 NVSHMEM 3.3.9 的对称堆、P2P/IBGDA 一侧路径与设备集体；以 DeepSeek **DeepEP V1**（GitHub，无独立 arXiv）证明「稀疏 EP 只需在跨节点临界点薄用 NVSHMEM」。划界避开 [[AI基础设施总览]] / [[混合专家架构]] / [[DeepSeekV3训练与MoE基建]] · [[DeepSeekV4技术报告深读]] 通信全文。

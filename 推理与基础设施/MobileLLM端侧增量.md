@@ -1,5 +1,5 @@
 ---
-title: "端侧 LLM 增量：MobileLLM-Pro + MobileLLM-Flash（≠ 11 / ≠ 7 / ≠ 9）"
+title: "端侧 LLM 增量：MobileLLM-Pro + MobileLLM-Flash"
 topic: MobileLLM端侧增量
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -8,23 +8,23 @@ sources:
  - https://arxiv.org/abs/2511.06719
  - https://arxiv.org/abs/2603.15954
 arxiv: ["2511.06719", "2603.15954"]
-related: ["端侧小模型", "ZeroQAT量化感知训练", "硬件软件协同部署", "Gemma4技术报告深读", "B7"]
+related: ["端侧小模型", "ZeroQAT量化感知训练", "硬件软件协同部署", "Gemma4技术报告深读", "推理引擎生态"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# 端侧 LLM 增量：MobileLLM-Pro + MobileLLM-Flash（≠ 11）
+# 端侧 LLM 增量：MobileLLM-Pro + MobileLLM-Flash
 
-> **定位**：**P1**——Meta Reality Labs / Meta AI 在 **2024 MobileLLM（ICML）之后**的两条**增量产品/方法轴**，禁止写成「MobileLLM 原文复述」：
+> **定位**：Meta Reality Labs / Meta AI 在 **2024 MobileLLM（ICML）之后**的两条**增量产品/方法轴**，不写成「MobileLLM 原文复述」：
 > - **MobileLLM-Pro**（*Technical Report*，arXiv **2511.06719**）：**1.08B** 端侧基础模型；四阶段预训练（SDM 数据混合 → **隐式位置蒸馏**扩到 **128k** → **专家合并** → **4-bit QAT**）+ 三阶段指令微调；对标 Gemma 3-1B / Llama 3.2-1B。
 > - **MobileLLM-Flash**（*Latency-Guided On-Device LLM Design*，arXiv **2603.15954**）：在 Pro/浅宽骨干上做 **硬件在环 NAS**（剪枝继承权重 + Ax 两阶段 BO）；产出 **350M / 650M / 1.4B** 族；主张 **skip-attention 交错**优于 SWA；Executorch 原生算子、无定制内核。
 > **攻坚线**：**架构思想（主）**——隐式位置蒸馏 / 专家合并 / 延迟—质量 Pareto；**AI Infra（辅）**——端侧 TTFT、INT4 分发、Executorch 可移植。
-> **硬划界（开篇钉死）**：
+> **范围与相邻笔记**：
 > - **≠ [[端侧小模型]]**：不重写 **MobileLLM 2024**（arXiv **2402.14905**）的深薄四件套、immediate block-wise 权重共享、DRAM/SRAM 层级通史，也不重写 Phi-4 / Gemma 4 E2B 对照全文。本卡只在「家族命名与浅宽反转」处交叉引用。
 > - **≠ [[ZeroQAT量化感知训练]]**：不写 ZeroQAT 的 **零阶（ZO）前向估计梯度**、可学习平滑、Q/V 轻量变体算法课；Pro 的 QAT 是 **标准 STE + 可学习量化范围 + FP 自蒸馏**，接口不同。
 > - **≠ [[硬件软件协同部署]]**：不写 NVIDIA Blackwell / TPU 机架白皮书、FP4/NVLink 代际表；本卡延迟数字来自 **手机 CPU/HTP + Executorch**，不是数据中心 codesign。
-> - **≠ B7**：不写 vLLM/SGLang 选型通史；Executorch / xnnpack 仅作部署字段。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。文内叙述与表冲突时 **以表为准** 并标注。
+> - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang 选型通史；Executorch / xnnpack 仅作部署字段。
+> 文内叙述与表冲突时 **以表为准** 并标注。
 
 ---
 
@@ -52,13 +52,13 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
-| **2024 MobileLLM 深薄配方** | 层深、embedding 共享、GQA、immediate share | **[[端侧小模型]]** | **否**（禁原文复述） |
-| **训练期 ZO-QAT** | 零阶梯度、端侧可训 QAT 显存 | **[[ZeroQAT量化感知训练]]** | **否**（禁算法课） |
+| **2024 MobileLLM 深薄配方** | 层深、embedding 共享、GQA、immediate share | **[[端侧小模型]]** | **否**（不复述原文） |
+| **训练期 ZO-QAT** | 零阶梯度、端侧可训 QAT 显存 | **[[ZeroQAT量化感知训练]]** | **否**（不写算法课） |
 | **数据中心 HW–SW codesign** | Blackwell / TPU / FP4 / NVLink | **[[硬件软件协同部署]]** | **否** |
 | **1B 四阶段预训练 + 128k 位置蒸馏** | SDM / IPD / specialist merge / 双路径 INT4 | **本篇主文 A** | **是** |
 | **手机 TTFT 在环 NAS + skip-attn 族** | 剪枝搜索、Pareto 原则、Executorch 可移植 | **本篇主文 B** | **是** |
 
-跟读直觉：[[端侧小模型]] 问「**sub-billion 端侧该不该深薄**」；Pro 问「**已有 1B 配方后，数据/长上下文/合并/量化四阶段怎么叠**」；Flash 问「**深薄在手机上是否反而更慢——如何用真实 TTFT 搜出浅宽 + skip**」。三者串成「2024 架构立轴 → 2025 Pro 训练栈 → 2026 Flash 延迟栈」，禁止把后两篇写成 MobileLLM 原文附录。
+跟读直觉：[[端侧小模型]] 问「**sub-billion 端侧该不该深薄**」；Pro 问「**已有 1B 配方后，数据/长上下文/合并/量化四阶段怎么叠**」；Flash 问「**深薄在手机上是否反而更慢——如何用真实 TTFT 搜出浅宽 + skip**」。三者串成「2024 架构立轴 → 2025 Pro 训练栈 → 2026 Flash 延迟栈」，不把后两篇写成 MobileLLM 原文附录。
 
 ### 2.2 与 [[端侧小模型]] 的唯一允许接口
 
@@ -78,7 +78,7 @@ Flash Related Work 明确点名：先验 **深薄**（含 Liu et al. 2024 = Mobi
  ▼ ▼ ▼
  深薄立轴 训练栈增量 延迟在环增量
  [[端侧小模型]] 本篇 A Pro 本篇 B Flash
- (禁复述) 128k+QAT skip-attn NAS
+ (不复述) 128k+QAT skip-attn NAS
 `
 
 ---
@@ -218,7 +218,7 @@ Instruct 榜（Table 7 节选）：HumanEval **59.8**（Gemma 41.5 / Llama 37.8�
 
 文称 Flash-1.4B 相对浅宽母体平均准确率只让 **1.1%**，换最高约 **1.2× / 1.3×** prefill/decode；相对 LFM2 族最高 **1.8× / 1.6×**。量化部署字段：W4 group32 + A8 dyn + 量化 KV；Nemotron-Flash-1B 因 JetBlock **不支持 Executorch** 未测延迟。iPhone 17 上相对优势大体保持（Table 8）。
 
-IFT（Table 7）：Flash-1.4B MMLU **47.89**、HumanEval **46.34**；Flash-650M Open Rewrite **46.84** 等——文称助手场景可比或更优；**禁止**与 Pro Table 7 无脚注硬并（评测设定/模型不同）。
+IFT（Table 7）：Flash-1.4B MMLU **47.89**、HumanEval **46.34**；Flash-650M Open Rewrite **46.84** 等——文称助手场景可比或更优；不宜与 Pro Table 7 无脚注硬并（评测设定/模型不同）。
 
 ### 4.5 局限（文内 Limitations）
 
@@ -243,19 +243,19 @@ IFT（Table 7）：Flash-1.4B MMLU **47.89**、HumanEval **46.34**；Flash-650M 
 
 `
 [[端侧小模型]] MobileLLM'24：深薄 × 共享 × DRAM 故事
- ↓（禁复述）
+ ↓（不复述）
 Pro：Scout-KD × SDM × IPD(128k) × Merge × INT4-QAT
  ↓ 浅宽母体
 Flash：真机 TTFT × 剪枝 BO × Skip>SWA × Executorch 可移植
 `
 
-1. **交叉链**：`related` 指向 [[端侧小模型]] / [[ZeroQAT量化感知训练]] / [[硬件软件协同部署]] / [[Gemma4技术报告深读]] / B7；正文禁止展开其主课。
+1. **交叉链**：`related` 指向 [[端侧小模型]] / [[ZeroQAT量化感知训练]] / [[硬件软件协同部署]] / [[Gemma4技术报告深读]] / [[推理引擎生态]]；正文不展开其主课。
 2. **待核实**：Flash 权重/代码公开入口（PDF 未给 HF URL）；Pro IFT Table 11 正文「32.7%」与表「45.23」不一致——引用时锁表。
-3. **勿混并**：Pro 128k NIH 与 Flash 4k TTFT、Pro/Flash 的 MMLU/HumanEval **分表引用**，禁止合成「统一端侧榜」。
+3. **不混并**：Pro 128k NIH 与 Flash 4k TTFT、Pro/Flash 的 MMLU/HumanEval **分表引用**，不合成「统一端侧榜」。
 
 ---
 
-## 六、开放问题（草稿）
+## 六、开放问题
 
 1. IPD 对非 RoPE / 非 Scout 教师是否可迁移？文内机制论证偏 RoPE+logit KD。
 2. Flash 的 skip-attn Pareto 在 ANE/HTP 上是否翻转？文内已提示跨加速器类可能失效。

@@ -21,14 +21,13 @@ timezone: Asia/Shanghai (CST)
 
 # GPU Kernel DSL：ThunderKittens（Dr. Kernel 索引）
 
-> **定位**：**P1 Infra / 编程模型**——立「**面向 AI 核的嵌入式 C++ / tile DSL**」短史：Stanford HazyResearch 的 **ThunderKittens（TK）**（arXiv:2410.20399；**ICLR 2025**）如何用**少数意见化抽象**（warp 级 16×16 tile + 块级 LCSF 异步模板 + 网格级持久化/块序）写出可与 CuBLAS / FlashAttention-3 对标、并在线性注意力 / SSM 上大幅领先基线的核。
+> **定位**：**Infra / 编程模型**——立「**面向 AI 核的嵌入式 C++ / tile DSL**」短史：Stanford HazyResearch 的 **ThunderKittens（TK）**（arXiv:2410.20399；**ICLR 2025**）如何用**少数意见化抽象**（warp 级 16×16 tile + 块级 LCSF 异步模板 + 网格级持久化/块序）写出可与 CuBLAS / FlashAttention-3 对标、并在线性注意力 / SSM 上大幅领先基线的核。
 > **攻坚线**：**AI Infra / 编程模型（主）**——抽象落在 GPU 层次的哪一层、相对 CUTLASS/CuTe 与 Triton 的定位；**评测字段（辅）**——文内 H100 TFLOPS / NCU 剖面照录，不外推未测硬件。
-> **硬划界（开篇钉死）**：
+> **范围与相邻笔记**：
 > - **≠ [[硬件软件协同部署]]**：不写 Blackwell / TPU 白皮书代际 × 精度 × 互联；本篇对象是 **核侧编程抽象**，不是机架级硬件 datasheet。
 > - **≠ [[注意力效率族MQA到MLA]]**：不写 MHA→MQA/GQA→MLA 的**注意力算法变体通史**；本篇若点到 GQA / FA3，只作「TK 核实现的工作负载」，不重写 KV 头共享公式。
-> - **禁止写成 CUDA 教程**：不教 `<<<>>>`、不逐步讲 bank conflict 手工 swizzle、不复刻附录完整核源码；只保留 **DSL 接口思想**（tile / LCSF / 意见化布局）与文内对照数字。
+> - **不写成 CUDA 教程**：不教 `<<<>>>`、不逐步讲 bank conflict 手工 swizzle、不复刻附录完整核源码；只保留 **DSL 接口思想**（tile / LCSF / 意见化布局）与文内对照数字。
 > - **Dr. Kernel 仅索引**：*Dr. Kernel*（2602.05885）是 **Triton 核的 RL 生成**线（KernelGYM / TRLOO），**不是** TK 后继；本卡只给入口与一句话定位，**不深读方法节**。
-> **禁止编造**：倍率、TFLOPS、NCU 字段、库体积一律锚定官方 PDF（2026-09-22 CST）。未在源文出现的「生产实测 / 跨代 GPU」数字不写。
 
 ---
 
@@ -62,9 +61,9 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|
 | **[[硬件软件协同部署]]** | 「当代加速器有 tensor core / 高带宽域」是物理前提一句 | Blackwell NVL72 / TPU Ironwood datasheet 表 |
 | **[[注意力效率族MQA到MLA]]** | GQA / 注意力是 TK 的**示例工作负载** | MHA→MQA/GQA→MLA 公式与质量—带宽取舍全文 |
-| **[[AI基础设施总览]] / B7** | 引擎会吃定制核 | FlashAttention / PagedAttention / vLLM 选型通史 |
+| **[[AI基础设施总览]] / [[推理引擎生态]]** | 引擎会吃定制核 | FlashAttention / PagedAttention / vLLM 选型通史 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|
@@ -147,7 +146,7 @@ Dr.K = LLM+RL 如何生成 Triton 核（补链，另一范式）
 | **Triton / TVM / XLA 等** | 编译器 / 高层图，接口友好 | 难直接使用未暴露的专用指令；异步与寄存器管控更绕；TK 保 PyTorch 味但留在 CUDA 嵌入层 |
 | **TK** | 意见化 tile + LCSF + grid 提示 | Appendix Table 5（2024-10-22 快照口径）：CutLASS include **22MB**、CuBLAS **689MB**、Triton **12.6MB**、**TK \<1.0MB**——体积叙事服务「小抽象面」主张，**不是**性能证明本身 |
 
-**禁止误读：** 「匹配 CuBLAS」≠ 「替换 cuBLAS 库产品」；文展示的是**单一约 40 行 device 代码的 GEMM 形态**在所示矩阵规模上可竞争（§4.1）。
+**易误读：** 「匹配 CuBLAS」≠ 「替换 cuBLAS 库产品」；文展示的是**单一约 40 行 device 代码的 GEMM 形态**在所示矩阵规模上可竞争（§4.1）。
 
 ---
 
@@ -222,16 +221,16 @@ TK = **人**在嵌入式 C++ tile DSL 里写核；Dr. Kernel = **模型**在 Tri
 
 ---
 
-## 九、可回收结论（给议程 / 交叉引用）
+## 九、可回收结论（交叉引用）
 
 1. **缺的那一层史**：[[硬件软件协同部署]] 钉硬件白皮书，[[注意力效率族MQA到MLA]] 钉注意力算法族；仓库仍缺「**AI 核嵌入式 DSL**」——TK 用 **tile + LCSF + 块序** 回答「少数抽象是否够快」。
 2. **意见化 ≠ 弱**：在文设 H100 基准上，TK 可 **匹配** CuBLAS / FA3 推理侧，并在反向注意力与线性注意力 / SSM 上给出文内 **10–40% / 6.5–14× / ~8×** 量级领先（分条见 §六）。
 3. **嵌入式友好失效**：相对 Triton，TK 强调 CUDA 嵌入使抽象可降级；相对 CUTLASS，强调**小模板面**与默认消 bank conflict。
-4. **Dr. Kernel**：Triton×RL 生成的近窗补链，**禁止**与 TK 谱系混写。
+4. **Dr. Kernel**：Triton×RL 生成的近窗补链，不与 TK 谱系混写。
 
 ---
 
-## 十、未决 / 跟读时勿外推
+## 十、未决 / 不宜外推
 
 - 论文主基准是 **H100 + CUDA 12.6**；仓 README 后续的 Blackwell / Rubin 支持属**工程演化**，不得倒写进 2024/ICLR2025 论文主张。
 - 「本科生无 CUDA 经验也能写」是文内可及性叙事，**不是**可复现的用人实验协议。

@@ -1,5 +1,5 @@
 ---
-title: "权重·激活 PTQ 收口：SpinQuant（旋转）+ ARCQuant（NVFP4）（≠ KV量化 / ≠ ZeroQAT）"
+title: "权重·激活 PTQ：SpinQuant（旋转）+ ARCQuant（NVFP4）（≠ KV量化 / ≠ ZeroQAT）"
 topic: SpinQuant与ARCQuant量化
 date: 2026-09-22
 lines: [架构思想, 部署接口]
@@ -18,19 +18,19 @@ retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# 权重·激活 PTQ 收口：SpinQuant（旋转）+ ARCQuant（NVFP4）（≠ KV 量化 / ≠ ZeroQAT）
+# 权重·激活 PTQ：SpinQuant（旋转）+ ARCQuant（NVFP4）（≠ KV 量化 / ≠ ZeroQAT）
 
-> **定位**：**P1** 收口——仓库量化三角此前已有 **[[KV缓存量化与压缩]]（KV cache）** 与 **[[ZeroQAT量化感知训练]]（训练期 ZO-QAT）**；本卡只补 **部署侧权重·激活 PTQ** 的横切缺口：
+> **定位**：仓库量化三角此前已有 **[[KV缓存量化与压缩]]（KV cache）** 与 **[[ZeroQAT量化感知训练]]（训练期 ZO-QAT）**；本卡只补 **部署侧权重·激活 PTQ** 的横切缺口：
 > - **SpinQuant**（*LLM Quantization with Learned Rotations*，ICLR 2025）：在 FP 网络输出不变的旋转参数化上，用 **Cayley SGD** 学 **Stiefel 流形**上的旋转，压激活/权重离群，再接 GPTQ；含可吸收的 $R_1,R_2$ 与在线 Hadamard $R_3,R_4$。
 > - **ARCQuant**（*Boosting NVFP4 Quantization with Augmented Residual Channels*，arXiv **2601.07475v2**）：面向 **Blackwell NVFP4（g=16, E2M1+E4M3）**，用 **增广残差通道** 做双阶段补偿，保持 **统一 NVFP4 精度路径**，映射到标准 GEMM。
 > **攻坚线**：**架构思想 / 部署接口（主）** + **文内 W4A4(KV) / NVFP4 精度—吞吐字段（辅）**。
-> **硬划界（开篇钉死，禁止滑向相邻笔记）**：
-> - **≠ [[KV缓存量化与压缩]]**：不写 KIVI / KVQuant 的 **K per-channel · V per-token**、残差窗、RoPE 前后误差轴；SpinQuant 表中的 **W-A-KV** 比特列只作「联合配置字段」，**禁止**把本卡写成 KV 量化通史。
+> **范围与相邻笔记**：
+> - **≠ [[KV缓存量化与压缩]]**：不写 KIVI / KVQuant 的 **K per-channel · V per-token**、残差窗、RoPE 前后误差轴；SpinQuant 表中的 **W-A-KV** 比特列只作「联合配置字段」，本卡不写成 KV 量化通史。
 > - **≠ [[ZeroQAT量化感知训练]]**：不写 ZeroQAT 的 **零阶前向梯度 / STE 绕开 / 端侧 QAT 内存**；本卡是 **冻结权重的 PTQ**（旋转学习或残差增广），不是训练期 QAT。
 > - **≠ [[端侧小模型]]**：不写 MobileLLM / Phi-4 / 端侧 SLM 产品谱系；只取「部署侧低比特压力」接口一句。
-> - **≠ B7**：不写 vLLM / SGLang / TRT-LLM 引擎选型、PagedAttention、投机解码族；ARCQuant 文内 vLLM 吞吐表仅作 **部署字段索引**。
-> - **≠ BitNet v2**：原生低比特 **从零训练** → **本波不升主**（波 13 议程 §四；维护期补链）。
-> **禁止编造**：公式编号、表数字、倍率一律锚定官方 PDF（2026-09-22 CST）。议程称 ARCQuant 为 ACL 2026；**官方 PDF 首页未印会议标识** → 本笔记以 **arXiv:2601.07475v2 \[cs.LG\] 4 Jul 2026** 为准，不虚构 proceedings 页码。
+> - **≠ [[推理引擎生态]]**：不写 vLLM / SGLang / TRT-LLM 引擎选型、PagedAttention、投机解码族；ARCQuant 文内 vLLM 吞吐表仅作 **部署字段索引**。
+> - **≠ BitNet v2**：原生低比特 **从零训练** → **不升主**，仅补链。
+> ARCQuant **官方 PDF 首页未印会议标识** → 本笔记以 **arXiv:2601.07475v2 \[cs.LG\] 4 Jul 2026** 为准。
 
 ---
 
@@ -60,7 +60,7 @@ timezone: Asia/Shanghai (CST)
 | **[[KV缓存量化与压缩]] KV cache 量化** | 已生成的 K/V 张量按非对称轴压比特 | **解码缓存** | [[KV缓存量化与压缩]] | **否**（表字段可出现 KV 列，不展开公式） |
 | **[[ZeroQAT量化感知训练]] ZeroQAT** | 前向 ZO 估梯度，联训量化参数 | **训练 / 微调** | [[ZeroQAT量化感知训练]] | **否** |
 | **[[端侧小模型]] on-device SLM** | 深薄架构 / 合成数据 / 端侧产品 | 模型族 | [[端侧小模型]] | **否** |
-| **B7 推理引擎** | vLLM / SGLang / TRT-LLM 选型 | 引擎生态 | B7 | **否**（名作吞吐对照） |
+| **[[推理引擎生态]] 推理引擎** | vLLM / SGLang / TRT-LLM 选型 | 引擎生态 | [[推理引擎生态]] | **否**（名作吞吐对照） |
 | **BitNet v2** | 原生低比特 **从零训练** | 预训练范式 | 维护期补链 | **不升主** |
 | **SpinQuant** | **旋转参数化 + Cayley 学旋转** 后 PTQ | **部署前标定** | **本篇 A** | **是** |
 | **ARCQuant** | **NVFP4 残差通道增广** + 融合量化核 | **部署前标定 + 在线残差** | **本篇 B** | **是** |
@@ -71,7 +71,7 @@ timezone: Asia/Shanghai (CST)
 
 [[KV缓存量化与压缩]] 正文 **刻意不写** AWQ/GPTQ/SmoothQuant 通史。本卡 **只在两文实验协议出现处**点名：
 
-| 出现处 | 用法（本卡允许） | 禁止 |
+| 出现处 | 本卡用法 | 不写 |
 |---|---|---|
 | SpinQuant §4.1 | 旋转学完后对旋转权重跑 **GPTQ**（128×2048 WikiText-2） | 复述 GPTQ Hessian 算法全文 |
 | SpinQuant Table 1 | SmoothQuant / LLM-QAT / AWQ / OmniQuant / QuIP# 作 **对照行** | 升为 AWQ/OmniQuant 主轴 |
@@ -150,7 +150,7 @@ $$
 推理：
  · no_had：换权重即可，无新 kernel
  · had：额外 fast Hadamard（R3/R4）；文称 ~8% 时延
-勿与：KIVI 残差窗、ZeroQAT ZO 梯度、BitNet 从零训练 混叙事
+不与：KIVI 残差窗、ZeroQAT ZO 梯度、BitNet 从零训练 混叙事
 `
 
 ---
@@ -222,7 +222,7 @@ $$
 **吞吐（摘要 + §4.3；Blackwell 消费/专业卡）：**
 - 摘要：相对 FP16 **最高约 3×** 加速（prefill 叙事；Fig 6 细项：Qwen2.5-7B 在 PRO 6000 上 **2.0×–2.5×**，Llama 3.1-8B 在 RTX 5090 上达 **3.5×**；内存降 **1.5×–2.8×**）。
 - 相对未补偿 NVFP4：时延仅增 **3%–9%**；Qwen2.5-7B prefill breakdown 总开销约 **4.9%**（Fig 8b）。
-- **vLLM** 集成、Qwen2.5-7B、RTX 5090、bs=8、gen=128（Table 4）：seq 1024 时 total **21077** tok/s、decode **2342**（相对 FP16 decode **1.96×**）；seq 2048 时 decode **1249**（相对 FP16 **2.08×**）。→ **仅作文内部署字段**；引擎通史回 **B7**。
+- **vLLM** 集成、Qwen2.5-7B、RTX 5090、bs=8、gen=128（Table 4）：seq 1024 时 total **21077** tok/s、decode **2342**（相对 FP16 decode **1.96×**）；seq 2048 时 decode **1249**（相对 FP16 **2.08×**）。→ **仅作文内部署字段**；引擎通史回 **[[推理引擎生态]]**。
 
 ### 4.5 局限（作者自述，§Limitations）
 
@@ -236,7 +236,7 @@ $$
 标定：定通道重排 + 层wise S（阈值 τ=2^{-3}M）
 权重：离线重排 + 量化 + 复制离群列 → QW_aug
 推理：融合核（Reorder/RMSNorm/主量化/残差量化）→ 标准 NVFP4 GEMM(Kin+S)
-勿与：SpinQuant 在线 Hadamard、KIVI 残差窗、ZeroQAT 混为一谈
+不与：SpinQuant 在线 Hadamard、KIVI 残差窗、ZeroQAT 混为一谈
 对照口诀：SpinQuant「转分布」；ARCQuant「拼残差通道、保 block 隔离」
 `
 
@@ -254,30 +254,19 @@ $$
 | **权重 PTQ** | 常接 **GPTQ** | 主文 **RTN**（可扩展） |
 | **代码** | facebookresearch/SpinQuant | actypedef/ARCQuant |
 
-**收口结论（给维护期）：** 量化三角闭合为 **KV（[[KV缓存量化与压缩]]）· QAT（[[ZeroQAT量化感知训练]]）· W·A-PTQ（本卡）**。后续若补 **BitNet v2**，应单开「原生低比特训练」轴，**不要**并回本卡升主。
+**结论：** 量化三角为 **KV（[[KV缓存量化与压缩]]）· QAT（[[ZeroQAT量化感知训练]]）· W·A-PTQ（本卡）**；原生低比特训练（BitNet v2）是另一条轴，不在本卡。
 
 ---
 
-## 六、禁止清单与交叉回链
+## 六、范围外与相邻笔记
 
-| 禁止 | 应回链 |
+| 范围外 | 相邻笔记 |
 |---|---|
-| 重写 KIVI / KVQuant 非对称公式与残差窗 | 推理与基础设施/KvQuant/KV缓存量化与压缩.md |
-| 重写 ZeroQAT ZO 梯度 / 端侧 QAT 内存表 | 推理与基础设施/KvQuant/ZeroQAT量化感知训练.md |
-| 重写 MobileLLM / Phi-4 / Gemma 小尺寸通史 | 推理与基础设施/端侧小模型.md / [[Gemma4技术报告深读]] |
-| 写成 vLLM/SGLang/TRT-LLM 选型手册 | 推理与基础设施/InfraServing/推理引擎生态.md |
-| 把 BitNet v2 升为本卡主文 | 波 13 议程 §四；维护期补链 |
-| 无 PDF 依据合并跨文倍率或虚构 ACL 页码 | 只引官方 PDF 与 arXiv 版次 |
-
----
-
-## 七、跟读检查清单
-
-- [ ] 能口述 SpinQuant 的 $R_1$–$R_4$ 何者可吸收、何时必须 `had`
-- [ ] 能解释「随机旋转 13 点方差 → Cayley on Stiefel」
-- [ ] 能说明 ARCQuant 为何批评 Hadamard on NVFP4，以及 $Q_{X_{\mathrm{aug}}}=[Q_X|Q_{R_o}]$ 如何进 GEMM
-- [ ] 能指出本卡与 [[KV缓存量化与压缩]] / [[ZeroQAT量化感知训练]] 的一句边界，且不展开对方公式
-- [ ] 引用数字时能指回 Table / Fig 编号（禁止口算外推）
+| 重写 KIVI / KVQuant 非对称公式与残差窗 | [[KV缓存量化与压缩]] |
+| 重写 ZeroQAT ZO 梯度 / 端侧 QAT 内存表 | [[ZeroQAT量化感知训练]] |
+| 重写 MobileLLM / Phi-4 / Gemma 小尺寸通史 | [[端侧小模型]] / [[Gemma4技术报告深读]] |
+| 写成 vLLM/SGLang/TRT-LLM 选型手册 | [[推理引擎生态]] |
+| BitNet v2 原生低比特训练 | 另立轴（本卡不收） |
 
 ---
 

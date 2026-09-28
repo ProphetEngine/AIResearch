@@ -7,17 +7,17 @@ status: archived
 sources:
  - https://arxiv.org/abs/2402.02750
  - https://arxiv.org/abs/2401.18079
- - 模型与技术报告/厂商报告/DeepSeekV41Flash深读.md
+ - DeepSeekV41Flash深读
 arxiv: ["2402.02750", "2401.18079"]
 archived: 2026-09-22
 ---
 
 # KV Cache 量化与极限压缩
 
-> **定位**：P1 横切——立 **K/V 非对称量化与误差轴**（per-channel Key、per-token Value、RoPE 前后、残差窗 / dense-sparse），**不**写权重量化通史，**不**重写 V4.1-Flash 产品解全文（见 [[DeepSeekV41Flash深读]]）。
+> **定位**：横切——立 **K/V 非对称量化与误差轴**（per-channel Key、per-token Value、RoPE 前后、残差窗 / dense-sparse），**不**写权重量化通史，**不**重写 V4.1-Flash 产品解全文（见 [[DeepSeekV41Flash深读]]）。
 > **攻坚线**：**AI Infra（主）** + **数学原理 / 量化误差（辅）**。
-> **刻意不写**：AWQ/GPTQ/SmoothQuant 权重史；token eviction / H2O / StreamingLLM 正文；PagedAttention / continuous batching（见 [[长上下文位置编码与系统侧]]、B7、[[连续批处理与Orca]]）；CSA2 / CED / SWA Bounded Replay 机制全文（[[DeepSeekV41Flash深读]]）。
-> **禁止编造**：公式、配置、评测数字一律取自官方 PDF（2026-09-22 CST）与已入库 [[DeepSeekV41Flash深读]]；两文互相称 concurrent，不以「谁先谁后」叙事替代方法差异。
+> **刻意不写**：AWQ/GPTQ/SmoothQuant 权重史；token eviction / H2O / StreamingLLM 正文；PagedAttention / continuous batching（见 [[长上下文位置编码与系统侧]]、[[推理引擎生态]]、[[连续批处理与Orca]]）；CSA2 / CED / SWA Bounded Replay 机制全文（[[DeepSeekV41Flash深读]]）。
+> 两文互相称 concurrent，不以「谁先谁后」叙事替代方法差异。
 
 ---
 
@@ -34,7 +34,7 @@ archived: 2026-09-22
 | 量级例（KIVI） | 540B PaLM、batch 512、ctx 2048 → KV 约 **3 TB**，约参数的 **3×**（Pope et al. 转述） |
 | 量级例（KVQuant） | LLaMA-7B：短序列权重主导 → 128K 时 KV 主导；3-bit 路径称 **4.8×** 激活足迹压缩（Fig 1 / Table 1） |
 
-**与仓库边界：** [[长上下文位置编码与系统侧]] / B7 已谈窗口与引擎；本篇只补「**把已有 K、V 张量压到更低比特**」这一正交手段——不替代稀疏注意力、不替代 eviction。
+**与仓库边界：** [[长上下文位置编码与系统侧]] / [[推理引擎生态]] 已谈窗口与引擎；本篇只补「**把已有 K、V 张量压到更低比特**」这一正交手段——不替代稀疏注意力、不替代 eviction。
 
 ### 1.2 误差轴抓手（读两文前先立）
 
@@ -168,7 +168,7 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 ## 四、与 V4.1-Flash 部署交叉（只串轴，不重写 [[DeepSeekV41Flash深读]]）
 
-权威数字与机制全文见 模型与技术报告/厂商报告/DeepSeekV41Flash深读.md §3.3 / Abstract。本处只立 **对照轴**：
+权威数字与机制全文见 [[DeepSeekV41Flash深读]] §3.3 / Abstract。本处只立 **对照轴**：
 
 | 轴 | KIVI / KVQuant（方法文） | DeepSeek-V4.1-Flash（产品 TR） |
 |---|---|---|
@@ -180,7 +180,7 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 | 压缩乘积 | 单靠低比特（+outlier） | **CSA2 层复用 × FP4** → HBM global KV **890 B/token ≈ V4-Flash 的 1/4**；再乘 SWA Bounded Replay → persistent ≈ **1/8** |
 | 用途表述 | 省 KV 存储 / 抬 batch·上下文 | FP4 **省存储而非加速 matmul**；**先反量化再注意力** |
 
-**串联读法（勿混）：**
+**串联读法：**
 
 1. **学术非对称 INT/NUQ** 证明：误差由 **K/V 算子角色 + RoPE + outlier** 决定，不是「一律 per-token 4-bit」口号。
 2. **V4.1** 在已稀疏/复用的 main KV 上再做 **硬件友好 FP4 QAT**，并显式留下 SWA 高精——是 **架构压缩 × 格式压缩** 的部署解，不是对 KIVI/KVQuant 的逐条复刻。
@@ -195,12 +195,12 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 3. **「假量化分数 = 可上线分数」** — KIVI：全量 2-bit 假量化 GSM8K 大掉，真算法靠 **残差 FP 窗**才接近 16-bit。
 4. **「Pre-RoPE / Post-RoPE 有唯一正确答案」** — KVQuant 与 V4.1 结论依赖路径（标定 vs QAT、是否融合 RoPE 核）；只记 **各自文内消融**。
 5. **「eviction / CSA / MLA = 量化」** — 正交：少存 token / 少存层或 entry / 低比特存 entry；本篇只覆盖第三类。
-6. **「890 B/token 可从 KIVI 2-bit 外推」** — 890 是 V4.1 **CSA2+FP4** 产品足迹，禁止用 Llama 稠密 KV 公式反推。
-7. **「10M context 已等于生产 SLA」** — KVQuant 为显存估算 + 质量评测叙事；落地仍受内核、页表、调度、前缀缓存等约束（见 B7 / [[DeepSeekV41Flash深读]] 部署章）。
+6. **「890 B/token 可从 KIVI 2-bit 外推」** — 890 是 V4.1 **CSA2+FP4** 产品足迹，不能用 Llama 稠密 KV 公式反推。
+7. **「10M context 已等于生产 SLA」** — KVQuant 为显存估算 + 质量评测叙事；落地仍受内核、页表、调度、前缀缓存等约束（见 [[推理引擎生态]] / [[DeepSeekV41Flash深读]] 部署章）。
 
 ---
 
-## 六、待核实 / 非本篇范围
+## 六、局限与待核实
 
 - KIVI Table 3 全模型逐格、LongBench 分任务、KVQuant RULER/Passkey 全表：本篇只摘主结论与代表性格。
 - 两文后续开源实现是否已并入 vLLM/SGLang 默认路径：**不跟代码默认值**。
@@ -213,8 +213,8 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 1. Liu, Yuan, Jin, Zhong, Xu, Braverman, Chen, Hu, 2024. *KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache* — arXiv:**2402.02750**；ICML 2024；本地 `https://arxiv.org/abs/2402.02750`。
 2. Hooper, Kim, Mohammadzadeh, Mahoney, Shao, Keutzer, Gholami, 2024/2025. *KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization* — arXiv:**2401.18079**；NeurIPS 2024；本地 `https://arxiv.org/abs/2401.18079`。
-3. 交叉部署：DeepSeek-AI, *DeepSeek-V4.1-Flash* — arXiv:**2609.19969**；笔记 模型与技术报告/厂商报告/DeepSeekV41Flash深读.md（FP4 main KV / CSA2 / 890 B/token；**勿在本篇重写**）。
-4. 背景交叉（不展开）：[[长上下文位置编码与系统侧]] 长上下文；B7 推理引擎；Pope et al. 服务化 KV 体积论述（KIVI §1 转述）。
+3. 交叉部署：DeepSeek-AI, *DeepSeek-V4.1-Flash* — arXiv:**2609.19969**；笔记 [[DeepSeekV41Flash深读]]（FP4 main KV / CSA2 / 890 B/token；**勿在本篇重写**）。
+4. 背景交叉（不展开）：[[长上下文位置编码与系统侧]] 长上下文；[[推理引擎生态]] 推理引擎；Pope et al. 服务化 KV 体积论述（KIVI §1 转述）。
 
 ## 相关笔记
 

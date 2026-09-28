@@ -15,13 +15,13 @@ official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
 
 # Prompt / Prefix Caching：模块化复用与计费经济学
 
-> **定位**：**P1 Infra / 成本横切**——在 **B7** 已立引擎级前缀复用（RadixAttention 选型轴）之后，本卡补两条独立切片：①学术侧 **Prompt Cache**（模块化注意力复用 / PML schema）；②商业 API 侧 **prompt / context caching 计费字段结构**（write / read / TTL）。SGLang 仅作「自动前缀树复用」交叉句，**禁止**重写 B7 引擎选型表。
+> **定位**：**Infra / 成本横切**——在 **[[推理引擎生态]]** 已立引擎级前缀复用（RadixAttention 选型轴）之后，本卡补两条独立切片：①学术侧 **Prompt Cache**（模块化注意力复用 / PML schema）；②商业 API 侧 **prompt / context caching 计费字段结构**（write / read / TTL）。SGLang 仅作「自动前缀树复用」交叉句，不重写 [[推理引擎生态]] 引擎选型表。
 > **攻坚线**：**AI Infra / 成本模型（主）**——模块边界、前缀命中、write/read/TTL 如何决定单位成本；**评测字段（辅）**——文内 TTFT 倍率、命中率、MB/token。
-> **硬划界（开篇写清）**：
-> - **≠ B7**：不写 vLLM / SGLang / TensorRT-LLM 选型对照表；RadixAttention 只取「自动前缀 KV 复用 + 命中率接口」一句。
+> **范围与相邻笔记**：
+> - **≠ [[推理引擎生态]]**：不写 vLLM / SGLang / TensorRT-LLM 选型对照表；RadixAttention 只取「自动前缀 KV 复用 + 命中率接口」一句。
 > - **≠ [[KV缓存量化与压缩]]**：不写 K/V 非对称量化、残差窗、outlier 比特轴。
 > - **≠ [[DuoAttention与KVzip]]**：不写 DuoAttention 头分工、KVzip query-agnostic 驱逐。
-> **禁止编造**：学术数字一律锚定官方 PDF（2026-09-22 CST）；官方定价页**只核对 write / read / TTL 字段结构**，标注核对时间 **Asia/Shanghai 2026-09-22**；**绝对 $/MTok 表易过时 → 本卡不抄作事实**，倍率若出现仅作「当日结构倍率」说明。
+> **定价口径**：官方定价页**只核对 write / read / TTL 字段结构**（核对时间 **Asia/Shanghai 2026-09-22**）；**绝对 $/MTok 表易过时，本卡不抄**，倍率若出现仅作「当日结构倍率」说明。
 
 ---
 
@@ -55,7 +55,7 @@ official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
 
 | 已入库 | 本卡只取 | 本卡不写 |
 |---|---|---|
-| **B7** | 「跨请求共享前缀 KV」是 serving 缺口；SGLang RadixAttention = 自动前缀树 | vLLM / SGLang / TRT 选型表、PD 分离、投机通史、6.4× 引擎对照全文 |
+| **[[推理引擎生态]]** | 「跨请求共享前缀 KV」是 serving 缺口；SGLang RadixAttention = 自动前缀树 | vLLM / SGLang / TRT 选型表、PD 分离、投机通史、6.4× 引擎对照全文 |
 | **[[KV缓存量化与压缩]]** | KV 张量可被缓存 / 复用 | KIVI / KVQuant 非对称量化与误差轴 |
 | **[[DuoAttention与KVzip]]** | 长上下文下 KV 足迹仍贵 | DuoAttention 头门控、KVzip 重构打分驱逐 |
 
@@ -70,7 +70,7 @@ official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
 
 `
 Prompt Cache = 显式模块 + 预填 KV + 拼接（可非严格前缀）
-RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，详 B7
+RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，详 [[推理引擎生态]]
 云 API 缓存 = write 贵一点 / read 便宜 / TTL 决定保活成本
 `
 
@@ -115,7 +115,7 @@ RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，�
 
 实现要点（§4）：HuggingFace transformers 原型 ≈ 3K Python；模块可放 **CPU DRAM** 或 **GPU HBM**（GPU 从 CPU 取则有 H2D memcpy）；RoPE / ALiBi 需支持不连续 position ID（文称每模型约 +20 行量级适配）。
 
-### 3.4 评测字段（文内，禁外推）
+### 3.4 评测字段（文内，不外推）
 
 **延迟（§5.2，Llama 7B，LongBench）：**
 
@@ -138,9 +138,9 @@ RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，�
 
 ---
 
-## 四、SGLang 交叉：自动前缀复用（≠ B7 选型表）
+## 四、SGLang 交叉：自动前缀复用（≠ [[推理引擎生态]] 选型表）
 
-> 本节约束：**只写 RadixAttention 与 Prompt Cache 的对照接口**；引擎对照、FSM、投机、硬件覆盖 → **B7**。
+> 本节约束：**只写 RadixAttention 与 Prompt Cache 的对照接口**；引擎对照、FSM、投机、硬件覆盖 → **[[推理引擎生态]]**。
 
 | 维度 | Prompt Cache（本卡主文） | RadixAttention（SGLang §3；交叉） |
 |---|---|---|
@@ -153,7 +153,7 @@ RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，�
 
 文内命中率示例（SGLang 评测段）：多基准 cache hit rate 约 **50%–99%**；生产多模态观察例 LLaVA-Next-34B **52.4%**、另一模型 **74.1%**（文内自述窗口）。更高命中 → 更大 batch / 更高吞吐 / 更低延迟（Fig 8）。
 
-**跟读分界：** 要「模块拼装、文档池、参数化模板」→ Prompt Cache；要「多轮 / few-shot / fork 树自动吃前缀」→ RadixAttention（细节回 **B7**）。
+**跟读分界：** 要「模块拼装、文档池、参数化模板」→ Prompt Cache；要「多轮 / few-shot / fork 树自动吃前缀」→ RadixAttention（细节回 **[[推理引擎生态]]**）。
 
 ---
 
@@ -195,18 +195,18 @@ RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，�
 
 Anthropic 页：TTL 从「写或读该条目的请求**开始**」计时，流式长响应会吃掉存活窗口。OpenAI 页：复用刷新寿命且不再收 write。Google 页：Explicit storage 按声明 TTL 计，与「是否提前 delete」的计费细则以活页为准。
 
-### 5.3 与学术轴的接口（勿混）
+### 5.3 与学术轴的接口
 
 | 问题 | 学术 Prompt Cache | 云 API Prompt/Context Cache |
 |---|---|---|
 | 谁决定缓存边界？ | 开发者写 **PML schema** | 断点 / 自动前缀 / `caches.create` 内容 |
 | 能否非前缀模块拼装？ | **能**（concat 模块 KV） | 主流是 **前缀匹配**（Google explicit 是「命名前缀资源」） |
 | 计费可见性 | 自托管算力/显存 | **write / read / TTL(/storage)** 账单字段 |
-| 与 B7 关系 | 可启发 serving 模块管理 | 与引擎 Radix 命中率正交：一个在云账单，一个在自建吞吐 |
+| 与 [[推理引擎生态]] 关系 | 可启发 serving 模块管理 | 与引擎 Radix 命中率正交：一个在云账单，一个在自建吞吐 |
 
 ---
 
-## 六、可迁移问题（给后续波次）
+## 六、可迁移问题
 
 1. **模块 mask vs 全注意力**：scaffolding 的内存–一致性曲线如何标定？与 [[DuoAttention与KVzip]] 头级保留是否可叠？
 2. **Schema 自动归纳**：能否从流量里挖掘高频片段生成 PML，而不靠手写？

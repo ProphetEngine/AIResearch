@@ -14,11 +14,11 @@ archived: 2026-09-22
 
 # Continuous batching / iteration-level scheduling 理论边界（Orca 专线）
 
-> **定位**：P1 Infra 子题——钉死 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
+> **定位**：Infra 子题——钉死 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
 > **攻坚线**：**AI Infra（主）**。
-> **相对已入库**：[[推理引擎生态]] / [[AI基础设施总览]] 以 vLLM·SGLang·TRT-LLM **选型地图**与 PagedAttention 为主；Orca 在彼处仅为次级交叉。本篇 **只做理论边界 / Orca 专线**，**禁止**重写引擎选型表、PagedAttention 分页算法正文、投机解码通史。
+> **相对已入库**：[[推理引擎生态]] / [[AI基础设施总览]] 以 vLLM·SGLang·TRT-LLM **选型地图**与 PagedAttention 为主；Orca 在彼处仅为次级交叉。本篇 **只做理论边界 / Orca 专线**，不重写引擎选型表、PagedAttention 分页算法正文、投机解码通史。
 > **交叉基线**：vLLM（Kwon et al., arXiv:2309.06180）**仅作对照**——其 Discussion 明确 iteration-level scheduling 与 PagedAttention **互补**，不替代。
-> **禁止编造**：术语、数字、实验设定一律取自官方 PDF（2026-09-22 CST）；业界口语「continuous batching」在 Orca 正文中对应 **iteration-level scheduling**（文中未以 continuous batching 作正式章节名）。
+> 业界口语「continuous batching」在 Orca 正文中对应 **iteration-level scheduling**（文中未以 continuous batching 作正式章节名）。
 
 ---
 
@@ -28,8 +28,8 @@ archived: 2026-09-22
 |---|---|
 | **主文献** | Yu, Jeong, Kim, Kim, Chun. *Orca: A Distributed Serving System for Transformer-Based Generative Models*. **OSDI 2022**（Carlsbad, CA；Proceedings of the 16th USENIX Symposium on OSDI） |
 | **入口** | https://www.usenix.org/conference/osdi22/presentation/yu ；PDF https://www.usenix.org/system/files/osdi22-yu.pdf |
-| **对照基线** | Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention*（vLLM）→ `https://arxiv.org/abs/2309.06180`；笔记交叉 [[AI基础设施总览]] §4、`B7` §1.3 |
-| **本篇不覆盖** | SGLang Radix / TRT-LLM 选型轴（→ B7）；KV 量化通史（→ [[KV缓存量化与压缩]]）；投机算法族正文（→ B7 §三） |
+| **对照基线** | Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention*（vLLM）→ `https://arxiv.org/abs/2309.06180`；笔记交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] §1.3 |
+| **本篇不覆盖** | SGLang Radix / TRT-LLM 选型轴；KV 量化通史（→ [[KV缓存量化与压缩]]）；投机算法族正文（→ [[推理引擎生态]] §三） |
 
 **一句话抓手：** 自回归生成使单请求必须跑 **多次 iteration**（每步产出一 token）；若调度仍锁在 **请求级 batch**，早结束的请求无法立刻返回、晚到的请求必须等整批结束——Orca 把调度粒度改到 **单次 iteration**，并用 **selective batching** 让「已处理 token 数不同」的请求仍能共享非 Attention 算子的批执行。
 
@@ -111,7 +111,7 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 - 调度保持在途 batch 数 ≈ `n_workers`，从而跨 worker **管线化多个 iteration-batch**（Figure 8a）。
 - 对照 FasterTransformer：请求级下常用 **microbatch** 填管线，被迫在「更大 microbatch（更像批）」与「更多 microbatch（更少 bubble）」之间权衡；Orca 称 iteration-level **免除该权衡**，无需为管线再切 microbatch（§4.2、Figure 8）。
 
-### 3.5 论文自报量级（禁外推为 SLA）
+### 3.5 论文自报量级（不可外推为 SLA）
 
 | 设定（均据 §6） | 结果（论文数字） |
 |---|---|
@@ -125,17 +125,17 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 
 ## 四、与 Prefill–Decode 分离 / 投机解码的正交关系
 
-> 本节只立 **轴正交**，细节回 `B7` / [[AI基础设施总览]]；不重画引擎地图。
+> 本节只立 **轴正交**，细节回 [[推理引擎生态]] / [[AI基础设施总览]]；不重画引擎地图。
 
 | 轴 | 管什么 | 不替代什么 |
 |---|---|---|
 | **Iteration-level / continuous batching** | **时间维**：一步（iteration）内如何把活跃序列拼进同一批执行；完成/到达如何即时进出 | 不决定 prefill 与 decode 是否同池；不减少目标模型必须串行的「逻辑步」上限 |
-| **Prefill–Decode（PD）分离** | **拓扑 / 池维**：算力型 prefill 与访存型 decode 是否分池扩缩（DeepSeek-V3 §3.4 叙事见 [[AI基础设施总览]]；B7 §1.3） | 分池之后，各池内部仍通常需要某种连续批 / 步进调度 |
-| **投机解码** | **串行步维**：用草稿 + 校验减少目标模型前向次数（B7 §三） | 接受/拒绝仍发生在步进循环里；与「批里有哪些序列」是不同旋钮 |
+| **Prefill–Decode（PD）分离** | **拓扑 / 池维**：算力型 prefill 与访存型 decode 是否分池扩缩（DeepSeek-V3 §3.4 叙事见 [[AI基础设施总览]]；[[推理引擎生态]] §1.3） | 分池之后，各池内部仍通常需要某种连续批 / 步进调度 |
+| **投机解码** | **串行步维**：用草稿 + 校验减少目标模型前向次数（[[推理引擎生态]] §三） | 接受/拒绝仍发生在步进循环里；与「批里有哪些序列」是不同旋钮 |
 
 **正交命题（可检验）：**
 
-1. **PD × continuous batching：** B7 误区条已写——二者叠加而非替换。Orca 文中的 initiation/increment 是 **同一引擎时间线上的 phase**，不等于当代「prefill 池 / decode 池」产品形态；把 Orca 直接等同于 PD disaggregation 是范畴错误。
+1. **PD × continuous batching：** [[推理引擎生态]] 误区条已写——二者叠加而非替换。Orca 文中的 initiation/increment 是 **同一引擎时间线上的 phase**，不等于当代「prefill 池 / decode 池」产品形态；把 Orca 直接等同于 PD disaggregation 是范畴错误。
 2. **投机 × continuous batching：** 投机改变的是「每步产出几个候选 / 校验几个 token」；continuous batching 改变的是「这些步进如何与其他请求交错」。可同开同关；加速比不可乘成单一 SLA（接受率、批组成、KV 布局均独立）。
 3. **PagedAttention × iteration-level：** vLLM Discussion（§8）原话要点——二者 **complementary**：Orca 靠调度交错提高并行度；vLLM 靠降低碎片 / 提高显存利用率让 **更多请求的工作集同时塞进 GPU**；细粒度交错反而使内存管理更关键，故分页更「刚需」。vLLM 摘要区间相对 FasterTransformer / Orca 等约 **2–4×**（已录 [[AI基础设施总览]]；**本篇不重做分页评测表**）。
 
@@ -164,7 +164,7 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 7. **「`max_tokens` 预留已解决 KV 显存」**
  预留避免死锁，但把 **未知输出长度** 转成 **保守占坑**；vLLM 用 Oracle/Pow2/Max 三种复现暴露该边界。真正的块级共享 / 近零碎片是下一篇（已入库）问题，不是 Orca 调度定理的推论。
 
-8. **编造「Orca 论文写了 continuous batching 专章 / PD disaggregation API」**
+8. **「Orca 论文写了 continuous batching 专章 / PD disaggregation API」**
  正文关键词是 **iteration-level scheduling** 与 **selective batching**；PD 产品语汇与 continuous batching 营销语汇属后续生态，交叉时必须降级为对照而非伪引 Orca。
 
 ---
@@ -176,15 +176,15 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 | Yu et al., *Orca* | OSDI 2022 | https://www.usenix.org/system/files/osdi22-yu.pdf ；会议页 https://www.usenix.org/conference/osdi22/presentation/yu |
 | Kwon et al., *PagedAttention / vLLM*（对照基线） | arXiv:2309.06180 | `https://arxiv.org/abs/2309.06180`；交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] §1.3 |
 
-**次级交叉（点到为止，不入库为本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；B7 投机解码四篇一手 PDF。
+**次级交叉（点到为止，不入库为本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；[[推理引擎生态]] 投机解码四篇一手 PDF。
 
 ---
 
-## 七、待核实 / 刻意未写
+## 七、局限与待核实
 
 - Orca 原系统公开可用性与生产分支演化（vLLM 评测写明需自研复现）。
-- 当代引擎中 continuous batching 与 chunked prefill、prefix cache、PD disagg 的具体默认组合——属 B7 选型层，本篇不附表。
-- EAGLE 等更新一代投机与步进调度的共设计：议程明确本波不派投机专线。
+- 当代引擎中 continuous batching 与 chunked prefill、prefix cache、PD disagg 的具体默认组合——属 [[推理引擎生态]] 选型层，本篇不附表。
+- EAGLE 等更新一代投机与步进调度的共设计：不在本篇展开。
 
 ## 相关笔记
 

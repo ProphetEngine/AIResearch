@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 10　AI Infra「势」：训练并行、推理 serving、量化与硬件协同
+# AI Infra「势」：训练并行、推理 serving、量化与硬件协同
 
 入口论文 / 报告：
 
@@ -16,7 +16,7 @@ archived: 2026-09-22
 - Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention* (arXiv:2309.06180；下文称 vLLM / PagedAttention 论文)。
 - DeepSeek-AI, *DeepSeek-V3 Technical Report* (arXiv:2412.19437；下文称 V3 报告) **§3 Training Framework / FP8 / Inference**。
 
-本笔记以 **AI Infra** 为主线、**架构思想** 为辅线：跟读「算力—通信—显存—精度」如何被拆开再协同。吞吐与效率数字一律取自原文摘要/正文，不编造未读到的对比表或外推百分比。
+本笔记以 **AI Infra** 为主线、**架构思想** 为辅线：跟读「算力—通信—显存—精度」如何被拆开再协同。
 
 ---
 
@@ -194,7 +194,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 4. **「vLLM 一定 2–4×」**：该区间是相对 FasterTransformer / Orca 等、在论文工作负载上的结果；连续预分配若已极优化、或瓶颈已在别的子系统，倍率不可外推。
 5. **「量化只是推理压缩」**：V3 把 **FP8 预训练**写成主文，并区分哪些算子必须留 BF16/FP32；把「推理 INT8/INT4」与「训练 FP8」混为一谈会漏掉累加精度、tile 缩放、通信路径精度等关键设计。
 6. **「有了 EP 就不需要 TP / 反之」**：V3 训练叙事是大 EP + DualPipe **省掉 TP**；其 **推理** prefill 仍用 **TP4**。并行维度随阶段（训 / prefill / decode）切换，不是全局唯一最优。
-7. **编造未写明的吞吐**：本笔记禁止把「某博客说的 tokens/s」写进正文；若需更新数字，应回到对应论文表图或官方复现说明。
+7. **「博客里的 tokens/s 可直接引用」**：未写明配置的吞吐数字不能当论据；更新数字应回到对应论文表图或官方复现说明。
 
 ### 5.2 核心引用
 
@@ -204,7 +204,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 - DeepSeek-AI (2024/2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437. PDF: `https://arxiv.org/abs/2412.19437`
 - 相关背景（本议题引用链）：Huang et al., GPipe；Dao et al., FlashAttention；Vaswani et al., Attention Is All You Need；Lepikhin et al. / Fedus et al. 等 MoE 并行文献（见 V3 / Megatron 参考文献列表）。
 
-### 5.3 待核实 / 延伸
+### 5.3 局限与待核实
 
 - Megatron 后续开源栈（Megatron-Core、Megatron-LM 新版本）中的 **序列并行、上下文并行、分布式优化器** 等：本笔记以 1909.08053 正文为准，未逐项对照 2024+ 代码默认策略。
 - FlashAttention-3 / 更新内核在 Hopper/Blackwell 上的占用率与精度路径：未纳入本次 PDF 精读。
@@ -214,11 +214,8 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 
 ---
 
-*笔记状态：draft · 攻坚线 AI Infra（主）+ 架构思想（辅）· 可跟读*
-
 ## 相关笔记
 
-### P0
 - [[注意力与Transformer核心思想]]
 - [[DecoderOnly与GPT路线]]
 - [[规模定律与预训练范式]]
@@ -226,11 +223,8 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 - [[对齐脉络RLHF与偏好优化]]
 - [[推理时扩展TestTimeScaling]]
 - [[开源与闭源前沿模型谱系]]
-
-### P1
 - [[长上下文位置编码与系统侧]]
 - [[多模态架构脉络]]
-- [[AI基础设施总览]]
 - [[注意力效率族MQA到MLA]]
 - [[LLaMA开源生态里程碑]]
 

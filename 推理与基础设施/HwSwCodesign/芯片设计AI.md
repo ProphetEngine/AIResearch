@@ -27,12 +27,12 @@ archived: 2026-09-22
 
 # 芯片设计 AI：AlphaChip（宏布局 RL）+ ChipExpert（IC 专科 LLM）
 
-> **定位**：**P1**——相对 [[硬件软件协同部署]]（加速器代际×精度×互联**选型白皮书**），本篇专写 **设计侧 AI** 两条正交轴：**(A) 宏布局 / floorplanning 的深度 RL**（Nature 2021 → 后命名 AlphaChip + Circuit Training）与 **(B) IC 设计专科开源 LLM**（ChipExpert）。
+> **定位**：相对 [[硬件软件协同部署]]（加速器代际×精度×互联**选型白皮书**），本篇专写 **设计侧 AI** 两条正交轴：**(A) 宏布局 / floorplanning 的深度 RL**（Nature 2021 → 后命名 AlphaChip + Circuit Training）与 **(B) IC 设计专科开源 LLM**（ChipExpert）。
 > **攻坚线**：**架构思想（主）** + **评测 / 复现争议字段（辅，强制单列）**。
-> **硬划界（禁止重写）**：
-> - **禁止重写** [[硬件软件协同部署]] 的 Blackwell / TPU7x Ironwood / NVL72 选型地图与部署成本叙事。
-> - **禁止写成「已证实碾压商业工具」**：Nature 主张、独立评估（Kahng 等 / MacroPlacement）、Markov 元分析、作者 Addendum / 辩护文须**并列呈现**，不替任一侧下最终裁判。
-> - **禁止编造**：Nature 全文 PDF 需登录（idp 登录墙），未读；方法细节以 **arXiv:2004.10746** + Nature 着陆页摘要 / Change history 为准；评测数字锚定官方 PDF（2026-09-22 CST）。
+> **范围与相邻笔记**：
+> - **不重写** [[硬件软件协同部署]] 的 Blackwell / TPU7x Ironwood / NVL72 选型地图与部署成本叙事。
+> - **不写成「已证实碾压商业工具」**：Nature 主张、独立评估（Kahng 等 / MacroPlacement）、Markov 元分析、作者 Addendum / 辩护文须**并列呈现**，不替任一侧下最终裁判。
+> - **主要来源**：[arXiv:2004.10746](https://arxiv.org/abs/2004.10746) + Nature 着陆页摘要 / Change history（2026-09-22 CST）；Nature 全文 PDF 需登录，未读。
 
 ---
 
@@ -137,7 +137,7 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 | **2024-11** | 作者辩护文 arXiv:2411.10053（*That Chip Has Sailed*） |
 | **2026-03-10** | Kahng 等评估 arXiv **2302.11014v3**：在公开流上评估 **CT-AC / CT-Scratch** |
 
-### 4.2 三方主张对照（禁止单边叙事）
+### 4.2 三方主张对照（不作单边叙事）
 
 | 轴 | Nature / 作者侧（摘要·Addendum·blog·2411.10053） | 批判侧（2306.09633 Markov） | 独立评估侧（2302.11014v3 MacroPlacement） |
 |---|---|---|---|
@@ -148,11 +148,11 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 | **编辑部立场** | 2024-09-26：调查关闭，发 **Addendum（非 Correction）** | 认为 Addendum **未回答**主要关切（樱桃采摘、数据污染风险、预训练数据不透明等） | 强调可重复评估责任；指出 CT 可扩展性与预训练方法仍有 **still-missing confirmations** |
 | **CT-AC vs SA（公开数字，评估文）** | （作者侧强调预训练与生产影响） | （与 Google Team 2 / UCSD 线交叉引用） | 文内要点：**CT-AC** 在 **6/9** 例 **TNS** 更好；**SA** 在 **7/9** 例 **rWL**、**6/9** 例 **proxy cost** 更好；大体量设计上人类专家在多数 Nature Table 1 口径上优于 CT-AC；**SA 用显著更少资源**仍具优势 |
 
-### 4.3 本笔记的读写纪律（硬约束落地）
+### 4.3 结论边界
 
-1. **禁止**把 blog / Addendum 的「superhuman / 世界范围采用」写成已由独立评测锁死的事实。
-2. **禁止**把 Markov 的「integrity substantially undermined」写成已被 Nature 编辑采纳的最终判决——编辑部选择了 **Addendum + 撤 Editor’s Note**。
-3. **允许**陈述可核事实：Editor’s Note 曾挂一年；News & Views 已撤；公开 MacroPlacement 评估**未**复现「碾压商业/人类」的顶线故事，且报告 SA/人类在多指标上仍强。
+1. blog / Addendum 的「superhuman / 世界范围采用」**不是**已由独立评测锁死的事实。
+2. Markov 的「integrity substantially undermined」**不是**已被 Nature 编辑采纳的最终判决——编辑部选择了 **Addendum + 撤 Editor’s Note**。
+3. 可核事实：Editor’s Note 曾挂一年；News & Views 已撤；公开 MacroPlacement 评估**未**复现「碾压商业/人类」的顶线故事，且报告 SA/人类在多指标上仍强。
 4. **Circuit Training** = 社区可触达的方法近似实现；**≠** Nature 专有实验的充分复现包。
 
 ---
@@ -217,7 +217,7 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 
 ---
 
-## 七、开放问题 / 待核实
+## 七、局限与待核实
 
 1. **Nature / Addendum 全文 PDF**：需登录，未读；若后续取得，应对照 arXiv 做「期刊版 vs 预印本」diff（尤其表格与预训练描述）。
 2. **CT-AC 预训练数据清单**：公开指导有，完整数据与「是否污染测试块」在批评侧仍为开放指控——本笔记不裁决。
@@ -238,7 +238,7 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 | 可读方法 PDF | `https://arxiv.org/abs/2004.10746` |
 | 批判 / 评估 | `2306.09633` / `2302.11014v3` |
 | ChipExpert | `2408.00804`；Llama-3 8B；CPT 域知识 **0.85** |
-| 禁止叙事 | 「已证实碾压商业工具」；重写 [[硬件软件协同部署]] GPU/TPU 选型 |
+| 不采用的叙事 | 「已证实碾压商业工具」；重写 [[硬件软件协同部署]] GPU/TPU 选型 |
 
 ## 相关笔记
 

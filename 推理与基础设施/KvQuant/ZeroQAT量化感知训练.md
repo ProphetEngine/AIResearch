@@ -13,13 +13,13 @@ archived: 2026-09-22
 
 # Quantization-aware training：ZeroQAT（端到端 on-device QAT @ 推理成本）
 
-> **定位**：**P1**——仓库缺 **训练感知量化 / 端侧 QAT** 一手报告；锚点是 Tan et al. *End-to-End On-Device Quantization-Aware Training for LLMs at Inference Cost*（arXiv **2509.00031v2**）。主写 **零阶（ZO）前向估计梯度 → 去掉反传** 的 Full/PEFT QAT，以及 **可学习平滑 + 可学习权重量化器 + 轻量 Q/V 变体**；辅写精度—比特—内存表与 OnePlus 12 端侧字段。
+> **定位**：仓库缺 **训练感知量化 / 端侧 QAT** 一手报告；锚点是 Tan et al. *End-to-End On-Device Quantization-Aware Training for LLMs at Inference Cost*（arXiv **2509.00031v2**）。主写 **零阶（ZO）前向估计梯度 → 去掉反传** 的 Full/PEFT QAT，以及 **可学习平滑 + 可学习权重量化器 + 轻量 Q/V 变体**；辅写精度—比特—内存表与 OnePlus 12 端侧字段。
 > **攻坚线**：**架构思想（主）**——ZO-QAT 为何绕开 STE、如何端到端联训模型与量化参数；**评测字段（辅）**——W2A16 / W4A4 的 PPL·零样本·下游 Acc，以及 A100 / 手机内存—时延。
-> **硬划界（禁止重写）**：
+> **范围与相邻笔记**：
 > - **≠ [[KV缓存量化与压缩]] KV 量化**：本篇是 **权重 / 激活的训练期 QAT**，不是解码期 K/V cache 非对称压缩（KIVI / KVQuant）。
 > - **≠ [[端侧小模型]] on-device SLM 通史**：不写 MobileLLM / Phi-4 / LiteRT 产品谱系；只取「端侧能跑 QAT」这一效率接口。
 > - **可交叉 [[Gemma4技术报告深读]] 一句**：Gemma 4 TR / docs 有 **产品侧 mobile QAT 与内存表**（int2+int4 权重、激活 int8 等）——那是**已训好权重的分发字段**，不是本篇 ZO 训练算法；详见 [[Gemma4技术报告深读]] §4.2，此处不展开。
-> **禁止编造**：主张、公式编号、表数字一律锚定官方 PDF（2026-09-22 CST）；文内未给 GitHub / 代码哈希 → **标「PDF 未声明开源入口」**，不虚构仓库。
+> 文内未给 GitHub / 代码哈希 → **标「PDF 未声明开源入口」**。
 
 ---
 
@@ -55,7 +55,7 @@ PTQ（便宜、低比特易崩） vs FO-QAT（准、反传显存炸）
 | **[[KV缓存量化与压缩]]** KV cache 量化 | 「推理期也有量化压力」的相邻意识 | per-channel Key / per-token Value、残差窗、KIVI/KVQuant 公式 |
 | **[[端侧小模型]]** on-device SLM | 「端侧内存预算极紧」的产品压力面 | MobileLLM 深度—宽度、Phi-4-mini、PLE 通史 |
 | **[[Gemma4技术报告深读]]** Gemma 4 | **一句交叉**：开源权重族的 **mobile QAT 分发/内存表**（§4.2） | local/global 注意力、p-RoPE、MTP、整份 TR |
-| **B7** 推理引擎 | 无直接重叠；勿把本篇写成 vLLM/GGUF 手册 | PagedAttention、连续批 |
+| **[[推理引擎生态]]** 推理引擎 | 无直接重叠；本篇不是 vLLM/GGUF 手册 | PagedAttention、连续批 |
 
 ### 2.2 问题立轴（§1–§3，跟读）
 
@@ -255,7 +255,7 @@ $$
 | **[[KV缓存量化与压缩]]** | 推理 KV 压缩 ↔ 本篇训练期 W/A QAT；问题域正交 |
 | **[[Gemma4技术报告深读]]** | Gemma 4 **产品 QAT/内存列**（mobile int2+int4、act int8、docs 下载后缀）≠ ZeroQAT 的 ZO 训练算法——**仅一句索引** |
 | **[[端侧小模型]]** | 端侧 SLM 产品与架构通史；本篇只贡献「边缘设备上能否跑 QAT」的方法证据 |
-| 议程附注 | 近月 **QUASAR QAT（2608.13966）** 可作补链，**不升**本篇主锚 |
+| 补链 | 近月 **QUASAR QAT（2608.13966）** 可作补链，**不升**本篇主锚 |
 
 ---
 
@@ -267,7 +267,7 @@ $$
 4. **评测叙事双轨：** 语言建模（PPL）+ 下游（零样本/微调 Acc）+ **真机（OnePlus 12）**；读表时分清预训练 vs 微调、WO vs WA、g128 与否。
 5. **仓库用法：** 需要「训练期量化算法」时引本卡；需要「推理 KV」看 [[KV缓存量化与压缩]]；需要「端侧小模型产品族」看 [[端侧小模型]]；Gemma 分发 QAT 只回 [[Gemma4技术报告深读]] §4.2。
 
-**开放缺口（文内未填，勿脑补）：** PDF **未声明**官方代码仓；端侧实验停留在 OPT≤6.7B + 固定 SoC；与更新一代开源权重（Gemma 4 QAT 包等）**无直接对照实验**。
+**开放缺口（文内未填）：** PDF **未声明**官方代码仓；端侧实验停留在 OPT≤6.7B + 固定 SoC；与更新一代开源权重（Gemma 4 QAT 包等）**无直接对照实验**。
 
 ## 相关笔记
 

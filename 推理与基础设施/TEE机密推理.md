@@ -1,5 +1,5 @@
 ---
-title: "Privacy-preserving inference：GPU/CPU TEE 机密计算（信任边界 × CC tax，5）"
+title: "Privacy-preserving inference：GPU/CPU TEE 机密计算（信任边界 × CC tax）"
 topic: TEE机密推理
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -16,14 +16,13 @@ archived: 2026-09-22
 
 # Privacy-preserving inference：GPU/CPU TEE 机密计算
 
-> **定位**：**P1**——仓库缺 **云侧机密推理 / TEE 开销与远程证明** 横切；[[隐私与机器遗忘]] 已写机器遗忘，本篇改写 **data-in-use 机密部署**。锚点两篇可核 PDF：Confidential.ai 的 Blackwell B200 CC 吞吐实测（arXiv **2608.26575**）与 EnclaveX 端到端 CPU+GPU TEE（arXiv **2606.31408**）。
+> **定位**：仓库缺 **云侧机密推理 / TEE 开销与远程证明** 横切；[[隐私与机器遗忘]] 已写机器遗忘，本篇改写 **data-in-use 机密部署**。锚点两篇可核 PDF：Confidential.ai 的 Blackwell B200 CC 吞吐实测（arXiv **2608.26575**）与 EnclaveX 端到端 CPU+GPU TEE（arXiv **2606.31408**）。
 > **攻坚线**：**架构思想（主）**——信任边界（CPU TEE ↔ GPU CC ↔ 应用层）与远程证明链；**评测字段（辅）**——CC tax / 吞吐 / TTFT·TPOT·ITL，以及 attestation 延迟。
-> **硬划界（禁止重写）**：
+> **范围与相邻笔记**：
 > - **≠ [[隐私与机器遗忘]] unlearning**：擦权重 / forget 集 ≠ 运行时加密隔离；本篇**不写**遗忘算法与 MIA。
 > - **≠ [[端侧小模型]] 端侧 SLM 通史**：端侧「数据不离机」是**另一轴**；本篇是 **公有云 / 多租户** 上的机密 VM + cGPU。
 > - **≠ [[硬件软件协同部署]] HW–SW 白皮书选型地图**：不写 Blackwell 代际 / FP4 规格通史；只取 **CC 模式边界与开销**。
-> - **禁止侧信道利用步骤**：两文威胁模型均声明侧信道**超范围**；本笔记只记「观测被故意关闭」等防御后果，**不写**攻击复现。
-> - **禁止编造**：数字、配置、页数一律锚定官方 PDF（2026-09-22 CST）。
+> - **不写侧信道利用步骤**：两文威胁模型均声明侧信道**超范围**；本笔记只记「观测被故意关闭」等防御后果，**不写**攻击复现。
 
 ---
 
@@ -47,7 +46,7 @@ archived: 2026-09-22
 | **[[隐私与机器遗忘]]** unlearning | 「事后擦知识」是**另一条**隐私轴；索引一句即可 | forget/retain、OpenUnlearning、MIA 实现 |
 | **[[端侧小模型]]** 端侧 SLM | 「数据不出设备」与「云上 TEE」互补，不互换 | MobileLLM / Phi 通史、端侧 QAT |
 | **[[硬件软件协同部署]]** HW–SW | Blackwell / H200 **作为 CC 载体**点名 | 白皮书代际、FP4/互联选型地图 |
-| **B7 / [[AI基础设施总览]]** | SGLang / vLLM / Triton **仅作测栈**；补丁名作开销杠杆 | 引擎选型通史、PagedAttention 全文 |
+| **[[推理引擎生态]] / [[AI基础设施总览]]** | SGLang / vLLM / Triton **仅作测栈**；补丁名作开销杠杆 | 引擎选型通史、PagedAttention 全文 |
 
 ### 2.2 两文各自的「不写什么」（跟读）
 
@@ -240,7 +239,7 @@ vLLM 0.22 / Qwen3.5-9B 单 B200（Table 7）：cudagraph decode **1179 vs 1772 t
 
 RQ2 机制（防御侧）：cGPU 模式加密 CVM–cGPU IO（bounce buffer）→ 小 batch/短输入时 IO 税显眼；算力占比升则税降。文指出 TDX-Connect / SEV-IO 等 TEE-I/O 方向 NVIDIA cGPU **尚未支持**（引其 release notes）。
 
-> **读数纪律：** Blackwell 文在 B200 + 打补丁 SGLang 上给出 **1–3%** 可达成点；EnclaveX 在 H200 + Triton 上给出的是 **CVM/CC vs 完全非机密 native** 的 **几十百分点** 面，且 **SCONE 相对 CVM 可忽略**。两表**机代、栈、对照基线不同**，禁止合成「TEE 一律 X%」。
+> **读数口径：** Blackwell 文在 B200 + 打补丁 SGLang 上给出 **1–3%** 可达成点；EnclaveX 在 H200 + Triton 上给出的是 **CVM/CC vs 完全非机密 native** 的 **几十百分点** 面，且 **SCONE 相对 CVM 可忽略**。两表**机代、栈、对照基线不同**，禁止合成「TEE 一律 X%」。
 
 ---
 
@@ -276,7 +275,7 @@ RQ2 机制（防御侧）：cGPU 模式加密 CVM–cGPU IO（bounce buffer）�
 - **不写** Intel TDX / AMD SEV / ARM CCA / SGX 产品通史。
 - **不写** Hopper→Blackwell 白皮书算力表（→ [[硬件软件协同部署]]）。
 - **不写** 侧信道、投机执行利用、cache 攻击步骤（两文排除；观测关闭只记后果）。
-- **不写** Bifrost TEE–FHE 混合等附录候选升格（agenda：可补链，不升主清单）。
+- **不写** Bifrost TEE–FHE 混合等附录候选升格（仅可补链）。
 - **不写** 跨节点 CC 吞吐数字（源文未测）。
 
 ---

@@ -15,23 +15,22 @@ related:
  - "推理引擎生态"
  - "DeepSeekV3训练与MoE基建"
  - "AI基础设施总览"
-note_deepep: "DeepEP 无独立 arXiv 主文；本卡仅作集成/对照接口一句；禁止虚构 DeepEP paper arXiv 号；内核分析见 NVSHMEM与DeepEP通信"
+note_deepep: "DeepEP 无独立 arXiv 主文；本卡仅作集成/对照接口一句；内核分析见 NVSHMEM与DeepEP通信"
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
 # Sparse MoE 服务系统：MegaScale-Infer + UltraEP（≠ MoE 架构通史 / ≠ DeepEP 通信）
 
-> **定位**：**P1 Infra / 服务架构**——在 **[[混合专家架构]]** 已立 MoE **架构通史**、**[[NVSHMEM与DeepEP通信]]** 已立 **NVSHMEM 通信基底 + DeepEP 案例**之后，本卡只写 **服务侧如何把注意力与专家解耦、如何在机架级大 EP 上做近最优负载均衡**。两条主轴正交：
+> **定位**：**Infra / 服务架构**——在 **[[混合专家架构]]** 已立 MoE **架构通史**、**[[NVSHMEM与DeepEP通信]]** 已立 **NVSHMEM 通信基底 + DeepEP 案例**之后，本卡只写 **服务侧如何把注意力与专家解耦、如何在机架级大 EP 上做近最优负载均衡**。两条主轴正交：
 > - **MegaScale-Infer**（*Disaggregated Expert Parallelism*）：**注意力节点 ↔ 专家节点**解耦 + ping-pong 微批 + 定制 **M2N** 通信；主战场是 **decode 吞吐 / 单位成本**。
 > - **UltraEP**（*exact-load, real-time balancer*）：在 **rack-scale node（RSN）** 上对 **每个 microbatch × 每层**做 **配额驱动复制 + 重路由**；主战场是 **训练 + serving prefill** 的秩级负载与理想吞吐贴近度。
 > **攻坚线**：**AI Infra / 服务架构（主）** + **文内吞吐 / 失衡字段（辅）**。
-> **硬划界（开篇钉死，禁止滑向通史或通信内核）**：
+> **范围与相邻笔记**：
 > - **≠ [[混合专家架构]]**：不写 Switch→Mixtral→V3 路由公式、aux-loss、总参/激活参通史；MoE 稀疏只当「每专家 batch 变稀 → 利用率塌」接口一句。
 > - **≠ [[NVSHMEM与DeepEP通信]]**：不写 NVSHMEM 对称堆 / IBGDA / DeepEP V1·V2 内核剖面；**禁止虚构 DeepEP 独立 arXiv 号**；本卡若点 DeepEP，只录「token all-to-all 后端 / 对照一句」。
 > - **≠ [[ThunderKittens内核DSL]]**：不写 ThunderKittens tile DSL / 核编程抽象。
-> - **≠ B7**：不写 vLLM/SGLang/TRT-LLM 引擎选型通史、PagedAttention、投机解码族；基线名只作评测对照。
-> **禁止编造**：倍率、失衡比、硬件表一律锚定官方 PDF（2026-09-22 CST）。
+> - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang/TRT-LLM 引擎选型通史、PagedAttention、投机解码族；基线名只作评测对照。
 
 ---
 
@@ -57,17 +56,17 @@ timezone: Asia/Shanghai (CST)
 | **[[混合专家架构]] MoE 架构通史** | 路由 / 稀疏 / 总参–激活参 | 模型族叙事 | [[混合专家架构]] | **否** |
 | **[[NVSHMEM与DeepEP通信]] NVSHMEM·DeepEP** | 设备侧 RMA / EP all-to-all 内核 | 通信库 | [[NVSHMEM与DeepEP通信]] | **否**（仅接口） |
 | **[[ThunderKittens内核DSL]] ThunderKittens** | GPU 核 DSL | 编程模型 | [[ThunderKittens内核DSL]] | **否** |
-| **B7 推理引擎** | vLLM / SGLang / TRT-LLM 选型 | 引擎生态 | B7 | **否**（名作基线） |
+| **[[推理引擎生态]] 推理引擎** | vLLM / SGLang / TRT-LLM 选型 | 引擎生态 | [[推理引擎生态]] | **否**（名作基线） |
 | **MegaScale-Infer** | Attention–FFN **节点解耦** + ping-pong + M2N | **decode 服务实例** | **本篇 A** | **是** |
 | **UltraEP** | **exact-load** 复制/重路由（RSN hot-path） | **EP 组 × 层 × 微批** | **本篇 B** | **是** |
 
-跟读直觉：[[混合专家架构]] 问「**模型怎么稀疏**」；[[NVSHMEM与DeepEP通信]] 问「**token 怎么在 GPU 间搬**」；B7 问「**引擎怎么选**」；MegaScale-Infer 问「**注意力与专家要不要分机、怎么流水**」；UltraEP 问「**大 EP 热专家怎么实时摊平**」。
+跟读直觉：[[混合专家架构]] 问「**模型怎么稀疏**」；[[NVSHMEM与DeepEP通信]] 问「**token 怎么在 GPU 间搬**」；[[推理引擎生态]] 问「**引擎怎么选**」；MegaScale-Infer 问「**注意力与专家要不要分机、怎么流水**」；UltraEP 问「**大 EP 热专家怎么实时摊平**」。
 
-### 2.2 DeepEP 硬约束（防越界）
+### 2.2 DeepEP 边界
 
 - UltraEP §7：**token dispatch/combine** 接 **DeepEP**（文标 `hybrid-ep` 分支、`v1.2.1+7febc6e`）；References **\[9\]** 为 **GitHub** `deepseek-ai/DeepEP`，**无独立 arXiv 主文号**。
 - MegaScale-Infer §6「Comparison with DeepEP」只给 **一句对照**：己方 **CPU 侧**做跨节点 M2N，DeepEP 走 **GPU–GPU**（无 CPU proxy）——**不**展开 DeepEP 内核 / PTX / L2 占用分析（那是 [[NVSHMEM与DeepEP通信]]）。
-- **本卡禁止**：虚构 DeepEP paper arXiv；重写 DeepEP V1/V2 通信路径；把 UltraEP 写成「DeepEP 续篇」。
+- **本卡不写**：DeepEP V1/V2 通信路径；也不把 UltraEP 写成「DeepEP 续篇」。
 
 `
  MoE serving / large-EP 外壳
@@ -208,9 +207,9 @@ SLO：文设 **TBT = 150 ms**。异质表（Table 3）以 L20 归一化标价，
 | 与 DeepEP | 一句 CPU vs GPU–GPU 对照 | token 后端集成；复制带宽对照 |
 | 典型数字锚 | 最高 **1.90×**/GPU decode；M2N **4.2×** | **~94%** ideal；失衡 **→~1.01–1.04** |
 
-**建议跟读顺序：** §二划界 → MegaScale Fig.3–4 + Alg.1 + Fig.8/9 吞吐表 → UltraEP Fig.1–2 + Alg.1 + Fig.11/12 → 需要通信基底时回 **[[NVSHMEM与DeepEP通信]]**，需要路由史时回 **[[混合专家架构]]**，需要引擎选型时回 **B7**——**不要**反向把本卡写成其中任一续篇。
+**建议跟读顺序：** §二划界 → MegaScale Fig.3–4 + Alg.1 + Fig.8/9 吞吐表 → UltraEP Fig.1–2 + Alg.1 + Fig.11/12 → 需要通信基底时回 **[[NVSHMEM与DeepEP通信]]**，需要路由史时回 **[[混合专家架构]]**，需要引擎选型时回 **[[推理引擎生态]]**——**不要**反向把本卡写成其中任一续篇。
 
-**刻意不写（防越界）：** Switch/Mixtral 路由公式重推；NVSHMEM/IBGDA/DeepEP V1·V2 内核；ThunderKittens DSL；vLLM PagedAttention / 投机解码通史；虚构 DeepEP arXiv。
+**刻意不写：** Switch/Mixtral 路由公式重推；NVSHMEM/IBGDA/DeepEP V1·V2 内核；ThunderKittens DSL；vLLM PagedAttention / 投机解码通史；虚构 DeepEP arXiv。
 
 ---
 
@@ -221,5 +220,5 @@ SLO：文设 **TBT = 150 ms**。异质表（Table 3）以 L20 归一化标价，
 | 一手 PDF | `https://arxiv.org/abs/2504.02263`；`https://arxiv.org/abs/2606.04101` |
 | 核验时刻 | 2026-09-22 CST |
 | DeepEP 引用 | UltraEP Ref.[9] = GitHub；MegaScale 文内对照句；**无独立 arXiv** |
-| 禁编造声明 | 未外推未见表硬件倍率；生产「1.5–2.0× / >92% ideal」仅照录作者自述部署段 |
+| 数字口径 | 生产「1.5–2.0× / >92% ideal」为作者自述部署段 |
 
