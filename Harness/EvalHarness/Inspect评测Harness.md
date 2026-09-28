@@ -14,10 +14,10 @@ sources:
  - https://inspect.aisi.org.uk/log-viewer.html
  - https://github.com/UKGovernmentBEIS/inspect_ai
 related:
- - "安全与评测/评测与排行榜可靠性.md"
- - "Harness/智能体与工具/代码智能体Harness史线.md"
- - "Harness/EvalHarness/WorfBench工作流基准.md"
- - "Harness/智能体与工具/智能体工具与长程任务.md"
+ - "评测与排行榜可靠性"
+ - "代码智能体Harness史线"
+ - "WorfBench工作流基准"
+ - "智能体工具与长程任务"
 github: "https://github.com/UKGovernmentBEIS/inspect_ai"
 docs: "https://inspect.aisi.org.uk/"
 arxiv: []
@@ -66,9 +66,9 @@ archived: 2026-09-22
 
 | 问题 | 本文 | 相关笔记 |
 |---|---|---|
-| 榜单分数为何不可信 / 污染 / scaffold 敏感？ | **不写** | 安全与评测/评测与排行榜可靠性.md |
-| 编码 agent 的 ACI / 生产 SDK 史？ | **不写** | Harness/智能体与工具/代码智能体Harness史线.md |
-| 工作流 DAG 是否生成对？ | **不写** | Harness/EvalHarness/WorfBench工作流基准.md |
+| 榜单分数为何不可信 / 污染 / scaffold 敏感？ | **不写** | [[评测与排行榜可靠性]] |
+| 编码 agent 的 ACI / 生产 SDK 史？ | **不写** | [[代码智能体Harness史线]] |
+| 工作流 DAG 是否生成对？ | **不写** | [[WorfBench工作流基准]] |
 | 如何**声明并跑**一个可组合、可沙箱、可复现的 LLM/agent 评测？ | **主文** | — |
 
 ### 2.2 与 lm-eval-harness（一行对照，止于此）
@@ -318,7 +318,7 @@ LLM 辅助文档索引（站点提供）：`llms.txt` / `llms-guide.txt`；页�
 
 ---
 
-## 九、待核实 / 故意不写
+## 九、局限与待核实
 
 - 以文档站与 GitHub 为一手入口；不以二手博客补「论文贡献列表」。
 - GitHub **瞬时 star / fork / release tag**：页面会变；引用以仓 URL + 文档版本行为为准。
@@ -329,7 +329,7 @@ LLM 辅助文档索引（站点提供）：`llms.txt` / `llms-guide.txt`；页�
 
 ## 十、摘要
 
-**路径：** Harness/EvalHarness/Inspect评测Harness.md
+**路径：** [[Inspect评测Harness]]
 
 **要点：** 以 UK AISI Inspect **文档站 + GitHub** 为一手入口，写清开源评测运行时三原语——**Task** 组装 **Dataset + Solver + Scorer**；**Solver** 变换 `TaskState`（可 chain / agent）；**Scorer** 相对 `target` 抽取或模型打分；**sandbox**（Docker 等）隔离工具侧 `exec`/文件，编排仍在主机；**日志**默认 `.eval`，经 `inspect view` / `eval-retry` / `inspect log export-config → --run-config` 形成复现环。分工：≠榜单通史、≠编码 harness、lm-eval 仅一行对照。
 

@@ -30,12 +30,12 @@ timezone: Asia/Shanghai (CST)
 > - **TutorBench**（Scale AI）：高中 / AP 六科 STEM、多模态、样本专属量尺（rubric）+ LLM-judge；三用例（自适应讲解 / 评估反馈 / 主动学习）。
 > - **TeachArena**（HKUST + Qwen）：真实教学工作流三面——教师判断 → 情境多轮辅导 → LMS 端到端动作；354 审计任务。
 > **攻坚线**：**评测字段 / 任务设计（主）**——评什么对象、证据单位、自动打分契约；**教学法原则对照（辅）**——仅作与 [[LearnLM教育辅导]] 原则表的接口对照，**不**重写 LearnLM 后训练配方。
-> **硬划界（开篇钉死）**：
-> - **≠ [[LearnLM教育辅导]]**：禁止写成 **LearnLM 第二张模型卡**。本卡**不**写 pedagogical IF 共训、SFT/RM/RL 进 Gemini、专家场景偏好对齐配方；LearnLM 仅在 MathTutorBench Table 4 / TeachArena 文内对照句 / TutorBench 相关工作中作为**被测或引用对象**出现。
-> - **≠ [[合成用户仿真]]**：禁止重写 τ-bench / ToolEmu「合成用户 / 合成工具」仿真评测主轴。TeachArena 虽引用 τ-bench 作 agent 工作流对照，本卡只取 **教学证据 → 决策 → LMS 状态** 契约，不写零售/航空用户仿。
-> - **≠ [[评测与排行榜可靠性]]**：禁止写成榜单污染 / thinking 模式 / 路由敏感性通史；三篇分数只作文内协议下的**转述**，不定外部聚合榜。
-> - **≠ [[Inspect评测Harness]]**：禁止写成 Inspect Task/Solver/Scorer harness 运行时 API；本卡是 **领域基准任务设计**，不是评测框架原语。
-> **禁止编造**：主张、实例数、表数字、RM 准确率、HF commit 一律锚定官方 PDF（2026-09-22 CST）。文内未给完整 HF repo slug / 未列表格的图柱读数 → **标待核实** 或不写。
+> **范围与相邻笔记**：
+> - **≠ [[LearnLM教育辅导]]**：不写成 **LearnLM 第二张模型卡**。本卡**不**写 pedagogical IF 共训、SFT/RM/RL 进 Gemini、专家场景偏好对齐配方；LearnLM 仅在 MathTutorBench Table 4 / TeachArena 文内对照句 / TutorBench 相关工作中作为**被测或引用对象**出现。
+> - **≠ [[合成用户仿真]]**：不重写 τ-bench / ToolEmu「合成用户 / 合成工具」仿真评测主轴。TeachArena 虽引用 τ-bench 作 agent 工作流对照，本卡只取 **教学证据 → 决策 → LMS 状态** 契约，不写零售/航空用户仿。
+> - **≠ [[评测与排行榜可靠性]]**：不写成榜单污染 / thinking 模式 / 路由敏感性通史；三篇分数只作文内协议下的**转述**，不定外部聚合榜。
+> - **≠ [[Inspect评测Harness]]**：不写成 Inspect Task/Solver/Scorer harness 运行时 API；本卡是 **领域基准任务设计**，不是评测框架原语。
+> 文内未给完整 HF repo slug / 未列表格的图柱读数 → **标待核实** 或不写。
 
 ---
 
@@ -267,7 +267,7 @@ Overall = 三 stage 分数**不加权平均**（任务数不等不影响 headlin
 
 文内关键统计：Stage1 均值 **0.893**（范围 0.799–0.947）——**有界判断整体偏高**；Stage2–Stage1 Spearman **ρ=0.24**，Stage2–Stage3 **ρ=0.21**，Stage1–Stage3 **ρ=0.58**；模型「最好–最差 stage 排名」中位差 **7** 位。
 
-典型重排：Gemini-2.5-Pro Stage2 第 2（0.769）但 Stage3 第 12（0.477）；GPT-5.5 Stage3 前列、Stage2 靠后。文内点到 LearnLM「教育向行为」与 Gemini Stage2 相对强、但 **禁止归因到专有训练**——本卡同样 **不**据此写 LearnLM 卡。
+典型重排：Gemini-2.5-Pro Stage2 第 2（0.769）但 Stage3 第 12（0.477）；GPT-5.5 Stage3 前列、Stage2 靠后。文内点到 LearnLM「教育向行为」与 Gemini Stage2 相对强、但 **不宜归因到专有训练**——本卡同样 **不**据此写 LearnLM 卡。
 
 工作流分数上沿 **0.704**（Claude Opus 4.8 Stage3）——Abstract「workflow scores top out at 0.704」。
 
@@ -326,5 +326,5 @@ Table 1 定位：τ-bench / TheAgentCompany / Toolathlon 有工具与状态，�
 
 - 官方 PDF：`https://arxiv.org/abs/2502.18940` · `https://arxiv.org/abs/2510.02663` · `https://arxiv.org/abs/2605.14322`
 - arXiv abs/pdf 链接见 YAML `aux`
-- 代码/数据入口见 §一表；TeachArena 完整 HF slug **文内未给出** → 不编造
+- 代码/数据入口见 §一表；TeachArena 完整 HF slug **文内未给出**
 

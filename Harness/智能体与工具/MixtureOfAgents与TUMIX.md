@@ -17,13 +17,13 @@ archived: 2026-09-22
 
 > **定位**：测试时聚合与工具混合主题轴——相对 [[推理时扩展TestTimeScaling]] 的 **测试时切片扩展**：不重开 ToT / 自一致性 / Best-of-N 通史，专攻 **多层异构 LLM 聚合（MoA）** 与 **同一底座上工具策略混合的多代理测试时缩放（TUMIX）**。
 > **攻坚线**：**架构思想（主）**——层间 Aggregate-and-Synthesize、proposer/aggregator 角色、工具–文本混合 agent 池、早停；**评测字段（辅）**——AlpacaEval LC / HLE·GPQA·AIME 成本–质量曲线。
-> **硬划界（禁止重写）**：
-> - **禁止重写** [[推理时扩展TestTimeScaling]] 的 o1/R1 训练轴、ToT / self-consistency / Best-of-N 通史；本篇只把它们当作「单路径或多采样」对照坐标。
-> - **禁止重写** [[多智能体辩论]] 的 MAD 鞅诊断 / FREE-MAD 全轨迹打分 / 分层分歧仪器；本篇聚合是 **合成生成**（MoA）或 **工具策略并行+共享精炼**（TUMIX），不是辩论协议专篇。
-> - **禁止重写** [[ToRL工具集成强化学习]] ToRL 的「从 base 把解释器嵌进 RL env」；本篇工具在 **推理期 agent 池**，不训工具策略。
-> - **禁止重写** [[混合专家架构]] 激活级 MoE 门控全文；MoA 仅作「模型级 MoE 类比」一句。
-> - **禁止重写** [[智能体工具与长程任务]] MCP / 旗舰工具环产品叙事。
-> **禁止编造**：数字与主张锚定官方 PDF（2026-09-22 CST）、Google Research 摘要页；图内未抽出可读点标 **待核实读图**。
+> **范围与相邻笔记**：
+> - **不重写** [[推理时扩展TestTimeScaling]] 的 o1/R1 训练轴、ToT / self-consistency / Best-of-N 通史；本篇只把它们当作「单路径或多采样」对照坐标。
+> - **不重写** [[多智能体辩论]] 的 MAD 鞅诊断 / FREE-MAD 全轨迹打分 / 分层分歧仪器；本篇聚合是 **合成生成**（MoA）或 **工具策略并行+共享精炼**（TUMIX），不是辩论协议专篇。
+> - **不重写** [[ToRL工具集成强化学习]] ToRL 的「从 base 把解释器嵌进 RL env」；本篇工具在 **推理期 agent 池**，不训工具策略。
+> - **不重写** [[混合专家架构]] 激活级 MoE 门控全文；MoA 仅作「模型级 MoE 类比」一句。
+> - **不重写** [[智能体工具与长程任务]] MCP / 旗舰工具环产品叙事。
+> **主要来源**：[MoA](https://arxiv.org/abs/2406.04692)、[TUMIX](https://arxiv.org/abs/2510.01279)、[Google Research 摘要页](https://research.google/pubs/tumix-augmenting-llm-reasoning-with-a-dynamic-tool-use-mixture/)（2026-09-22 CST）。
 
 ---
 
@@ -256,7 +256,7 @@ $\oplus$ = Table 1 的 **Aggregate-and-Synthesize** 提示：要求批判性综�
 
 ---
 
-## 七、本篇未覆盖 / 待核实
+## 七、局限与待核实
 
 - MoA Fig.1/3/5 各点精确坐标；引言 65.8% vs Table 2 的版本差来源。
 - TUMIX Appendix Table 10–15（基线配置、单 agent 首轮分、消融全表、LLM-generated agent 名单）；Fig.5–10/13 细格。
@@ -271,7 +271,6 @@ $\oplus$ = Table 1 的 **Aggregate-and-Synthesize** 提示：要求批判性综�
 - PDF：`https://arxiv.org/abs/2406.04692`（arXiv **2406.04692v1**，2024-06-07）。
 - PDF：`https://arxiv.org/abs/2510.01279`（arXiv **2510.01279v1**，2025-09-30）。
 - 辅：Google Research pub 页（上表 URL）。
-- 笔记状态：`date: 2026-09-22` · `status: draft`。
 
 ## 相关笔记
 

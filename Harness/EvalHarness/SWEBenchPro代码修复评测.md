@@ -24,12 +24,12 @@ timezone: Asia/Shanghai (CST)
 > - **SWE-Bench Pro**（Scale AI，arXiv **2509.16941**）：长程、抗污染、企业级仓库修复；公共 / 商业 / 留出三分集。
 > - **SWE-Bench Pro Verified**（上交所 AI Lab 等，arXiv **2609.08149**）：在 Pro **公共 731** 上叠 **反 reward-hacking 执行环境** + **102 题最小改动校正**。
 > **攻坚线**：**评测字段（主）**——规模切分、Pass@1 / accuracy、协议旋钮（增广 / 预算 / scaffold）、泄漏通道与修复前后分差。
-> **硬划界（开篇钉死）**：
-> - **≠ [[代码智能体Harness史线]]**：禁止重写 SWE-agent ACI / OpenHands SDK / 控制环正文。两文只用 SWE-Agent 或 mini-swe-agent 作**统一评测脚手架引用**，不展开命令面 / 观测格式 / 四包 SDK。
-> - **≠ [[评测与排行榜可靠性]]**：禁止重写污染 / 路由 / thinking 模式 / System Card 榜单通史全文；本卡只录 **Pro 族专用字段**（copyleft 抗污染、三分集、anti-hacking、任务校正）。
-> - **≠ [[科研智能体]]**：禁止把「科研模板改码 / ChemCrow 工具化学」写成仓库级 SE 补丁环；本卡对象是 **issue→patch→fail2pass/pass2pass**。
-> - **禁止重写 SWE-agent 控制环**（ReAct 步、viewer/edit/search 消融等 → 已在 [[代码智能体Harness史线]]）。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。图内柱读数标 **待核实读图**；Scale Labs 网页摘要与 arXiv **v2** 摘要数字不一致处显式对照。
+> **范围与相邻笔记**：
+> - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 控制环正文。两文只用 SWE-Agent 或 mini-swe-agent 作**统一评测脚手架引用**，不展开命令面 / 观测格式 / 四包 SDK。
+> - **≠ [[评测与排行榜可靠性]]**：不重写污染 / 路由 / thinking 模式 / System Card 榜单通史全文；本卡只录 **Pro 族专用字段**（copyleft 抗污染、三分集、anti-hacking、任务校正）。
+> - **≠ [[科研智能体]]**：不把「科研模板改码 / ChemCrow 工具化学」写成仓库级 SE 补丁环；本卡对象是 **issue→patch→fail2pass/pass2pass**。
+> - **不重写 SWE-agent 控制环**（ReAct 步、viewer/edit/search 消融等 → 已在 [[代码智能体Harness史线]]）。
+> Scale Labs 网页摘要与 arXiv **v2** 摘要数字不一致处显式对照。
 
 ---
 
@@ -260,11 +260,11 @@ timezone: Asia/Shanghai (CST)
 | 环境 | 原 Pro Docker | + 反泄漏重建 / 网络拦 / 元数据洗 |
 | 题面 | 原 731 | 102 题字段修订 |
 
-→ **禁止**把 Verified 的 60% 档与 Pro Table 1 的 40% 档当成「模型半年暴涨/暴跌」单因果叙事；先对齐 scaffold、环境、题面版本。
+→ 不宜把 Verified 的 60% 档与 Pro Table 1 的 40% 档当成「模型半年暴涨/暴跌」单因果叙事；先对齐 scaffold、环境、题面版本。
 
 ---
 
-## 五、评测字段清单（本卡交付用）
+## 五、评测字段清单
 
 写报告 / 排行时建议显式填下表（缺一则不可横比）：
 
@@ -286,7 +286,7 @@ timezone: Asia/Shanghai (CST)
 - **[[代码智能体Harness史线]]**：需要「动作面 / 沙箱 SDK」时跳转；本卡不重写。
 - **[[评测与排行榜可靠性]]**：需要「thinking / pass@k / 系统卡协议」通史时跳转；本卡只钉 Pro 族字段。
 - **[[科研智能体]] / [[开端性与发现基础模型]]**：科学发现或开端自改进若用 SWE 作验证信号，只引用本卡指标，不反向重写 Pro 构造。
-- **待跟**：held-out 858 公开对照；Java/C++ 扩展；与 SWE-bench-Live / ProMax / DeepSWE 的协议对齐表（Verified Related work 已索引，本卡不升主）。
+- **未覆盖**：held-out 858 公开对照；Java/C++ 扩展；与 SWE-bench-Live / ProMax / DeepSWE 的协议对齐表（Verified Related work 已索引，本卡不升主）。
 
 ---
 
@@ -296,4 +296,4 @@ timezone: Asia/Shanghai (CST)
 |---|---|
 | 页数 | **20** / **37** |
 | 辅页 | Scale Labs HTML 摘要已对照；与 v2「<45%」不一致已标 |
-| 禁编造 | 表数字均出自抽取文本；Figure 1 柱高标 **待核实读图** |
+| 读图 | Figure 1 柱高 **待核实读图** |

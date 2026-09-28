@@ -21,12 +21,12 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：浏览评测主题轴——补仓库里缺的两条**基准论文本身**：OpenAI **BrowseComp**（深研多跳、难找易验的短答案浏览竞赛）与 OSU/Berkeley **Online-Mind2Web**（*An Illusion of Progress?*，在线真实站点任务 + 人工金标揭「WebVoyager 自报高分」幻象，并给出 **WebJudge** 自动评测）。
 > **攻坚线**：**评测字段（主）**——题型构造 / 难度轴 / 主指标 / 校准与算力缩放 / 自动评 vs 人工一致率；禁外推未测产品 SLA。
-> **硬划界（开篇钉死）**：
-> - **≠ [[UIVenus2GUI智能体]] UI-Venus-2**：禁止重写跨端 GUI foundation 训练管线、MOPD、SGV；[[UIVenus2GUI智能体]] 卡内若出现 Online-Mind2Web **分数行**，本卡只写**基准定义与协议**，不写 Venus 训练/权重。
-> - **≠ [[计算机使用智能体]] CUA**：禁止重写 Operator System Card 安全栈、OSWorld 2.0 长程桌面、StateAct；本卡若点到 Operator，仅作 Online-Mind2Web **人工 SR 表内一列**，不写截图键鼠产品安全。
-> - **≠ [[WorfBench工作流基准]] WorfBench**：禁止重写 agentic **workflow 图生成**与 WorFEval；本卡对象是 **浏览问答 / 在线网页操作完成**，不是 DAG 工作流合成。
-> - **≠ [[VendingBench经营长程评测]] Vending-Bench**：禁止重写经营仿真净值 / meltdown；介质与目标完全不同。
-> **禁止编造**：Accuracy / SR / AR / Calibration Error / 题量 / 站点量一律锚定官方 PDF（2026-09-22 CST）与官博 HTML；图注模糊处只引文内明确表数字。两文主张差异标为**该文主张**，不升跨文「谁更真实」裁决。
+> **范围与相邻笔记**：
+> - **≠ [[UIVenus2GUI智能体]] UI-Venus-2**：不重写跨端 GUI foundation 训练管线、MOPD、SGV；[[UIVenus2GUI智能体]] 卡内若出现 Online-Mind2Web **分数行**，本卡只写**基准定义与协议**，不写 Venus 训练/权重。
+> - **≠ [[计算机使用智能体]] CUA**：不重写 Operator System Card 安全栈、OSWorld 2.0 长程桌面、StateAct；本卡若点到 Operator，仅作 Online-Mind2Web **人工 SR 表内一列**，不写截图键鼠产品安全。
+> - **≠ [[WorfBench工作流基准]] WorfBench**：不重写 agentic **workflow 图生成**与 WorFEval；本卡对象是 **浏览问答 / 在线网页操作完成**，不是 DAG 工作流合成。
+> - **≠ [[VendingBench经营长程评测]] Vending-Bench**：不重写经营仿真净值 / meltdown；介质与目标完全不同。
+> **主要来源**：[BrowseComp](https://arxiv.org/abs/2504.12516)、[Online-Mind2Web](https://arxiv.org/abs/2504.01382)、[BrowseComp 官博](https://openai.com/index/browsecomp)（2026-09-22 CST）。两文主张差异标为**该文主张**，不升跨文「谁更真实」裁决。
 
 ---
 

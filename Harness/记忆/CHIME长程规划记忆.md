@@ -25,15 +25,15 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：长程规划记忆主题轴——在已入库记忆轴（[[智能体长程记忆]] OS 分页、[[MemoryR1强化学习记忆维护]] RL 四操作、[[Mem0与Zep生产级记忆]] 生产记忆层、[[HippoRAG2与CatRAG]] 检索式非参记忆）之外，补「**长程 agentic planning × 自演化记忆的信用分配**」空位。主锚 **CHIME**（*Credit-Aware HIerarchical Memory Evolution*）：把终局成败拆成「计划质量 / 执行误差 / 环境噪声」，分设 **planning bank** 与 **execution bank**，先归因再写入（attribute-before-memorize）。
 > **攻坚线**：**架构思想（主）**——分层银行 + Credit Attribution Gate + 信用感知演化；**评测字段（辅）**——四榜 train/eval Avg@3 与消融 / RQ 表，禁外推未测场景。
-> **硬划界（开篇钉死）**：
-> - **≠ [[Mem0与Zep生产级记忆]]**：禁止重写 Mem0 / Zep **生产对话记忆层** API、Graphiti 时序 episode、ADD/UPDATE tool-call 产品面。本卡对象是 **冻结策略上的自演化规划经验库**，不是会话事实抽取–更新服务。
-> - **≠ [[HippoRAG2与CatRAG]]**：禁止重写 HippoRAG 2 / CatRAG **文档语料上的检索图算法**（OpenIE+PPR、查询条件边权）。本卡是 **agent 交互轨迹 → 规划/执行经验**，不是非参文档记忆索引。
-> - **≠ [[智能体长程记忆]]**：禁止重写 MemGPT 主/档案上下文分页、A-Mem Zettelkasten 卡片链接演化全文。本卡不回答「窗口当物理内存怎么换页」，只回答「终局信号怎么归因到计划 vs 执行」。
-> - **≠ [[MemoryR1强化学习记忆维护]]**：禁止重写 Memory-R1 在 `{ADD, UPDATE, DELETE, NOOP}` 上的 **outcome RL / 双 agent 蒸馏**。CHIME **冻结骨干参数**，只更新外置银行；信用门是 **结构化自省**，不是策略梯度。
-> - **≠ [[智能体工具与长程任务]]**：禁止重写工具环 / MCP / 旗舰 agent 产品通史；四榜只作「长程工具任务床」接口。
-> - **≠ [[推理时树搜索ABMCTS]]**：禁止重写 AB-MCTS **推理期答案树搜索**（宽 vs 深）；CHIME 文内把 test-time search（WebAnchor 等）标为对照范式，本卡不写树搜索内核。
-> **补链不升主**：**MEM1**（常量内部状态 RL）与 **ReSum**（长程搜索上下文摘要 / ReSum-GRPO）仅作「长程记忆–上下文效率」对照索引，禁止展开成第二主轴。
-> **禁止编造**：机制、公式编号、表数字一律锚定官方 PDF（2026-09-22 CST）。图内未列表格的精确曲线点标 **待核实读图**。文末代码「will be released」→ 记为 **承诺仓**，不以本地克隆为准。
+> **范围与相邻笔记**：
+> - **≠ [[Mem0与Zep生产级记忆]]**：不重写 Mem0 / Zep **生产对话记忆层** API、Graphiti 时序 episode、ADD/UPDATE tool-call 产品面。本卡对象是 **冻结策略上的自演化规划经验库**，不是会话事实抽取–更新服务。
+> - **≠ [[HippoRAG2与CatRAG]]**：不重写 HippoRAG 2 / CatRAG **文档语料上的检索图算法**（OpenIE+PPR、查询条件边权）。本卡是 **agent 交互轨迹 → 规划/执行经验**，不是非参文档记忆索引。
+> - **≠ [[智能体长程记忆]]**：不重写 MemGPT 主/档案上下文分页、A-Mem Zettelkasten 卡片链接演化全文。本卡不回答「窗口当物理内存怎么换页」，只回答「终局信号怎么归因到计划 vs 执行」。
+> - **≠ [[MemoryR1强化学习记忆维护]]**：不重写 Memory-R1 在 `{ADD, UPDATE, DELETE, NOOP}` 上的 **outcome RL / 双 agent 蒸馏**。CHIME **冻结骨干参数**，只更新外置银行；信用门是 **结构化自省**，不是策略梯度。
+> - **≠ [[智能体工具与长程任务]]**：不重写工具环 / MCP / 旗舰 agent 产品通史；四榜只作「长程工具任务床」接口。
+> - **≠ [[推理时树搜索ABMCTS]]**：不重写 AB-MCTS **推理期答案树搜索**（宽 vs 深）；CHIME 文内把 test-time search（WebAnchor 等）标为对照范式，本卡不写树搜索内核。
+> **补链不升主**：**MEM1**（常量内部状态 RL）与 **ReSum**（长程搜索上下文摘要 / ReSum-GRPO）仅作「长程记忆–上下文效率」对照索引，不展开成第二主轴。
+> 文末代码「will be released」→ 记为 **承诺仓**。
 
 ---
 
@@ -216,13 +216,13 @@ Train 侧 CHIME 亦最高：Qwen **35.02**、DeepSeek **38.00**（相对最强�
 
 - **问题**：长程多轮把全部 thought/action/observation 拼进上下文 → 成本与 OOD 长度退化。
 - **方法**：每步更新紧凑共享内部状态（文内 `<IS></IS>`），融合先验记忆与新观测并丢弃冗余；端到端 RL；另给「组合已有数据集成任意长任务序列」的环境构造。
-- **与 CHIME 正交点**：MEM1 攻 **上下文长度/常量记忆**；CHIME 攻 **外置银行写入前的阶段信用**。二者都谈 long-horizon agents，但一个是 **参数内状态压缩**，一个是 **冻结参数 + 分库自演化**。本卡禁止把 MEM1 写成「CHIME 的训练版」。
+- **与 CHIME 正交点**：MEM1 攻 **上下文长度/常量记忆**；CHIME 攻 **外置银行写入前的阶段信用**。二者都谈 long-horizon agents，但一个是 **参数内状态压缩**，一个是 **冻结参数 + 分库自演化**。本卡不把 MEM1 写成「CHIME 的训练版」。
 
 ### 8.2 ReSum（2509.13313）— 上下文摘要轴（可选）
 
 - **问题**：Web agent 要广探索 vs 上下文窗硬顶；改架构（内部 memory token）破坏兼容且需重训。
 - **方法**：周期性调用**外部摘要工具**压缩史 → 从压缩态续探（训练免费即可用）；**ReSum-GRPO** 用 advantage broadcasting 把终奖传到分段轨迹。文称相对 ReAct 训练免费 **+4.5%**，再 GRPO **+8.2%**（Abstract；细节不展开）。
-- **与 CHIME 正交点**：ReSum 是 **搜索轨迹上下文管理**；CHIME 是 **计划/执行经验归因入库**。议程明确 **不升主**。
+- **与 CHIME 正交点**：ReSum 是 **搜索轨迹上下文管理**；CHIME 是 **计划/执行经验归因入库**。本卡 **不升主**。
 
 ---
 
@@ -238,4 +238,4 @@ Train 侧 CHIME 亦最高：Qwen **35.02**、DeepSeek **38.00**（相对最强�
 5. 忽略 BFCL 上 DeepSeek 单榜 A-MapReduce 更高的例外，只报平均。
 6. 把「Code will be released」当成已可复现的冻结 commit。
 
-**开放问题（文内已暗示、本卡不编造答案）：** 跨榜迁移弱；Gate 依赖骨干自省能力（RQ5）；记忆指导仍受执行能力上限约束（附录 B）。
+**开放问题（文内已暗示）：** 跨榜迁移弱；Gate 依赖骨干自省能力（RQ5）；记忆指导仍受执行能力上限约束（附录 B）。

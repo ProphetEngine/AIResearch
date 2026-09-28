@@ -19,13 +19,13 @@ timezone: Asia/Shanghai (CST)
 > **定位**：编排计划评测主题轴——仓库已有 **[[多智能体辩论]]**（辩论协议：多样性 / 置信度 / 反共识）、**[[MixtureOfAgents与TUMIX]]**（MoA 层间合成 / TUMIX 工具策略混合）、**[[AgentBazaar经济对齐]]**（多代理市场经济对齐）、**[[智能体工具与长程任务]]**（旗舰工具环 / 长程产品叙事）。本卡转问一刀**可隔离的编排计划评测**：
 > - **OrchBench**（*Evaluating Multi-Agent Orchestration Plans in Isolation via Deterministic Simulation*）：把端到端 MAS 成绩拆开——**固定任务 DAG + 上下文上限 $L$ + agent 预算 $A_{\max}$**，只评 planner 产出的 $\pi=(\alpha,R)$（子任务分配 × 跨 agent 信息转移与保留比）；**确定性仿真器**代替 worker / 工具 / 环境噪声，输出质量 $Q$、makespan 效率、token 效率与可解释协调失败。
 > **攻坚线**：**评测字段（主）**——仿真—真实相关、规模化缺失转移、信息覆盖 vs agent 数；**编排接口思想（辅）**——计划表示 $\pi=(\alpha,R)$、压缩敏感类、缺失转移惩罚 $\lambda$。
-> **硬划界（开篇钉死）**：
-> - **≠ [[多智能体辩论]]**：禁止重写 MAD 鞅诊断、FREE-MAD 全轨迹打分、分层分歧仪器、DynaDebate 路径生成。本卡**不是**同题 QA 委员会辩论；M3MAD-Bench 与 [[多智能体辩论]] 更近 → **仅 §七补链**，不升主。
-> - **≠ [[MixtureOfAgents与TUMIX]]**：禁止重写 MoA Aggregate-and-Synthesize、TUMIX 工具–文本混合池 / 早停。本卡评的是 **DAG 上的分配与 handoff 计划**，不是测试时异构合成或工具策略混合。
-> - **≠ [[AgentBazaar经济对齐]]**：禁止重写 Agent Bazaar 市场 POSG、EAS、Sybil / 柠檬市场。本卡**无**经济角色与交易环境。
-> - **≠ [[智能体工具与长程任务]]**：禁止重写 Claude/GPT 旗舰 MCP、并行工具、System Card 长程产品叙事；Claude Code 在本卡只作**真实执行对照框架**一句。
+> **范围与相邻笔记**：
+> - **≠ [[多智能体辩论]]**：不重写 MAD 鞅诊断、FREE-MAD 全轨迹打分、分层分歧仪器、DynaDebate 路径生成。本卡**不是**同题 QA 委员会辩论；M3MAD-Bench 与 [[多智能体辩论]] 更近 → **仅 §七补链**，不升主。
+> - **≠ [[MixtureOfAgents与TUMIX]]**：不重写 MoA Aggregate-and-Synthesize、TUMIX 工具–文本混合池 / 早停。本卡评的是 **DAG 上的分配与 handoff 计划**，不是测试时异构合成或工具策略混合。
+> - **≠ [[AgentBazaar经济对齐]]**：不重写 Agent Bazaar 市场 POSG、EAS、Sybil / 柠檬市场。本卡**无**经济角色与交易环境。
+> - **≠ [[智能体工具与长程任务]]**：不重写 Claude/GPT 旗舰 MCP、并行工具、System Card 长程产品叙事；Claude Code 在本卡只作**真实执行对照框架**一句。
 > - **≠ [[合成用户仿真]]**：τ-bench / ToolEmu 用户仿与工具仿不重开；OrchBench 固定 DAG，**不**仿真用户。
-> **禁止编造**：机制、公式编号、表数字一律锚定官方 PDF（2026-09-22 CST）。图内未列表格的精确曲线点标 **待核实读图**。OrchBench 文内**未见**作者自发布官方评测仓 URL → **无承诺仓**（仅引用 Claude Code / Crush 等第三方框架仓）。
+> OrchBench 文内**未见**作者自发布官方评测仓 URL → **无承诺仓**（仅引用 Claude Code / Crush 等第三方框架仓）。
 
 ---
 
@@ -68,7 +68,7 @@ Related Work 三组：① PlanBench / FlowBench / WorFBench 测**结构正确性
  ▼ ▼ ▼ ▼
  怎么辩 怎么合成/混工具 市场是否稳 编排计划好不好
  [[多智能体辩论]] [[MixtureOfAgents与TUMIX]] [[AgentBazaar经济对齐]] 本篇 OrchBench
- (禁重写) (禁重写) (禁重写) 隔离仿真评测
+ (不重写) (不重写) (不重写) 隔离仿真评测
  │
  M3MAD 补链
  (辩论评测箱→[[多智能体辩论]])
@@ -186,16 +186,16 @@ $s_v=\max\bigl(c_a,\ \max_{u\in\mathrm{Parents}(v)} f_u\bigr)$——同 agent �
 
 1. **归因隔离**：若产品叙事只报端到端 MAS 分，无法回答「是编排烂还是 worker/工具炸」。OrchBench 把问题收成可复现的 $\pi$ 比较——适合作为编排研究的**前置筛**，再在目标框架（Claude Code 等）上少量实跑。
 2. **诊断优于堆料**：Coverage 相关稳、agent 数相关垮；工程默认「再开几个 subagent」在大 DAG 上可能制造更多 missing transfer。仿真引导补 handoff（Table 9）是可操作的改进环。
-3. **效率承诺有条件**：token/时间狂降成立于**仿真代替执行**；真实时间/token **不可**由仿真可靠预测（文内自承）→ 入库评测卡应同时记 Score 与框架实跑计费，禁止把 $E_{\mathrm{token}}$ 误读成「线上账单」。
+3. **效率承诺有条件**：token/时间狂降成立于**仿真代替执行**；真实时间/token **不可**由仿真可靠预测（文内自承）→ 评测卡应同时记 Score 与框架实跑计费，$E_{\mathrm{token}}$ 不等于「线上账单」。
 4. **与相邻卡接线**：要写辩论机制 → **[[多智能体辩论]]**；要写异构合成/工具混合 → **[[MixtureOfAgents与TUMIX]]**；要写市场系统风险 → **[[AgentBazaar经济对齐]]**；要写旗舰工具环产品 → **[[智能体工具与长程任务]]**。本卡只钉「编排计划隔离仿真」。
 
 ---
 
 ## 七、补链 · M3MAD-Bench（不升主）
 
-**为何只补链：** Agenda 与本卡划界一致——M3MAD 是 **MAD 方法的多维评测箱**（Multi-domain × Multi-modal × Multi-dimensional metrics），评的是辩论策略在 13 数据集 / 9 底座上的准确率与 token·时间代价，并给九条「MAD 并非处处有效」洞察（协作优于对抗、成本高、多轮收益有限、互相强化错误等）。这与 **[[多智能体辩论]]** 同题族，升主会叠床；与 OrchBench「DAG 编排计划隔离」正交。
+**为何只补链：** M3MAD 是 **MAD 方法的多维评测箱**（Multi-domain × Multi-modal × Multi-dimensional metrics），评的是辩论策略在 13 数据集 / 9 底座上的准确率与 token·时间代价，并给九条「MAD 并非处处有效」洞察（协作优于对抗、成本高、多轮收益有限、互相强化错误等）。这与 **[[多智能体辩论]]** 同题族，升主会叠床；与 OrchBench「DAG 编排计划隔离」正交。
 
-**仅录接口（禁止展开成第二主文）：**
+**仅录接口（不展开成第二主文）：**
 
 | 字段 | 文内 |
 |---|---|
@@ -220,9 +220,3 @@ $s_v=\max\bigl(c_a,\ \max_{u\in\mathrm{Parents}(v)} f_u\bigr)$——同 agent �
 2. 固定 DAG 假设下，「先分解再编排」的联合优化如何接入而不重新揉进端到端噪声？
 3. 与 HiddenBench / Silo-Bench 的「交互中通信」能否共用同一缺失转移仪器？
 4. 作者评测仓若后续公开，应补 `code_promised` 字段并核版本哈希。
-
----
-
-## 九、摘要
-
-**回报表摘要：** [[OrchBench多智能体编排评测]] 主锚 OrchBench（编排计划隔离仿真；≠ MAD/MoA/市场/旗舰工具环）；M3MAD 仅补链；禁编造；中文归档；date 2026-09-22。

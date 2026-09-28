@@ -10,10 +10,10 @@ sources:
  - https://arxiv.org/abs/2501.13956
 arxiv: ["2504.19413", "2501.13956"]
 related:
- - "Harness/记忆/智能体长程记忆.md"
- - "Harness/记忆/MemoryR1强化学习记忆维护.md"
- - "检索与知识/图谱检索GraphRAG.md"
- - "检索与知识/检索增强与知识外挂.md"
+ - "智能体长程记忆"
+ - "MemoryR1强化学习记忆维护"
+ - "图谱检索GraphRAG"
+ - "检索增强与知识外挂"
 code_mem0: "https://mem0.ai/research"
 code_graphiti: "https://github.com/getzep/graphiti"
 product_zep: "https://www.getzep.com"
@@ -85,7 +85,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 3.1 动机与产品定位
 
-文首问题（§1 / Fig.1）：固定上下文窗口下，跨会话偏好（如素食、无乳）易丢；单纯加长窗口只是推迟溢出，且长上下文注意力对「夹在无关长段中的关键偏好」并不稳健。Mem0 自称面向 **production-ready** agent：动态提取、合并、检索显著信息；并给出图增强变体 Mem0<sup>g</sup>（正文上标 $g$，抽取文本常写作 `Mem0g`）。
+文首问题（§1 / Fig.1）：固定上下文窗口下，跨会话偏好（如素食、无乳）易丢；单纯加长窗口只是推迟溢出，且长上下文注意力对「夹在无关长段中的关键偏好」并不稳健。Mem0 自称面向 **production-ready** agent：动态提取、合并、检索显著信息；并给出图增强变体 Mem0<sup>g</sup>（正文上标 $g$，纯文本常写作 `Mem0g`）。
 
 ### 3.2 Mem0 双阶段流水线（§2.1 / Fig.2）
 

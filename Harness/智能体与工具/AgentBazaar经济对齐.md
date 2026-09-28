@@ -16,13 +16,13 @@ archived: 2026-09-22
 
 > **定位**：经济代理主题轴——仓库缺 **economy / econ agents** 横切；锚点是近窗（2026-05）*Agent Bazaar*（Karten / Crow / Jin，Princeton；COLM 2026）。主写 **多代理市场系统性风险**（B2C 崩盘、C2C Sybil 柠檬市场）与 **Economic Alignment Score（EAS）**，辅写 harness + 定向 RL。
 > **攻坚线**：**评测字段（主）**——两环境失败模式、EAS 四分量、硬设置下跨模型可比；**架构思想（辅）**——Stabilizing Firms / Skeptical Guardians harness、REINFORCE++ 自适应课程。
-> **硬划界（禁止重写）**：
-> - **禁止重写** [[多智能体辩论]] MAD 辩论协议 / 多数票 / 置信度调制（本篇是 **市场 POSG**，不是同题 QA 委员会）。
-> - **禁止重写** 金融交易 bot / QuantAgent / FinAgent **通史**（Related 仅点名「单代理交易」邻槽后立即回到本篇的系统性失败）。
-> - **禁止重写** [[合成用户仿真]] 合成用户仿真（本篇买家/卖家是 **市场角色**，不是 τ-bench 风格工具环用户仿）。
-> - **禁止重写** [[对齐脉络RLHF与偏好优化]] RLHF / Constitutional AI 通史——只取「单交互 helpfulness ≠ 系统性经济安全」接口句。
-> - Vending-Bench / Arena（文内对照）→ **索引一句**；本主题轴不另开经营长程通史（agenda 已标可作后续候选）。
-> **禁止编造**：主张与数字锚定官方 PDF（2026-09-22 CST）与作者项目页；图内未列表格处不读点。
+> **范围与相邻笔记**：
+> - **不重写** [[多智能体辩论]] MAD 辩论协议 / 多数票 / 置信度调制（本篇是 **市场 POSG**，不是同题 QA 委员会）。
+> - **不重写** 金融交易 bot / QuantAgent / FinAgent **通史**（Related 仅点名「单代理交易」邻槽后立即回到本篇的系统性失败）。
+> - **不重写** [[合成用户仿真]] 合成用户仿真（本篇买家/卖家是 **市场角色**，不是 τ-bench 风格工具环用户仿）。
+> - **不重写** [[对齐脉络RLHF与偏好优化]] RLHF / Constitutional AI 通史——只取「单交互 helpfulness ≠ 系统性经济安全」接口句。
+> - Vending-Bench / Arena（文内对照）→ **索引一句**；本主题轴不另开经营长程通史。
+> **主要来源**：[arXiv:2605.17698](https://arxiv.org/abs/2605.17698)、[作者项目页](https://sethkarten.ai/papers/agent-bazaar.html)（2026-09-22 CST）。
 
 ---
 
@@ -251,7 +251,7 @@ $$
 | 通用 agent 工具环 | [[智能体工具与长程任务]] |
 | 本篇 | **市场 POSG 失败模式 + EAS + 经济对齐 RL** |
 
-**后续候选（agenda 已记，本篇不展开）：** Vending-Bench / Arena 经营长程与竞争剥削。
+**后续候选（本篇不展开）：** Vending-Bench / Arena 经营长程与竞争剥削。
 
 ---
 

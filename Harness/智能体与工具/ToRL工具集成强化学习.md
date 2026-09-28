@@ -15,11 +15,11 @@ archived: 2026-09-22
 
 > **定位**：工具集成强化学习主题轴——仓库内 **「把代码解释器嵌进 RL 环境、从 base 直接探索工具策略」** 专篇。相对纯 CoT 的 outcome RL（R1 / SimpleRL 等）与蒸馏轨迹再 SFT 的 TIR（ToRA / MathCoder 等），ToRL 证明：**工具调用本身可以当探索动作**，不必先模仿人类/更强模型的工具脚本。
 > **攻坚线**：**架构思想（主）**——TIR rollout 环、沙箱选择、观测 mask、工具次数 $C$；**评测字段（辅）**——AIME/MATH 等相对「无工具 RL」与「Instruct-TIR」的增益、训练中 code ratio / pass ratio。
-> **硬划界（禁止重写）**：
-> - **禁止重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单（Clip-Higher / Dynamic Sampling / token-level loss / Overlong 等）。本篇只用到「**用 GRPO 做组相对 RL**」这一抽象槽位；超参见 §3.1，不展开目标函数变体。
-> - **禁止重写** [[代码智能体Harness史线]] 的 SWE-agent ACI / OpenHands SDK（编辑器命令面、lint guardrail、生产 harness）。本篇沙箱是 **数学题上的 Python 解释器（Sandbox Fusion）**，不是软件工程 ACI。
-> - **禁止重写** [[智能体工具与长程任务]] 旗舰工具环 / MCP / System Card 长程；[[DeepSeekR1推理训练深读]] 多阶段管线表；[[推理时扩展TestTimeScaling]] TTS 通史。
-> **禁止编造**：数字、消融、奖励表一律锚定官方 PDF（2026-09-22 CST）与 GitHub README 自报表；图内未抽出可读曲线点标 **待核实读图**。
+> **范围与相邻笔记**：
+> - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单（Clip-Higher / Dynamic Sampling / token-level loss / Overlong 等）。本篇只用到「**用 GRPO 做组相对 RL**」这一抽象槽位；超参见 §3.1，不展开目标函数变体。
+> - **不重写** [[代码智能体Harness史线]] 的 SWE-agent ACI / OpenHands SDK（编辑器命令面、lint guardrail、生产 harness）。本篇沙箱是 **数学题上的 Python 解释器（Sandbox Fusion）**，不是软件工程 ACI。
+> - **不重写** [[智能体工具与长程任务]] 旗舰工具环 / MCP / System Card 长程；[[DeepSeekR1推理训练深读]] 多阶段管线表；[[推理时扩展TestTimeScaling]] TTS 通史。
+> **主要来源**：[arXiv:2503.23383](https://arxiv.org/abs/2503.23383)、[GitHub README](https://github.com/GAIR-NLP/ToRL)（2026-09-22 CST）。
 
 ---
 
@@ -234,7 +234,6 @@ $$
 
 - PDF：`https://arxiv.org/abs/2503.23383`（arXiv **2503.23383v1**，2025-03-30；CreationDate 2025-04-01 CST）。
 - 辅：`https://github.com/GAIR-NLP/ToRL`（README 表与 Table 3 一致；stargazers 等元数据随时间变，**不以星数为科学主张**）。
-- 笔记状态：`date: 2026-09-22` · `status: draft`。
 
 ## 相关笔记
 

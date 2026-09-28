@@ -17,13 +17,12 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：工具数据合成主题轴——在「Toolformer 式：为工具调用**合成训练对**」谱系上，补近窗一刀 **ToolLoop**：把 generate-then-filter 改成 **generate–verify–refine**，用三阶段分解（ground truth → 反向造 query → 正向造 tool calls）+ 每阶段 **dynamic self-feedback**，用 **11K** 合成样本把 4B 非推理模式推到 BFCL **86.40%**。
 > **攻坚线**：**架构思想（主）**——候选函数聚类、三阶段分解、阶段局部校验与重写；**评测字段（辅）**——BFCL non-live/live、ACEBench 五维、消融「无反馈 / 终滤 / 全闭环」、合成重试分布。
-> **硬划界（开篇钉死）**：
-> - **≠ [[ToRL工具集成强化学习]] ToRL**：禁止重写「代码解释器 ⊂ RL env、从 base 探索工具策略」。ToRL = **训练期交互 RL**（Sandbox Fusion + GRPO）；本篇 = **离线合成 function-calling 数据 → SFT**，评测是 BFCL/ACEBench **静态 schema 命中**，不是 AIME 解释器环。
-> - **≠ [[智能体工具与长程任务]]**：禁止重写旗舰 System Card / MCP / Extended thinking with tools / 长程产品叙事；本篇只谈 **训练数据怎么造**。
-> - **≠ [[代码智能体Harness史线]]**：禁止重写 SWE-agent ACI / OpenHands SDK / 生产沙箱 harness；本篇沙箱感止于「AST/规则查 JSON 合法性」，不是编码智能体命令面。
-> **补链不升主**：**HEART**（arXiv:2609.01736）= Tool Primitives + ToolFace + Planner/Router/Verifier **推理期 harness**，与 ToolLoop「合成训练数据」正交 → **仅索引**，禁止展开成第二主轴。
+> **范围与相邻笔记**：
+> - **≠ [[ToRL工具集成强化学习]] ToRL**：不重写「代码解释器 ⊂ RL env、从 base 探索工具策略」。ToRL = **训练期交互 RL**（Sandbox Fusion + GRPO）；本篇 = **离线合成 function-calling 数据 → SFT**，评测是 BFCL/ACEBench **静态 schema 命中**，不是 AIME 解释器环。
+> - **≠ [[智能体工具与长程任务]]**：不重写旗舰 System Card / MCP / Extended thinking with tools / 长程产品叙事；本篇只谈 **训练数据怎么造**。
+> - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 生产沙箱 harness；本篇沙箱感止于「AST/规则查 JSON 合法性」，不是编码智能体命令面。
+> **补链不升主**：**HEART**（arXiv:2609.01736）= Tool Primitives + ToolFace + Planner/Router/Verifier **推理期 harness**，与 ToolLoop「合成训练数据」正交 → **仅索引**，不展开成第二主轴。
 > **谱系口径（笔记编辑位，非文内自号）**：文 Related Work 主对照 Self-Instruct / APIGen / APIGen-MT / ToolMind 等「合成→过滤」线；本卡用「**Toolformer 谱系**」指仓库横切的 **工具调用合成监督数据** 桶（学何时/调何工具），**不**声称正文自称 Toolformer 后继。
-> **禁止编造**：机制、表数字、重试统计一律锚定官方 PDF（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。
 
 ---
 
@@ -238,7 +237,7 @@ Ethics：合成数据、不采 PII；人工标只标合成例；API 规格与基
 
 ## 七、补链 HEART（2609.01736）——仅索引
 
-| 项 | 一文摘要（禁止当本卡主方法展开） |
+| 项 | 一文摘要（非本卡主方法） |
 |---|---|
 | 问题 | 多步/多轮工具因 **异构 schema / 输出类型** 易脆；大工具目录塞进上下文掉点 |
 | 组件 | **Tool Primitives**（NL 接口包住 schema 解析与执行）；**ToolFace**（**25,519** 函数库，动态检索）；**HEART** harness（Planner / Router / Verifier） |
@@ -246,11 +245,6 @@ Ethics：合成数据、不采 PII；人工标只标合成例；API 规格与基
 
 ---
 
-## 八、跟读清单（验收自检）
-
-- [ ] 开篇划界：≠ [[ToRL工具集成强化学习]] / ≠ [[智能体工具与长程任务]] / ≠ [[代码智能体Harness史线]]；HEART 仅补链
-- [ ] 范式：generate-then-filter → generate–verify–refine；三阶段 + ≤3 重写
-- [ ] 数字锚：11K / 86.40% / Isolate 86.07%；消融 79.97→82.56→86.40；ACE 72.1% @ 18.3% 数据
-- [ ] 未把 ToRL RL 环、旗舰 MCP、SWE ACI 写进主轴
+## 八、一句话收束
 
 **结论句：** ToolLoop 把 Toolformer 谱系里「造 FC 监督数据」的瓶颈，从「多造再滤」拧到「**先钉函数组合、再反向问句、再正向填参，且每步可修**」——用更少样本换更高 BFCL/ACEBench 一致性；它解决的是 **数据对齐**，不是 [[ToRL工具集成强化学习]] 的 **RL 探索**，也不是 [[代码智能体Harness史线]]/[[智能体工具与长程任务]] 的 **运行时 harness / 产品长程**。

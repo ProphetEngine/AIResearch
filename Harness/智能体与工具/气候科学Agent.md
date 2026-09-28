@@ -21,12 +21,12 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：气候科学智能体主题轴——补 [[天气气候基础模型]]「天气/气候 **foundation model**」之后仍缺的轴：**多代理编排做气候数据科学 / 社会—气候分析**。主锚两篇：**(A) ClimateAgent**（HKUST；气候数据获取→分析→报告的端到端编排）与 **(B) ClimateAgents**（HIT；社会—气候动力学的多智能体研究助手）。附录索引 **ClimAgent**（开放式气候建模 + ClimaBench）。
 > **攻坚线**：**架构思想（主）**——角色分层 / 共享上下文 / API 自省与自纠；**评测字段（辅）**——工作流完成率、报告质量多维分、社会—气候案例与 Agentic Reviewer 文内分。
-> **硬划界（开篇钉死）**：
-> - **≠ [[天气气候基础模型]]**：禁止重写 Aurora / Earth-system FM 的 3D latent、预训练→多域微调、预报 rollout；本卡对象是 **LLM 多代理工作流**，不是格点地球场基础模型。
-> - **≠ [[科研智能体]]**：禁止重写 The AI Scientist / ChemCrow 通史；ChemCrow 若出现仅作 ClimateAgent related work 一句邻接，不复述化学工具表。
+> **范围与相邻笔记**：
+> - **≠ [[天气气候基础模型]]**：不重写 Aurora / Earth-system FM 的 3D latent、预训练→多域微调、预报 rollout；本卡对象是 **LLM 多代理工作流**，不是格点地球场基础模型。
+> - **≠ [[科研智能体]]**：不重写 The AI Scientist / ChemCrow 通史；ChemCrow 若出现仅作 ClimateAgent related work 一句邻接，不复述化学工具表。
 > - **≠ ClimateGPT（2401.09646）**：专科气候 LLM 若点到，**仅作前置对照一句**，不升主、不拆架构。
 > - **≠ [[智能体工具与长程任务]] / [[代码智能体Harness史线]]**：不写 MCP / SWE-bench harness 通史；AutoGen / Copilot 仅作文内对照槽。
-> **禁止编造**：表数字、页数、完成率、GitHub 一律锚定官方 PDF（2026-09-22 CST）；图柱未抽出标「待核实读图」；ClimateAgents 自称 GitHub 但**未给完整 URL**——本卡不臆造仓库地址。
+> ClimateAgents 自称 GitHub 但**未给完整 URL**。
 
 ---
 
@@ -258,7 +258,7 @@ Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
 
 ## 六、附录索引：ClimAgent（不升主）
 
-> 议程指定附录：开放式气候科学分析 Agent + ClimaBench；**禁止**与双主文对等展开。
+> 附录：开放式气候科学分析 Agent + ClimaBench；不与双主文对等展开。
 
 | 字段 | 文内口径（锚定 PDF） |
 |---|---|
@@ -281,21 +281,13 @@ Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
 **可复核：**
 1. 页数：**49 / 15 / 23**。
 2. ClimateAgent Table 1/2、Table 3、Table 8 与 PDF 一致；摘要 8.32 / 6.27 / 3.26 / 100% 一致。
-3. ClimateAgents Table 1 十一角色；Agentic Reviewer overall **6.4**、soundness **5** 与抽取一致。
-4. ClimAgent CE「150 tools / 30 databases」、GitHub `usail-hkust/ClimAgent`、Table 1 Overall 数字与抽取一致。
+3. ClimateAgents Table 1 十一角色；Agentic Reviewer overall **6.4**、soundness **5** 与原文一致。
+4. ClimAgent CE「150 tools / 30 databases」、GitHub `usail-hkust/ClimAgent`、Table 1 Overall 数字与原文一致。
 
-**缺口 / 勿编造：**
-- ClimateAgents **无**文内完整自有 GitHub URL——禁止补造。
-- ClimAgent **220 vs 320** 任务数冲突未在文内消解——禁止选边「纠正」。
-- 40.21% 仅摘要出现；未在本抽取中还原为 Table 1 的显式算术——引用时标「摘要主张」。
+**缺口：**
+- ClimateAgents **无**文内完整自有 GitHub URL。
+- ClimAgent **220 vs 320** 任务数冲突未在文内消解，不选边「纠正」。
+- 40.21% 仅摘要出现；未在原文中还原为 Table 1 的显式算术——引用时标「摘要主张」。
 - ClimateAgents §4.2 误写「ClimateAgent」——标笔误风险，不合并系统。
-- 禁止把 [[天气气候基础模型]] Aurora 参数量/技巧写进本卡；禁止把 [[科研智能体]] 成本 <$15/篇 等数字挪来。
+- 不把 [[天气气候基础模型]] Aurora 参数量/技巧写进本卡，也不把 [[科研智能体]] 成本 <$15/篇 等数字挪来。
 - ClimateGPT 仅作前置对照、不升主。
-
----
-
-## 八、与 Wave9 agenda 的对齐句
-
-Agenda [[气候科学Agent]]：「[[天气气候基础模型]] 立的是天气/气候基础模型；缺『多代理编排做气候数据科学 / 社会—气候分析』轴。ClimateAgent（2511.20109）与 ClimateAgents（2603.13840）可核；≠ [[科研智能体]] 通史；≠ ClimateGPT 升主；ClimAgent（2604.16922v1）附录。」本卡交付即该缺口：双主文架构+评测字段钉死，附录索引，划界开篇钉死。
-
-*2026-09-22 CST。*

@@ -20,13 +20,13 @@ archived: 2026-09-22
 
 > **定位**：工作流评测主题轴——相对 **[[智能体工具与长程任务]]**（旗舰工具环 / 长程产品叙述）与 **[[代码智能体Harness史线]]**（编码 ACI / 沙箱 harness），补仓库缺失的 **「把复杂任务分解为可执行 DAG 工作流」生成质量** 评测轴。锚点是浙大 / 阿里 *Benchmarking Agentic Workflow Generation*（arXiv **2410.07869v3**，**ICLR 2025**）：基准 **WorfBench** + 协议 **WorFEval**（子序列 / 子图匹配）。
 > **攻坚线**：**评测字段（主）**——$f1_{\mathrm{chain}}$ vs $f1_{\mathrm{graph}}$、四场景、held-out、端到端增益与并行耗时；**架构思想（辅）**——节点链 → DAG、工作流作先验 / CoT 增强 / 并行缩短路径。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[智能体工具与长程任务]]**：不写 MCP / ReAct / System Card 长程产品通史；本卡测的是 **规划图是否对**，不是工具环上能否跑完。
 > - **≠ [[代码智能体Harness史线]]**：不写 SWE-agent ACI / OpenHands SDK / Docker 沙箱；本卡无「改仓库执行」闭环。
 > - **≠ [[计算机使用智能体]]**：不是桌面 GUI / OSWorld / Operator；embodied 源（ALFWorld 等）只作 **工作流图构造数据源**。
 > - **≠ [[多智能体辩论]]**：不是多代理辩论协议；文中 multi-agent 仅作「可能改进生成」的一句相关工作。
 > - **≠ [[VendingBench经营长程评测]]**：不是经营净值 / meltdown 长程连贯。
-> **禁止编造**：表数字、过滤率、超参一律锚定官方 PDF（2026-09-22 CST）。图内未列表格的点位不读点；§3.1「共 18 模型」与 Table 1 行数不一致处 **以表为准并标注**。
+> §3.1「共 18 模型」与 Table 1 行数不一致处 **以表为准并标注**。
 
 ---
 
@@ -35,7 +35,7 @@ archived: 2026-09-22
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主文** | Qiao, Fang, Qiu, Wang, Zhang, Jiang, Xie, Huang, Chen（ZJU / Alibaba）, *Benchmarking Agentic Workflow Generation* | arXiv:**2410.07869v3** \[cs.CL\] **23 Feb 2025**；页眉 *Published as a conference paper at ICLR 2025*；`https://arxiv.org/abs/2410.07869`（**25** 页 letter；CreationDate **2025-02-25** CST） | 一手：任务形式、构造与质控、WorFEval、主表、下游作用 |
-| **备·ICLR** | 同题会议 PDF | https://proceedings.iclr.cc/paper_files/paper/2025/file/adbe936993aa7cf41e45054d8b72f183-Paper-Conference.pdf | 议程备链；本笔记数字以 arXiv 官方 PDF 为准 |
+| **备·ICLR** | 同题会议 PDF | https://proceedings.iclr.cc/paper_files/paper/2025/file/adbe936993aa7cf41e45054d8b72f183-Paper-Conference.pdf | 备用链接；本笔记数字以 arXiv 官方 PDF 为准 |
 | **代码 / 数据** | zjunlp/**WorfBench** | https://github.com/zjunlp/WorfBench ；HF collection `zjunlp/worfbench-…`；项目页 https://zjunlp.github.io/project/WorFBench/ | `gen_workflow` / `eval_workflow`；训练参考 LLaMA-Factory |
 
 **一句话抓手：** 现有 agent 评测多看 **端到端成败** 或 **线性分解**；WorfBench 把「子任务 + 依赖」建成 **DAG（含并行）**，WorFEval 用 **语义匹配 + LIS（链）+ MCIS（图）** 给出可复现的 $f1_{\mathrm{chain}}$ / $f1_{\mathrm{graph}}$——主发现是 **图规划系统性地难于线性规划**（闭源里 GPT-4 平均约 **67.32% → 52.47%**，差距约 **15%**）。
@@ -213,7 +213,7 @@ $$
 
 ---
 
-## 八、刻意不写 / 待核实
+## 八、局限与待核实
 
 | 项 | 处理 |
 |---|---|
