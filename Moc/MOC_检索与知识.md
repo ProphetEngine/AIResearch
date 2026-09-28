@@ -12,21 +12,21 @@ status: active
 
 ## 时间线入口
 
-- [[RAG发展时间线|RAG / 知识增强时间线]]
+- [[RAG发展时间线]]
 
 ## 通史 / 总览节点
 
-- [[检索增强与知识外挂|B6 RAG / 知识增强]]
+- [[检索增强与知识外挂]]
 
 ## 增量节点
 
-- [[图谱检索GraphRAG|Graph RAG]]
-- [[SelfRAG与CorrectiveRAG|Self-RAG / CRAG]]
-- [[HippoRAG2与CatRAG|HippoRAG 2 / CatRAG]]
+- [[图谱检索GraphRAG]]
+- [[SelfRAG与CorrectiveRAG]]
+- [[HippoRAG2与CatRAG]]
 - [[AgenticRAG分层检索接口]]
 
 ## 相关主题
 
 - [[MOC_智能体Harness]]
-- [[MOC_注意力与长上下文|B 长上下文与注意力效率]]
+- [[MOC_注意力与长上下文]]
 
