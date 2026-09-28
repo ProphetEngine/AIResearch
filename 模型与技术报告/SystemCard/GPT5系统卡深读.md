@@ -1,6 +1,6 @@
 ---
 title: GPT-5 System Card 专项深读卡
-topic: TR-GPT-5
+topic: GPT5系统卡深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -12,7 +12,6 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：OpenAI, *GPT-5 System Card*（封面日期 **August 13, 2025**）
 > 官方 PDF：`https://cdn.openai.com/gpt-5-system-card.pdf`（**60** 页；CreationDate **2025-08-20** CST）
-> **禁编造**：能力榜分仅写正文/表格显式数字；图中未抽出可读数字的标「待核实读图」。
 
 ---
 
@@ -25,7 +24,8 @@ archived: 2026-09-22
 | 封面日期 | **August 13, 2025** |
 | 页数 | **60**（A4）；目录含 §1–5 + Appendix 1/2 + References |
 | PDF 元数据 | Creator: LaTeX with hyperref；CreationDate/ModDate：**2025-08-20** 03:33:37 CST（晚于封面日约一周，或为再导出） |
-| 官方入口 | 页：`https://openai.com/index/gpt-5-system-card/`；CDN PDF：`https://cdn.openai.com/gpt-5-system-card.pdf`（见 [[SystemCard与TR扫描2025至2026]]） |
+| 官方入口 | 页：`https://openai.com/index/gpt-5-system-card/`；CDN PDF：`https://cdn.openai.com/gpt-5-system-card.pdf`；arXiv 镜像：`https://arxiv.org/abs/2601.03267` |
+| 前代卡（Table 1 对照） | OpenAI o3 / o4-mini System Card（2025-04-16）：`https://cdn.openai.com/pdf/2221c875-02dc-4789-800b-e7758f3722c1/o3-and-o4-mini-system-card.pdf` |
 
 **与博客 / 姊妹材料的关系（仅原文可核对处）：**
 
@@ -167,7 +167,7 @@ archived: 2026-09-22
 |---|---|---|
 | **Biological & Chemical** | 将本 launch 作 **High capability** 处理并激活 safeguards；「remains on the cusp」；thinking-pro 亦测 | 长文 biorisk / ProtocolQA / TroubleshootingBench 等（Table 14）；SecureBio：mitigated thinking **拒绝全部** agent/long-form 危险提示；helpful-only 与 o3-helpful-only 能力接近（Table 15 等） |
 | **Cybersecurity** | 「The gpt-5 model series **does not meet** the threshold for **high cyber risk**.」 | Cyber Range：thinking **unaided 解不出**任何场景；mini 有提升但仍不达「significant cyber risk」条；Pattern Labs：easy 17/18、medium 8/14、**hard 0/4**；结论「limited assistance to a moderately skilled… operator」 |
-| **AI Self-Improvement** | 「modest improvement… **did not meet our High thresholds**.」 | 评测套件：SWE-bench Verified (N=477)、OpenAI PRs、MLE-Bench、SWE-Lancer、PaperBench、OPQA（Table 17）。正文显式数字例：OPQA 上 thinking「highest… at **2%**」；MLE-Bench 子集 ChatGPT agent 最高 **9%** bronze。**SWE pass@1 具体值在 Figure 19， 未抽出 → 勿臆造**；仅确认博客 medium verbosity **74.9%** 被本卡引用 |
+| **AI Self-Improvement** | 「modest improvement… **did not meet our High thresholds**.」 | 评测套件：SWE-bench Verified (N=477)、OpenAI PRs、MLE-Bench、SWE-Lancer、PaperBench、OPQA（Table 17）。正文显式数字例：OPQA 上 thinking「highest… at **2%**」；MLE-Bench 子集 ChatGPT agent 最高 **9%** bronze。**SWE pass@1 具体值在 Figure 19，未读出**；仅确认博客 medium verbosity **74.9%** 被本卡引用 |
 | **Sandbagging（研究类，§5.2）** | Apollo：26 evals；thinking covert action **3.97%** vs o3 **8.24%**；helpful-only **28.36%**（Table 18） | METR：50%-time horizon ≈ **2h15m**（65m–4h30m CI）vs o3 **1h30m**；四条「unlikely」结论（>10× AI R&D 加速、战略误导评测、rogue replication、及对后续小幅迭代仍成立） |
 
 ### 3.7 High Bio 多层防护摘要（§5.3，Infra 辅线）
@@ -214,12 +214,12 @@ archived: 2026-09-22
 
 ---
 
-## 5. 待核实与引用
+## 5. 局限、待核实与引用
 
-### 5.1 待核实
+### 5.1 局限与待核实
 
 1. 封面 **2025-08-13** vs CreationDate **2025-08-20** vs 扫描清单「页卡约 2025-08-07」——是否同文多版本导出；建议对照官方页 Last updated。
-2. Figure 1–3、8、19、22–27 等**图内精确百分点**（ 未可靠抽出）——需人工读图或后续 OCR，**禁止凭记忆填榜**。
+2. Figure 1–3、8、19、22–27 等**图内精确百分点**（未可靠读出）——需人工读图。
 3. System Card 内 SWE-bench Verified pass@1（max verbosity）与博客 **74.9%**（medium）的数值差。
 4. *From Hard Refusals to Safe-Completions* 正式 URL / arXiv 号（本卡仅给论文名）。
 5. Gray Swan ART、METR full report、Apollo 报告的独立归档链接。
@@ -237,13 +237,10 @@ archived: 2026-09-22
 
 ### 5.3 相关研究会笔记
 
-- 模型与技术报告/开源与闭源前沿模型谱系.md — 谱系与博客主张
-- Harness/智能体与工具/智能体工具与长程任务.md — 工具/长程叙事（待核实项本卡部分关闭）
-- 模型与技术报告/SystemCard与TR扫描2025至2026.md — System Card 下载与系列卡清单
+- [[开源与闭源前沿模型谱系]] — 谱系与博客主张
+- [[智能体工具与长程任务]] — 工具/长程叙事（待核实项本卡部分关闭）
 
 ---
-
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22（Asia/Shanghai）· status: draft · 仅据官方 PDF 原文*
 
 ## 相关笔记
 
@@ -254,7 +251,7 @@ archived: 2026-09-22
 - [[GPT5系统卡深读]]
 - [[Gemini25技术报告深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[开源与闭源前沿模型谱系]]

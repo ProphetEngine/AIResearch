@@ -6,18 +6,18 @@ lines: [架构思想, 数学原理, AI Infra]
 status: archived
 source_url: https://arxiv.org/abs/2608.30320
 cross_ref:
- - 模型与技术报告/厂商报告/Qwen3技术报告深读.md # Qwen3 全家桶 / think·蒸馏；本卡不重写
- - 训练/持续与技巧/优化器与训练稳定性.md # Muon 通史；本卡只写 Flash-Next 工程差分
- - 架构/注意力与长上下文/注意力效率族MQA到MLA.md # 注意力效率通史；本卡专 QSA/GDN 增量
+ - Qwen3技术报告深读 # Qwen3 全家桶 / think·蒸馏；本卡不重写
+ - 优化器与训练稳定性 # Muon 通史；本卡只写 Flash-Next 工程差分
+ - 注意力效率族MQA到MLA # 注意力效率通史；本卡专 QSA/GDN 增量
 archived: 2026-09-22
 ---
 
-# 3　Qwen3.8-Next / Flash-Next 架构 TR 深读
+# Qwen3.8-Next / Flash-Next 架构 TR 深读
 
 > **定位**：相对已入库 [[Qwen3技术报告深读]] 的**架构世代增量**深读卡。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30320`（2026-09-22；28 页）。
 > **攻坚线**：**架构思想（主）** + **数学原理（线性注意力 / 稀疏索引，辅）** + **AI Infra（FlashQLA / Muon / 稳定性，辅）**。
-> **刻意不写**：Qwen3 的 Dense/MoE 全家桶表、think/no_think、thinking budget、Strong-to-Weak Distillation、四阶段后训练（见 [[Qwen3技术报告深读]]）；Adam→AdamW→Muon 通史（见 B4）。
-> **禁止编造**：本 PDF **未给出** Flash-Next 总层数 / hidden / 专家数 / 预训练总 token 精确账本 → 不得从博文或二级综述外推。
+> **刻意不写**：Qwen3 的 Dense/MoE 全家桶表、think/no_think、thinking budget、Strong-to-Weak Distillation、四阶段后训练（见 [[Qwen3技术报告深读]]）；Adam→AdamW→Muon 通史（见 [[优化器与训练稳定性]]）。
+> 本 PDF **未给出** Flash-Next 总层数 / hidden / 专家数 / 预训练总 token 精确账本。
 
 ---
 
@@ -31,7 +31,7 @@ archived: 2026-09-22
 | PDF 页数 | **28**（A4） | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:4af3385) | |
 | PDF 链接 | `https://arxiv.org/abs/2608.30320` | arXiv |
-| 镜像 | GitHub `QwenLM/Qwen3.8-Flash-Next` · `tech_report.pdf` | 议程入口 |
+| 镜像 | GitHub `QwenLM/Qwen3.8-Flash-Next` · `tech_report.pdf` | GitHub |
 | 产品名（正文） | **Qwen3.8-Flash-Next**（稀疏 MoE base）；评测表写作 **Qwen3.8-Flash-Next-Base** | Abstract / §4 / Tab. 11 |
 | 摘要四支柱 | (1) **GDN + 全局注意力**混合；(2) CPT 期换 **QSA**；(3) **Gated Residual (GR)**；(4) 主机侧 **n-gram embedding** + **Muon** | Abstract |
 
@@ -44,7 +44,7 @@ Flash-Next 把「损失 / 下游榜 / 训推成本 / 训练稳定性」当成**�
 
 > 左列锚已入库 Qwen3 TR（arXiv:2505.09388）；中间列为**本 PDF 明文**对照的近期 Qwen 基线（3.5 结构 / 3.7-Plus）；右列为本报告。勿把 Qwen3 的 think 协议或 36T 预训练账本写进本卡。
 
-| 维度 | Qwen3 TR（已入库，勿重写） | 本 PDF 中的前代锚点 | **Qwen3.8-Flash-Next（本 PDF）** |
+| 维度 | Qwen3 TR（已入库，本卡不重写） | 本 PDF 中的前代锚点 | **Qwen3.8-Flash-Next（本 PDF）** |
 |---|---|---|---|
 | 报告入口 | 2505.09388 · 2025-05 | Qwen3.5 结构消融；**Qwen3.7-Plus-Base = 397B / 17B 激活**（Tab. 11） | **2608.30320v1** · 2026-08-31 · 28 页 |
 | 总参 / 激活 | Dense 0.6–32B；MoE 30B-A3B / 235B-A22B | 397B-A17B（Plus）；消融常用 25B-A3B / 156B-A7B 等 | **125B** 总参 · **6B** 激活/token · 另 **51B** n-gram 表（离加速器） |
@@ -268,9 +268,9 @@ Fig. 4：Stage 2 与全注意力 LM loss 差约 **$10^{-4}$** 量级。
 
 ---
 
-## 十、待核实与引用
+## 十、局限、待核实与引用
 
-### 10.1 待核实（禁止编造）
+### 10.1 局限与待核实
 
 | # | 项目 | 原因 |
 |---|---|---|
@@ -287,8 +287,8 @@ Fig. 4：Stage 2 与全注意力 LM loss 差约 **$10^{-4}$** 量级。
 |---|---|---|---|
 | [Q38N] | On the Design of Qwen3.8-Next Architecture… | arXiv **2026-08-31**（v1） | https://arxiv.org/abs/2608.30320 ；PDF https://arxiv.org/pdf/2608.30320 |
 | [Q38N-GH] | QwenLM/Qwen3.8-Flash-Next（含 tech_report.pdf） | — | https://github.com/QwenLM/Qwen3.8-Flash-Next |
-| [QWEN3] | Qwen3 Technical Report（对照锚，勿重写） | 2025-05 | 模型与技术报告/厂商报告/Qwen3技术报告深读.md |
-| [B4] | 优化器与训练稳定性 | 2026-09-22 | 训练/持续与技巧/优化器与训练稳定性.md |
+| [QWEN3] | Qwen3 Technical Report（对照锚，本卡不重写） | 2025-05 | [[Qwen3技术报告深读]] |
+| [OPT] | 优化器与训练稳定性（研究会笔记） | 2026-09-22 | [[优化器与训练稳定性]] |
 
 ### 10.3 跟读一句话
 
@@ -301,5 +301,5 @@ Fig. 4：Stage 2 与全注意力 LM loss 差约 **$10^{-4}$** 量级。
 - [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

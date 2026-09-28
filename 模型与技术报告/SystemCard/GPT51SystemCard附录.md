@@ -1,5 +1,5 @@
 ---
-topic: TR-GPT-5.1
+topic: GPT51SystemCard附录
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -11,9 +11,8 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）**
 > 锚点：OpenAI, *GPT-5.1 Instant and GPT-5.1 Thinking System Card Addendum*（封面日期 **November 12, 2025**）
 > 官方 PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`（**5** 页；CreationDate/ModDate **2025-11-13** 00:38:05 CST）
-> 主卡对照：模型与技术报告/SystemCard/GPT5系统卡深读.md（GPT-5 System Card，封面 **2025-08-13**）
-> 扫描入口：模型与技术报告/SystemCard与TR扫描2025至2026.md（deploymentsafety / CDN PDF）
-> **禁编造**：本 addendum **无能力榜分、无参数量/架构细节**；数字仅取正文/表格显式值；线上 A/B 仅写作者定性结论（wide error bars / low statistical confidence），不臆造百分点。
+> 主卡对照：[[GPT5系统卡深读]]（GPT-5 System Card，封面 **2025-08-13**）
+> 本 addendum **无能力榜分、无参数量/架构细节**；线上 A/B 仅有作者定性结论（wide error bars / low statistical confidence）。
 
 ---
 
@@ -26,7 +25,7 @@ archived: 2026-09-22
 | 封面日期 | **November 12, 2025** |
 | 页数 | **5**（A4）；§1 Introduction → §2 Baseline Model Safety Evaluations → §3 Preparedness Framework → References |
 | PDF 元数据 | Creator: LaTeX with hyperref；CreationDate/ModDate：**2025-11-13** 00:38:05 CST（晚于封面约 1 天） |
-| 官方入口 | 页：`https://deploymentsafety.openai.com/gpt-5-1`；CDN PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`（见 模型与技术报告/SystemCard与TR扫描2025至2026.md） |
+| 官方入口 | 页：`https://deploymentsafety.openai.com/gpt-5-1`；CDN PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf` |
 
 **本卡自身定位（§1，仅原文）：**
 
@@ -43,7 +42,7 @@ archived: 2026-09-22
 
 ## 2. 相对 GPT-5 System Card 的增量对照
 
-> 对照轴：本 addendum ↔ 模型与技术报告/SystemCard/GPT5系统卡深读.md 所据主卡（封面 2025-08-13，60 页）。
+> 对照轴：本 addendum ↔ [[GPT5系统卡深读]] 所据主卡（封面 2025-08-13，60 页）。
 > 仅写两边都能锚定的差分；主卡有而本卡未重跑/未复述的项标「本卡未覆盖」。
 
 | 维度 | GPT-5 System Card（主卡） | 本 Addendum（5.1） |
@@ -159,9 +158,9 @@ archived: 2026-09-22
 
 ---
 
-## 4. 待核实与引用
+## 4. 局限、待核实与引用
 
-### 4.1 待核实
+### 4.1 局限与待核实
 
 1. 封面 **2025-11-12** vs CreationDate **2025-11-13**——是否同文次日再导出；建议对照 deploymentsafety 页 Last updated。
 2. 「GPT-5 system card addendum on **sensitive conversations**」姊妹文：官方页 / 扫描清单是否已收录、mental health / emotional reliance 定义与 grader 细则以哪份为准。
@@ -169,7 +168,7 @@ archived: 2026-09-22
 4. Online A/B 的样本量、时间窗、undesired 操作定义、置信区间数值——正文仅给定性（wide error bars / low|high statistical confidence），**无表内百分点**。
 5. Table 3「attack planning」gpt-5.1-instant 单元格为 **1.00**（两位）而其行列多为三位——是否排版截断，读图/再抽取确认。
 6. StrongReject 改编细节（插入哪些 jailbreak、harm 覆盖面）相对主卡 Table 5 是否同协议——本卡仅称「adaptation of … StrongReject [1]」。
-7. 与 GPT-5.2 / 后续 addendum、ChatGPT agent System Card 的条款差分（扫描清单 P1 项；本卡未交叉深读）。
+7. 与 GPT-5.2 / 后续 addendum、ChatGPT agent System Card 的条款差分（本卡未交叉深读）。
 
 ### 4.2 本卡主要引用锚点（PDF 内）
 
@@ -182,14 +181,11 @@ archived: 2026-09-22
 
 ### 4.3 相关研究会笔记
 
-- 模型与技术报告/SystemCard/GPT5系统卡深读.md — GPT-5 主卡深读（本卡直接增量对象）
-- 模型与技术报告/SystemCard与TR扫描2025至2026.md — 系列卡下载与 P1「5.1/5.2 增补卡」排队
-- 模型与技术报告/开源与闭源前沿模型谱系.md — 统一系统 / Instant·Thinking 产品谱系
-- Harness/智能体与工具/智能体工具与长程任务.md — 工具/路由叙事（本卡未新增注入数字）
+- [[GPT5系统卡深读]] — GPT-5 主卡深读（本卡直接增量对象）
+- [[开源与闭源前沿模型谱系]] — 统一系统 / Instant·Thinking 产品谱系
+- [[智能体工具与长程任务]] — 工具/路由叙事（本卡未新增注入数字）
 
 ---
-
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22（Asia/Shanghai）· status: draft · 仅据官方 PDF 原文*
 
 ## 相关笔记
 
@@ -201,5 +197,5 @@ archived: 2026-09-22
 - [[Gemini3Pro模型卡深读]]
 - [[ClaudeOpus41系统卡附录深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

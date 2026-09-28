@@ -1,6 +1,6 @@
 ---
 title: "Llama 4（Scout/Maverick）正式 PDF TR 待核实备忘"
-topic: TR-Llama-4
+topic: Llama4待核实备忘
 date: 2026-09-22
 as_of: 2026-09-22
 status: archived
@@ -12,7 +12,7 @@ archived: 2026-09-22
 
 > **结论（2026-09-22 核实）：无正式 PDF TR → 待核实**
 > Meta **未**发布类似 Llama 1/2/3 herd paper 的 **PDF** technical report，也 **未**发布独立 PDF model card。
-> 本文件**不是**深读卡；禁止把下文表格当「论文已证实」的层图/训练配方来源。**禁止硬编**未在官方材料中出现的参数。
+> 本文件**不是**深读卡；下文表格不是「论文已证实」的层图/训练配方来源。
 
 ---
 
@@ -20,7 +20,7 @@ archived: 2026-09-22
 
 | 类型 | URL | 形态 |
 |------|-----|------|
-| 发布博文 | https://ai.meta.com/blog/llama-4-multimodal-intelligence/ | HTML（2025-04-05；本轮 HEAD **200**） |
+| 发布博文 | https://ai.meta.com/blog/llama-4-multimodal-intelligence/ | HTML（2025-04-05） |
 | 同博文（大小写路径变体） | https://ai.meta.com/blog/Llama-4-multimodal-intelligence/ | 同上族入口 |
 | GitHub Model Card | https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md | **Markdown**（非 PDF） |
 | 官方 Docs 卡页 | https://dev.meta.ai/llama/docs/model-cards-and-prompt-formats/llama4 | HTML |
@@ -33,7 +33,7 @@ archived: 2026-09-22
 
 ## 2. 已核实主张（仅据博文 + 官方 MODEL_CARD.md）
 
-来源：GitHub `models/llama4/MODEL_CARD.md`（本轮 raw 拉取）及官博摘要口径；未另开 PDF。
+来源：GitHub `models/llama4/MODEL_CARD.md` 及官博摘要口径；未另开 PDF。
 
 | 项 | 官方声称（摘要） |
 |----|------------------|
@@ -66,7 +66,6 @@ archived: 2026-09-22
 
 - **无**可核官方 PDF URL。
 - **未写** Llama 4 深读卡（无 PDF 锚点）。
-- 若 Meta 后续放出 herd PDF / 正式 model-card PDF：再下载并改写为深读卡；届时更新 模型与技术报告/SystemCard与TR扫描2025至2026.md 中 Llama 4 行。
 
 **状态标签：无正式 PDF TR → 待核实。**
 
@@ -78,5 +77,5 @@ archived: 2026-09-22
 - [[KimiK2技术报告深读]]
 - [[Llama4待核实备忘]]
 - [[Mistral3公告短卡]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

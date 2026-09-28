@@ -23,14 +23,14 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：开源前沿旗舰主题轴——Kimi Team *Kimi K3: Open Frontier Intelligence*（arXiv:**2607.24653**v2，页眉 **7 Aug 2026**；XMP identifier `…/2607.24653v2`）。立「**开源 3T 级原生多模态 MoE 旗舰 TR**」：在 **预训练规模轴（≈2.8T / 104B 激活）** 与 **1M 上下文 test-time / agentic RL 轴** 上同时推进，公开全权重。
 > **攻坚线**：**架构思想（主）**——Hybrid KDA–MLA、AttnRes、Stable LatentMoE（SiTU-GLU / Quantile Balancing）、MoonViT-V2、Per-Head Muon；**AI Infra（辅）**——FlashKDA / KCP、MoonEP、1M agentic RL + AgentENV、KDA-aware prefix cache / QAT 服务；**评测字段（文内表，辅）**——Table 2/3 与 Fig.1 主结果转述。
-> **硬划界（开篇钉死）**：
-> - **≠ [[Nemotron3Ultra技术报告深读]]**：禁止写成 **Nemotron 3 Ultra**（Hybrid Mamba–Attention + LatentMoE / NVIDIA 开源旗舰）配方复述。本卡只写 **Moonshot Kimi K3** 本体；Nemotron 数字若不在本 PDF → 不出现。
-> - **≠ [[OLMo3全栈开放配方]]**：禁止写成 **OLMo 3** 全开放数据/配方旗舰对照全文。
-> - **≠ [[Qwen3CoderNext技术报告深读]]**：禁止写成 **Qwen3-Coder-Next**「代码专用小激活脚印 + 可执行反馈中训」轴。K3 的编码能力只作为 **文内 coding / agent 评测与 RL 域之一**，不立「Coder 专用旗舰」主轴。
-> - **≠ [[DeepSeekV4技术报告深读]]**：禁止写成 **DeepSeek-V4**（CSA+HCA / mHC / 百万上下文）配方复述。本 PDF 虽保留 **Gated MLA** 与 **MoonEP↔DeepEP** 对照句，但 **主注意力是 KDA 混合栈**，残差是 **AttnRes**——**禁止**滑成「又一篇 DeepSeek 百万上下文 TR」。
-> - **≠ [[开源与闭源前沿模型谱系]]**：禁止写成开闭源谱系通史 / 代际叙事；本卡是 **单篇 TR 深读**，他厂型号只出现在 **文内 Table 2/3 数字转述**。
+> **范围与相邻笔记**：
+> - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Attention + LatentMoE / NVIDIA 开源旗舰）配方复述。本卡只写 **Moonshot Kimi K3** 本体；Nemotron 数字若不在本 PDF → 不出现。
+> - **≠ [[OLMo3全栈开放配方]]**：不写成 **OLMo 3** 全开放数据/配方旗舰对照全文。
+> - **≠ [[Qwen3CoderNext技术报告深读]]**：不写成 **Qwen3-Coder-Next**「代码专用小激活脚印 + 可执行反馈中训」轴。K3 的编码能力只作为 **文内 coding / agent 评测与 RL 域之一**，不立「Coder 专用旗舰」主轴。
+> - **≠ [[DeepSeekV4技术报告深读]]**：不写成 **DeepSeek-V4**（CSA+HCA / mHC / 百万上下文）配方复述。本 PDF 虽保留 **Gated MLA** 与 **MoonEP↔DeepEP** 对照句，但 **主注意力是 KDA 混合栈**，残差是 **AttnRes**——不是「又一篇 DeepSeek 百万上下文 TR」。
+> - **≠ [[开源与闭源前沿模型谱系]]**：不写成开闭源谱系通史 / 代际叙事；本卡是 **单篇 TR 深读**，他厂型号只出现在 **文内 Table 2/3 数字转述**。
 > - **≠ [[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]**：K2 的 MuonClip / MLA-only / 1.04T 表、K1.5 的 RL 通史不重开；本卡只录 **相对 K2 的 ∆（Table 1）** 与 K3 新增件。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）与辅博文明示句。文内未给出的精确总 token 账本 / GPU 小时 / 完整层宽公式推导 → **不得外推**。图柱未与表对齐的读数标 **待核实读图**。
+> 文内未给出精确总 token 账本 / GPU 小时 / 完整层宽公式推导。
 
 ---
 
@@ -79,7 +79,7 @@ timezone: Asia/Shanghai (CST)
 | **Kimi K2 / K1.5** | 前代 TR 全文 | **[[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]** | **否**（仅 ∆） |
 | **Kimi K3 开源前沿旗舰** | 3T 架构 + 1M agentic RL + Infra + 文内评测 | **本篇** | **是** |
 
-跟读直觉：[[DeepSeekV4技术报告深读]] 问「**DeepSeek 如何压百万上下文 KV/算力**」；[[Nemotron3Ultra技术报告深读]] 问「**NVIDIA 开源旗舰 Hybrid+LatentMoE**」；[[Qwen3CoderNext技术报告深读]] 问「**小激活脚印上的代码 agent 反馈栈**」；本卡问「**Moonshot 如何同时推开源预训练规模到 3T 类、并用 KDA/AttnRes/Stable LatentMoE + 1M RL 立开源前沿**」。共享「MoE / 长上下文 / agent RL」词汇，但 **厂商栈与主杠杆不同**——禁止写成「DeepSeek/Nemotron 配方换皮」。
+跟读直觉：[[DeepSeekV4技术报告深读]] 问「**DeepSeek 如何压百万上下文 KV/算力**」；[[Nemotron3Ultra技术报告深读]] 问「**NVIDIA 开源旗舰 Hybrid+LatentMoE**」；[[Qwen3CoderNext技术报告深读]] 问「**小激活脚印上的代码 agent 反馈栈**」；本卡问「**Moonshot 如何同时推开源预训练规模到 3T 类、并用 KDA/AttnRes/Stable LatentMoE + 1M RL 立开源前沿**」。共享「MoE / 长上下文 / agent RL」词汇，但 **厂商栈与主杠杆不同**——不写成「DeepSeek/Nemotron 配方换皮」。
 
 `
  开源「旗舰 TR」近窗
@@ -91,7 +91,7 @@ timezone: Asia/Shanghai (CST)
  Ultra (CSA/HCA)
  │ │ │ │
  └─────────┴────┬────┴──────────────┘
- │ 禁止复述
+ │ 不复述
  ▼
  ★ [[KimiK3技术报告]] Kimi K3
  KDA+AttnRes+Stable LatentMoE
@@ -108,7 +108,7 @@ timezone: Asia/Shanghai (CST)
 | Qwen Coder MegaFlow / 80A3 训练栈 | → [[Qwen3CoderNext技术报告深读]] |
 | [[开源与闭源前沿模型谱系]] 开闭源谱系长表 | 本卡单篇深读 |
 | K2 MuonClip / 15.5T token 账本全文 | → [[KimiK2技术报告深读]]；本卡只录相对 ∆ |
-| 博文案例的「芯片设计 / MiniTriton」完整复现步骤 | 辅材料；以 §7 Case Studies 提纲为准，不编造指标 |
+| 博文案例的「芯片设计 / MiniTriton」完整复现步骤 | 辅材料；以 §7 Case Studies 提纲为准，文内无指标 |
 
 ---
 
@@ -194,7 +194,7 @@ timezone: Asia/Shanghai (CST)
 | 位置编码 | **NoPE**；位置由 KDA 门控/衰减隐式编码 → 宣称可直接外推 1M、无需 RoPE 改参 |
 | 长文数据 | 清洗+上采样真长文/视频；并 **置换拼接** 合成「必须跨全上下文」任务，防注意力塌成局部模式 |
 
-> **待核实**：本 PDF **未**给出与 K2「15.5T tokens」同口径的 K3 总 token 账本 → **不编造**。
+> **待核实**：本 PDF **未**给出与 K2「15.5T tokens」同口径的 K3 总 token 账本。
 
 ---
 
@@ -289,13 +289,13 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 九、待核实 / 缺口清单
+## 九、局限与待核实
 
 | 项 | 状态 |
 |---|---|
-| K3 预训练总 token / GPU-小时精确账本 | 本 PDF 未给 → 不编造 |
+| K3 预训练总 token / GPU-小时精确账本 | 本 PDF 未给 |
 | Fig.7 / Fig.13 曲线精确坐标 | 需读图；已标 **待核实读图** |
 | 权重实际落地日 vs 博文「July 27, 2026」 | 以 HF `moonshotai/Kimi-K3` 为准复核 |
 | §F XTML 模板全文、附录 B–E 证明细节 | 本卡未展开；需要时回 PDF |
-| 与 Nemotron LatentMoE / DeepSeek MLA 的「同名组件」细对比实验 | **划界禁止**在本卡展开；另立项再写 |
+| 与 Nemotron LatentMoE / DeepSeek MLA 的「同名组件」细对比实验 | 本卡不展开（范围外） |
 

@@ -13,8 +13,8 @@ archived: 2026-09-22
 
 > **定位**：A.X K2 增量技术报告主题轴（相对已入库 DeepSeek-V3 / Kimi-K2 / GLM-4.5 / Qwen3）。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30181`（2026-09-22 CST）。
 > **攻坚线**：**架构思想（主）** + **评测字段 / agentic bench（辅）**。
-> **刻意不写**：DeepSeek-V3 MoE+MLA+DualPipe/FP8 分块配方全文（见 [[DeepSeekV3训练与MoE基建]]）；Kimi-K2 MuonClip / 15.5T / agentic 数据合成通史（见 [[KimiK2技术报告深读]]）；GLM-4.5 / Qwen3 训练 Infra 与 scaling 配方全文；DSA 两阶段续训（见 [[DeepSeekV32技术报告深读]]）；EAGLE 投机解码通史（B7 / 留给 [[EAGLE3投机解码]]）。本卡只补「SKT **A.X K2** 相对 **A.X K1** 与开源 MoE 对照表里的本 PDF 新公开点」。
-> **禁止编造**：A.X K1 独立 TR、Nemotron/GLM-5.1/Kimi-K2.6 等对照模型数字 **仅录本 PDF Table 6 转述**；图内未抽出可读点标「待核实读图」。
+> **刻意不写**：DeepSeek-V3 MoE+MLA+DualPipe/FP8 分块配方全文（见 [[DeepSeekV3训练与MoE基建]]）；Kimi-K2 MuonClip / 15.5T / agentic 数据合成通史（见 [[KimiK2技术报告深读]]）；GLM-4.5 / Qwen3 训练 Infra 与 scaling 配方全文；DSA 两阶段续训（见 [[DeepSeekV32技术报告深读]]）；EAGLE 投机解码通史（[[推理引擎生态]] / 留给 [[EAGLE3投机解码]]）。本卡只补「SKT **A.X K2** 相对 **A.X K1** 与开源 MoE 对照表里的本 PDF 新公开点」。
+> A.X K1 独立 TR、Nemotron/GLM-5.1/Kimi-K2.6 等对照模型数字 **仅录本 PDF Table 6 转述**。
 
 ---
 
@@ -50,7 +50,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 
 ## 二、相对已入库超大开源 MoE / 前代 K1 的增量对照
 
-> 左列以本 PDF 明文为准。V3 / Kimi-K2 / GLM-4.5 / Qwen3 列仅作「已入库笔记锚点」，**禁止把本卡写成其 Infra 重写**。
+> 左列以本 PDF 明文为准。V3 / Kimi-K2 / GLM-4.5 / Qwen3 列仅作「已入库笔记锚点」，本卡不重写其 Infra。
 
 | 维度 | DeepSeek-V3 / Kimi-K2 等（已入库） | **A.X K1（本 PDF 转述）** | **A.X K2（本 PDF）** |
 |---|---|---|---|
@@ -237,9 +237,9 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 
 ---
 
-## 七、待核实与引用
+## 七、局限、待核实与引用
 
-### 7.1 待核实（禁止当作已确认）
+### 7.1 局限与待核实
 
 1. **A.X K1 独立完整 TR / 权重卡**：本仓库无 PDF；519B、~10T、192 experts、dual-norm 等 **仅本报告转述**。
 2. **Fig 1 / 3 / 4 / 5 / 7–9 曲线逐点**：文本层无完整数值表；吞吐绝对 tok/s 以正文叙述与 Table 15 相对值为准。
@@ -258,7 +258,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 
 ### 7.3 关联笔记
 
-- 模型与技术报告/厂商报告/DeepSeekV3训练与MoE基建.md / 模型与技术报告/厂商报告/DeepSeekV32技术报告深读.md / 模型与技术报告/厂商报告/KimiK2技术报告深读.md / 模型与技术报告/厂商报告/GLM45技术报告深读.md / 模型与技术报告/厂商报告/Qwen3技术报告深读.md
+- [[DeepSeekV3训练与MoE基建]] / [[DeepSeekV32技术报告深读]] / [[KimiK2技术报告深读]] / [[GLM45技术报告深读]] / [[Qwen3技术报告深读]]
 - [[混合专家架构]] MoE；[[长上下文位置编码与系统侧]] 长上下文；[[注意力效率族MQA到MLA]] 注意力效率；[[智能体工具与长程任务]] agents
 - [[MOC_模型与技术报告]]；交叉 **[[EAGLE3投机解码]]** EAGLE-3 增量（勿在本卡展开）
 

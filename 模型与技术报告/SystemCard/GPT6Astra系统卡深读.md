@@ -16,7 +16,6 @@ archived: 2026-09-22
 > 官方 PDF：`https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf`（**118** 页；Title：GPT-6 Astra System Card；CreationDate **2025-12-18** CST，与封面日不一致，**以封面/正文/Hub 为准**）
 > Hub：https://deploymentsafety.openai.com/gpt-6-astra
 > PDF URL：https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf
-> **禁编造**：能力/安全数字仅写 PDF/Hub 正文或表格显式值；图内未抽出可读数字处标「待核实读图」。
 
 ---
 
@@ -229,7 +228,7 @@ archived: 2026-09-22
 
 **Critical：** 新设 + 保留 AAV；新三项用未发表实验数据；**新集无一超 Critical 阈** → 不按 Critical 对待，保持 High 护栏。Critical 相关双用途域用 **helpful-only** 变体报分。旧 Hard-negative protein binding / DNA TF binding 作 retiring 最后报告（精确分见图，待核实读图）。
 
-SecureBio 外部评测：正文有专门小节（§10.1.1.4）；细节数字以 PDF 为准（抽取中部分图分待核实读图）。
+SecureBio 外部评测：正文有专门小节（§10.1.1.4）；细节数字以 PDF 为准（部分图分待核实读图）。
 
 ### 7.2 Cybersecurity Critical（§10.1.2）— 深读重点
 
@@ -295,14 +294,14 @@ SecureBio 外部评测：正文有专门小节（§10.1.1.4）；细节数字以
 
 ---
 
-## 9. 待核实 / 缺口
+## 9. 局限与待核实
 
-- [ ] 大量 Figure/Table 曲线精确百分点未 OCR：Jailbreak Fig.3、PI Fig.4–5、对齐 Fig.7–21、Monitorability Fig.22–41、Preparedness Bio/Cyber/SI 多数 Fig.42–56、Safeguards 部分表 → **待核实读图**。
-- [ ] PDF `CreationDate` 2025-12-18 vs 封面 2026-09-03：以封面/Hub 为准（与 5.6 卡同类元数据异常）。
-- [ ] SecureBio / KernelGen / NanoGPT / PostTrain / MLE 精确分多在图中。
-- [ ] Oversight gaming / metagaming 训练曲线与「aligned rollouts」条件化比例仅见图。
-- [ ] 无第三方独立复现本卡分数；数字一律溯源 OpenAI 原文/Hub。
-- [ ] 本卡**未**公开参数量、训练算力、数据配比细节。
+- 大量 Figure/Table 曲线精确百分点未 OCR：Jailbreak Fig.3、PI Fig.4–5、对齐 Fig.7–21、Monitorability Fig.22–41、Preparedness Bio/Cyber/SI 多数 Fig.42–56、Safeguards 部分表 → **待核实读图**。
+- PDF `CreationDate` 2025-12-18 vs 封面 2026-09-03：以封面/Hub 为准（与 5.6 卡同类元数据异常）。
+- SecureBio / KernelGen / NanoGPT / PostTrain / MLE 精确分多在图中。
+- Oversight gaming / metagaming 训练曲线与「aligned rollouts」条件化比例仅见图。
+- 无第三方独立复现本卡分数；数字一律溯源 OpenAI 原文/Hub。
+- 本卡**未**公开参数量、训练算力、数据配比细节。
 
 ---
 
@@ -314,5 +313,5 @@ SecureBio 外部评测：正文有专门小节（§10.1.1.4）；细节数字以
 - [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

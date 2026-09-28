@@ -13,9 +13,9 @@ archived: 2026-09-22
 > 官方 PDF：`https://deepmind.google/models/model-cards/gemini-3-7-flash/`（**9** 页 A4；Title: *Gemini-3-7-Flash-Model-Card.pdf*；Producer: Skia/PDF m154 Google Docs Renderer）
 > 卡页：https://deepmind.google/models/model-cards/gemini-3-7-flash/
 > PDF URL：https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-7-Flash-Model-Card.pdf
-> 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md
-> **只写增量**：相对 2.5 TR / 3 Pro Model Card 已入库面；本卡大量字段「see Gemini 3.6 Flash model card」——**本仓库未入库 3.6 Flash 卡**，不得把 3 Pro / 2.5 数字外推为 3.7 架构主张。
-> **禁止编造**：参数量、专家数、未写明的层图/训练规模一律标「未公开 / defer 至 3.6」；能力榜分仅写第 5 页表 / 卡页可读数字。
+> 对照笔记：[[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]
+> **只写增量**：相对 2.5 TR / 3 Pro Model Card 已入库面；本卡大量字段「see Gemini 3.6 Flash model card」——**本仓库未入库 3.6 Flash 卡**，3 Pro / 2.5 数字不外推为 3.7 架构主张。
+> 参数量、专家数、层图与训练规模卡内未写明，标「未公开 / defer 至 3.6」。
 
 ---
 
@@ -50,7 +50,7 @@ archived: 2026-09-22
 
 ## 2. 相对 Gemini 2.5 TR / 3 Pro Model Card 的增量对照
 
-> 对照源：本卡原文 + 本地 模型与技术报告/厂商报告/Gemini25技术报告深读.md、模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md。只写两侧可锚定或本卡显式相对前代的句子。本卡对照列主轴是 **3.6 Flash**（未入库），故下表「相对 2.5 / 3 Pro」= 产品字段与安全框架差分，**不是**把 3.7 能力表硬并到 3 Pro 第 5 页同名榜。
+> 对照源：本卡原文 + [[Gemini25技术报告深读]]、[[Gemini3Pro模型卡深读]]。只写两侧可锚定或本卡显式相对前代的句子。本卡对照列主轴是 **3.6 Flash**（未入库），故下表「相对 2.5 / 3 Pro」= 产品字段与安全框架差分，**不是**把 3.7 能力表硬并到 3 Pro 第 5 页同名榜。
 
 ### 2.1 产品 / 文档形态
 
@@ -61,7 +61,7 @@ archived: 2026-09-22
 | Thinking 旋钮 | Dynamic + **Thinking budget**（报告有 budget→精度曲线） | Deep Think = optional inference 设定；budget **未写** | **customizable thinking configurations**（quality / cost / latency） | 口号延续 2.5 Flash「可控 thinking」产品轴；**无** budget 数值表 / Deep Think 专名 |
 | 输入 / 输出 | 1M / 64K（2.5 Pro/Flash） | 1M / 64K | **1M / 64K** | 窗口口径同级 |
 | Knowledge cutoff | January 2025（2.5） | **January 2025** | **March 2026**（部分域仍可能停在 Jan 2025） | 相对 3 Pro / 2.5 **明文延长**；双截止口径需产品侧注意 |
-| 架构公开 | sparse MoE + native multimodal（报告） | 同句式 +「architecture developments」无具体名 | **本卡无架构段实质内容**；全部「see 3.6 Flash」 | **禁止**把 3 Pro MoE 口号或 2.5 Infra 数字迁移为 3.7 主张 |
+| 架构公开 | sparse MoE + native multimodal（报告） | 同句式 +「architecture developments」无具体名 | **本卡无架构段实质内容**；全部「see 3.6 Flash」 | 3 Pro MoE 口号或 2.5 Infra 数字不迁移为 3.7 主张 |
 | 参数 / 专家 / FLOPs | 未公开 | 仍未公开 | **仍未公开**（且 defer 3.6） | 无增量数字 |
 
 ### 2.2 分发渠道（相对 3 Pro 卡）
@@ -150,7 +150,7 @@ archived: 2026-09-22
 
 > 绝对百分比点（pp）增减；自动评测非 human/red team。原文总判：「performs **similarly** to Gemini 3.6 Flash across both safety and tone, with low unjustified refusals。」
 > 脚注：Tone / instruction following 的「正 Δ = 改进」对照基准写的是 **Gemini 3 Flash**（非 3.6）——与列标题「vs 3.6」并存，引用时勿混。
-> 另有硬约束：「computed with **improved evaluations**… **not directly comparable** with… previous Gemini model cards。」
+> 另有原文限定：「computed with **improved evaluations**… **not directly comparable** with… previous Gemini model cards。」
 
 | Evaluation | 3.7 vs 3.6 | 方向语义（原文） |
 |---|---|---|
@@ -162,7 +162,7 @@ archived: 2026-09-22
 
 人工复核：flagged 损失「overwhelmingly」为 false positives 或 not egregious。
 
-**相对 3 Pro 卡（vs 2.5 Pro）的读法差异：** 3 Pro 曾报 Text-to-Text **−10.4%** 量级回归；本卡相对 3.6 的安全 Δ 在 **±1 pp 量级**，叙事为「similar」。**禁止**跨卡把百分比符号与 pp 混比。
+**相对 3 Pro 卡（vs 2.5 Pro）的读法差异：** 3 Pro 曾报 Text-to-Text **−10.4%** 量级回归；本卡相对 3.6 的安全 Δ 在 **±1 pp 量级**，叙事为「similar」。跨卡不可把百分比与 pp 混比。
 
 ### 4.2 人类红队
 
@@ -194,9 +194,9 @@ archived: 2026-09-22
 
 ---
 
-## 5. 待核实与引用
+## 5. 局限、待核实与引用
 
-### 5.1 待核实
+### 5.1 局限与待核实
 
 | # | 项 | 原因 |
 |---|---|---|
@@ -218,18 +218,18 @@ archived: 2026-09-22
 | 主 PDF | `https://deepmind.google/models/model-cards/gemini-3-7-flash/` |
 | 卡页 | https://deepmind.google/models/model-cards/gemini-3-7-flash/ |
 | 方法页 | https://deepmind.google/models/evals-methodology/gemini-3-7-flash |
-| 2.5 / 3 Pro 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md |
+| 2.5 / 3 Pro 对照 | [[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]] |
 
-### 5.3 跟读回填建议（不写进事实栏）
+### 5.3 与相邻笔记的增量
 
 - **[[开源与闭源前沿模型谱系]]**：Gemini 行可加 **3.7 Flash（2026-08）**——Flash 线迭代；参数仍未公开；依赖 3.6。
 - **[[推理时扩展TestTimeScaling]]**：可记「可配置 thinking」产品旋钮延续，但无 budget 曲线。
 - **[[多模态架构脉络]]**：agentic video / LVBench 作 Flash 线视频锚；勿覆盖 2.5 视频 token 配方。
-- **B11**：短卡 + defer 前代卡 + FSF 外链，是 DeepMind「增量 Model Card」字段范例。
+- **[[模型卡与SystemCard规范]]**：短卡 + defer 前代卡 + FSF 外链，是 DeepMind「增量 Model Card」字段范例。
 
 ---
 
-## 6. 摘要（给父代理 / 速览）
+## 6. 摘要
 
 Gemini 3.7 Flash Model Card（**2026-08-13** 发布，**9** 页）把该型号定位为基于 **3.6 Flash** 的 Gemini 3 族下一迭代：口号为 **核心推理算法改进 + agentic video + 可配置 thinking（质量/成本/延迟）**；上下文 **1M** / 输出 **64K**；knowledge cutoff 名义 **2026-03**（部分域仍可能 **2025-01**）。架构/数据/硬件/软件/安全政策正文 **全部 defer 至 3.6 Flash 卡**（本仓库未入库）——相对 2.5 TR / 3 Pro 卡**无新 MoE/Infra 数字**。能力表（vs 3.6）显示 DeepSWE **+16.7 pp**、AutomationBench **+13.4 pp**、OSWorld-2.0 **+14.1 pp**、GDP.pdf **+12.0 pp**、MRCR 128k **+5.2 pp** 等；CharXiv 相对 3.6 **略降 ~0.7 pp**。引入价 **$0.75 / $3.75**（至 2026-12-31）。安全相对 3.6 近似持平（±1 pp）；FSF **April-2026** 下 CBRN/Cyber **达 alert、未达 CCL**，并报告 **TCL not reached**；出货加强 CBRN/cyber offense 防护。技术深度仍依赖外链方法页与 FSF 报告。
 

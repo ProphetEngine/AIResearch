@@ -1,5 +1,5 @@
 ---
-topic: TR-GPT-5.6
+topic: GPT56系统卡深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -16,7 +16,6 @@ archived: 2026-09-22
 > - `https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf`（**77** 页；Title 元数据仍写 “GPT-5.6 Preview System Card”；CreationDate **2025-12-18** CST，与封面日不一致，以封面/正文为准）
 > - `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf`（**82** 页；Title 元数据仍误标 Preview；CreationDate 同上）
 > Hub：`https://deploymentsafety.openai.com/gpt-5-6`（GA）；Preview：`https://deploymentsafety.openai.com/gpt-5-6-preview`；PDF：`.../gpt-5-6-preview/gpt-5-6-preview.pdf`、`.../gpt-5-6/gpt-5-6.pdf`
-> **禁编造**：能力/安全数字仅写 PDF/Hub 正文或表格显式值；图内未抽出可读数字处标「待核实读图」。
 
 ---
 
@@ -179,13 +178,13 @@ UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 
 
 ---
 
-## 8. 待核实 / 缺口
+## 8. 局限与待核实
 
-- [ ] Figure/Table 中大量曲线与精确百分点未 OCR：Jailbreak Fig.3、CTF/CVE 图、CoT 系列 Fig.8–16、VulnLMP 无表分数、部分 Bio Critical 表内 Sol 精确 pass 率等 → **待核实读图**。
-- [ ] GA PDF Title 仍写 Preview、CreationDate 为 2025-12-18：以封面 **2026-07-09** 与 Hub 为准。
-- [ ] Preview vs GA 全文 diff 未做逐段机械比对；上表差分来自封面/changelog/目录/引言/§4.2 显式增补。
-- [ ] Apollo Research sandbagging/scheming 专节正文在抽取中有截断风险 → 引用前建议回 PDF §9.3。
-- [ ] 无第三方独立复现本卡分数；数字一律溯源 OpenAI 原文。
+- Figure/Table 中大量曲线与精确百分点未 OCR：Jailbreak Fig.3、CTF/CVE 图、CoT 系列 Fig.8–16、VulnLMP 无表分数、部分 Bio Critical 表内 Sol 精确 pass 率等 → **待核实读图**。
+- GA PDF Title 仍写 Preview、CreationDate 为 2025-12-18：以封面 **2026-07-09** 与 Hub 为准。
+- Preview vs GA 全文 diff 未做逐段机械比对；上表差分来自封面/changelog/目录/引言/§4.2 显式增补。
+- Apollo Research sandbagging/scheming 专节正文可能不全 → 引用前回原文 §9.3。
+- 无第三方独立复现本卡分数；数字一律溯源 OpenAI 原文。
 
 ---
 
@@ -195,5 +194,5 @@ UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 
 - [[GPT51SystemCard附录]]
 - [[GPT52SystemCard更新]]
 - [[GPT56系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

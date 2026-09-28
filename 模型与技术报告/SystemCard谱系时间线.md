@@ -13,9 +13,8 @@ status: active
 
 - [[开源与闭源前沿模型谱系]]
 - [[模型卡与SystemCard规范]]
-- [[SystemCard与TR扫描2025至2026]]
 
-## 代表性 TR-*
+## 代表性技术报告与系统卡
 
 - DeepSeek：[[DeepSeekV3训练与MoE基建]] · [[DeepSeekV32技术报告深读]] · [[DeepSeekR1推理训练深读]]
 - Qwen：[[Qwen3技术报告深读]]
@@ -24,7 +23,7 @@ status: active
 - Anthropic：[[ClaudeOpus41系统卡附录深读]] · [[ClaudeOpus45系统卡深读]]
 - 其他：[[Grok4模型卡深读]] · [[Kimik15技术报告深读]] · [[KimiK2技术报告深读]] · [[GLM45技术报告深读]] · [[MiniMaxM1技术报告深读]] · [[Mistral3公告短卡]] · [[Llama4待核实备忘]]
 
-## 旗舰深读 / 近窗（文件名保留 W*）
+## 旗舰深读 / 近窗
 
 - [[GPT6Astra系统卡深读]] · [[DeepSeekV41Flash深读]] · [[Qwen38Next架构深读]] · [[ClaudeOpus5系统卡深读]] · [[Gemini37Flash模型卡深读]]
 - [[Gemma4技术报告深读]] · [[AXK2技术报告深读]] · [[UIVenus2GUI智能体]]

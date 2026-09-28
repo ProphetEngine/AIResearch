@@ -1,11 +1,11 @@
 ---
-topic: TR-Mistral-3
+topic: Mistral3公告短卡
 date: 2026-09-22
 status: archived
 archived: 2026-09-22
 ---
 
-# Mistral 3 / Large 3｜公告级短卡（P2）
+# Mistral 3 / Large 3｜公告级短卡
 
 ## 一句话
 Mistral AI 于 **2025-12-02** 发布 Mistral 3：包含面向边缘/本地的 Ministral 3（3B/8B/14B）与旗舰 **Mistral Large 3**；全系公告称采用 Apache 2.0。
@@ -35,5 +35,5 @@ Mistral AI 于 **2025-12-02** 发布 Mistral 3：包含面向边缘/本地的 Mi
 - [[KimiK2技术报告深读]]
 - [[Llama4待核实备忘]]
 - [[Mistral3公告短卡]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

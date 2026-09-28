@@ -1,6 +1,6 @@
 ---
 title: Claude Opus 4.1 System Card Addendum 专项深读卡
-topic: TR-Claude-Opus-4.1
+topic: ClaudeOpus41系统卡附录深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -14,7 +14,7 @@ archived: 2026-09-22
 > 官方 PDF：`https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf`（**23** 页；Title: Claude 4.1 System Card）  
 > 落地页：https://www.anthropic.com/claude-opus-4-1-system-card
 > 对照：Claude 4 主卡 `https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf`；后续全卡笔记 [[ClaudeOpus45系统卡深读]]
-> **禁止编造**：本卡为 **Addendum**，几乎不给能力榜；下文数字与主张均锚定原文表格/段落；图柱未抽出可读数的标「待核实读图」。
+> 本卡为 **Addendum**，几乎不给能力榜。
 
 ---
 
@@ -169,7 +169,7 @@ Claude Opus 4.1 是 Opus 4 的增量版；本卡是挂在 **Claude 4 SC（May 20
 
 ## 四、相对 Opus 4.5 System Card 的位置
 
-| 维度 | Opus 4.1 Addendum（本卡） | Opus 4.5 System Card（模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md） |
+| 维度 | Opus 4.1 Addendum（本卡） | Opus 4.5 System Card（[[ClaudeOpus45系统卡深读]]） |
 |---|---|---|
 | 时间线 | 封面 **Aug 2025**；Changelog **Sep 15, 2025** | 封面 **Nov 2025**；Changelog 至 **Dec 5, 2025** |
 | 体裁 / 页数 | **Addendum**，**23** 页；挂在 Claude 4 SC 下 | **完整** System Card，**153** 页 |
@@ -187,16 +187,16 @@ Claude Opus 4.1 是 Opus 4 的增量版；本卡是挂在 **Claude 4 SC（May 20
 
 ---
 
-## 五、待核实与引用
+## 五、局限、待核实与引用
 
-### 5.1 待核实
+### 5.1 局限与待核实
 
 1. Fig 4.1.A / 4.2.A / 4.3.A / 5.A / 6.3.* 等图柱精确数值（正文未抽出可读柱高）——发表级引用需回 PDF 读图。
 2. Claude 4 主卡中三条「agentic coding misuse evaluations」的具体名称与口径（本卡仅称「from the Claude 4 system card」）。
 3. RSP「4× effective compute」「six months’ worth of finetuning」的操作化定义以 **RSP 正文 §3.1** 为准；本卡仅复述。
 4. CBRN partners（Faculty Science、SecureBio、Deloitte、Signature Science）的合同角色与可公开协议细节——卡内仅致谢/开发归属。
 5. 参数量、预训练数据截止、RL 算法：**本卡未给**（亦未声称继承 Opus 4 某公开截止日）。
-6. 引用 Opus 4.5 表中「Opus 4.1 = 74.5% SWE」等能力分时：那些分来自 **4.5 卡评测配置**，**不在本 Addendum 正文**——禁止写成本卡自报能力榜。
+6. 引用 Opus 4.5 表中「Opus 4.1 = 74.5% SWE」等能力分时：那些分来自 **4.5 卡评测配置**，**不在本 Addendum 正文**——不写成本卡自报能力榜。
 
 ### 5.2 推荐引用写法
 
@@ -217,12 +217,10 @@ Anthropic. Claude 4 System Card. May 2025
 
 ```text
 Anthropic. System Card: Claude Opus 4.5. November 2025
-（见 模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md）
+（见 [[ClaudeOpus45系统卡深读]]）
 ```
 
 ---
-
-*草稿状态：draft。修订时优先同步 Addendum Changelog 与 Claude 4 / Opus 4.5 卡更正（尤其 reward-hack 脚注 3、Synthesis Screening 脚注 4）；数字禁止离开原文脚注单独传播。*
 
 ## 相关笔记
 
@@ -234,5 +232,5 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 - [[Gemini3Pro模型卡深读]]
 - [[ClaudeOpus41系统卡附录深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

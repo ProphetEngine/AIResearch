@@ -1,6 +1,6 @@
 ---
 title: Qwen3 Technical Report 深读笔记
-topic: TR-Qwen3
+topic: Qwen3技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -209,9 +209,9 @@ Table 21（Qwen3-8B，自同一 off-policy 检查点起，仅数学/代码查询
 
 ---
 
-## 六、待核实与引用
+## 六、局限、待核实与引用
 
-### 6.1 待核实（禁止编造）
+### 6.1 局限与待核实
 
 | # | 项目 | 原因 |
 |---|---|---|
@@ -241,7 +241,7 @@ Table 21（Qwen3-8B，自同一 off-policy 检查点起，仅数学/代码查询
 - [[DeepSeekV3训练与MoE基建]]
 - [[Qwen3技术报告深读]]
 - [[DeepSeekR1推理训练深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[混合专家架构]]

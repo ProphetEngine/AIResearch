@@ -26,12 +26,12 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：全栈开放配方主题轴——立 **AI2「fully-open」全栈 model flow** 锚点：不仅放最终权重，还放 **每阶段数据 / 中间 checkpoint / 代码依赖**。主文：*Olmo 3*（Team Olmo / Allen Institute for AI 等，arXiv:**2512.13961**v2）。旗舰叙事落在 **Olmo 3.1 Think 32B**（全文自称 strongest fully-open thinking model）。
 > **攻坚线**：**架构思想 / 开放配方接口（主）** + **评测字段（文内系列对照，辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ [[Nemotron3Ultra技术报告深读]]**：禁止写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra技术报告深读]] 对照一句即可。
-> - **≠ [[GPToss模型卡深读]]**：禁止重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
-> - **≠ [[Gemma4技术报告深读]]**：禁止重写 **Gemma 4** TR（Google Apache 开源权重族 / PLE / QAT）；本卡是 AI2 dense 7B/32B + Dolma/Dolci 全栈。
-> - **≠ 已入库 Qwen / DeepSeek / Llama pending**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），**禁止**把其架构/训练配方抄入本卡当 Olmo 主张。
-> **禁止编造**：型号、token 量、表数字、算力日一律锚定官方 PDF（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
+> **范围与相邻笔记**：
+> - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra技术报告深读]] 对照一句即可。
+> - **≠ [[GPToss模型卡深读]]**：不重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
+> - **≠ [[Gemma4技术报告深读]]**：不重写 **Gemma 4** TR（Google Apache 开源权重族 / PLE / QAT）；本卡是 AI2 dense 7B/32B + Dolma/Dolci 全栈。
+> - **≠ 已入库 Qwen / DeepSeek / Llama pending**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），不把其架构/训练配方抄入本卡当 Olmo 主张。
+> 正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
 
 ---
 
@@ -206,7 +206,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 ## 七、评测字段摘录（辅；禁跨表硬比绝对分）
 
-> 协议、解码、是否 thinking、是否 Avg@k 均不同源表自洽；**禁止**与 [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] / Qwen3 TR 表直接「决胜负」。
+> 协议、解码、是否 thinking、是否 Avg@k 均不同源表自洽；不宜与 [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] / Qwen3 TR 表直接「决胜负」。
 
 ### 7.1 旗舰快照 Table 1 / Table 14（Olmo 3.1 Think 32B 选列）
 
@@ -252,7 +252,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 ---
 
-## 八、开放配方接口清单（验收用）
+## 八、开放配方接口清单
 
 | 接口层 | 文内锚点 | 本卡用法 |
 |---|---|---|
@@ -261,18 +261,17 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 | 训练代码 | OLMo-core · Open Instruct | 架构/吞吐字段锚附录表 |
 | 评测 | OlmoBaseEval · OLMES · decon | 决策用聚类/代理指标/SNR，非榜单通史 |
 | 中间 ckpt | 每阶段释放 | fully-open 相对 open-weight 的核心增量 |
-| 追踪 | thinking 链可回溯至训练数据（§1） | 研究机会句；禁止外推未给工具链 |
+| 追踪 | thinking 链可回溯至训练数据（§1） | 研究机会句；文内未给工具链 |
 
 ---
 
-## 九、明确不写 / 待核实
+## 九、局限与待核实
 
 | 不写 | 原因 |
 |---|---|
 | Nemotron 3 Ultra / gpt-oss / Gemma 4 架构与表 | 划界 ≠ [[Nemotron3Ultra技术报告深读]] / [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] |
 | Qwen3 / DeepSeek / Llama4 配方回填 | ≠ 已入库 TR；仅基线名 |
-| 未抽出的 Figure 精确点、附录全表逐格 | 页数极长；需要时回 或 PDF |
-| 权重 / 数据集整包下载入库 | 体积与许可另议；本卡只链配方接口 |
+| 未抽出的 Figure 精确点、附录全表逐格 | 页数极长；需要时回原文 PDF |
 | 「已超越 Qwen 3」类外推 | 文写 *narrowing the gap* / *close to*；照录 |
 
 **待核实读图：** Figure 1/2/13/18–21/24–26 等曲线与饼图像素值；Appendix A.3–A.8 大量配表未整章抄入笔记。
@@ -289,12 +288,6 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 ---
 
-## 十一、验收摘要（给主管）
+## 十一、摘要
 
-| 项 | 内容 |
-|---|---|
-| 页数 | **118** |
-| 深读 PDF | [arXiv:2512.13961](https://arxiv.org/abs/2512.13961) |
-| 备注 | 正式引用 arXiv HTTPS（页数较长，跟读以章节为准） |
-| 主结论 | AI2 **fully-open model flow** 旗舰：Dolma 3 三阶段 Base（至 ~6T 级 + 65K）→ Dolci 后训练三角（Think / Instruct / RL-Zero）；旗舰 **Olmo 3.1 Think 32B** 文内称 strongest fully-open thinking @32B，并以更少 token 逼近 Qwen 3 开源权重 thinking |
-| 划界 | ≠ [[Nemotron3Ultra技术报告深读]]；≠ [[GPToss模型卡深读]]；≠ [[Gemma4技术报告深读]]；≠ Qwen/DeepSeek/Llama pending 正文 |
+AI2 **fully-open model flow** 旗舰：Dolma 3 三阶段 Base（至 ~6T 级 + 65K）→ Dolci 后训练三角（Think / Instruct / RL-Zero）；旗舰 **Olmo 3.1 Think 32B** 文内称 strongest fully-open thinking @32B，并以更少 token 逼近 Qwen 3 开源权重 thinking。

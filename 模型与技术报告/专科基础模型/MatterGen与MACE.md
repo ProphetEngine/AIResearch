@@ -24,12 +24,12 @@ timezone: Asia/Shanghai (CST)
 > - **MatterGen**：条件**生成式**无机晶体设计（扩散联合精炼原子类型 / 坐标 / 晶格 + adapter 微调）。
 > - **MACE 跨域统一力场**（2510.25380）：分子 / 表面 / 无机晶体 **cross-domain** 多头 replay 后训练；以 **MACE-MP-0**（2401.00096）为 foundation 谱系基线（**正式外链**）。
 > **攻坚线**：**架构思想 / 任务接口（生成 vs 力场）（主）** + **文内稳定性 / 物性 / 跨域榜字段（辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ [[MatterSim材料基础模型]] MatterSim**：不重写主动学习温压构型、M3GNet/Graphormer 双骨干、0–5000 K / 0–1000 GPa、Gibbs/相图主文。MatterGen 文内把 MatterSim 当 **pre-relax / 稳定性过滤 MLFF**（与 RSS/substitution 同配）——本卡只录**接口句**，禁止展开 MatterSim 方法。2510.25380 把 `mattersim-5M` 当跨域对照基线——只录榜名与文内得分，不复述 MatterSim 架构。
+> **范围与相邻笔记**：
+> - **≠ [[MatterSim材料基础模型]] MatterSim**：不重写主动学习温压构型、M3GNet/Graphormer 双骨干、0–5000 K / 0–1000 GPa、Gibbs/相图主文。MatterGen 文内把 MatterSim 当 **pre-relax / 稳定性过滤 MLFF**（与 RSS/substitution 同配）——本卡只录**接口句**，不展开 MatterSim 方法。2510.25380 把 `mattersim-5M` 当跨域对照基线——只录榜名与文内得分，不复述 MatterSim 架构。
 > - **≠ [[生物学基础模型]]**：不写 AF3 坐标扩散 / ESM3 多轨道蛋白 LM。
 > - **≠ [[天气气候基础模型]]**：不写 Aurora / Earth-system 场预报。
 > - **≠ [[蛋白质设计]]**：不写 RFdiffusion / BindCraft 蛋白 binder 设计。
-> **禁止编造**：主张与数字一律锚定官方 PDF（2026-09-22 CST）。MatterGen **主数字以 arXiv:2312.03687v2 抽取为准**；Nature 正式刊作刊发线 / 实验验证存在性补链（摘要口径「>10× 更近能量最低点」与 arXiv「>15×」不一致处标清来源，**不以刊发页覆盖 arXiv 表数字**）。
+> MatterGen **主数字以 arXiv:2312.03687v2 为准**；Nature 正式刊作刊发线 / 实验验证存在性补链（摘要口径「>10× 更近能量最低点」与 arXiv「>15×」不一致处标清来源，**不以刊发页覆盖 arXiv 表数字**）。
 
 ---
 
@@ -54,14 +54,14 @@ timezone: Asia/Shanghai (CST)
 
 ## 二、议题边界：生成设计 × 跨域力场 ≠ MatterSim 预测主文
 
-### 2.1 四向对照（跟读必钉）
+### 2.1 四向对照
 
 | 轴 | **[[MatterSim材料基础模型]] MatterSim** | **本卡 MatterGen** | **本卡 MACE-MP-0 / 跨域** | **[[生物学基础模型]] / [[天气气候基础模型]] / [[蛋白质设计]]** |
 |---|---|---|---|---|
 | 任务 | 原子图 → **能量/力/应力 → 物性预测 / MD** | 噪声结构 → **生成**晶体；条件约束 | 原子坐标 → **统一 MLIP**（跨电子结构理论 / 跨化学域） | 蛋白结构·序列 / 地球场 / binder |
 | 「Foundation」含义 | 宽化学 + 宽温压构型上的通用势 | 跨周期表 **S.U.N.** 生成底座 + 条件微调 | 开箱 MD + 少量点微调；再跨域多头 | 生物 / 气象 / 蛋白设计 FM |
 | 与 MatterSim 关系 | **主文** | 文内 **调用** MatterSim 做 pre-relax 过滤（接口） | 跨域榜对照 `mattersim-5M`（接口） | 平行科学 FM，对象不同 |
-| 本篇是否主写 | ✗（禁重写） | ✓ | ✓（MP-0 作谱系基线，禁巨本二进制） | ✗ |
+| 本篇是否主写 | ✗（不重写） | ✓ | ✓（MP-0 作谱系基线） | ✗ |
 
 ### 2.2 刻意不写什么
 
@@ -102,7 +102,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|
 | 预训练集 **Alex-MP-20** | **607,684** 条稳定结构（≤20 原子；自 MP + Alexandria 重算） |
 | 稳定 | DFT 弛豫后相对参考凸包 **≤ 0.1 eV/atom** |
-| 参考包 **Alex-MP-ICSD** | **1,081,850** unique（MP + Alexandria + ICSD 重算；抽取 §2.2） |
+| 参考包 **Alex-MP-ICSD** | **1,081,850** unique（MP + Alexandria + ICSD 重算；原文 §2.2） |
 | **Novel** | 不在 Alex-MP-ICSD |
 | **S.U.N.** | Stable + Unique + Novel |
 
@@ -136,7 +136,7 @@ timezone: Asia/Shanghai (CST)
 - 基线名单显式含 **DiffCSP**；数据/代码指向 `microsoft/mattergen`。
 跟读：**实验细节与合成操作不写**；只立「生成 → 可合成验证」这一任务接口。
 
-### 3.6 自述局限（抽取 §3 Discussion）
+### 3.6 自述局限（原文 §3 Discussion）
 
 - 生成空间群偏 **P1**（对称性不足，大胞尤甚）。
 - 评测仍难覆盖真实应用全部判据；实验表征是最终检验。
@@ -146,7 +146,7 @@ timezone: Asia/Shanghai (CST)
 
 ## 四、MACE-MP-0：原子材料化学 foundation 力场（谱系基线）
 
-> 角色：为 **2510.25380 跨域统一** 提供「foundation MLIP + multi-head replay」谱系起点；**禁止**把 153 页巨本当默认。
+> 角色：为 **2510.25380 跨域统一** 提供「foundation MLIP + multi-head replay」谱系起点；153 页巨本不作默认入口。
 
 ### 4.1 主张与训练设定（抽取摘要 / Methods）
 
@@ -222,7 +222,7 @@ Stage 2 Multi-Head Replay Post-Training
 
 文内叙事：MH 模型在 Molecules / Molecular Crystals 上明显增益，Materials 保持竞争；相对 UMA 的「理论层级全局嵌入」，作者认为**更少灵活性的多头 + 共享表示**反而更利于向主头迁移知识（§XIV）。速度表（Table XV，H100，1000-atom diamond，含 cuEquivariance / compile）：`mace-mh-1` / `mace-omat-1` **43** steps/s；`mace-mp-0a` / `mace-omat-0` **83** steps/s（更大 L=2 / 512 channel 代价，非架构改动本身）。
 
-**与 [[MatterSim材料基础模型]] 接口**：此处 `mattersim-5M` 仅为跨域总分对照——**禁止**回写 MatterSim 温压主动学习正文。
+**与 [[MatterSim材料基础模型]] 接口**：此处 `mattersim-5M` 仅为跨域总分对照——不回写 MatterSim 温压主动学习正文。
 
 ### 5.5 代码与利益声明（抽取）
 
@@ -244,7 +244,7 @@ Stage 2 Multi-Head Replay Post-Training
 
 ---
 
-## 七、跟读清单 / 待核实
+## 七、局限与待核实
 
 1. MatterGen：**以 arXiv v2 为准**；若需 Nature 表数字 / Extended Data，需另读 Nature PDF。注意摘要 **15×（arXiv）vs 10×（Nature）**。
 2. MatterGen 化学体系实验中 **MatterSim 仅过滤接口**——细节回链 [[MatterSim材料基础模型]]。
@@ -260,4 +260,4 @@ Stage 2 Multi-Head Replay Post-Training
 | https://www.nature.com/articles/s41586-025-08628-5 | Nature 刊发线、实验验证存在性、Code/Data availability |
 | `https://arxiv.org/abs/2510.25380` | 跨域架构、数据头、全局分 |
 | https://arxiv.org/pdf/2401.00096 | MP-0 foundation 设定与 replay 协议源头 |
-| [[MatterSim材料基础模型]] | 预测势主轴；本卡禁重写 |
+| [[MatterSim材料基础模型]] | 预测势主轴；本卡不重写 |

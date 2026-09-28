@@ -14,7 +14,7 @@ archived: 2026-09-22
 > **定位**：DeepSeek-V4.1 Flash 增量技术报告主题轴（相对已入库 V3 / V3.2）。数字一律取自官方 PDF `https://arxiv.org/abs/2609.19969`（2026-09-22 CST）。
 > **攻坚线**：**架构思想（主）** + **AI Infra / KV·部署（辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线与 671B/37B/14.8T/DualPipe/FP8 分块配方（见 [[混合专家架构]]、[[DeepSeekV3训练与MoE基建]]）；DSA 两阶段继续训与 GRPO 四稳定化全文（见 [[DeepSeekV32技术报告深读]]）；KV 量化通史（留给 [[KV缓存量化与压缩]]）。本卡只补「相对 V3/V3.2 **本 PDF 新公开** 的 CED / CSA2 / FP4 KV / SWA Bounded Replay」。
-> **禁止编造**：本 PDF **对照锚点是 DeepSeek-V4 / V4-Flash / V4-Pro**，**未重开** V3 的 671B/37B 表 → 不得把 V3 数字外推为 V4.1-Flash 主张；V4 本体无本仓库独立 TR → V4 侧数字仅录本 PDF 转述。
+> 本 PDF **对照锚点是 DeepSeek-V4 / V4-Flash / V4-Pro**，**未重开** V3 的 671B/37B 表，V3 数字不外推为 V4.1-Flash 主张；V4 本体无本仓库独立 TR → V4 侧数字仅录本 PDF 转述。
 
 ---
 
@@ -258,7 +258,7 @@ $$
 | **[[DeepSeekV32技术报告深读]]** | DSA 两阶段；GRPO 四件套；128K agent 合成 | **不是 DSA 续篇**：纯 **CSA2** 三模式 + Hier. indexer；部署侧 **SWA Bounded Replay**；**FP4 main KV** |
 | **[[混合专家架构]]** | MoE 史线 | 无新专家拓扑哲学；仅 384/6/2304 等本代数 |
 | **[[长上下文位置编码与系统侧]] / [[注意力效率族MQA到MLA]]** | 长上下文 / 注意力效率通论 | 890 B/token、1/4 & 1/8 相对 V4-Flash、Reuse 核数、Decode FLOPs 近恒 |
-| **[[AI基础设施总览]] / B7** | Infra / 引擎选型 | EPD；persistent vs host DRAM 10%；不写引擎通史 |
+| **[[AI基础设施总览]] / [[推理引擎生态]]** | Infra / 引擎选型 | EPD；persistent vs host DRAM 10%；不写引擎通史 |
 | **[[KV缓存量化与压缩]]（待做）** | — | 本卡只记 V4.1 **产品解**（E2M1+scale16、RoPE 后 QAT）；通史/误差轴留给 [[KV缓存量化与压缩]] |
 
 **一句话：**
@@ -266,12 +266,12 @@ V3/V3.2 卡讲清「基座怎么训、DSA/RL 怎么叠加」；本卡讲清「�
 
 ---
 
-## 七、待核实与引用
+## 七、局限、待核实与引用
 
-### 7.1 待核实（禁止当作已确认）
+### 7.1 局限与待核实
 
 1. **DeepSeek-V4 / V4-Flash / V4-Pro 独立完整 TR**：本仓库暂无对应 PDF；CSA–HCA 细节、V4 Exact SWA replay 数字等 **仅本 PDF 转述**。
-2. **890 bytes/token 的逐项分解表**：正文给总数与「≈1/4 V4-Flash」，未在抽取文本中给逐字段字节账；若需拆解应回读 Fig 1(b) 或后续 blog。
+2. **890 bytes/token 的逐项分解表**：正文给总数与「≈1/4 V4-Flash」，未给逐字段字节账；若需拆解应回读 Fig 1(b) 或后续 blog。
 3. **「1/3 total / 1/4 activated vs V4-Pro」**：以引言对 Base 的参数对比为准（Table 1：552B vs 1.6T；8B/16B vs 49B）——引用时注明是作者口径。
 4. **Fig 2 / Fig 6 曲线数值点**：文本层无逐点表。
 5. **Table 3 对照模型全名与评测 scaffold**：正文有 Max effort 与 scaffold 附录；跨 scaffold 方差见 Table 4/5——引用单点分数须标明 scaffold。
@@ -287,8 +287,8 @@ V3/V3.2 卡讲清「基座怎么训、DSA/RL 怎么叠加」；本卡讲清「�
 
 ### 7.3 关联笔记
 
-- [[DeepSeekV3训练与MoE基建]]：模型与技术报告/厂商报告/DeepSeekV3训练与MoE基建.md
-- [[DeepSeekV32技术报告深读]]：模型与技术报告/厂商报告/DeepSeekV32技术报告深读.md
+- [[DeepSeekV3训练与MoE基建]]
+- [[DeepSeekV32技术报告深读]]
 - [[混合专家架构]] / [[长上下文位置编码与系统侧]] / [[注意力效率族MQA到MLA]] / [[AI基础设施总览]] / [[智能体工具与长程任务]]：MoE 史、长上下文、注意力效率、Infra、agent
 - [[MOC_模型与技术报告]]；交叉 **[[KV缓存量化与压缩]]** KV 量化通史（勿在本卡展开）
 
@@ -299,5 +299,5 @@ V3/V3.2 卡讲清「基座怎么训、DSA/RL 怎么叠加」；本卡讲清「�
 - [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

@@ -24,11 +24,10 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：Nemotron 开源旗舰主题轴——立 NVIDIA **Nemotron 3 Ultra** 模型技术报告：Hybrid Mamba–Attention + LatentMoE、面向 **agentic reasoning** 的预训练 / 后训练 / 量化 / 推理配方与文内评测。主文：NVIDIA *Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning*（arXiv:**2606.15007**v1，**12 Jun 2026**）。
 > **攻坚线**：**架构思想（主）** + **评测字段（文内 agent / 推理表，辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ [[NemotronCC数据策展]]**：禁止重写 **Nemotron-CC 语料清洗章**（过滤 / 去重 / 质量分类 / 合成改写管线）。本卡预训练数据只记 **Ultra 相对 Super 新增发布集 + 两阶段配比骨架**，不展开通用网页策展全文。
-> - **≠ [[SEA-LION低资源区域模型]]**：禁止写成 **SEA-LION 区域 CPT / OPD / SEA-HELM**；SEA 卡里 Ultra 仅作教师信号源一句 → 本卡才是 **基座旗舰 TR**。
-> - **≠ 其他厂商 TR**：禁止把本卡写成 DeepSeek / Qwen / Kimi / GLM / OLMo 等对照全文；对照模型只出现在 **文内 Table 2 / Table 10 数字转述**。OLMo 3 开放配方旗舰见 **[[OLMo3全栈开放配方]]**。
-> **禁止编造**：主张、表数字、吞吐倍率一律锚定官方 PDF（2026-09-22 CST）；图内未抽出的精确曲线点标 **待核实读图**。**禁**下权重 / 大数据集。
+> **范围与相邻笔记**：
+> - **≠ [[NemotronCC数据策展]]**：不重写 **Nemotron-CC 语料清洗章**（过滤 / 去重 / 质量分类 / 合成改写管线）。本卡预训练数据只记 **Ultra 相对 Super 新增发布集 + 两阶段配比骨架**，不展开通用网页策展全文。
+> - **≠ [[SEA-LION低资源区域模型]]**：不写成 **SEA-LION 区域 CPT / OPD / SEA-HELM**；SEA 卡里 Ultra 仅作教师信号源一句 → 本卡才是 **基座旗舰 TR**。
+> - **≠ 其他厂商 TR**：不把本卡写成 DeepSeek / Qwen / Kimi / GLM / OLMo 等对照全文；对照模型只出现在 **文内 Table 2 / Table 10 数字转述**。OLMo 3 开放配方旗舰见 **[[OLMo3全栈开放配方]]**。
 
 ---
 
@@ -46,7 +45,7 @@ timezone: Asia/Shanghai (CST)
 **开源入口（文内明示，禁下权重）：**
 - 配方仓：https://github.com/NVIDIA-NeMo/Nemotron
 - 评测示例：https://github.com/NVIDIA-NeMo/Evaluator/blob/main/examples/nemotron/nemotron-3-ultra
-- HF：文称开源 **Base / Post-Trained / NVFP4 量化** checkpoint，以及训练数据与 recipe（具体 repo ID 以 HF 检索为准，本卡不编造 ID）。
+- HF：文称开源 **Base / Post-Trained / NVFP4 量化** checkpoint，以及训练数据与 recipe（文内未给具体 repo ID）。
 
 **一句话抓手：** **550B total / 55B active** Hybrid Mamba–Attention LatentMoE；**20T** 预训练 + **1M** 上下文扩展；后训练 **SFT → RLVR → 两轮 MOPD（Multi-teacher On-Policy Distillation）→ MTP Boosting**；宣称相对公开旗舰最高约 **∼6×** 推理吞吐（文内 Fig.1：8K in / 64K out、GB200、NVFP4；对 GLM-5.1 / Kimi-K2.6 / Qwen-3.5 为 **5.9× / 4.8× / 1.6×**），精度持平（on-par accuracy）。
 
@@ -100,7 +99,7 @@ timezone: Asia/Shanghai (CST)
 | MoE Latent Size | **2048** |
 | MTP layers（shared） | **2** |
 
-Fig.2：层块按 **Mamba-2 × Attention** 混合重复（文内示意倍数 x3 / x2 / x3 / x3 / x4），MoE 稀疏叠在 LatentMoE 上——细节以 PDF 图为准，**禁止**自造未写明的精确交错公式。
+Fig.2：层块按 **Mamba-2 × Attention** 混合重复（文内示意倍数 x3 / x2 / x3 / x3 / x4），MoE 稀疏叠在 LatentMoE 上——细节以 PDF 图为准，文内未写精确交错公式。
 
 ### 3.2 NVFP4 预训练与稳定性（§2.2 / §2.7）
 
@@ -112,7 +111,7 @@ Fig.2：层块按 **Mamba-2 × Attention** 混合重复（文内示意倍数 x3 
 
 ### 3.3 数据与课表（≠ [[NemotronCC数据策展]]）
 
-**只记 Ultra 相对 Super 的增量与课表骨架**（禁止清洗管线重写）：
+**只记 Ultra 相对 Super 的增量与课表骨架**（不重写清洗管线）：
 
 | 文内发布 / 增量（Intro / §2.3） | 角色（文内） |
 |---|---|
@@ -180,7 +179,7 @@ Base (1M 扩展)
 
 ### 4.5 后训练主表（Table 10，抽 agent / 推理 / 长上下文）
 
-对照开源：MiniMax-2.7、GLM-5.1、Kimi-K2.6、Qwen-3.5、DS-v4-Pro、DS-v4-Flash。口径与 harness 见文 §3.7 / Appendix；**禁止**跨表不同设置硬比绝对胜负。
+对照开源：MiniMax-2.7、GLM-5.1、Kimi-K2.6、Qwen-3.5、DS-v4-Pro、DS-v4-Flash。口径与 harness 见文 §3.7 / Appendix；跨表设置不同，不可硬比绝对胜负。
 
 | Benchmark | N-3-Ultra 550B-A55B |
 |---|---|
@@ -214,7 +213,3 @@ Base (1M 扩展)
 
 **文内声称开源：** Base BF16、Post-Trained BF16、Post-Trained NVFP4、GenRM；若干预训练 / 后训练数据集；训练 recipe；RL environments（NeMo Gym 等链接见文）。
 **本卡未写：** 完整教师列表与 RL 环境失败归因表（Table 7–9）、量化逐层 bit 表、全部附录评测协议。需要时回 PDF。
-
----
-
-**禁止入库：** 模型权重、量化包、原始数据集 shard。

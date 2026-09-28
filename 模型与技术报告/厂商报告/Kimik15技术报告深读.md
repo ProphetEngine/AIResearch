@@ -1,6 +1,6 @@
 ---
 title: "技术报告专项：Kimi k1.5 Technical Report 深读切片（架构思想 / 数学原理）"
-topic: TR-Kimi-k1.5
+topic: Kimik15技术报告深读
 date: 2026-09-22
 lines: [架构思想, 数学原理]
 status: archived
@@ -11,7 +11,7 @@ archived: 2026-09-22
 # TR · Kimi k1.5 Technical Report 深读切片：架构思想 / 数学原理
 
 > **定位**：报告级对照表 / 深读卡。数字与公式一律取自官方 PDF `https://arxiv.org/abs/2501.12599`（页眉 **arXiv:2501.12599v4**）。
-> **刻意不写**：开闭源谱系通史（见 [[开源与闭源前沿模型谱系]]）、RLHF/DPO 通论（见 [[对齐脉络RLHF与偏好优化]]）、test-time scaling 通论（见 [[推理时扩展TestTimeScaling]]）、K2 MoE/MuonClip/Infra 专页（见 模型与技术报告/厂商报告/KimiK2技术报告深读.md）。本卡只补「可对表跟读」的 k1.5 RL 框架、镜像下降近似、length penalty、partial rollout 与相对 K2 的定位。
+> **刻意不写**：开闭源谱系通史（见 [[开源与闭源前沿模型谱系]]）、RLHF/DPO 通论（见 [[对齐脉络RLHF与偏好优化]]）、test-time scaling 通论（见 [[推理时扩展TestTimeScaling]]）、K2 MoE/MuonClip/Infra 专页（见 [[KimiK2技术报告深读]]）。本卡只补「可对表跟读」的 k1.5 RL 框架、镜像下降近似、length penalty、partial rollout 与相对 K2 的定位。
 > **评测分**：摘要 / Table 2–3 / Figure 7 亮点可录；完整 Appendix C 细则与 Figure 5–10 曲线不逐格抄入（见第六节待核实）。
 
 ---
@@ -50,7 +50,7 @@ archived: 2026-09-22
 
 ---
 
-## 三、架构思想（公开要点 · 禁止外推参数量）
+## 三、架构思想（公开要点 · 不外推参数量）
 
 ### 3.1 训练阶段流水线（§2 开篇 + §2.5）
 
@@ -217,9 +217,9 @@ Appendix C 注明：Table 3 的 IF-Eval 来自 **intermediate** 模型，将更�
 
 ---
 
-## 七、待核实与引用
+## 七、局限、待核实与引用
 
-### 7.1 待核实（禁止当作已确认）
+### 7.1 局限与待核实
 
 1. arXiv **首发 / v1–v3** 日期与 diff：本 PDF 仅见 **v4 · 3 Jun 2025**；写「首发日」需回查 https://arxiv.org/abs/2501.12599。
 2. **模型参数量 / 层宽 / 视觉塔结构 / 预训练总 tokens**：正文与 Appendix B **明确未给**完整规模表；B.3 称架构 scaling「beyond the scope」。
@@ -237,11 +237,11 @@ Appendix C 注明：Table 3 的 IF-Eval 来自 **intermediate** 模型，将更�
 
 ### 7.3 关联笔记
 
-- [[KimiK2技术报告深读]]：模型与技术报告/厂商报告/KimiK2技术报告深读.md（下游继承：policy opt / partial rollout / colocated）
-- [[对齐脉络RLHF与偏好优化]]：对齐与强化学习/对齐脉络RLHF与偏好优化.md（RLHF/DPO 通论）
-- [[推理时扩展TestTimeScaling]]：架构/推理时扩展TestTimeScaling.md（测时缩放通论）
-- [[DeepSeekR1推理训练深读]]：模型与技术报告/厂商报告/DeepSeekR1推理训练深读.md（同期推理 RL 对照）
-- [[多模态架构脉络]]：多模态与具身/视觉语言/多模态架构脉络.md（多模态通论）
+- [[KimiK2技术报告深读]]（下游继承：policy opt / partial rollout / colocated）
+- [[对齐脉络RLHF与偏好优化]]（RLHF/DPO 通论）
+- [[推理时扩展TestTimeScaling]]（测时缩放通论）
+- [[DeepSeekR1推理训练深读]]（同期推理 RL 对照）
+- [[多模态架构脉络]]（多模态通论）
 
 ## 相关笔记
 
@@ -251,5 +251,5 @@ Appendix C 注明：Table 3 的 IF-Eval 来自 **intermediate** 模型，将更�
 - [[KimiK2技术报告深读]]
 - [[Llama4待核实备忘]]
 - [[Mistral3公告短卡]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

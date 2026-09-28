@@ -12,9 +12,9 @@ archived: 2026-09-22
 > 锚点：Gemma Team, Google DeepMind, *Gemma 4 Technical Report*（arXiv **2607.02770v2**；页眉日期 **2026-06-19**；API published **2026-07-02**，updated **2026-07-24**）
 > 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）
-> 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md；模型与技术报告/SystemCard/Gemini37Flash模型卡深读.md
+> 对照笔记：[[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]；[[Gemini37Flash模型卡深读]]
 > **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**勿重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
-> **禁止编造：** 专家数/路由算法、未给的层宽表、训练 token 总量、视频管线细节若 TR 未写则标「未公开 / 仅 docs」。数字一律锚定 Table / 正文句。
+> 专家数/路由算法、层宽表、训练 token 总量、视频管线细节 TR 未写者标「未公开 / 仅 docs」。
 
 ---
 
@@ -49,7 +49,7 @@ archived: 2026-09-22
 
 ## 2. 相对 Gemini 2.5 / 3 Pro / 3.7 Flash 的「开源增量」对照
 
-> 左列锚本 PDF；右列仅作「已入库闭源卡已覆盖面」提示，**禁止**把 Gemini 未公开数字外推到 Gemma，也**禁止**把 Gemma 数字回填为 Gemini 架构主张。
+> 左列锚本 PDF；右列仅作「已入库闭源卡已覆盖面」提示；Gemini 未公开数字不外推到 Gemma，Gemma 数字也不回填为 Gemini 架构主张。
 
 | 维度 | Gemini 2.5 / 3 Pro / 3.7 Flash（已入库闭源卡） | **Gemma 4（本 PDF + docs）** | 开源增量读法 |
 |---|---|---|---|
@@ -117,7 +117,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 - 报告确认 MoE（Jacobs et al.）；给出 total/active **数量级**与命名 **A4B**。
 - **未公开：** 专家个数、共享/路由专家划分、top-$k$、负载均衡损失等。
 - docs 补充产品读法：生成时只激活约 **4B**，但 **26B 全量须装入内存**（路由）——与 Table 3「52.0 / 7.6」bf16 双口径一致。
-- → 记入「开源 MoE 小号样本」即可；**禁止**按 DeepSeek/Qwen MoE 史重写。
+- → 记入「开源 MoE 小号样本」即可，不按 DeepSeek/Qwen MoE 史重写。
 
 ---
 
@@ -176,7 +176,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 - 输入：主模型上一布 last-layer activations + token embeddings；4 层 Transformer **cross-attend** 主模型 KV（Figure 1）。
 - Drafter 宽度：E2B/E4B **d=256**；26B-A4B/31B **d=1024**；结构 **3 local + 1 global**。
 - E2B/E4B 解码优化：词表投影改为 **token cluster top-k** → 最终 matmul **$d×262k → d×4096$**，接受率相近。
-- → 与 B7 / 预定 **[[EAGLE3投机解码]] EAGLE-3** 划界：本卡只记 Gemma 官方 MTP 附头，不写投机解码通史。
+- → 与 [[推理引擎生态]] / 预定 **[[EAGLE3投机解码]] EAGLE-3** 划界：本卡只记 Gemma 官方 MTP 附头，不写投机解码通史。
 
 ---
 
@@ -254,7 +254,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 - 缓解：预训练过滤 PII/敏感；post-training 对齐；测试时 **不加 safety filters** 以测固有行为；称 text↔image 各尺寸「minimal policy violations」，相对 Gemma 3/3n 各类安全「major improvements」，并保持低 unjustified refusal。
 - 伦理关注点：bias/fairness；misinformation/misuse（指向 Responsible Generative AI Toolkit）；隐私（开发者须本地合规）。
 - 框架引用：Frontier Safety Framework（Google DeepMind, **2024** 介绍博文）——**本 PDF 无** 3.7 那种 April-2026 FSF 域表 / TCL alert。
-- → 交叉 B5 / [[可扩展监督与弱到强]] 即可；**禁止**把 3 Pro「CCL not reached」表抄入本卡。
+- → 交叉 [[安全红队与对抗评测]] / [[可扩展监督与弱到强]] 即可，不把 3 Pro「CCL not reached」表抄入本卡。
 
 ---
 
@@ -263,7 +263,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 | 议题 | 本卡只点到的咬合 |
 |---|---|
 | **[[端侧小模型]] on-device SLM** | E2B/E4B PLE、mobile QAT、LiteRT-LM 内存列、Pixel/Chrome 叙事 → **专篇留给 [[端侧小模型]]**（可与 MobileLLM/Phi-4 对照） |
-| B7 / **[[EAGLE3投机解码]]** 投机解码 | 官方 MTP drafter ≠ EAGLE-3 通史 |
+| [[推理引擎生态]] / **[[EAGLE3投机解码]]** 投机解码 | 官方 MTP drafter ≠ EAGLE-3 通史 |
 | [[多模态架构脉络]] 多模态 | encoder-free 12B 作「去掉独立编码器」开源样本 |
 | [[长上下文位置编码与系统侧]] 长上下文 | local/global + p-RoPE + KV 复用；窗长以 128k/256k 评测为准 |
 | [[推理时扩展TestTimeScaling]] thinking / TTS | thinking 控制符与轨迹格式；**无** budget 曲线 |
@@ -271,7 +271,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 
 ---
 
-## 9. 待核实 / 报告内张力
+## 9. 局限与待核实
 
 1. **26B-A4B 激活参口径：** Abstract **3.8B** vs Table 1 **2.8B (active)** vs Arena/docs **~4B** ——三处并存，引用时标明来源。
 2. **Video：** docs 写 E2B/E4B/12B native video；TR 正文主轴 text/image/audio → 视频编码/采样细节 **待 docs/模型卡补核**。
@@ -292,7 +292,7 @@ Gemma 4 把 Google 近月的「多模态 + 推理」能力，落成一套 **可�
 |---|---|
 | 一手 PDF | `https://arxiv.org/abs/2607.02770` ← https://arxiv.org/pdf/2607.02770 |
 | 辅 docs | https://ai.google.dev/gemma/docs/core （2026-07-08） |
-| 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md；模型与技术报告/SystemCard/Gemini37Flash模型卡深读.md |
+| 对照 | [[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]；[[Gemini37Flash模型卡深读]] |
 
 **检索截止：** 2026-09-22（Asia/Shanghai，CST）。数字与断言均来自上述 PDF/docs；未出现的专家拓扑、token 预算、视频栈细节未写入主张表。
 

@@ -8,7 +8,7 @@ aliases: [模型卡与SystemCard规范]
 archived: 2026-09-22
 ---
 
-# B-11　Model Card / System Card 规范
+# Model Card / System Card 规范
 
 > **攻坚线**：架构思想（主）
 > **跟读材料（官方优先）**：
@@ -18,11 +18,11 @@ archived: 2026-09-22
 > 2. Hugging Face Hub，《Model Cards》：https://huggingface.co/docs/hub/en/model-cards
 > - Annotated Template：https://huggingface.co/docs/hub/en/model-card-annotated
 > - Guidebook（引用 Mitchell；模板演进）：https://huggingface.co/docs/hub/en/model-card-guidebook
-> 3. **对照（增量，不重写各卡正文）**：A 表已入库深读卡
+> 3. **对照（增量，不重写各卡正文）**：已入库深读卡
 > - System Card 系：[[GPT5系统卡深读]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]
 > - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]
 > - [[MOC_模型与技术报告]]
-> **硬性约定**：写「文档体裁 → 字段接口 → 归档最小集」；**禁止**重写各厂卡的能力/安全数字与案例正文。禁止编造未在 Mitchell / HF / 已入库 TR 笔记中出现的字段名或承诺。未核对标「待核实」。
+> **范围**：写「文档体裁 → 字段接口 → 归档最小集」；不重写各厂卡的能力/安全数字与案例正文。
 
 ---
 
@@ -45,15 +45,15 @@ Mitchell et al.（§1）指出：当时没有标准化流程，用来沟通**已
  → 伦理考量 + 保留意见与建议
 `
 
-### 1.2 研究会语境：A 表归档需要统一字段，而非再抄一篇卡
+### 1.2 研究会语境：归档需要统一字段，而非再抄一篇卡
 
-议程（[[模型卡与SystemCard规范]] / B-11）写明：归档规范要求「官方 URL + 日期 + 是否 thinking/工具」等；仓库已有多份 System / Model Card PDF 与 TR 深读卡，但缺「**学术起源 → HF 实践 → 厂商 System Card**」的规范短笔记，便于归档员与评测议题共建字段。
+研究会归档规范要求「官方 URL + 日期 + 是否 thinking/工具」等；仓库已有多份 System / Model Card PDF 与 TR 深读卡，但缺「**学术起源 → HF 实践 → 厂商 System Card**」的规范短笔记，便于归档员与评测议题共建字段。
 
 因此本笔记只做三件事：
 
 1. 固定 Mitchell / HF 的**经典字段谱系**；
-2. 对照 A 表实践，标出 System Card 相对 Model Card 的**体裁差异**（不重写正文）；
-3. 给出研究会**归档最小字段建议**（可与 [[评测与排行榜可靠性]] / B-5 交叉，不替代各 TR 卡）。
+2. 对照已入库卡实践，标出 System Card 相对 Model Card 的**体裁差异**（不重写正文）；
+3. 给出研究会**归档最小字段建议**（可与 [[评测与排行榜可靠性]] / [[安全红队与对抗评测]] 交叉，不替代各 TR 卡）。
 
 ---
 
@@ -111,11 +111,11 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-## 三、System Card 实践差异（对照 A 表已入库卡，不重写正文）
+## 三、System Card 实践差异（对照已入库卡，不重写正文）
 
 ### 3.1 命名与体量：同一词根，不同产品形态
 
-| 维度 | 经典 Model Card（Mitchell / 短 HF README） | A 表所见「厂商卡」实践（据各 TR 元信息 / PDF TOC） |
+| 维度 | 经典 Model Card（Mitchell / 短 HF README） | 已入库「厂商卡」实践（据各 TR 元信息 / PDF TOC） |
 |------|--------------------------------------------|-----------------------------------------------------|
 | 典型页数 | Mitchell 倡「一至两页」短记录；示例为插图卡 | GPT-5 SC **60** 页；Claude 4 SC **124** 页；Claude Opus 4.5 SC **153** 页；Gemini 3 Pro MC **10** 页；Grok 4 MC **8** 页（各 TR 笔记） |
 | 标题习惯 | Model Card | OpenAI / Anthropic 多用 **System Card**；Google DeepMind Gemini 3 Pro 仍称 **Model Card**；xAI Grok 4/4.1 称 Model Card，**Grok 4.20 改称 System Card**（见 [[Grok4模型卡深读]] §3.4） |
@@ -147,17 +147,17 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 2. **从「单模型工件」到「系统」**：OpenAI 强调统一系统、router、thinking 变体、工具与防护栈；Anthropic 强调 hybrid thinking、effort、计算机使用与 ASL；卡名 System Card 与此一致。
 3. **从「一次发布」到「卡族」**：主卡 + Addendum + Update；以及 Preview vs GA（GPT-5.6 TR）。归档必须记下**卡类型**与**相对哪张主卡**。
 4. **名称漂移**：xAI 同系文档可从 Model Card 改称 System Card（[[Grok4模型卡深读]] §3.4），**不能**仅凭文件名推断字段完备度。
-5. **HF 机读层与厂商 PDF 层并行**：开源权重发布仍大量依赖 HF README/YAML；闭源旗舰则以 PDF SC/MC 为权威。研究会 A 表两者都收，字段模板需能覆盖。
+5. **HF 机读层与厂商 PDF 层并行**：开源权重发布仍大量依赖 HF README/YAML；闭源旗舰则以 PDF SC/MC 为权威。研究会库内两者都收，字段模板需能覆盖。
 
 ---
 
-## 四、归档字段建议（服务 A 表，不替代 TR 正文）
+## 四、归档字段建议（服务归档，不替代 TR 正文）
 
-下列为**入库登记 / 深读卡元信息**建议最小集。设计原则：能回答「这是哪份官方工件、评了什么面、能否与别家横比」，且与议程「官方 URL + 日期 + thinking/工具」对齐。取值一律来自 PDF/官网或标「未公开 / 待核实」。
+下列为**入库登记 / 深读卡元信息**建议最小集。设计原则：能回答「这是哪份官方工件、评了什么面、能否与别家横比」，且覆盖归档规范要求的「官方 URL + 日期 + thinking/工具」。取值一律来自 PDF/官网或标「未公开 / 待核实」。
 
 ### 4.1 工件身份（每张卡必填）
 
-| 字段 | 说明 | 取值提示（据 A 表实践） |
+| 字段 | 说明 | 取值提示（据已入库卡实践） |
 |------|------|------------------------|
 | `doc_title` | 封面/元数据标题 | 如 “GPT-5 System Card”；注意元数据 Title 可能误标 Preview（见 GPT-5.6 TR） |
 | `doc_genre` | 体裁枚举 | `model_card` \| `system_card` \| `system_card_addendum` \| `system_card_update` \| `tech_report` \| `hf_readme` |
@@ -213,7 +213,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 `标题 | 机构 | 封面/修订日 | 页数 | 官方 PDF URL | 官方落地页 | 体裁 | 相对前卡关系 | 治理框架 | thinking/工具表面（原文有则填）`
 
-正文切片仍按 A 表「对齐 / 推理 / 架构…」派工，**本 B-11 不规定能力数字怎么摘**。
+正文切片仍按「对齐 / 推理 / 架构…」主题分工，**本笔记不规定能力数字怎么摘**。
 
 ---
 
@@ -229,19 +229,19 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
  YAML 服务发现与小部件；Mitchell §4.7 要求的 unitary/intersectional 结果仍须在正文（或另文）给出。`model-index` 分数≠分群公平分析。
 
 4. **「把各厂 SC 安全表直接纵向比出谁更安全」**
- 协议、是否去 safeguard、语言覆盖、自评 vs 外部、Preview vs GA 均可能不同（Grok 4.1 对旧卡英文-only refusal 的修正；Addendum 与 Update 的「largely the same」）。横比前先填 §4.3 的 `eval_axes` 与协议备注。参见 [[评测与排行榜可靠性]]、`B-5`。
+ 协议、是否去 safeguard、语言覆盖、自评 vs 外部、Preview vs GA 均可能不同（Grok 4.1 对旧卡英文-only refusal 的修正；Addendum 与 Update 的「largely the same」）。横比前先填 §4.3 的 `eval_axes` 与协议备注。参见 [[评测与排行榜可靠性]]、[[安全红队与对抗评测]]。
 
 5. **「归档只要最新卡，旧卡可删」**
  TOXICITY v1→v5 示例与 Claude/OpenAI Changelog 均表明：**差分本身是证据**。应保留版本链（`relation_to_prior` / `superseded_by`），而不是只留最新 PDF。
 
 6. **「训练数据一节越详越好，可从 SC 反推完整配比」**
- Mitchell §4.6 已承认专有数据可只给分布级信息；A 表多张 SC/MC 对数据仅有高层句。缺细节标「未公开」，禁止用二手博客补全当官方字段。
+ Mitchell §4.6 已承认专有数据可只给分布级信息；已入库多张 SC/MC 对数据仅有高层句。缺细节标「未公开」，不用二手博客补全当官方字段。
 
 7. **「重写一遍卡正文当作规范笔记」**
- 本议题（议程 B-11）服务字段统一；能力/红队/Preparedness 数字已在对应 `TR-*` 与 `B-5`。重复粘贴会造成双源漂移。
+ 本笔记服务字段统一；能力/红队/Preparedness 数字已在对应技术报告深读卡与 [[安全红队与对抗评测]]。重复粘贴会造成双源漂移。
 
 8. **「o1 / 早期 SC 与 2025–2026 旗舰卡字段同构」**
- [[模型卡与SystemCard规范]] 入口曾列 o1 System Card（arXiv:2412.16720）作范例；体裁同属 System Card，但目录与威胁模型随产品代际扩展。引用时标注代际，勿假设字段一一对应。（o1 卡本笔记未展开深读。）
+ o1 System Card（arXiv:2412.16720）可作早期范例；体裁同属 System Card，但目录与威胁模型随产品代际扩展。引用时标注代际，勿假设字段一一对应。（o1 卡本笔记未展开深读。）
 
 ---
 
@@ -274,9 +274,9 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ### 相关研究会笔记
 
-- 安全与评测/安全红队与对抗评测.md：红队方法谱系 ↔ SC 安全章
-- 安全与评测/评测与排行榜可靠性.md：榜单/去污/协议 ↔ 卡内能力表
-- Harness/智能体与工具/智能体工具与长程任务.md：工具/智能体表面 ↔ `has_tools`
+- [[安全红队与对抗评测]]：红队方法谱系 ↔ SC 安全章
+- [[评测与排行榜可靠性]]：榜单/去污/协议 ↔ 卡内能力表
+- [[智能体工具与长程任务]]：工具/智能体表面 ↔ `has_tools`
 - [[MOC_模型与技术报告]]
 
 ### 入口提及、本笔记未展开
@@ -285,7 +285,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-*起草说明：Mitchell 字段与主张回溯自官方报告（https://arxiv.org/abs/1810.03993）；HF 结构回溯自 Hub 文档与 Annotated Template 页；厂商差异仅使用已入库 TR 笔记的元信息与目录级描述，不重写各卡评测数字。禁止用未核实来源补字段。*
+*主要来源：Mitchell 字段与主张据 https://arxiv.org/abs/1810.03993 ；HF 结构据 Hub 文档与 Annotated Template 页；厂商差异仅用已入库 TR 笔记的元信息与目录级描述。*
 
 ## 相关笔记
 

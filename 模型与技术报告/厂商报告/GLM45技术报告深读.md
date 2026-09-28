@@ -1,6 +1,6 @@
 ---
 title: GLM-4.5 Technical Report 深读笔记
-topic: TR-GLM-4.5
+topic: GLM45技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -202,9 +202,9 @@ Base（Table 2）：GLM-4.5-Base 355B/32B；内部评测框架；未训指令数
 
 ---
 
-## 四、待核实与引用
+## 四、局限、待核实与引用
 
-### 4.1 待核实（禁止编造）
+### 4.1 局限与待核实
 
 | # | 项目 | 原因 |
 |---|---|---|
@@ -245,7 +245,7 @@ Base（Table 2）：GLM-4.5-Base 355B/32B；内部评测框架；未训指令数
 - [[KimiK2技术报告深读]]
 - [[GLM45技术报告深读]]
 - [[MiniMaxM1技术报告深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[混合专家架构]]

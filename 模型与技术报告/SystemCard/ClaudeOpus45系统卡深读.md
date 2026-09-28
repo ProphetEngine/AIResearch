@@ -1,6 +1,6 @@
 ---
 title: Claude Opus 4.5 System Card 专项深读卡
-topic: TR-Claude-Opus-4.5
+topic: ClaudeOpus45系统卡深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -12,8 +12,8 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）**（agentic / thinking / 工具面与 RSP 安全评测如何写进产品旋钮）
 > 锚点：Anthropic, *System Card: Claude Opus 4.5*（封面 **November 2025**；Changelog 至 **December 5, 2025**）
 > 官方 PDF：`https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf`（**153** 页；Title: Claude Opus 4.5 System Card）
+> 发布页：https://www.anthropic.com/news/claude-opus-4-5
 > 对照笔记：[[智能体工具与长程任务]]、[[评测与排行榜可靠性]]；Claude 4 主卡 PDF：https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf
-> **禁止编造**：下文数字与主张均锚定原文；未在卡中出现的训练细节 / 未给出的 GitHub URL 标「待核实」。
 
 ---
 
@@ -155,9 +155,9 @@ Claude Opus 4.5 是 Anthropic 在 ASL-3 下部署的 hybrid 旗舰；本卡相�
 
 ## 四、相对 Claude 4 System Card / [[智能体工具与长程任务]] / [[评测与排行榜可靠性]] 的增量
 
-### 4.1 相对 *Claude 4 System Card*（Opus 4 & Sonnet 4，P2 已跟读）
+### 4.1 相对 *Claude 4 System Card*（Opus 4 & Sonnet 4）
 
-| 维度 | Claude 4 主卡（P2 摘要） | Opus 4.5 本卡增量（据原文） |
+| 维度 | Claude 4 主卡（摘要） | Opus 4.5 本卡增量（据原文） |
 |---|---|---|
 | Capabilities 专节 | 近五卡刻意少写能力、留给 blog | **整章 §2** 回写，并链「new Github repository」（§2.1；**具体 URL 待核实**） |
 | Thinking 旋钮 | Hybrid + extended；thinking summaries | 保留 hybrid；**新增 effort**（覆盖工具/结果 token） |
@@ -191,9 +191,9 @@ Claude Opus 4.5 是 Anthropic 在 ASL-3 下部署的 hybrid 旗舰；本卡相�
 
 ---
 
-## 五、待核实与引用
+## 五、局限、待核实与引用
 
-### 5.1 待核实
+### 5.1 局限与待核实
 
 1. §2.1「new Github repository」的**确切 URL** 与是否含全部能力评测 prompt（卡内未印完整链接）。
 2. ARC-AGI-1 Changelog：先前误述「只训 public train」→ 实为 reshuffled train/test（含 public test）；数字来自 **semi-private**——引用 Fig 2.10 时核对 **Nov 24, 2025** 后版本。
@@ -215,8 +215,6 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 
 ---
 
-*草稿状态：draft。修订时优先同步 System Card Changelog 与官方评测协议变更；数字禁止离开原文脚注单独传播。*
-
 ## 相关笔记
 
 ### 技术报告专项
@@ -226,7 +224,7 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 - [[GPT5系统卡深读]]
 - [[Gemini25技术报告深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[开源与闭源前沿模型谱系]]

@@ -1,6 +1,6 @@
 ---
 title: Grok 4 Model Card 专项深读卡
-topic: TR-Grok-4
+topic: Grok4模型卡深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 主锚点：xAI, *Grok 4 Model Card*（Last updated: **August 20, 2025**）
 > 官方 PDF：`https://data.x.ai/2025-08-20-grok-4-model-card.pdf`（**8** 页；CreationDate: 2025-08-22 15:02:14 CST）
 > 官方 URL：https://data.x.ai/2025-08-20-grok-4-model-card.pdf
-> **禁止编造**：参数量、层数、训练算力、学术能力榜（如 MMLU / SWE-bench）等**全文未披露**；下文数字与主张均锚定原文表格/段落。
+> 参数量、层数、训练算力、学术能力榜（如 MMLU / SWE-bench）等**全文未披露**。
 
 **同族已另卡（见 §三）：**
 
@@ -217,9 +217,9 @@ Grok 4 卡是一份 **8 页、几乎纯安全评测** 的 model card：能力侧
 
 ---
 
-## 四、待核实与引用
+## 四、局限、待核实与引用
 
-### 4.1 待核实 / 缺口（刻意不编造）
+### 4.1 局限与待核实
 
 1. **通用能力数字**：Grok 4 / 4.1 / 4.20 官方卡均**未**给出 MMLU、GPQA、SWE-bench、LiveCodeBench 等——若需能力深读，须另找 xAI blog / API docs / 第三方榜（**待核实**，本卡不填）。
 2. **参数量、架构（dense/MoE）、上下文窗口、知识截止日期**：三卡正文均未写；4.20 API 文档网页称 context 等——**属 docs 层，非 model card 原文**，引用时须另开源。
@@ -255,5 +255,5 @@ Grok 4 卡是一份 **8 页、几乎纯安全评测** 的 model card：能力侧
 - [[KimiK2技术报告深读]]
 - [[Llama4待核实备忘]]
 - [[Mistral3公告短卡]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

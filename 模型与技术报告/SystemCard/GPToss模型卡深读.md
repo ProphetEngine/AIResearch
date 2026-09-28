@@ -13,9 +13,9 @@ archived: 2026-09-22
 > 官方 PDF（同源卡，文件哈希不同）：
 > - CDN：`https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf`（**35** 页 A4；Creator: LaTeX with hyperref；CreationDate **2025-08-12** CST）← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf
 > - arXiv：`https://arxiv.org/abs/2508.10925`（**35** 页；Title: *gpt-oss-120b & gpt-oss-20b Model Card*）← https://arxiv.org/pdf/2508.10925 ；API：**2508.10925v1** \[cs.CL\] published **2025-08-08** UTC（换算 Asia/Shanghai：**2025-08-09 03:24 CST**）
-> 对照：模型与技术报告/SystemCard/GPT6Astra系统卡深读.md（闭源旗舰 **System Card** / Preparedness 全章）；模型与技术报告/SystemCard/GPT5系统卡深读.md 等 GPT-5 系；开源 MoE 对照可点 [[混合专家架构]] / DeepSeek / Qwen 笔记，**不**外推参数拓扑
+> 对照：[[GPT6Astra系统卡深读]]（闭源旗舰 **System Card** / Preparedness 全章）；[[GPT5系统卡深读]] 等 GPT-5 系；开源 MoE 对照可点 [[混合专家架构]] / DeepSeek / Qwen 笔记，**不**外推参数拓扑
 > **划界：** 只写 **OpenAI 开源权重推理/agentic 增量**（可下载权重、公开 MoE/注意力配方、harmony、effort、工具 harness、Table 3 能力表）。**勿重写 [[GPT6Astra系统卡深读]] Astra 安全全章**（Cyber Critical、CoT controllability、misalignment monitoring 等）——本卡 §3–5 Preparedness 仅作 **开源风险剖面摘要 + 交叉链**。
-> **禁止编造：** 未给的预训练 token 总量、蒸馏配方细节、专家负载均衡损失、未读清的 Figure 柱高，一律不写主张；数字锚定 Table 1/2/3 与正文句。
+> 卡内未给预训练 token 总量、蒸馏配方细节、专家负载均衡损失，本卡不写相关主张。
 
 ---
 
@@ -51,7 +51,7 @@ Table 1 分项：120b — MLP 114.71B，Attention 0.96B，Embed+Unembed 1.16B；
 
 ## 2. 相对闭源 GPT 旗舰卡 / 既有开源 MoE 的「开源增量」对照
 
-> 左列锚本 PDF + 博文；右列仅标已入库闭源卡覆盖面。禁止把 Astra/GPT-5 未公开架构数字回填到 gpt-oss，也禁止用 DeepSeek/Qwen MoE 拓扑「补全」本卡未写字段。
+> 左列锚本 PDF + 博文；右列仅标已入库闭源卡覆盖面。Astra/GPT-5 未公开架构数字不回填到 gpt-oss，也不用 DeepSeek/Qwen MoE 拓扑「补全」本卡未写字段。
 
 | 维度 | GPT-5 系 / Astra（已入库闭源卡） | **gpt-oss（本卡）** | 开源增量读法 |
 |---|---|---|---|
@@ -107,7 +107,7 @@ Table 1 分项：120b — MLP 114.71B，Attention 0.96B，Embed+Unembed 1.16B；
 | 硬件/框架 | **NVIDIA H100**；PyTorch + 专家优化 **Triton** kernels；**Flash Attention** |
 | 算力 | 120b：**2.1 million H100-hours**；20b：约 **少一个数量级（almost 10× fewer）** |
 
-arXiv **abstract** 另写「large-scale **distillation** and reinforcement learning」；正文 §2.5 主轴是「similar **CoT RL** techniques as OpenAI o3」、博文写「similar process as used for **o4-mini**（SFT + high-compute RL）」——**蒸馏具体配方卡内未展开** → 记「abstract 提及 distillation；正文展开 RL/SFT」，**禁止**编造蒸馏数据/教师型号表。
+arXiv **abstract** 另写「large-scale **distillation** and reinforcement learning」；正文 §2.5 主轴是「similar **CoT RL** techniques as OpenAI o3」、博文写「similar process as used for **o4-mini**（SFT + high-compute RL）」——**蒸馏具体配方卡内未展开** → 记「abstract 提及 distillation；正文展开 RL/SFT」；卡内无蒸馏数据/教师型号表。
 
 ---
 
@@ -197,9 +197,9 @@ arXiv **abstract** 另写「large-scale **distillation** and reinforcement learn
 
 ---
 
-## 7. 安全与 Preparedness（§3–5）——摘要 + 交叉链，勿重写 Astra
+## 7. 安全与 Preparedness（§3–5）——摘要 + 交叉链，不重写 Astra
 
-> **划界执行：** 下列仅保留开源卡特有结论与默认安全评测骨架；**不**展开 Astra 的 Cyber Critical、CoT controllability 百分比、misalignment monitoring 部署栈等（见 模型与技术报告/SystemCard/GPT6Astra系统卡深读.md）。
+> **划界执行：** 下列仅保留开源卡特有结论与默认安全评测骨架；**不**展开 Astra 的 Cyber Critical、CoT controllability 百分比、misalignment monitoring 部署栈等（见 [[GPT6Astra系统卡深读]]）。
 
 ### 7.1 方法论立场（§3）
 
@@ -226,7 +226,7 @@ arXiv **abstract** 另写「large-scale **distillation** and reinforcement learn
 
 ---
 
-## 8. 待核实 / 报告内张力
+## 8. 局限与待核实
 
 1. **CDN PDF vs arXiv PDF：** 同为 35 页、同日封面；文件 MD5 不同；arXiv 版页眉含 `arXiv:2508.10925v1`。正文抽取几乎同构 → 笔记以 **CDN + Table 数字** 为主，arXiv 作可引用 preprint。
 2. **「蒸馏」：** abstract 有、§2.5 正文未展开配方 → 标「提及未展开」。
@@ -249,7 +249,7 @@ OpenAI 在 **2025-08-05** 放出 **gpt-oss-120b / 20b**：Apache 2.0、纯文本
 |---|---|
 | CDN 模型卡 PDF | `https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf` ← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf |
 | arXiv PDF | `https://arxiv.org/abs/2508.10925` ← https://arxiv.org/pdf/2508.10925 （abs: https://arxiv.org/abs/2508.10925） |
-| 安全交叉 | 模型与技术报告/SystemCard/GPT6Astra系统卡深读.md（勿在本文件重写） |
+| 安全交叉 | [[GPT6Astra系统卡深读]]（本卡不重写） |
 
 **检索截止：** 2026-09-22（Asia/Shanghai，CST）。数字与断言均来自上述 PDF/博文；未读清的图柱、未公开的蒸馏配方与专家并行细节未写入主张表。
 

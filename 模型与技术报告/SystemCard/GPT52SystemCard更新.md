@@ -1,5 +1,5 @@
 ---
-topic: TR-GPT-5.2
+topic: GPT52SystemCard更新
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -11,8 +11,7 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）**
 > 锚点：OpenAI, *Update to GPT-5 System Card: GPT-5.2*（封面日期 **December 11, 2025**）
 > 官方 PDF：`https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf`（**27** 页；CreationDate/ModDate **2025-12-12** 00:46:24 CST）
-> 前序卡：模型与技术报告/SystemCard/GPT5系统卡深读.md；扫描清单：模型与技术报告/SystemCard与TR扫描2025至2026.md
-> **禁编造**：能力/安全数字仅写正文或表格显式值；Figure 1–16 等图内百分点未可靠抽出处标「待核实读图」。
+> 前序卡：[[GPT5系统卡深读]]
 
 ---
 
@@ -139,9 +138,9 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 
 ---
 
-## 4. 待核实与引用
+## 4. 局限、待核实与引用
 
-### 4.1 待核实
+### 4.1 局限与待核实
 
 1. Figure **1–4**（幻觉）、**5–8**（bio）、**9–10**（CTF / CVE）、**11–16**（self-improve）图内精确百分点—— 未抽出，**禁止凭记忆填榜**；需人工读图或 OCR。
 2. 封面 **2025-12-11** vs **2025-12-12**——是否再导出；对照官方页 Last updated。
@@ -164,15 +163,12 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 
 ### 4.3 相关研究会笔记
 
-- 模型与技术报告/SystemCard/GPT5系统卡深读.md — GPT-5 主卡（High Bio 防护栈、safe-completions、router）
-- 模型与技术报告/SystemCard与TR扫描2025至2026.md — 5.1 / 5.2 / 5.6 下载与系列清单
-- 模型与技术报告/开源与闭源前沿模型谱系.md — 谱系产品叙事
-- Harness/智能体与工具/智能体工具与长程任务.md — 工具 / 长程 / 注入
-- 安全与评测/评测与排行榜可靠性.md — 评测口径可靠性
+- [[GPT5系统卡深读]] — GPT-5 主卡（High Bio 防护栈、safe-completions、router）
+- [[开源与闭源前沿模型谱系]] — 谱系产品叙事
+- [[智能体工具与长程任务]] — 工具 / 长程 / 注入
+- [[评测与排行榜可靠性]] — 评测口径可靠性
 
 ---
-
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22（Asia/Shanghai）· status: draft · 仅据官方 PDF 原文 · 禁止编造*
 
 ## 相关笔记
 
@@ -184,5 +180,5 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 - [[Gemini3Pro模型卡深读]]
 - [[ClaudeOpus41系统卡附录深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

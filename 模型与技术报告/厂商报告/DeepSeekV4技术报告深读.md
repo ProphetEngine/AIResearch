@@ -14,7 +14,7 @@ archived: 2026-09-22
 > **定位**：DeepSeek-V4 技术报告主题轴——补齐 [[DeepSeekV41Flash深读]] 多次声明的「V4 / V4-Flash / V4-Pro 无本仓库独立 TR」缺口。数字一律取自官方 PDF `https://arxiv.org/abs/2606.19348`（2026-09-22 CST）。
 > **攻坚线**：**架构思想（主）** + **评测字段（文内长上下文 / agent 表，辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线与 DualPipe/FP8 分块配方（见 [[混合专家架构]]、[[DeepSeekV3训练与MoE基建]]）；DSA 两阶段继续训与 GRPO 四稳定化全文（见 [[DeepSeekV32技术报告深读]]）；**CED / CSA2 / FP4 main KV / SWA Bounded Replay** 全文（见 **[[DeepSeekV41Flash深读]]**）；通用 KV 量化通史（见 **[[KV缓存量化与压缩]]**，本卡只录 V4 **产品解**）。
-> **禁止编造**：本 PDF 自称 **preview**；对照锚点是 **V3 / V3.2**，**不是** V4.1-Flash → 不得把 [[DeepSeekV41Flash深读]] 的 CED/CSA2 数字回贴为 V4 主张；V4.1-Flash 侧数字仅作划界引用。
+> 本 PDF 自称 **preview**；对照锚点是 **V3 / V3.2**，**不是** V4.1-Flash，[[DeepSeekV41Flash深读]] 的 CED/CSA2 数字不回贴为 V4 主张；V4.1-Flash 侧数字仅作划界引用。
 
 ---
 
@@ -283,16 +283,16 @@ archived: 2026-09-22
 | **[[DeepSeekV41Flash深读]] V4.1-Flash** | CED / CSA2 / FP4 main KV / SWA Bounded Replay | 本卡立 **V4 本体** CSA–HCA、三策略 on-disk SWA、异构 KV 布局；**不写** CED/CSA2 全文 |
 | **[[KV缓存量化与压缩]] KV 量化通史** | 通史 / 误差轴 | 只录 V4：**RoPE-BF16+其余 FP8**、indexer FP4、expert FP4 QAT、磁盘三策略 |
 | **[[混合专家架构]] / [[长上下文位置编码与系统侧]] / [[注意力效率族MQA到MLA]]** | MoE 史、长上下文通论、注意力效率通论 | 本代数：284B/13B、1.6T/49B、$m=4$/$m'=128$、1M 27%/10% 等 |
-| **[[AI基础设施总览]] / B7** | Infra / 引擎选型通史 | MegaMoE、TileLang、contextual parallelism——点到为止 |
+| **[[AI基础设施总览]] / [[推理引擎生态]]** | Infra / 引擎选型通史 | MegaMoE、TileLang、contextual parallelism——点到为止 |
 
 **一句话：**
-V3/V3.2 卡讲清「基座与 DSA/RL」；[[DeepSeekV41Flash深读]] 讲清「在 V4 系上再压 KV 的 CED/CSA2/FP4/Bounded Replay」；**本卡讲清 V4 本体如何用 CSA+HCA+mHC+Muon 把百万窗做成可训可服的开源旗舰锚点**——并显式禁止把 V4.1 增量回贴到 V4。
+V3/V3.2 卡讲清「基座与 DSA/RL」；[[DeepSeekV41Flash深读]] 讲清「在 V4 系上再压 KV 的 CED/CSA2/FP4/Bounded Replay」；**本卡讲清 V4 本体如何用 CSA+HCA+mHC+Muon 把百万窗做成可训可服的开源旗舰锚点**——V4.1 增量不回贴到 V4。
 
 ---
 
-## 八、待核实与引用
+## 八、局限、待核实与引用
 
-### 8.1 待核实（禁止当作已确认）
+### 8.1 局限与待核实
 
 1. **CSA:HCA 精确层交错比 / 层类型表：** 正文只写「interleaved」+ 前层特例；细表需开源 inference 或后续 blog。
 2. **Fig 1 右图逐点 FLOPs/KV 曲线：** 文本层给 1M 相对比例，无逐位置表。
@@ -313,10 +313,10 @@ V3/V3.2 卡讲清「基座与 DSA/RL」；[[DeepSeekV41Flash深读]] 讲清「�
 
 ### 8.3 关联笔记
 
-- [[DeepSeekV41Flash深读]] DeepSeek-V4.1-Flash：模型与技术报告/厂商报告/DeepSeekV41Flash深读.md（增量卡；对照基线即本 TR）
-- [[DeepSeekV3训练与MoE基建]]：模型与技术报告/厂商报告/DeepSeekV3训练与MoE基建.md
-- [[DeepSeekV32技术报告深读]]：模型与技术报告/厂商报告/DeepSeekV32技术报告深读.md
-- [[KV缓存量化与压缩]] KV 量化通史：推理与基础设施/KvQuant/KV缓存量化与压缩.md（通史；本卡只录产品解）
+- [[DeepSeekV41Flash深读]] DeepSeek-V4.1-Flash：[[DeepSeekV41Flash深读]]（增量卡；对照基线即本 TR）
+- [[DeepSeekV3训练与MoE基建]]
+- [[DeepSeekV32技术报告深读]]
+- [[KV缓存量化与压缩]] KV 量化通史：[[KV缓存量化与压缩]]（通史；本卡只录产品解）
 - [[混合专家架构]] / [[长上下文位置编码与系统侧]] / [[注意力效率族MQA到MLA]] / [[AI基础设施总览]] / [[智能体工具与长程任务]]：MoE、长上下文、注意力效率、Infra、agent
 - [[MOC_模型与技术报告]]
 

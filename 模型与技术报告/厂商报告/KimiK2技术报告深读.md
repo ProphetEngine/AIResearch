@@ -1,6 +1,6 @@
 ---
 title: "技术报告专项：Kimi K2 Technical Report 深读切片（架构 / MoE / Infra）"
-topic: TR-Kimi-K2
+topic: KimiK2技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -86,7 +86,7 @@ archived: 2026-09-22
 | 语料域 | Web Text / Code / Mathematics / Knowledge；处理管线多沿用 Kimi K1.5；知识/数学域强调 **rephrasing** 提 token utility |
 | 中尺度对比实验（Muon 不稳定） | 9B activated / 53B total MoE + vanilla Muon：max attention logits 快速 **>1000** |
 
-**MuonClip / QK-Clip 机制要点（§2.1；不编造超参外数字）**：
+**MuonClip / QK-Clip 机制要点（§2.1）**：
 
 - 问题：Muon 相对 AdamW 更易出现 **exploding attention logits**；logit soft-cap 不够；**QK-Norm 不适用于 MLA**（推理时 Key 未完全物化）。
 - 做法：用 batch 内 per-head max logit $S_{\max}^h$ 作信号；超过 $\tau$ 时 **post-update** 缩放 $W_q/W_k$（**不改当前步 forward/backward**）。
@@ -176,9 +176,9 @@ archived: 2026-09-22
 
 ---
 
-## 六、待核实与引用
+## 六、局限、待核实与引用
 
-### 6.1 待核实（禁止当作已确认）
+### 6.1 局限与待核实
 
 1. arXiv **首发 / v1 日期**与 revision 历史：本 PDF 页眉仅见 **v2 · 3 Feb 2026**；写「首发日」需回查 https://arxiv.org/abs/2507.20534。
 2. 摘要「**1T / 32B**」vs Table 2「**1.04T / 32.6B**」vs 引言「1.04 trillion / 32 billion」——三处口径并存；对外引用建议标明来源表/段。
@@ -196,10 +196,10 @@ archived: 2026-09-22
 
 ### 6.3 关联笔记
 
-- [[混合专家架构]]：架构/MoE与稀疏/混合专家架构.md（MoE 史线）
-- [[开源与闭源前沿模型谱系]]：模型与技术报告/开源与闭源前沿模型谱系.md（谱系）
-- [[AI基础设施总览]]：推理与基础设施/AI基础设施总览.md（Infra 通论）
-- [[DeepSeekV3训练与MoE基建]]：模型与技术报告/厂商报告/DeepSeekV3训练与MoE基建.md（V3 对照底表）
+- [[混合专家架构]]（MoE 史线）
+- [[开源与闭源前沿模型谱系]]（谱系）
+- [[AI基础设施总览]]（Infra 通论）
+- [[DeepSeekV3训练与MoE基建]]（V3 对照底表）
 
 ## 相关笔记
 
@@ -214,7 +214,7 @@ archived: 2026-09-22
 - [[KimiK2技术报告深读]]
 - [[GLM45技术报告深读]]
 - [[MiniMaxM1技术报告深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[混合专家架构]]

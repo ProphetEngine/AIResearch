@@ -1,6 +1,6 @@
 ---
 title: Gemini 2.5 Technical Report 深读笔记
-topic: TR-Gemini-2.5
+topic: Gemini25技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：Gemini Team, Google, *Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities*
 > 官方 PDF：`https://arxiv.org/abs/2507.06261`（**73** 页 A4）
-> 本卡边界：只写报告正文/表已公开内容；**禁止**补参数量、专家数、未写明的层图。对照增量以本地笔记 **[[开源与闭源前沿模型谱系]]**、**[[多模态架构脉络]]**（并旁及 [[长上下文位置编码与系统侧]] / [[推理时扩展TestTimeScaling]] / [[AI基础设施总览]]）为准。
+> 本卡边界：只写报告正文/表已公开内容，不补参数量、专家数、未写明的层图；安全章（CBRN / cyber CTF 风格评测图等）仅作「未达 CCL」元结论索引，不转写攻击步骤。对照增量以 **[[开源与闭源前沿模型谱系]]**、**[[多模态架构脉络]]**（并旁及 [[长上下文位置编码与系统侧]] / [[推理时扩展TestTimeScaling]] / [[AI基础设施总览]]）为准。
 
 ---
 
@@ -26,7 +26,7 @@ archived: 2026-09-22
 | 通信 | gemini-report@google.com | 封面页脚 |
 | arXiv 页眉 | **arXiv:2507.06261v6** \[cs.CL\] **19 Dec 2025** | PDF 第 1 页页眉 |
 | PDF 页数 | **73** | |
-| HTML / PDF | https://arxiv.org/abs/2507.06261 ；https://arxiv.org/pdf/2507.06261 | arXiv |
+| HTML / PDF | https://arxiv.org/abs/2507.06261 ；https://arxiv.org/pdf/2507.06261 ；官方镜像 https://storage.googleapis.com/deepmind-media/gemini/gemini_v2_5_report.pdf | arXiv / Google DeepMind |
 | 系列定位 | Gemini **2.X** 族：2.5 Pro、2.5 Flash，以及更早的 2.0 Flash、2.0 Flash-Lite；自称覆盖 capability–cost **Pareto frontier** | Abstract；§1；§6 |
 | 相对 Gemini 1.5 | 原生多模态 + **>1M** 输入上下文 + native tool use；2.5 为 **thinking** 模型族；训练稳定与后训练（SFT/RM/RL）显著加码 | §1；§2 |
 | 核心产品主张（摘要级） | 2.5 Pro：coding / reasoning SoTA 叙事 + 多模态理解，可处理最长约 **3 小时**视频；2.5 Flash：可控 thinking budget 的 hybrid reasoning；2.0 Flash / Flash-Lite：低延迟低成本 | Abstract；Table 1 |
@@ -172,7 +172,7 @@ API 映射（Table 2）：`gemini-2.5-pro` / `gemini-2.5-flash` / `gemini-2.0-fl
 
 ## 四、相对 [[开源与闭源前沿模型谱系]] / [[多模态架构脉络]] 的增量
 
-> 对照对象：本地 模型与技术报告/开源与闭源前沿模型谱系.md、多模态与具身/视觉语言/多模态架构脉络.md（旁及 架构/注意力与长上下文/长上下文位置编码与系统侧.md、架构/推理时扩展TestTimeScaling.md、推理与基础设施/AI基础设施总览.md）。下列只写「博客/谱系卡 → 本技术报告」可核实的增量。
+> 对照对象：[[开源与闭源前沿模型谱系]]、[[多模态架构脉络]]（旁及 [[长上下文位置编码与系统侧]]、[[推理时扩展TestTimeScaling]]、[[AI基础设施总览]]）。下列只写「博客/谱系卡 → 本技术报告」可核实的增量。
 
 ### 4.1 相对 [[开源与闭源前沿模型谱系]]（前沿谱系）
 
@@ -215,13 +215,13 @@ Dense/MoE → **稀疏 MoE（参数量未公开）**；Thinking → **Dynamic + 
 | MMMU | 82.0% | 67.7% |
 | Humanity’s Last Exam（no tools） | 21.6% | 4.6% |
 
-Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚手架与尝试次数不同时禁止无脚注硬比**（[[开源与闭源前沿模型谱系]] 已警告）。
+Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚手架与尝试次数不同时不宜无脚注硬比**（[[开源与闭源前沿模型谱系]] 已警告）。
 
 ---
 
-## 五、待核实与引用
+## 五、局限、待核实与引用
 
-### 5.1 待核实（禁止当作已确认）
+### 5.1 局限与待核实
 
 | # | 项 | 原因 |
 |---|---|---|
@@ -248,7 +248,7 @@ Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚�
 | §5 | Safety / Frontier Safety Framework |
 | §6 | Discussion |
 
-### 5.3 本地笔记交叉
+### 5.3 相关笔记交叉
 
 | 笔记 | 关系 |
 |---|---|
@@ -261,12 +261,6 @@ Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚�
 
 ---
 
-## 附：写作约束备忘
-
-- 原文 https://arxiv.org/abs/2507.06261
-- 数字与断言均来自上述 PDF；未在报告出现的参数量、层图、训练 FLOPs **未写入正文表**。
-- 安全章（CBRN / cyber CTF 风格评测图等）仅作「未达 CCL」元结论索引，**不**转写攻击步骤。
-
 ## 相关笔记
 
 ### 技术报告专项
@@ -276,7 +270,7 @@ Table 4 另与 o3 / o4-mini / Claude 4 / Grok 3 / DeepSeek R1 等横比；**脚�
 - [[GPT5系统卡深读]]
 - [[Gemini25技术报告深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[开源与闭源前沿模型谱系]]

@@ -1,6 +1,6 @@
 ---
 title: MiniMax-M1 Technical Report 专项深读卡
-topic: TR-MiniMax-M1
+topic: MiniMaxM1技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：MiniMax, *MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention*（arXiv:2506.13585）
 > 官方 PDF：`https://arxiv.org/abs/2506.13585`（**22** 页 A4）
-> 本卡边界：数字与机制一律取自本 PDF 正文/表；**禁止**补 Text-01 未在本报告复述的层宽/隐层维等细节。对照增量旁及 **[[推理时扩展TestTimeScaling]]**（test-time scaling）、**[[长上下文位置编码与系统侧]]**（长上下文）、**[[AI基础设施总览]]**（AI Infra）、**[[注意力效率族MQA到MLA]]**（attention efficiency）。
+> 本卡边界：数字与机制一律取自本 PDF 正文/表，不补 Text-01 未在本报告复述的层宽/隐层维等细节。对照增量旁及 **[[推理时扩展TestTimeScaling]]**（test-time scaling）、**[[长上下文位置编码与系统侧]]**（长上下文）、**[[AI基础设施总览]]**（AI Infra）、**[[注意力效率族MQA到MLA]]**（attention efficiency）。
 
 ---
 
@@ -141,7 +141,7 @@ MiniMax-Text-01 base
 
 ---
 
-## 四、待核实与引用
+## 四、局限、待核实与引用
 
 ### 4.1 本 PDF 未给出 / 需外查
 
@@ -193,7 +193,7 @@ MiniMax-Text-01 base
 - [[KimiK2技术报告深读]]
 - [[GLM45技术报告深读]]
 - [[MiniMaxM1技术报告深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[混合专家架构]]

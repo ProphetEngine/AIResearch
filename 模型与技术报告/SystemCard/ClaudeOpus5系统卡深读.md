@@ -14,8 +14,8 @@ archived: 2026-09-22
 > 官方 PDF（用户指定 CDN）：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
 > 索引页：https://www.anthropic.com/system-cards（条目 **Claude Opus 5 / July 2026**）
 > 公告：https://www.anthropic.com/news/claude-opus-5（**Jul 24, 2026**）
-> 对照笔记：模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md（相对增量）；安全与评测/安全红队与对抗评测.md（**勿重写**红队方法全文）
-> **禁编造**：数字与主张仅锚定 Opus 5 System Card / 索引页链出的 5.1 卡正文；卡未提 Opus 4.5 时**不以 4.5 数字硬横比**。Fable/Mythos 5.1 **仅附录索引**，不全文重写。
+> 对照笔记：[[ClaudeOpus45系统卡深读]]（相对增量）；[[安全红队与对抗评测]]（**不重写**红队方法全文）
+> 卡未提 Opus 4.5 时**不以 4.5 数字硬横比**；Fable/Mythos 5.1 **仅附录索引**，不全文重写；不复述可操作攻击步骤。
 
 ---
 
@@ -48,7 +48,7 @@ archived: 2026-09-22
 | **§2 RSP evaluations** | CB-1/CB-2、AI R&D、对齐风险更新 | **重** |
 | **§3 Cyber** | 能力梯 + **分类器分层** + UK AISI ranges | **重** |
 | §4 Safeguards and harmlessness | 单轮/多轮/儿童/心理健康/偏见/选举 | 中（给可核对数字） |
-| §5 Agentic safety | 恶意 agent / 影响活动 / prompt injection | 中（点到为止，**不**扩写 B5） |
+| §5 Agentic safety | 恶意 agent / 影响活动 / prompt injection | 中（点到为止，**不**扩写 [[安全红队与对抗评测]]） |
 | **§6 Alignment assessment** | 行为审计、监控、诚实、白盒、规避能力 | **重** |
 | §7 Model welfare | 福利访谈 | 略 |
 | §8 Capabilities | SWE / agentic / 多模态等总表 | 中（相对 4.5 增量用） |
@@ -111,7 +111,7 @@ CB-1 配套缓解（§2.1.3.1 列举）：实时 classifier guards、guard 豁�
 
 Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completions（与 Mythos 5 可比），且面向完成用户任务而非独立目标；**无** sandbagging / 恶意 / oversight evasion 实例。
 
-> **与 B5 边界：** 此处只收 System Card 的**评测结论与监控接口**；红队流程、众包协议、偏好模型训练等见 安全与评测/安全红队与对抗评测.md，本篇不重写。
+> **与 [[安全红队与对抗评测]] 边界：** 此处只收 System Card 的**评测结论与监控接口**；红队流程、众包协议、偏好模型训练等见 [[安全红队与对抗评测]]，本篇不重写。
 
 ---
 
@@ -161,7 +161,7 @@ Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completi
 
 ---
 
-## 5. Safeguards / Agentic safety（可核对摘录，防与 B5 重复）
+## 5. Safeguards / Agentic safety（可核对摘录，防与 [[安全红队与对抗评测]] 重复）
 
 ### 5.1 无害率 / 过度拒绝（§4.1）
 
@@ -178,7 +178,7 @@ Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completi
 
 - 覆盖：恶意 Claude Code、恶意 computer use、自主有害影响活动、agent 场景 **prompt injection**（含外部红队与跨 coding/computer/browser 自适应攻击）。
 - Exec 总判：总体 **≥ Opus 4.8**，**prompt injection 鲁棒性**增益最大；helpful-only 在有害影响活动评测上仍远低于「能跑通自主行动」所需能力，完整训练模型继续拒绝。
-- **不**在此展开攻击话术、注入模板或红队工艺——见 B5。
+- **不**在此展开攻击话术、注入模板或红队工艺——见 [[安全红队与对抗评测]]。
 
 ---
 
@@ -208,9 +208,9 @@ Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / com
 
 ## 7. 相对 Opus 4.5 的增量（桥接说明）
 
-> **硬约束：** Opus 5 System Card **从未点名 Opus 4.5**；卡内定量对照主轴是 **Opus 4.8 / Fable 5 / Mythos 5**。下表把「已入库 4.5 深读卡」与「本卡 + 公告」做**结构/政策增量**对照，**禁止**把 4.5 的 SWE-bench Verified 80.9% 与 5 的 96.0% 当成同 harness 直接相减。
+> **对照前提：** Opus 5 System Card **从未点名 Opus 4.5**；卡内定量对照主轴是 **Opus 4.8 / Fable 5 / Mythos 5**。下表把「已入库 4.5 深读卡」与「本卡 + 公告」做**结构/政策增量**对照；4.5 的 SWE-bench Verified 80.9% 与 5 的 96.0% 不同 harness，不可直接相减。
 
-| 维度 | Opus 4.5（模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md，封面 Nov 2025） | Opus 5（本卡，Jul 24, 2026） |
+| 维度 | Opus 4.5（[[ClaudeOpus45系统卡深读]]，封面 Nov 2025） | Opus 5（本卡，Jul 24, 2026） |
 |---|---|---|
 | 谱系位置 | Claude 4 族旗舰之一；对照 Opus 4/4.1、Sonnet 4.5 等 | 明确写成 **Opus 4.8 升级**；同窗对照 **Fable 5 / Mythos 5** |
 | 部署安全级 | **ASL-3** | **ASL-3**（明示与 **Opus 4.8** 同档组合） |
@@ -228,11 +228,11 @@ Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / com
 
 ---
 
-## 8. 待核实与引用
+## 8. 局限、待核实与引用
 
-### 8.1 待核实
+### 8.1 局限与待核实
 
-1. Fig 3.3.5.A（ExploitGym）与 Fig 3.4.x 精确柱高/百分数：txt 抽取不全 → 发表级引用需回 PDF 读图。
+1. Fig 3.3.5.A（ExploitGym）与 Fig 3.4.x 精确柱高/百分数未逐一读出，引用需回原文读图。
 2. 公告「classifier 触发约比 Fable 5 少 85%」与 System Card 图示的定量对齐关系。
 3. SHADE-Arena / LinuxArena 具体 stealth 百分数（§6.7 有叙述，本笔记未全表抄录）。
 4. 内部 AI R&D 套件任务定义与对外可复现材料。
@@ -269,8 +269,6 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 
 ---
 
-*草稿状态：draft。修订时优先同步 System Card / Risk Report changelog；禁止把 Opus 4.5 与 Opus 5 不同 harness 分数直接做差值传播；禁止复述可操作攻击步骤。*
-
 ## 相关笔记
 
 - [[GPT6Astra系统卡深读]]
@@ -278,5 +276,5 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 - [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

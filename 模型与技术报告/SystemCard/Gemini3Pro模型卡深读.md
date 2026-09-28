@@ -1,5 +1,5 @@
 ---
-topic: TR-Gemini-3-Pro
+topic: Gemini3Pro模型卡深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -12,7 +12,7 @@ archived: 2026-09-22
 > 锚点：Google DeepMind, *Gemini 3 Pro Model Card*（**Model Release: November 2025**；**Last Updated: May 2026**）
 > 官方 PDF：`https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf`（**10** 页 letter；Title: *Gemini 3 Pro Model Card (May 2026)*；Producer: Skia/PDF m150 Google Docs Renderer）
 > 对照笔记：[[Gemini25技术报告深读]]（本地 2.5 技术报告）；旁及 [[开源与闭源前沿模型谱系]] / [[推理时扩展TestTimeScaling]] / [[多模态架构脉络]] / [[AI基础设施总览]]
-> **禁止编造**：参数量、专家数、未写明的层图/训练规模一律标「未公开」；能力榜分仅写第 5 页表可读数字。
+> 参数量、专家数、层图与训练规模卡内未写明，标「未公开」。
 
 ---
 
@@ -50,7 +50,7 @@ archived: 2026-09-22
 
 ## 2. 相对 Gemini 2.5 的增量对照
 
-> 对照源：本卡原文 + 本地 [[Gemini25技术报告深读]]（Gemini 2.5 Technical Report）。只写两侧都可锚定或本卡显式相对 2.5 的句子。
+> 对照源：本卡原文 + [[Gemini25技术报告深读]]（Gemini 2.5 Technical Report）。只写两侧都可锚定或本卡显式相对 2.5 的句子。
 
 ### 2.1 产品 / 接口级
 
@@ -118,7 +118,7 @@ archived: 2026-09-22
 | Tone | **+7.9%** | 改进（拒绝语气更「objective」） |
 | Unjustified-refusals | **+3.7% (non-egregious)** | 改进（边界提示更敢答且安全） |
 
-**方法注（原文硬约束）：**
+**方法注（原文限定）：**
 
 1. 分数为相对指定对照的 **absolute percentage increase/decrease**；自动评测，非 human / red team。
 2. 「Overall, Gemini 3 Pro outperforms Gemini 2.5 Pro across both **safety and tone**, while keeping unjustified refusals low」——与 Text-to-Text **-10.4%** 并存；作者用人工复核解释损失。
@@ -184,9 +184,9 @@ Deep Think 的 FSF 评测：「consistent with the original Gemini 3 Pro assessm
 
 ---
 
-## 4. 待核实与引用
+## 4. 局限、待核实与引用
 
-### 4.1 待核实
+### 4.1 局限与待核实
 
 | # | 项 | 原因 |
 |---|---|---|
@@ -206,10 +206,11 @@ Deep Think 的 FSF 评测：「consistent with the original Gemini 3 Pro assessm
 | 类型 | 路径 / 标识 |
 |---|---|
 | 主 PDF | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
+| 3.1 Pro 卡页 | `https://deepmind.google/models/model-cards/gemini-3-1-pro/` |
 | 2.5 对照 | `https://arxiv.org/abs/2507.06261`；笔记 [[Gemini25技术报告深读]] |
 | 外链（卡内） | evals-methodology（上表域名待核）；Frontier Safety Framework Report；FSF September-2025 |
 
-### 4.3 跟读回填建议（不写进事实栏）
+### 4.3 与相邻笔记的增量
 
 - **[[开源与闭源前沿模型谱系]]**：Gemini 行代际加 **3 Pro（2025-11 发布 / 卡更新 2026-05）**；Dense/MoE 仍「稀疏 MoE，参数未公开」；Deep Think = 可选 inference 模式。
 - **[[推理时扩展TestTimeScaling]]**：可记「3 Pro 卡确认 Deep Think 为产品旋钮」，但无 budget 曲线。
@@ -218,7 +219,7 @@ Deep Think 的 FSF 评测：「consistent with the original Gemini 3 Pro assessm
 
 ---
 
-## 5. 摘要（给父代理 / 速览）
+## 5. 摘要
 
 Gemini 3 Pro Model Card（发布 2025-11，更新 2026-05，**10** 页）把 3 Pro 定位为独立训练的稀疏 MoE 原生多模态推理旗舰，可选 **Deep Think**；上下文 **1M** / 输出 **64K** / cutoff **2025-01**（与 2.5 Pro 同截止）。相对 2.5 Pro，第 5 页表显示推理（HLE 37.5% vs 21.6%、ARC-AGI-2 31.1% vs 4.9%）、屏理解、agentic（τ2、Vending-Bench、Terminal-Bench）与长上下文（MRCR）全面抬升，SWE-Bench Verified single-attempt 76.2% 仍略低于表内 Sonnet 4.5。安全上内部 Text-to-Text 自动分相对 2.5 **-10.4%**（作者称多为非严重/假阳性），tone / 无理拒绝改进；FSF 各域均 **CCL not reached**（Cyber 达 alert 但未达 CCL）。架构与 Infra **无**参数量或 TPU 代际数字——技术深度弱于 2.5 技术报告，细节依赖外链报告。
 
@@ -232,5 +233,5 @@ Gemini 3 Pro Model Card（发布 2025-11，更新 2026-05，**10** 页）把 3 P
 - [[Gemini3Pro模型卡深读]]
 - [[ClaudeOpus41系统卡附录深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 

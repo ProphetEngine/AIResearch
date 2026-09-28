@@ -1,6 +1,6 @@
 ---
 title: "DeepSeek-V3.2 Technical Report 专项深读卡"
-topic: TR-DeepSeek-V3.2
+topic: DeepSeekV32技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
@@ -13,7 +13,7 @@ archived: 2026-09-22
 > **定位**：报告级增量深读卡（相对 V3 / V3.1-Terminus / V3.2-Exp）。数字一律取自官方 PDF `https://arxiv.org/abs/2512.02556`（2026-09-22）。
 > **攻坚线**：**架构思想（主）** + **AI Infra（辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线（见 [[混合专家架构]]）；开闭源谱系坐标（见 [[开源与闭源前沿模型谱系]]）；V3 完整训练/DualPipe/FP8 配方表（见 [[DeepSeekV3训练与MoE基建]]）。本卡只补「V3.2 相对前代公开了什么」。
-> **禁止编造**：本 PDF **未重述** 671B/37B、14.8T、DualPipe、FP8 分块等 V3 配方数字 → 不得从 V3 卡外推为 V3.2 新主张。
+> 本 PDF **未重述** 671B/37B、14.8T、DualPipe、FP8 分块等 V3 配方数字，V3 数字不外推为 V3.2 新主张。
 
 ---
 
@@ -27,7 +27,6 @@ archived: 2026-09-22
 | PDF 页数 | **23**（A4） | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:4177c2c) | |
 | PDF 链接 | `https://arxiv.org/abs/2512.02556` | arXiv |
-| 扫描登记 | [[SystemCard与TR扫描2025至2026]] 表：DeepSeek-V3.2 · arXiv 2025-12-02 · 已归档 | 模型与技术报告/SystemCard与TR扫描2025至2026.md |
 | 开源推理参考实现（脚注） | https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp/tree/main/inference | §2.1 脚注 2 |
 | 摘要三突破 | (1) **DeepSeek Sparse Attention (DSA)**；(2) **Scalable RL**（称可比 GPT-5；**Speciale** 金奖级 IMO/IOI）；(3) **Large-Scale Agentic Task Synthesis** | Abstract |
 
@@ -47,7 +46,7 @@ V3.2 从 **V3.1-Terminus（已扩到 128K）** 继续训入 **DSA**，再用大�
 
 ## 二、相对 V3 / V3.1 增量对照表
 
-> 左列以本 PDF 明文为准；V3 列仅作「本卡对照锚点」，细节见 模型与技术报告/厂商报告/DeepSeekV3训练与MoE基建.md。V3.1-Terminus **无独立本仓库 TR PDF** → 其数字仅录 V3.2 文中转述。
+> 左列以本 PDF 明文为准；V3 列仅作「本卡对照锚点」，细节见 [[DeepSeekV3训练与MoE基建]]。V3.1-Terminus **无独立本仓库 TR PDF** → 其数字仅录 V3.2 文中转述。
 
 | 维度 | DeepSeek-V3（[[DeepSeekV3训练与MoE基建]] / 本仓库 PDF） | V3.1-Terminus（仅 V3.2 文中） | **DeepSeek-V3.2（本 PDF）** |
 |---|---|---|---|
@@ -167,9 +166,9 @@ V3.2 从 **V3.1-Terminus（已扩到 128K）** 继续训入 **DSA**，再用大�
 
 ---
 
-## 五、待核实与引用
+## 五、局限、待核实与引用
 
-### 5.1 待核实（禁止当作已确认）
+### 5.1 局限与待核实
 
 1. **V3.1-Terminus / V3.2-Exp 独立技术报告或模型卡**：本仓库仅有本 V3.2 PDF；Terminus 的层数/总参/激活参/专家数等 **未在本 PDF 重述** → 不得默认「仍严格等于 V3 的 671B/37B」而不标注推断。
 2. **「>10% of pre-training cost」的分母**：是 V3 的 2.788M H800 hours、Terminus 继续训成本，还是内部另一口径？正文未给绝对 GPU-hours 表。
@@ -188,13 +187,12 @@ V3.2 从 **V3.1-Terminus（已扩到 128K）** 继续训入 **DSA**，再用大�
 
 ### 5.3 关联笔记
 
-- [[DeepSeekV3训练与MoE基建]]：模型与技术报告/厂商报告/DeepSeekV3训练与MoE基建.md（基座训练 / MoE / Infra）
-- [[DeepSeekR1推理训练深读]]：模型与技术报告/厂商报告/DeepSeekR1推理训练深读.md（推理 RL 前史）
-- [[混合专家架构]]：架构/MoE与稀疏/混合专家架构.md（MoE 史线；本卡无新专家拓扑）
-- [[开源与闭源前沿模型谱系]]：模型与技术报告/开源与闭源前沿模型谱系.md（谱系；V3.2 TR 此前为待核实项）
-- [[AI基础设施总览]] / [[注意力效率族MQA到MLA]]：推理与基础设施/AI基础设施总览.md、架构/注意力与长上下文/注意力效率族MQA到MLA.md（Infra / 稀疏注意力通论）
-- [[智能体工具与长程任务]]：Harness/智能体与工具/智能体工具与长程任务.md（agent / 工具长程）
-- 扫描表：模型与技术报告/SystemCard与TR扫描2025至2026.md
+- [[DeepSeekV3训练与MoE基建]]（基座训练 / MoE / Infra）
+- [[DeepSeekR1推理训练深读]]（推理 RL 前史）
+- [[混合专家架构]]（MoE 史线；本卡无新专家拓扑）
+- [[开源与闭源前沿模型谱系]]（谱系；V3.2 TR 此前为待核实项）
+- [[AI基础设施总览]] / [[注意力效率族MQA到MLA]]（Infra / 稀疏注意力通论）
+- [[智能体工具与长程任务]]（agent / 工具长程）
 
 ## 相关笔记
 
@@ -209,7 +207,7 @@ V3.2 从 **V3.1-Terminus（已扩到 128K）** 继续训入 **DSA**，再用大�
 - [[KimiK2技术报告深读]]
 - [[GLM45技术报告深读]]
 - [[MiniMaxM1技术报告深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[混合专家架构]]

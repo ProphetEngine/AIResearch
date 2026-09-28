@@ -1,6 +1,6 @@
 ---
 title: DeepSeek-R1 推理训练专项深读（训练管线与奖励/算法）
-topic: TR-DeepSeek-R1
+topic: DeepSeekR1推理训练深读
 date: 2026-09-22
 lines: [架构思想, 数学原理]
 status: archived
@@ -22,7 +22,7 @@ archived: 2026-09-22
 |---|---|
 | 标题 | DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning |
 | 作者机构 | DeepSeek-AI；通讯 `research@deepseek.com` |
-| 标识 | arXiv:**2501.12948**（抽取文本页眉：**v2 [cs.CL] 4 Jan 2026**） |
+| 标识 | arXiv:**2501.12948**（PDF 页眉：**v2 [cs.CL] 4 Jan 2026**） |
 | PDF 链接 | `https://arxiv.org/abs/2501.12948`（约 86 页） |
 | 核心主张（摘要） | LLM 推理能力可通过**纯强化学习**激励，**无需人类标注的推理轨迹**；RL 框架促进自我反思、验证、动态换策略等行为涌现；涌现出的推理模式可再系统蒸馏到更小模型 |
 | 底座 | DeepSeek-**V3-Base**（R1-Zero / R1 冷启动起点；Supplementary A.1） |
@@ -268,9 +268,9 @@ $$
 
 ---
 
-## 六、待核实与引用
+## 六、局限、待核实与引用
 
-### 6.1 待核实 / 报告内口径张力
+### 6.1 局限与待核实
 
 1. **Code RL 数据量**：Table 4 写 Code **17K**；B.3.1 正文写 17k 算法题 **+ 8k** bug-fix——8k 是否计入表内 17K，原文未逐句钉死。
 2. **General RL**：表 66K vs 正文「66k helpfulness + 另外 12,000 harmlessness」——合计关系待与官方附录/后续勘误对齐。
@@ -292,7 +292,7 @@ $$
 1. DeepSeek-AI et al. *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.* arXiv:2501.12948（本笔记据 arXiv v2 PDF）.
 2. Shao et al., 2024. *Group Relative Policy Optimization*（报告引用的 GRPO 来源；细节以 R1 文内重述为准）.
 3. Schulman et al., 2017. PPO；Schulman et al., 2015. GAE；Ouyang et al., 2022. InstructGPT/RLHF（A.3 对照背景）.
-4. 研究会内链：架构/推理时扩展TestTimeScaling.md（势与 o1 对照）；本文件 模型与技术报告/厂商报告/DeepSeekR1推理训练深读.md。
+4. 研究会内链：[[推理时扩展TestTimeScaling]]（势与 o1 对照）；本文件 [[DeepSeekR1推理训练深读]]。
 
 ---
 
@@ -304,7 +304,7 @@ $$
 - [[DeepSeekV3训练与MoE基建]]
 - [[Qwen3技术报告深读]]
 - [[DeepSeekR1推理训练深读]]
-- [[SystemCard与TR扫描2025至2026]]
+- [[MOC_模型与技术报告]]
 
 ### 相关深度笔记
 - [[混合专家架构]]
