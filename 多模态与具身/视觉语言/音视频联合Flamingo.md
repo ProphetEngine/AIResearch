@@ -34,9 +34,9 @@ timezone: Asia/Shanghai (CST)
 
 ## 一、材料元信息与 PDF 体积
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主文** | *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos* | arXiv:**2607.16107v1** \[eess.AS\] **17 Jul 2026**（页眉日期 **2026-7-20**）；https://arxiv.org/pdf/2607.16107 → `https://arxiv.org/abs/2607.16107` | **9.7M**（10,120,887 B） | **47** letter（抽取时有 PDF 结构警告，正文可抽） | （1628 行） |
+| 角色 | 标题 / 版本 | 标识 | 页数 | 抽取 |
+|---|---|---|---|---|
+| **主文** | *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos* | arXiv:**2607.16107v1** \[eess.AS\] **17 Jul 2026**（页眉日期 **2026-7-20**）；https://arxiv.org/pdf/2607.16107 → `https://arxiv.org/abs/2607.16107` | **47** letter（抽取时有 PDF 结构警告，正文可抽） | （1628 行） |
 
 | 字段 | 文内可核 |
 |---|---|

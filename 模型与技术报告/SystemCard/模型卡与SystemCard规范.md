@@ -184,7 +184,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 | 字段 | 说明 |
 |------|------|
-| `governance_framework` | Preparedness / RSP+ASL / FSF / RMF|FAIF / 其他 / 未声明 |
+| `governance_framework` | Preparedness / RSP+ASL / FSF / RMF\|FAIF / 其他 / 未声明 |
 | `risk_tier_or_asl` | 卡内明确档位或 ASL 结论；无则空 |
 | `eval_axes` | 多值标签，建议受控词表：`disallowed_contentjailbreakprompt_injectionhallucinationdeceptionsycophancybias_fairnesschild_safetyhealthagentic_safetydual_use_biodual_use_cybercbrnmodel_welfarered_team_external` …（**按卡内实际章节勾选**） |
 | `mitigations_stack_mentioned` | 是否描述训练拒答 / 系统提示 / 过滤器 / 监控等（只记有无与节号，不写可复现攻击步骤） |
