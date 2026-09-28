@@ -9,6 +9,7 @@ sources:
  pdf: https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL/resolve/main/MiMo_V2_6_technical_report.pdf
  alphaxiv: https://www.alphaxiv.org/abs/2609.mimo-scaling-reinforcement-learning
  hf_collection: https://huggingface.co/collections/XiaomiMiMo/mimo-v26
+---
 
 # B · MiMo-V2.6：Scaling RL Towards Self-Improvement（Agentic RL）
 
@@ -83,7 +84,7 @@ MiMo-V2.6 把 Agentic RL 写成「算力三维放大」：**更大 batch + 更�
 
 ## 引用
 
-1. Xiaomi MiMo Team. *MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement*. Technical report PDF（HF：https://huggingface.co/XiaomiMiMo ；文件 `MiMo_V2_6_technical_report.pdf`，约 3.05MB）。重点 §4.1–4.3、§5.1/5.3/5.4、§6.2、§7.1–7.2。
+1. Xiaomi MiMo Team. *MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement*. Technical report PDF（HF：https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL/resolve/main/MiMo_V2_6_technical_report.pdf）。重点 §4.1–4.3、§5.1/5.3/5.4、§6.2、§7.1–7.2。
 2. 产品/开源说明：[MiMo-V2.6 发布页](https://mimo.mi.com/docs/en-US/news/latest/v2-6)（2026-09-22 更新）；[HF collection](https://huggingface.co/collections/XiaomiMiMo/mimo-v26)。
 3. 索引页：[alphaXiv 2609.mimo-scaling-reinforcement-learning](https://www.alphaxiv.org/abs/2609.mimo-scaling-reinforcement-learning)（Submitted 21 Sept 2026）。
 

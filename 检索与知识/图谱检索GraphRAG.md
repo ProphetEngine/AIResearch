@@ -26,10 +26,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文·经典** | Edge, Trinh, Cheng, Bradley, Chao, Mody, Truitt, Metropolitansky, Ness & Larson (Microsoft), *From Local to Global: A GraphRAG Approach to Query-Focused Summarization* | arXiv:**2404.16130v2** \[cs.CL\] **19 Feb 2025**；`https://arxiv.org/abs/2404.16130`（**26** 页 letter；CreationDate **2025-02-20** CST；6,893,854 bytes） | 实体 KG + Leiden 社区摘要 + map-reduce 全局答；相对向量 RAG 的 comprehensiveness / diversity |
-| **主文·增量** | Zhang, Huang, Zhou et al., *EraRAG: Efficient and Incremental Retrieval Augmented Generation for Growing Corpora* | arXiv:**2506.20963v2** \[cs.IR\] **4 Jul 2025**；`https://arxiv.org/abs/2506.20963`（**14** 页；Title 与作者元数据完整；1,792,984 bytes） | 超平面 LSH 多层图；merge/split + 向上传播的选择性更新；相对 GraphRAG/RAPTOR/HippoRAG 的重建成本 |
+| **主文·经典** | Edge, Trinh, Cheng, Bradley, Chao, Mody, Truitt, Metropolitansky, Ness & Larson (Microsoft), *From Local to Global: A GraphRAG Approach to Query-Focused Summarization* | arXiv:**2404.16130v2** \[cs.CL\] **19 Feb 2025**；`https://arxiv.org/abs/2404.16130`（**26** 页 letter；CreationDate **2025-02-20** CST） | 实体 KG + Leiden 社区摘要 + map-reduce 全局答；相对向量 RAG 的 comprehensiveness / diversity |
+| **主文·增量** | Zhang, Huang, Zhou et al., *EraRAG: Efficient and Incremental Retrieval Augmented Generation for Growing Corpora* | arXiv:**2506.20963v2** \[cs.IR\] **4 Jul 2025**；`https://arxiv.org/abs/2506.20963`（**14** 页；Title 与作者元数据完整） | 超平面 LSH 多层图；merge/split + 向上传播的选择性更新；相对 GraphRAG/RAPTOR/HippoRAG 的重建成本 |
 | **辅·代码** | GraphRAG：`https://github.com/microsoft/graphrag`；EraRAG：`https://github.com/EverM0re/EraRAG-Official`（摘要自报） | 复现入口；本笔记不展开仓库提交史 | |
 
 **一句话抓手：**
@@ -261,7 +261,7 @@ EraRAG 解决「图索引要跟着语料长，更新必须局部化」。
 
 ---
 
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22 16:58 CST（Asia/Shanghai）· status: draft · 据官方 PDF/；禁止重写 B6 向量 RAG 通史；禁止编造未核数字*
+*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22 16:58 CST（Asia/Shanghai）· status: draft · 据官方 PDF；禁止重写 B6 向量 RAG 通史；禁止编造未核数字*
 
 ## 相关笔记
 

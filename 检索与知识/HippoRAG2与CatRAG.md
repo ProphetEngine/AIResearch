@@ -5,9 +5,9 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2502.14802 # 2.4M / 19p
- - https://arxiv.org/abs/2602.01965 # 655K / 13p
- - https://aclanthology.org/2026.findings-acl.290/ # ACL 会刊近重复，仅 URL+抽取
+ - https://arxiv.org/abs/2502.14802
+ - https://arxiv.org/abs/2602.01965
+ - https://aclanthology.org/2026.findings-acl.290/
 arxiv: ["2502.14802", "2602.01965"]
 acl: ["2026.findings-acl.290"]
 related: ["检索增强与知识外挂", "图谱检索GraphRAG", "SelfRAG与CorrectiveRAG", "检索式注意力", "Mem0与Zep生产级记忆", "智能体长程记忆"]
@@ -31,20 +31,18 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主①** | *From RAG to Memory: Non-Parametric Continual Learning for Large Language Models*（HippoRAG 2） | arXiv:**2502.14802v2** \[cs.CL\]（**19 Jun 2025**）；ICML 2025（PMLR 267）；作者 Gutiérrez*, Shu*, Qi, Zhou, Su（OSU / UIUC） | `https://arxiv.org/abs/2502.14802` | **2.4M**（2,498,688 B） | **19** letter | |
-| **主②·arXiv** | *Breaking the Static Graph: Context-Aware Traversal for Robust Retrieval-Augmented Generation*（CatRAG） | arXiv:**2602.01965v1** \[cs.CL\]（**2 Feb 2026**）；作者 Lau†, Zhang, Ruan, Zhou, Guo, Zhang, Zhou（Huawei HKRC / HKUST / CUHK-Shenzhen） | `https://arxiv.org/abs/2602.01965` | **655K**（670,229 B） | **13** A4 | |
-| **主②·ACL** | *Breaking the Static Graph: Context-Aware Traversal for Graph-Based RAG* | ACL Findings **2026** pp.**5849–5863**； CreationDate **2026-06-09 22:00:05 CST** | [`ACL Anthology`](https://aclanthology.org/2026.findings-acl.290/)（近重复，仅 URL+抽取） | **—**（未入库） | **15** A4 | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主①** | *From RAG to Memory: Non-Parametric Continual Learning for Large Language Models*（HippoRAG 2） | arXiv:**2502.14802v2** \[cs.CL\]（**19 Jun 2025**）；ICML 2025（PMLR 267）；作者 Gutiérrez*, Shu*, Qi, Zhou, Su（OSU / UIUC） | `https://arxiv.org/abs/2502.14802` | **19** letter |
+| **主②·arXiv** | *Breaking the Static Graph: Context-Aware Traversal for Robust Retrieval-Augmented Generation*（CatRAG） | arXiv:**2602.01965v1** \[cs.CL\]（**2 Feb 2026**）；作者 Lau†, Zhang, Ruan, Zhou, Guo, Zhang, Zhou（Huawei HKRC / HKUST / CUHK-Shenzhen） | `https://arxiv.org/abs/2602.01965` | **13** A4 |
+| **主②·ACL** | *Breaking the Static Graph: Context-Aware Traversal for Graph-Based RAG* | ACL Findings **2026** pp.**5849–5863**； CreationDate **2026-06-09 22:00:05 CST** | [`ACL Anthology`](https://aclanthology.org/2026.findings-acl.290/)（近重复） | **15** A4 |
 
 | 材料 | 代码 / 数据（文内或仓库自报） |
 |---|---|
 | HippoRAG 2 | https://github.com/OSU-NLP-Group/HippoRAG ；README 另链 HuggingFace `osunlp/HippoRAG_2`；前作 HippoRAG 1：arXiv 2405.14831 / `legacy` 分支 |
 | CatRAG | https://github.com/kwunhang/CatRAG ；README：**2026-04-14** 录 ACL Findings 2026；**2026-08-20** 释出**复现实现**与 HoVer 数据。注意：论文 Limitations 写「**完整源码因专有数据政策不能公开**」，仅给超参表；跟读以「复现仓库 ≠ 论文作者原仓库全量」标注 |
-
-**体积判定**：HippoRAG 2 **2.4M**、CatRAG arXiv **655K**，均 **<20MB** → 按 Wave10 验收规矩入库；ACL Findings 与 arXiv 近重复，按验收规矩仅保留 URL+抽取。
 
 **一句话抓手：**
 - **HippoRAG 2**：OpenIE 短语图 + **passage 节点 / context 边**（dense-sparse）+ **query-to-triple** + LLM **recognition memory** 滤三元组 → PPR → 段落 QA；用事实 / 联想 / 通感三轴证明「结构增强不必牺牲简单事实」。
@@ -230,10 +228,9 @@ Hub 量化（100 条 MuSiQue 抽样）：Mean PPR-Weighted Strength **837.0→76
 ## 六、可复核清单与已知缺口
 
 **可复核：**
-1. 本地体积：`ls -lh https://arxiv.org/abs/2502.14802 https://arxiv.org/abs/2602.01965` → **2.4M / 655K**；ACL Findings：[`ACL Anthology`](https://aclanthology.org/2026.findings-acl.290/) + （ACL 会刊近重复，仅 URL+抽取）。
-2. 页数：**19 / 13 / 15**；ACL 页码 **5849–5863**。
-3. HippoRAG 2 Table 2/3/4、CatRAG Table 2/3/4/5 与 `*.txt` 一致。
-4. 划界句可回链：HippoRAG 2 §2.2「aid in the retrieval process rather than to expand the retrieval corpus」；CatRAG §2.3 one-shot vs Self-RAG 迭代。
+1. 页数：**19 / 13 / 15**；ACL 页码 **5849–5863**。
+2. HippoRAG 2 Table 2/3/4、CatRAG Table 2/3/4/5 与官方 PDF 一致。
+3. 划界句可回链：HippoRAG 2 §2.2「aid in the retrieval process rather than to expand the retrieval corpus」；CatRAG §2.3 one-shot vs Self-RAG 迭代。
 
 **缺口 / 勿编造：**
 - HippoRAG 2 Fig.3 折线具体点坐标未从文本抽出 → 只保留文内定性。
@@ -246,4 +243,4 @@ Hub 量化（100 条 MuSiQue 抽样）：Mean PPR-Weighted Strength **837.0→76
 
 ## 七、与 Wave10 agenda 的对齐句
 
-Agenda [[HippoRAG2与CatRAG]]：「B6 立稠密检索；[[图谱检索GraphRAG]] 立社区摘要 GraphRAG；[[SelfRAG与CorrectiveRAG]] 立 Self-RAG/CRAG。近窗 **HippoRAG 2** 推向非参数长期记忆（事实/联想/通感）；**CatRAG** 针对静态图 hub 漂移做查询自适应边权与锚定。划界 ≠B6/[[图谱检索GraphRAG]]/[[SelfRAG与CorrectiveRAG]]/[[检索式注意力]]/[[Mem0与Zep生产级记忆]]；禁止写成 GraphRAG 重写。」本卡交付即该缺口：双主文入库 + ACL Findings 近重复仅 URL+抽取，开篇划界钉死，评测字段锚定 PDF。
+Agenda [[HippoRAG2与CatRAG]]：「B6 立稠密检索；[[图谱检索GraphRAG]] 立社区摘要 GraphRAG；[[SelfRAG与CorrectiveRAG]] 立 Self-RAG/CRAG。近窗 **HippoRAG 2** 推向非参数长期记忆（事实/联想/通感）；**CatRAG** 针对静态图 hub 漂移做查询自适应边权与锚定。划界 ≠B6/[[图谱检索GraphRAG]]/[[SelfRAG与CorrectiveRAG]]/[[检索式注意力]]/[[Mem0与Zep生产级记忆]]；禁止写成 GraphRAG 重写。」本卡交付即该缺口：ACL Findings 近重复仅留 URL，开篇划界钉死，评测字段锚定 PDF。

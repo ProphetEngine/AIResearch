@@ -29,9 +29,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A** | Feng, Weir, Bostrom et al., *VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks* | arXiv:**2511.04662v1** \[cs.AI\] **6 Nov 2025**；`https://arxiv.org/abs/2511.04662`（**37** 页 letter；1,423,650 bytes；UPenn + AWS） | NL CoT → FOL/SMT-LIB；Z3 校验；自反思 / SFT / DPO |
+| **主文 A** | Feng, Weir, Bostrom et al., *VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks* | arXiv:**2511.04662v1** \[cs.AI\] **6 Nov 2025**；`https://arxiv.org/abs/2511.04662`（**37** 页 letter；UPenn + AWS） | NL CoT → FOL/SMT-LIB；Z3 校验；自反思 / SFT / DPO |
 | **主文 B** | Hubert, Mehta, Sartran et al. (Google DeepMind), *Olympiad-level formal mathematical reasoning with reinforcement learning* | Nature **Vol 651** \| **19 March 2026** pp.607–…；doi:**10.1038/s41586-025-09833-y**；Received 3 Jun 2025 / Accepted 30 Oct 2025 / Published online **12 Nov 2025**；`https://doi.org/10.1038/s41586-025-09833-y`（**25** 页；CreationDate **2026-03-17** CST） | Lean 环境 RL；auto-formalization 课程；TTRL；IMO 2024 |
 
 **备链（议程）：** VeriCoT 作者页 https://benjaminkiesl.github.io/publications/vericot_feng_et_al.pdf（本笔记主采 arXiv PDF，未另核镜像字节差）。

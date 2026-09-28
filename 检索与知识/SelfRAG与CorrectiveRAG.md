@@ -29,10 +29,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文·自省** | Asai, Wu, Wang, Sil & Hajishirzi, *Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection* | arXiv:**2310.11511v1** \[cs.CL\] **17 Oct 2023**；`https://arxiv.org/abs/2310.11511`（**30** 页 letter；CreationDate **2023-10-19** CST；1,405,127 bytes；页眉 *Preprint*） | reflection tokens；按需检索；ISREL / ISSUP / ISUSE；段级 beam |
-| **主文·纠错** | Yan, Gu, Zhu & Ling, *Corrective Retrieval Augmented Generation* | arXiv:**2401.15884v3** \[cs.CL\]（published **29 Jan 2024**，updated **7 Oct 2024**）；`https://arxiv.org/abs/2401.15884`（**16** 页 A4；CreationDate **2024-10-08** CST；667,756 bytes） | 轻量检索评估器；Correct / Incorrect / Ambiguous；Web 回退；decompose-then-recompose |
+| **主文·自省** | Asai, Wu, Wang, Sil & Hajishirzi, *Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection* | arXiv:**2310.11511v1** \[cs.CL\] **17 Oct 2023**；`https://arxiv.org/abs/2310.11511`（**30** 页 letter；CreationDate **2023-10-19** CST；页眉 *Preprint*） | reflection tokens；按需检索；ISREL / ISSUP / ISUSE；段级 beam |
+| **主文·纠错** | Yan, Gu, Zhu & Ling, *Corrective Retrieval Augmented Generation* | arXiv:**2401.15884v3** \[cs.CL\]（published **29 Jan 2024**，updated **7 Oct 2024**）；`https://arxiv.org/abs/2401.15884`（**16** 页 A4；CreationDate **2024-10-08** CST） | 轻量检索评估器；Correct / Incorrect / Ambiguous；Web 回退；decompose-then-recompose |
 | **辅·代码（文内）** | Self-RAG：`https://github.com/AkariAsai/self-rag`（摘要自报 selfrag.github.io）；CRAG：`https://github.com/HuskyInSalt/CRAG` | 复现入口；本笔记不展开仓库提交史 | |
 
 **一句话抓手：**
@@ -302,8 +302,8 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 
 ## 七、待核实
 
-1. Self-RAG 后续正式发表版本（若有 ICLR 相机稿）与本地 **v1 Preprint** 数字差异——本笔记锚定 `2310.11511v1` PDF。
-2. Self-RAG 消融图（检索频率–准确率、权重–citation/MAUVE）的精确点值： 对图不可靠。
+1. Self-RAG 后续正式发表版本（若有 ICLR 相机稿）与 **v1 Preprint** 数字差异——本笔记锚定 `2310.11511v1` PDF。
+2. Self-RAG 消融图（检索频率–准确率、权重–citation/MAUVE）的精确点值：未可靠读图。
 3. CRAG 评估器上下阈值的具体数值、Google API 调用限额：正文 Algorithm 只给逻辑，细参见 Appendix（本卡未逐条抄附录超参表）。
 4. CRAG §5.5 ChatGPT-as-evaluator 的完整数字表。
 5. 与当代商业「agentic RAG」编排产品的一一对应——禁止编造；仅保留机制接口。
@@ -316,12 +316,10 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 
 - Asai, A., Wu, Z., Wang, Y., Sil, A., & Hajishirzi, H. (2023). *Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection*. arXiv:2310.11511v1.
  - https://arxiv.org/abs/2310.11511
- - 本地：`https://arxiv.org/abs/2310.11511`
  - 代码（文内）：https://github.com/AkariAsai/self-rag
 
 - Yan, S.-Q., Gu, J.-C., Zhu, Y., & Ling, Z.-H. (2024). *Corrective Retrieval Augmented Generation*. arXiv:2401.15884v3.
  - https://arxiv.org/abs/2401.15884
- - 本地：`https://arxiv.org/abs/2401.15884`
  - 代码（文内）：https://github.com/HuskyInSalt/CRAG
 
 ### 8.2 划界与交叉（已有笔记）
@@ -346,7 +344,7 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 
 ---
 
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22 17:15 CST（Asia/Shanghai）· status: draft · 据官方 PDF/；禁止编造；≠ B6 向量通史 / ≠ [[图谱检索GraphRAG]] 图谱社区摘要*
+*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22 17:15 CST（Asia/Shanghai）· status: draft · 据官方 PDF；禁止编造；≠ B6 向量通史 / ≠ [[图谱检索GraphRAG]] 图谱社区摘要*
 
 ## 相关笔记
 

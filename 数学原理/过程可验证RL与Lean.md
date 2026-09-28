@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [架构思想, 奖励接口, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2606.20068 # https://arxiv.org/abs/2606.20068
- - https://arxiv.org/abs/2507.08649 # 0.96MiB / 23p；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2606.20068
+ - https://arxiv.org/abs/2507.08649
 aux:
  - https://arxiv.org/abs/2606.20068
  - https://arxiv.org/pdf/2606.20068
@@ -35,19 +35,12 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A · Process-Verified RL** | Kim & Yun (KAIST AI), *Process-Verified Reinforcement Learning for Theorem Proving via Lean* | arXiv:**2606.20068v1** \[cs.AI\] **18 Jun 2026**；页眉 *Published as a conference paper at ICLR 2026*；XMP MetadataDate 2026-06-19T00:53:42Z（→ **2026-06-19 08:53 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2606.20068`（**10,407,700 B ≈ 9.93MiB** / **28** 页 letter） | 主锚：Lean = tactic 级过程 oracle → GRPO |
-| **主文 B · Leanabell-Prover-V2** | Ji, Liu, Wang♥, Zhang, Yue, Shi, Sun, Zhang, Zhou & Gai (Klear Team, Kuaishou), *Leanabell-Prover-V2: Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning* | arXiv:**2507.08649v1** \[cs.AI\] **11 Jul 2025**；XMP MetadataDate 2025-07-14T00:50:01Z（→ **2025-07-14 08:50 CST**）；arXiv nonexclusive-distrib 1.0；`https://arxiv.org/abs/2507.08649`（**1,004,898 B ≈ 0.96MiB** / **23** 页 A4） | 主锚：多轮 verifier-integrated CoT + DAPO |
-
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| Process-Verified PDF | `https://arxiv.org/abs/2606.20068` | **9.93MiB** | **28** | 官方 HTTPS 外链（≈9.93MiB） |
-| Process-Verified 抽取 | | **98K**（100,318 B） | — | 全文检索 |
-| Leanabell-V2 PDF | `https://arxiv.org/abs/2507.08649` | **0.96MiB** | **23** | **官方 HTTPS 外链**（≪10MB） |
-| Leanabell-V2 抽取 | | **87K**（88,826 B） | — | 全文检索 |
+| **主文 A · Process-Verified RL** | Kim & Yun (KAIST AI), *Process-Verified Reinforcement Learning for Theorem Proving via Lean* | arXiv:**2606.20068v1** \[cs.AI\] **18 Jun 2026**；页眉 *Published as a conference paper at ICLR 2026*；XMP MetadataDate 2026-06-19T00:53:42Z（→ **2026-06-19 08:53 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2606.20068`（**28** 页 letter） | 主锚：Lean = tactic 级过程 oracle → GRPO |
+| **主文 B · Leanabell-Prover-V2** | Ji, Liu, Wang♥, Zhang, Yue, Shi, Sun, Zhang, Zhou & Gai (Klear Team, Kuaishou), *Leanabell-Prover-V2: Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning* | arXiv:**2507.08649v1** \[cs.AI\] **11 Jul 2025**；XMP MetadataDate 2025-07-14T00:50:01Z（→ **2025-07-14 08:50 CST**）；arXiv nonexclusive-distrib 1.0；`https://arxiv.org/abs/2507.08649`（**23** 页 A4） | 主锚：多轮 verifier-integrated CoT + DAPO |
 
 **代码入口（文内明示，2026-09-22 未做线上可用性核验）：**
 - Leanabell-Prover-V2：`https://github.com/Leanabell-LM/Leanabell-Prover-V2`（源码 / 数据 / 模型）
@@ -233,10 +226,7 @@ $$
 
 | 项 | 值 |
 |---|---|
-| 主 PDF | `https://arxiv.org/abs/2606.20068`（**10,407,700 B ≈ 9.93MiB** / 28p）；`https://arxiv.org/abs/2507.08649`（**1,004,898 B ≈ 0.96MiB** / 23p） |
-| 抽取 | `{process-verified-rl,leanabell-prover-v2}.txt`（及 镜像） |
-| 抽取命令 | （2026-09-22 CST） |
-| 备注 | **两篇均官方 HTTPS 外链**；Process-Verified 体积偏中 → ****；Leanabell |
+| 主 PDF | `https://arxiv.org/abs/2606.20068`（28p）；`https://arxiv.org/abs/2507.08649`（23p） |
 | 未核 / 禁写 | AlphaProof IMO/TTRL 通史；VPS/VPRM 主文；PRM 谱系；未公开的 Process-Verified 代码仓；AST 细奖励「应能工作」的外推 |
 
-**变更记录：** 2026-09-22 CST — 初稿 draft：双主锚深读 + 四向划界；表数字锚定本地抽取。
+**变更记录：** 2026-09-22 CST — 初稿 draft：双主锚深读 + 四向划界；表数字锚定官方 PDF。

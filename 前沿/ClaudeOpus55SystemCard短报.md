@@ -62,6 +62,6 @@ timezone: Asia/Shanghai (CST)
 | 类型 | 路径 / URL | 备注 |
 |---|---|---|
 | 产品/卡页 | https://www.anthropic.com/claude-opus-5-5 | 2026-09-22 公告；定价/CVP·LSVP/平台可用性 |
-| System Card PDF（CDN） | https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf | **≈17.8 MB · 230 页** |
+| System Card PDF（CDN） | https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf | **230 页** |
 | 索引页 | https://www.anthropic.com/system-cards | 总表入口（是否已挂 Opus 5.5 条目以当日页为准） |
 | 对照（勿当本篇正文） | 模型与技术报告/SystemCard/ClaudeOpus5系统卡深读.md；模型与技术报告/SystemCard/ClaudeFable与Mythos51.md | Opus 5 / Fable·Mythos 5.1 深读 |
