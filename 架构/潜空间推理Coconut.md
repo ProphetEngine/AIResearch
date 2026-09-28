@@ -229,8 +229,8 @@ Coconut 变体：**w/o curriculum**（直接末阶段）；**w/o thought**（同
 
 ## 相关笔记
 
-- [[测试时训练|Test-Time Training]]
-- [[潜空间推理Coconut|Coconut]]
-- [[审慎对齐与断路器|Deliberative / Circuit Breakers]]
-- [[DeepSeekV4技术报告深读|DeepSeek-V4]]
+- [[测试时训练]]
+- [[潜空间推理Coconut]]
+- [[审慎对齐与断路器]]
+- [[DeepSeekV4技术报告深读]]
 

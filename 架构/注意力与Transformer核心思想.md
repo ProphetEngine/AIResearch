@@ -158,11 +158,11 @@ Transformer 把「可并行的全局注意力编码器 / 解码器」立成新�
 
 ## 相关笔记
 
-- [[注意力与Transformer核心思想|Attention / Transformer]]
-- [[DecoderOnly与GPT路线|Decoder-only / GPT]]
-- [[规模定律与预训练范式|规模定律与预训练]]
-- [[混合专家架构|MoE / 稀疏激活]]
-- [[对齐脉络RLHF与偏好优化|对齐 RLHF / DPO]]
-- [[推理时扩展TestTimeScaling|Test-time scaling]]
-- [[开源与闭源前沿模型谱系|前沿模型谱系]]
+- [[注意力与Transformer核心思想]]
+- [[DecoderOnly与GPT路线]]
+- [[规模定律与预训练范式]]
+- [[混合专家架构]]
+- [[对齐脉络RLHF与偏好优化]]
+- [[推理时扩展TestTimeScaling]]
+- [[开源与闭源前沿模型谱系]]
 

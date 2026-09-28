@@ -214,9 +214,9 @@ $\tau$ 在与树搜索 **同一 100-prompt 校准集** 上一维扫描；候选 
 
 ## 相关笔记
 
-- [[DiffusionForcing族|Diffusion Forcing]]
-- [[WorfBench工作流基准|WorfBench]]
-- [[合成对齐数据Magpie|Magpie / ActiveUltraFeedback]]
-- [[EntMTP熵引导投机解码|EntMTP]]
-- [[DuoAttention与KVzip|DuoAttention / KVZip]]
+- [[DiffusionForcing族]]
+- [[WorfBench工作流基准]]
+- [[合成对齐数据Magpie]]
+- [[EntMTP熵引导投机解码]]
+- [[DuoAttention与KVzip]]
 
