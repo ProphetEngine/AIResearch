@@ -267,7 +267,7 @@ Community：用 **label propagation**（非 Leiden），便于新节点动态挂
 | 文内交叉 | Table 1/2 把 Zep 当基线；§4.5 批 Zep 图 token 与异步延迟 | 摘要/DMR 对标 MemGPT；未在 LongMemEval 成功跑通 MemGPT |
 | 与本仓库其他笔记 | 四操作面 → 被 Memory-R1 笔记引用为 RL 动作集出处 | community 灵感 → GraphRAG 笔记；MemGPT 分数 → 长程记忆笔记 |
 
-选型跟读建议（仍非裁决）：若问题框是 **LOCOMO 式多跳对话事实 + 低 p95 检索延迟**，跟 Mem0 Table 2；若问题框是 **~100k+ token 长会话 + 时序/跨会话偏好 + 事实有效期**，跟 Zep LongMemEval；若问题框是 **文档库全局主题问答**，回「图谱检索GraphRAG」，不要用本篇硬套。
+选型建议：若问题框是 **LOCOMO 式多跳对话事实 + 低 p95 检索延迟**，看 Mem0 Table 2；若问题框是 **~100k+ token 长会话 + 时序/跨会话偏好 + 事实有效期**，看 Zep LongMemEval；若问题框是 **文档库全局主题问答**，见 [[图谱检索GraphRAG]]，本篇两套记忆不适用。以上按各文自报结果指路，不构成跨文优劣结论。
 
 ---
 

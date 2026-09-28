@@ -29,7 +29,7 @@ archived: 2026-09-22
 
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Anthropic, *System Card: Claude Fable 5.1 & Claude Mythos 5.1* | 封面 **September 1, 2026**；https://www.anthropic.com/claude-fable-and-mythos-5.1 （**212** 页 letter） | 预部署七域评测；双配置定义；RSP / cyber / 护栏 / agentic / alignment |
+| **主文** | Anthropic, *System Card: Claude Fable 5.1 & Claude Mythos 5.1* | 封面 **September 1, 2026**（**212** 页 letter） | 预部署七域评测；双配置定义；RSP / cyber / 护栏 / agentic / alignment |
 | **辅·产品公告** | https://www.anthropic.com/claude-fable-and-mythos-5-1 | 2026-09-22 CST 核对 | 定价/EFS/CVP·LSVP/Claude Security 产品表述；与卡交叉核验访问边界 |
 | **备链 CDN**（用户指定） | `https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf` | 以 CDN PDF 为准 | 备用 PDF 链接 |
 
@@ -291,7 +291,7 @@ Exec 总括：发布以来 **最强 overall cyber**；内部套件 **≥ Mythos 
 
 `text
 Anthropic. System Card: Claude Fable 5.1 & Claude Mythos 5.1. September 1, 2026.
-（URL：https://www.anthropic.com/claude-fable-and-mythos-5.1 ；212 pp.）
+（212 pp.）
 
 Anthropic. Introducing Claude Fable 5.1 and Claude Mythos 5.1. September 2026.
 https://www.anthropic.com/claude-fable-and-mythos-5-1

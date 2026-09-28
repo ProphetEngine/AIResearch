@@ -247,10 +247,6 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 ---
 
-**状态：** `archived` · `date: 2026-09-22`
-
----
-
 ## 九、局限与待核实
 
 - CircuitLasso 附录 Table 3–7 逐特征标签与 $\lambda$ 消融曲线点：未全表抄录。

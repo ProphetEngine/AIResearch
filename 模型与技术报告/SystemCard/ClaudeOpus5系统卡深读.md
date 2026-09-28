@@ -259,7 +259,7 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 | Title | **Claude Fable 5.1 & Claude Mythos 5.1 System Card** |
 | 封面日期 | **September 1, 2026** |
 | 页数 | **212** |
-| 公告页 | https://www.anthropic.com/claude-fable-and-mythos-5.1 |
+| 公告页 | — |
 | 产品双轨 | **Fable 5.1**：通用，生物/cyber 等高风险双用途额外护栏；**Mythos 5.1**：同模型、护栏更松，受信访问；并支撑 **Claude Security**（Enterprise） |
 | RSP 摘要（Exec） | CB-1、**未达** CB-2（含不确定性）；AI R&D 风险 **low**（METR 外部一致）；**对齐灾难风险由 very low 调为 low**（指向 2026-08 Risk Report / cyber 评测相关事件披露后的不确定性↑） |
 | Cyber 摘要（Exec） | 发布以来最强 cyber；≥ Mythos 5；**几乎全面强于 Opus 5**（ExploitBench / OSS-Fuzz / Firefox 147 / ExploitGym）；Fable 5.1 **同样放开源码漏洞发现**；因能力↑取**更宽安全边际**（误伤仍高于 Opus 5，但假阳性少于 Fable 5 发布时）；**未发现 critical severity jailbreak** |

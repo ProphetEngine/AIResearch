@@ -212,7 +212,3 @@ Anthropic 页：TTL 从「写或读该条目的请求**开始**」计时，流�
 2. **Schema 自动归纳**：能否从流量里挖掘高频片段生成 PML，而不靠手写？
 3. **计费字段对齐**：跨云把 `cache_creation_*` / `cache_write_tokens` / storage 映射到同一 FinOps 模型时，TTL 刷新语义差如何归一？
 4. **命中率 SLA**：Radix LRU vs 云侧「可能更长保留」——生产 agent 长系统提示下，write 溢价与 TTFT SLA 如何联合优化（只问字段，不编费率）？
-
----
-
-**状态：** `archived` · date **2026-09-22** · 跟读语言：中文。

@@ -191,11 +191,11 @@ $s_v=\max\bigl(c_a,\ \max_{u\in\mathrm{Parents}(v)} f_u\bigr)$——同 agent �
 
 ---
 
-## 七、补链 · M3MAD-Bench（不升主）
+## 七、补链 · M3MAD-Bench
 
-**为何只补链：** M3MAD 是 **MAD 方法的多维评测箱**（Multi-domain × Multi-modal × Multi-dimensional metrics），评的是辩论策略在 13 数据集 / 9 底座上的准确率与 token·时间代价，并给九条「MAD 并非处处有效」洞察（协作优于对抗、成本高、多轮收益有限、互相强化错误等）。这与 **[[多智能体辩论]]** 同题族，升主会叠床；与 OrchBench「DAG 编排计划隔离」正交。
+**范围：** M3MAD 是 **MAD 方法的多维评测箱**（Multi-domain × Multi-modal × Multi-dimensional metrics），评的是辩论策略在 13 数据集 / 9 底座上的准确率与 token·时间代价，并给九条「MAD 并非处处有效」洞察（协作优于对抗、成本高、多轮收益有限、互相强化错误等）。它与 **[[多智能体辩论]]** 同题族，辩论方法见该篇；与 OrchBench「DAG 编排计划隔离」正交，本篇只列接口字段。
 
-**仅录接口（不展开成第二主文）：**
+**接口字段：**
 
 | 字段 | 文内 |
 |---|---|
