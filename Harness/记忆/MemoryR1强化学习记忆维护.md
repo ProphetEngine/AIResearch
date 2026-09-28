@@ -26,9 +26,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Yan, Yang et al. (LMU / MCML / TUM / …), *Memory-R1: Enhancing Large Language Model Agents to Manage and Utilize Memories via Reinforcement Learning* | arXiv:**2508.19828v5** \[cs.CL\] **14 Jan 2026**；`https://arxiv.org/abs/2508.19828`（**20** 页 A4；3,472,962 bytes） | 双 agent + outcome RL（PPO/GRPO）；四操作维护记忆库 + 答前蒸馏 |
+| **主文** | Yan, Yang et al. (LMU / MCML / TUM / …), *Memory-R1: Enhancing Large Language Model Agents to Manage and Utilize Memories via Reinforcement Learning* | arXiv:**2508.19828v5** \[cs.CL\] **14 Jan 2026**；`https://arxiv.org/abs/2508.19828`（**20** 页 A4） | 双 agent + outcome RL（PPO/GRPO）；四操作维护记忆库 + 答前蒸馏 |
 | **操作集出处（文内）** | Mem0（Chhikara et al., 2025）`{ADD, UPDATE, DELETE, NOOP}`；另引 MemGPT / AIOS CRUD 等为启发式对照 | 本篇不展开 Mem0 产品全文 | 动作面来源 |
 | **训练框架（文内）** | VERL（Sheng et al., 2025）；H100×4（14B 用 8 GPU） | Appendix D | 复现入口级信息 |
 
@@ -217,14 +217,6 @@ $$
 - 与生产 Mem0 / MemoryOS 的实现是否逐 API 对齐，原文称「re-implemented」——深度复现应核附录与开源（若后续发布）。
 
 ---
-
-## 七、本地路径速查
-
-| 类型 | 路径 |
-|---|---|
-| 笔记 | Harness/记忆/MemoryR1强化学习记忆维护.md |
-| PDF | `https://arxiv.org/abs/2508.19828` |
-| 交叉 | Harness/记忆/智能体长程记忆.md（禁止当本稿重写底稿） |
 
 ## 相关笔记
 

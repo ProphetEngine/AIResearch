@@ -28,11 +28,11 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 抓取 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Backlund & Petersson (Andon Labs), *Vending-Bench: A Benchmark for Long-Term Coherence of Autonomous Agents* | arXiv:**2502.15840v1** \[cs.AI\] **20 Feb 2025**；文内 **February 2025**；`https://arxiv.org/abs/2502.15840`（**28** 页 letter；7,449,988 bytes） | 环境、评分、九模型×5 run、meltdown 轨迹、记忆消融 |
-| **辅·官方评测页（VB1）** | https://andonlabs.com/evals/vending-bench | WebFetch 2026-09-22 | 更新排行榜；标注 **2025-11-18** 起 VB1 **deprecated**，改推 VB2 |
-| **串联·VB2 页** | https://andonlabs.com/evals/vending-bench-2 | WebFetch 2026-09-22 | 一年期银行余额主分；对抗供应商 / 协商；**勿另开同题笔记** |
+| **主文** | Backlund & Petersson (Andon Labs), *Vending-Bench: A Benchmark for Long-Term Coherence of Autonomous Agents* | arXiv:**2502.15840v1** \[cs.AI\] **20 Feb 2025**；文内 **February 2025**；`https://arxiv.org/abs/2502.15840`（**28** 页 letter） | 环境、评分、九模型×5 run、meltdown 轨迹、记忆消融 |
+| **辅·官方评测页（VB1）** | https://andonlabs.com/evals/vending-bench | 2026-09-22 核对 | 更新排行榜；标注 **2025-11-18** 起 VB1 **deprecated**，改推 VB2 |
+| **串联·VB2 页** | https://andonlabs.com/evals/vending-bench-2 | 2026-09-22 核对 | 一年期银行余额主分；对抗供应商 / 协商；**勿另开同题笔记** |
 | **框架（文内）** | AISI inspect-ai；Andon `multiagent-inspect` 扩展 | refs [1][3] | 子代理委托实现 |
 
 **通信：** `founders@andonlabs.com`
@@ -211,7 +211,7 @@ archived: 2026-09-22
 
 ## 七、官方页更新榜与 VB2 串联（辅源；非论文 Table 1）
 
-### 7.1 VB1 站点榜（WebFetch 2026-09-22）
+### 7.1 VB1 站点榜（2026-09-22 核对）
 
 页首声明：**2025-11-18** 起 VB1 deprecated，改由 **Vending-Bench 2** 接棒；页上仍保留含更新模型的 VB1 跑分（模型 5 samples；Human* 仍 1 sample）。摘录前若干行供对照（**勿与 §四混排**）：
 

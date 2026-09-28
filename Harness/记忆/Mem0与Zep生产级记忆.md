@@ -46,8 +46,6 @@ timezone: Asia/Shanghai (CST)
 | Mem0 | Chhikara, Khant, Aryan, Singh, Yadav（`research@mem0.ai`） | https://mem0.ai/research ；图库实现写明 **Neo4j** |
 | Zep | Rasmussen, Paliychuk, Beauvais, Ryan, Chalef（Zep AI） | 产品 https://www.getzep.com ；引擎 **Graphiti** https://github.com/getzep/graphiti ；图检索侧写明 **Neo4j**（含 Lucene） |
 
-PDF 体积约 **1.1 MB**（Mem0）/ **146 KB**（Zep）。
-
 **一句话抓手：**
 - **Mem0**：会话对 → 异步摘要 + 近窗 → LLM 抽候选事实 → 对 top-s 相似记忆做 **ADD / UPDATE / DELETE / NOOP** tool-call；Mem0<sup>g</sup> 再叠实体–关系有向标注图。
 - **Zep / Graphiti**：episode / entity / community **三层时序 KG** + 双时间轴（事件序 $T$ / 事务序 $T'$）+ 边失效；检索 = 搜索 → 重排 → 构造上下文字符串。
@@ -276,7 +274,7 @@ Community：用 **label propagation**（非 Leiden），便于新节点动态挂
 ## 六、可复核清单与已知缺口
 
 **可复核：**
-1. 官方 PDF：https://arxiv.org/abs/2504.19413 、https://arxiv.org/abs/2501.13956 ；体积约 **1.1 MB / 146 KB**。
+1. 官方 PDF：https://arxiv.org/abs/2504.19413 、https://arxiv.org/abs/2501.13956 。
 2. 页数：**23 / 12**。
 3. Mem0 Table 1/2、Zep Table 1/2/3 数字与原文一致。
 4. 摘要「26% / 2% / 91% / >90% token」与 Table 2 算术一致。

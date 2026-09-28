@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [评测字段, 编排接口思想]
 status: archived
 sources:
- - https://arxiv.org/abs/2607.25656 # 3.16M / 25p（主文）
- - https://arxiv.org/abs/2601.02854 # 2.00M / 10p（补链，不升主）
+ - https://arxiv.org/abs/2607.25656
+ - https://arxiv.org/abs/2601.02854
 arxiv: ["2607.25656", "2601.02854"]
 related: ["多智能体辩论", "MixtureOfAgents与TUMIX", "AgentBazaar经济对齐", "智能体工具与长程任务", "合成用户仿真"]
 code_promised: null # OrchBench 文内未见作者自发布评测仓 URL
@@ -26,23 +26,17 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[智能体工具与长程任务]]**：禁止重写 Claude/GPT 旗舰 MCP、并行工具、System Card 长程产品叙事；Claude Code 在本卡只作**真实执行对照框架**一句。
 > - **≠ [[合成用户仿真]]**：τ-bench / ToolEmu 用户仿与工具仿不重开；OrchBench 固定 DAG，**不**仿真用户。
 > **禁止编造**：机制、公式编号、表数字一律锚定官方 PDF（2026-09-22 CST）。图内未列表格的精确曲线点标 **待核实读图**。OrchBench 文内**未见**作者自发布官方评测仓 URL → **无承诺仓**（仅引用 Claude Code / Crush 等第三方框架仓）。
-> **二进制**：两篇均 **≪20MB** 且页数 **≪80**（见 §一）→ **官方 HTTPS 外链**。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文** | Ren, He, Zhang, Qian, Han, Zheng, Li & Zhang, *OrchBench: Evaluating Multi-Agent Orchestration Plans in Isolation via Deterministic Simulation* | arXiv:**2607.25656**v1 \[cs.AI\] **28 Jul 2026**；Fudan / 中关村学院 / Queen Mary；`https://arxiv.org/abs/2607.25656`（**3.16M**，3,312,344 B；**25** 页 letter） | **编排计划隔离仿真评测**：DAG + $\pi=(\alpha,R)$ + 确定性仿真器；与 Claude Code 质量相关 $r=0.816$ |
-| **补链** | Li, Zhang, Li et al., *M3MAD-Bench: Multi-Dimensional Evaluation of Multi-Agent Debate Across Domains and Modalities* | arXiv:**2601.02854**v2 \[cs.AI\]（published **2026-01-06**；v2 **31 Jul 2026**）；ACMMM **2026**；`https://arxiv.org/abs/2601.02854`（**2.00M**，2,093,773 B；**10** 页） | **MAD 多维评测箱**（域×模态×效率）；与 [[多智能体辩论]] 叠床 → **不升主**，仅索引 |
+| **主文** | Ren, He, Zhang, Qian, Han, Zheng, Li & Zhang, *OrchBench: Evaluating Multi-Agent Orchestration Plans in Isolation via Deterministic Simulation* | arXiv:**2607.25656**v1 \[cs.AI\] **28 Jul 2026**；Fudan / 中关村学院 / Queen Mary；`https://arxiv.org/abs/2607.25656`（**25** 页 letter） | **编排计划隔离仿真评测**：DAG + $\pi=(\alpha,R)$ + 确定性仿真器；与 Claude Code 质量相关 $r=0.816$ |
+| **补链** | Li, Zhang, Li et al., *M3MAD-Bench: Multi-Dimensional Evaluation of Multi-Agent Debate Across Domains and Modalities* | arXiv:**2601.02854**v2 \[cs.AI\]（published **2026-01-06**；v2 **31 Jul 2026**）；ACMMM **2026**；`https://arxiv.org/abs/2601.02854`（**10** 页） | **MAD 多维评测箱**（域×模态×效率）；与 [[多智能体辩论]] 叠床 → **不升主**，仅索引 |
 
-**代码（文内）：** OrchBench → **无作者承诺仓**（2026-09-22 抽取未见 `github.com/.../OrchBench` 类自述）。M3MAD → `https://github.com/liaolea/M3MAD-Bench`（补链文 Abstract）。
-
-| 文件 | 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `2607.25656-orchbench.pdf` | **3.16M**（3,312,344 B） | 25 | **官方 HTTPS 外链**（≪20MB；≪80 页） |
-| `2601.02854-m3mad.pdf` | **2.00M**（2,093,773 B） | 10 | **官方 HTTPS 外链**（补链；≪20MB） |
+**代码（文内）：** OrchBench → **无作者承诺仓**（文内未见 `github.com/.../OrchBench` 类自述）。M3MAD → `https://github.com/liaolea/M3MAD-Bench`（补链文 Abstract）。
 
 **一句话抓手：** 端到端 MAS 分数把「编排好不好」与「worker / 工具 / 环境稳不稳」揉在一起且极贵；OrchBench 只让模型交**编排计划**，用**确定性仿真**在相同 DAG / $L$ / $A_{\max}$ 下比 $Q$、makespan、token，并暴露 **missing transfer**——验证侧与 Claude Code 质量相关 **$r=0.816$**，成本约 **1.3% tokens / 10.3% wall-clock**（Abstract）。
 
@@ -229,15 +223,6 @@ $s_v=\max\bigl(c_a,\ \max_{u\in\mathrm{Parents}(v)} f_u\bigr)$——同 agent �
 
 ---
 
-## 九、材料体积
-
-| 项 | 结论 |
-|---|---|
-| 一手 PDF | **有**（主文 + 补链均已 `curl`→本地） |
-| OrchBench | **3.16MB / 25 页** → **官方 HTTPS 外链**至 （已落盘）；正式库可同步  |
-| M3MAD | **2.00MB / 10 页** → **官方 HTTPS 外链（补链）**；不另开议题卡 |
-| >20MB / >80 页规则 | **均不适用**； |
-| 抽取 | 已存 `*.txt`；瘦身备份可只保留抽取 + arXiv 链 |
-| 成稿路径 | [[OrchBench多智能体编排评测]] |
+## 九、摘要
 
 **回报表摘要：** [[OrchBench多智能体编排评测]] 主锚 OrchBench（编排计划隔离仿真；≠ MAD/MoA/市场/旗舰工具环）；M3MAD 仅补链；禁编造；中文归档；date 2026-09-22。

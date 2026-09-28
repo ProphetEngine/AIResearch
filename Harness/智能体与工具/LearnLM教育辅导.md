@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - `https://arxiv.org/pdf/2412.16429`；
+ - https://arxiv.org/pdf/2412.16429
  - https://arxiv.org/abs/2407.12687
 arxiv: ["2412.16429", "2407.12687"]
 related: ["MedGemma医学专科", "对齐脉络RLHF与偏好优化", "B11"]
@@ -25,10 +25,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 · LearnLM** | LearnLM Team (Google), *LearnLM: Improving Gemini for Learning* | arXiv:**2412.16429v3** \[cs.CY\]（页眉 **2024-12-19**；`goo.gle/LearnLM-dec24`）；`https://arxiv.org/pdf/2412.16429`；（**35** 页 A4；约 28.7 MB） | 把教育学问题重述为 **pedagogical IF**；SFT + RLHF 共训进 Gemini；专家场景评测 vs GPT-4o / Claude 3.5 Sonnet / Gemini 1.5 Pro |
-| **对照 · 早期报告** | Jurenka, Kunesch, McKee, Gillick et al. (Google DeepMind 等), *Towards Responsible Development of Generative AI for Education: An Evaluation-Driven Approach* | arXiv:**2407.12687v4** \[cs.CY\]（页眉 v1 **2024-05-14**；v2 **2025-11-28**）；`https://arxiv.org/abs/2407.12687`（**86** 页 A4；约 6.0 MB） | 参与式研发；**五条高阶教学法原则**；**七套**教育学基准 taxonomy；SFT 出 **LearnLM-Tutor（𝑀4，Gemini 1.0）**；ASU Study Hall / HallMate |
+| **主文 · LearnLM** | LearnLM Team (Google), *LearnLM: Improving Gemini for Learning* | arXiv:**2412.16429v3** \[cs.CY\]（页眉 **2024-12-19**；`goo.gle/LearnLM-dec24`）；`https://arxiv.org/pdf/2412.16429`；（**35** 页 A4） | 把教育学问题重述为 **pedagogical IF**；SFT + RLHF 共训进 Gemini；专家场景评测 vs GPT-4o / Claude 3.5 Sonnet / Gemini 1.5 Pro |
+| **对照 · 早期报告** | Jurenka, Kunesch, McKee, Gillick et al. (Google DeepMind 等), *Towards Responsible Development of Generative AI for Education: An Evaluation-Driven Approach* | arXiv:**2407.12687v4** \[cs.CY\]（页眉 v1 **2024-05-14**；v2 **2025-11-28**）；`https://arxiv.org/abs/2407.12687`（**86** 页 A4） | 参与式研发；**五条高阶教学法原则**；**七套**教育学基准 taxonomy；SFT 出 **LearnLM-Tutor（𝑀4，Gemini 1.0）**；ASU Study Hall / HallMate |
 
 **一句话抓手：** 通用 LLM 默认「给信息」≠「会辅导」——早期报告用 **SFT 把教学法原则灌进 LearnLM-Tutor**；后续 LearnLM 改成 **让教师/开发者用 System Instructions 指定教学法**，并把教育学数据 **混进 Gemini 后训练**，用场景化专家偏好量「像不像好导师」。
 

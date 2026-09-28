@@ -32,10 +32,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Qiao, Fang, Qiu, Wang, Zhang, Jiang, Xie, Huang, Chen（ZJU / Alibaba）, *Benchmarking Agentic Workflow Generation* | arXiv:**2410.07869v3** \[cs.CL\] **23 Feb 2025**；页眉 *Published as a conference paper at ICLR 2025*；`https://arxiv.org/abs/2410.07869`（**25** 页 letter；CreationDate **2025-02-25** CST；3,430,519 bytes） | 一手：任务形式、构造与质控、WorFEval、主表、下游作用 |
-| **备·ICLR** | 同题会议 PDF | `https://arxiv.org/abs/2410.07869`（3,229,575 bytes）；https://proceedings.iclr.cc/paper_files/paper/2025/file/adbe936993aa7cf41e45054d8b72f183-Paper-Conference.pdf | 议程备链；本笔记数字以 arXiv 官方 PDF 为准 |
+| **主文** | Qiao, Fang, Qiu, Wang, Zhang, Jiang, Xie, Huang, Chen（ZJU / Alibaba）, *Benchmarking Agentic Workflow Generation* | arXiv:**2410.07869v3** \[cs.CL\] **23 Feb 2025**；页眉 *Published as a conference paper at ICLR 2025*；`https://arxiv.org/abs/2410.07869`（**25** 页 letter；CreationDate **2025-02-25** CST） | 一手：任务形式、构造与质控、WorFEval、主表、下游作用 |
+| **备·ICLR** | 同题会议 PDF | https://proceedings.iclr.cc/paper_files/paper/2025/file/adbe936993aa7cf41e45054d8b72f183-Paper-Conference.pdf | 议程备链；本笔记数字以 arXiv 官方 PDF 为准 |
 | **代码 / 数据** | zjunlp/**WorfBench** | https://github.com/zjunlp/WorfBench ；HF collection `zjunlp/worfbench-…`；项目页 https://zjunlp.github.io/project/WorFBench/ | `gen_workflow` / `eval_workflow`；训练参考 LLaMA-Factory |
 
 **一句话抓手：** 现有 agent 评测多看 **端到端成败** 或 **线性分解**；WorfBench 把「子任务 + 依赖」建成 **DAG（含并行）**，WorFEval 用 **语义匹配 + LIS（链）+ MCIS（图）** 给出可复现的 $f1_{\mathrm{chain}}$ / $f1_{\mathrm{graph}}$——主发现是 **图规划系统性地难于线性规划**（闭源里 GPT-4 平均约 **67.32% → 52.47%**，差距约 **15%**）。
@@ -222,9 +222,6 @@ $$
 | 训练 loss 曲线、全量逐模型逐格复述 | 主表已给闭源全行列 + 开源 Avg；细格按需回 PDF |
 | 与 PlanBench / ToolBench 端到端榜的横向对齐 | → 需要时交叉 **[[评测与排行榜可靠性]]**；本卡不重写榜可靠性通史 |
 | World model 文献深读 | 文仅作改进方向指针 → 另卡 |
-
-**本地核验命令备忘：**
-` https://arxiv.org/abs/2410.07869` → （2026-09-22 CST）。
 
 ## 相关笔记
 

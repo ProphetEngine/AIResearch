@@ -6,9 +6,9 @@ lines: [架构思想, 评测字段]
 status: archived
 archived: 2026-09-22
 sources:
- - https://arxiv.org/abs/2511.20109 # 4.2M / 49p
- - https://arxiv.org/abs/2603.13840 # 6.4M / 15p
- - https://arxiv.org/abs/2604.16922 # 1.9M / 23p（附录）
+ - https://arxiv.org/abs/2511.20109
+ - https://arxiv.org/abs/2603.13840
+ - https://arxiv.org/abs/2604.16922
 arxiv: ["2511.20109", "2603.13840", "2604.16922"]
 related: ["天气气候基础模型", "科研智能体", "智能体工具与长程任务", "代码智能体Harness史线"]
 code_climateagent: "https://github.com/Relaxed-System-Lab/ClimateAgent"
@@ -26,25 +26,23 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[科研智能体]]**：禁止重写 The AI Scientist / ChemCrow 通史；ChemCrow 若出现仅作 ClimateAgent related work 一句邻接，不复述化学工具表。
 > - **≠ ClimateGPT（2401.09646）**：专科气候 LLM 若点到，**仅作前置对照一句**，不升主、不拆架构。
 > - **≠ [[智能体工具与长程任务]] / [[代码智能体Harness史线]]**：不写 MCP / SWE-bench harness 通史；AutoGen / Copilot 仅作文内对照槽。
-> **禁止编造**：表数字、页数、完成率、GitHub 一律锚定官方 PDF（2026-09-22 CST）与 `ls -lh`；图柱未抽出标「待核实读图」；ClimateAgents 自称 GitHub 但**未给完整 URL**——本卡不臆造仓库地址。
+> **禁止编造**：表数字、页数、完成率、GitHub 一律锚定官方 PDF（2026-09-22 CST）；图柱未抽出标「待核实读图」；ClimateAgents 自称 GitHub 但**未给完整 URL**——本卡不臆造仓库地址。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主①** | *CLIMATEAGENT: Multi-Agent Orchestration for Complex Climate Data Science Workflows* | arXiv:**2511.20109v2** \[cs.LG\]（文首标 **14 Sep 2026**） | `https://arxiv.org/abs/2511.20109` | **4.2M**（4,340,473 B） | **49** letter | |
-| **主②** | *ClimateAgents: A Multi-Agent Research Assistant for Social-Climate Dynamics Analysis* | arXiv:**2603.13840v1** \[cs.MA\]（文首标 **14 Mar 2026**）；Preprint. Under review. | `https://arxiv.org/abs/2603.13840` | **6.4M**（6,704,002 B） | **15** letter | |
-| **附录** | *ClimAgent: LLM as Agents for Autonomous Open-ended Climate Science Analysis* | arXiv:**2604.16922v1** \[cs.AI\]（文首标 **18 Apr 2026**）；议程注明无版本后缀 `/pdf` 曾 404，故用 **v1** | `https://arxiv.org/abs/2604.16922` | **1.9M**（1,910,537 B） | **23** A4 | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主①** | *CLIMATEAGENT: Multi-Agent Orchestration for Complex Climate Data Science Workflows* | arXiv:**2511.20109v2** \[cs.LG\]（文首标 **14 Sep 2026**） | `https://arxiv.org/abs/2511.20109` | **49** letter |
+| **主②** | *ClimateAgents: A Multi-Agent Research Assistant for Social-Climate Dynamics Analysis* | arXiv:**2603.13840v1** \[cs.MA\]（文首标 **14 Mar 2026**）；Preprint. Under review. | `https://arxiv.org/abs/2603.13840` | **15** letter |
+| **附录** | *ClimAgent: LLM as Agents for Autonomous Open-ended Climate Science Analysis* | arXiv:**2604.16922v1** \[cs.AI\]（文首标 **18 Apr 2026**） | `https://arxiv.org/abs/2604.16922` | **23** A4 |
 
 | 材料 | 作者 / 机构（文首） | 代码（文内明示） |
 |---|---|---|
 | ClimateAgent | Chenyue Li\*, Hyeonjae Kim\*, Wen Deng, Mengxi Jin, Wen Huang, Mengqian Lu, Binhang Yuan†（\*共一；†通讯）；The Hong Kong University of Science and Technology | https://github.com/Relaxed-System-Lab/ClimateAgent |
 | ClimateAgents | Shan Shan；Department of Mathematics / International Center for Interdisciplinary Statistics，Harbin Institute of Technology；`shans@hit.edu.cn` | 文称「source code repository hosted on GitHub」——**未给出可点击完整 URL**（本卡不补造） |
 | ClimAgent（附录） | Hao Wang¹, Jindong Han³, Wei Fan⁴, Hao Liu¹,²\*；HKUST(GZ) / HKUST / Shandong University / University of Auckland | https://github.com/usail-hkust/ClimAgent |
-
-**体积判定**：ClimateAgent **4.2M**、ClimateAgents **6.4M**、ClimAgent **1.9M**，均 **<20MB** → 按验收规矩 ****。抽取同步： 与 。
 
 **一句话抓手：**
 - **ClimateAgent**：用户气候问题 → Orchestrate + Plan 分解 → Data-Agent（cdsapi / ecmwf-api 动态 introspect，m=8 候选脚本）→ Coding-Agent（自纠 Rmax=3）→ 报告；基准 **Climate-Agent-Bench-85**，文称 **100%** 任务完成、报告质量 **8.32**（vs Copilot **6.27** / GPT-5 **3.26**）。
@@ -281,11 +279,10 @@ Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
 ## 七、可复核清单与已知缺口
 
 **可复核：**
-1. 本地体积：`ls -lh https://arxiv.org/abs/2511.20109 https://arxiv.org/abs/2603.13840 https://arxiv.org/abs/2604.16922` → **4.2M / 6.4M / 1.9M**。
-2. 页数：**49 / 15 / 23**。
-3. ClimateAgent Table 1/2、Table 3、Table 8 与 一致；摘要 8.32 / 6.27 / 3.26 / 100% 一致。
-4. ClimateAgents Table 1 十一角色；Agentic Reviewer overall **6.4**、soundness **5** 与抽取一致。
-5. ClimAgent CE「150 tools / 30 databases」、GitHub `usail-hkust/ClimAgent`、Table 1 Overall 数字与抽取一致。
+1. 页数：**49 / 15 / 23**。
+2. ClimateAgent Table 1/2、Table 3、Table 8 与 PDF 一致；摘要 8.32 / 6.27 / 3.26 / 100% 一致。
+3. ClimateAgents Table 1 十一角色；Agentic Reviewer overall **6.4**、soundness **5** 与抽取一致。
+4. ClimAgent CE「150 tools / 30 databases」、GitHub `usail-hkust/ClimAgent`、Table 1 Overall 数字与抽取一致。
 
 **缺口 / 勿编造：**
 - ClimateAgents **无**文内完整自有 GitHub URL——禁止补造。
@@ -293,12 +290,12 @@ Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
 - 40.21% 仅摘要出现；未在本抽取中还原为 Table 1 的显式算术——引用时标「摘要主张」。
 - ClimateAgents §4.2 误写「ClimateAgent」——标笔误风险，不合并系统。
 - 禁止把 [[天气气候基础模型]] Aurora 参数量/技巧写进本卡；禁止把 [[科研智能体]] 成本 <$15/篇 等数字挪来。
-- ClimateGPT 未下载、不升主。
+- ClimateGPT 仅作前置对照、不升主。
 
 ---
 
 ## 八、与 Wave9 agenda 的对齐句
 
-Agenda [[气候科学Agent]]：「[[天气气候基础模型]] 立的是天气/气候基础模型；缺『多代理编排做气候数据科学 / 社会—气候分析』轴。ClimateAgent（2511.20109）与 ClimateAgents（2603.13840）可核；≠ [[科研智能体]] 通史；≠ ClimateGPT 升主；ClimAgent（2604.16922v1）附录。」本卡交付即该缺口：双主文架构+评测字段钉死，附录索引，划界开篇钉死，PDF 体积可入库。
+Agenda [[气候科学Agent]]：「[[天气气候基础模型]] 立的是天气/气候基础模型；缺『多代理编排做气候数据科学 / 社会—气候分析』轴。ClimateAgent（2511.20109）与 ClimateAgents（2603.13840）可核；≠ [[科研智能体]] 通史；≠ ClimateGPT 升主；ClimAgent（2604.16922v1）附录。」本卡交付即该缺口：双主文架构+评测字段钉死，附录索引，划界开篇钉死。
 
-*2026-09-22 CST。体积：`ls -lh` 同日核对。*
+*2026-09-22 CST。*

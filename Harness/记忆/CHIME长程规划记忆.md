@@ -5,9 +5,9 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2609.02074 # 811K / 15p（主）
- - https://arxiv.org/abs/2506.15841 # 4.3M / 23p（补链）
- - https://arxiv.org/abs/2509.13313 # 1.3M / 29p（可选补链）
+ - https://arxiv.org/abs/2609.02074
+ - https://arxiv.org/abs/2506.15841
+ - https://arxiv.org/abs/2509.13313
 arxiv: ["2609.02074", "2506.15841", "2509.13313"]
 related:
  - "智能体长程记忆"
@@ -37,21 +37,19 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主** | *CHIME: Credit-Aware Hierarchical Memory Evolution for Long-Horizon Agentic Planning* | arXiv:**2609.02074v1** \[cs.AI\]（**2 Sep 2026**）；作者 Ye, Lan, Jiang, Ye, Zhu, Jia, Wang*, Xu, Luo, Shi*（厦大 / 浙大 / 阿里） | `https://arxiv.org/abs/2609.02074` | **811K**（829,476 B） | **15** letter | |
-| **补链** | *MEM1: Learning to Synergize Memory and Reasoning for Efficient Long-Horizon Agents* | arXiv:**2506.15841v2** \[cs.CL\]（**17 Jul 2025**）；Zhou*, Qu* et al.（SMART / NUS / MIT / Yonsei） | `https://arxiv.org/abs/2506.15841` | **4.3M**（4,492,356 B） | **23** letter | |
-| **可选补链** | *ReSum: Unlocking Long-Horizon Search Intelligence via Context Summarization* | arXiv:**2509.13313v3** \[cs.CL\]（**26 Mar 2026**）；Wu*, Li* et al.（CUHK / 通义 / HKUST / Penn State） | `https://arxiv.org/abs/2509.13313` | **1.3M**（1,360,337 B） | **29** letter | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主** | *CHIME: Credit-Aware Hierarchical Memory Evolution for Long-Horizon Agentic Planning* | arXiv:**2609.02074v1** \[cs.AI\]（**2 Sep 2026**）；作者 Ye, Lan, Jiang, Ye, Zhu, Jia, Wang*, Xu, Luo, Shi*（厦大 / 浙大 / 阿里） | `https://arxiv.org/abs/2609.02074` | **15** letter |
+| **补链** | *MEM1: Learning to Synergize Memory and Reasoning for Efficient Long-Horizon Agents* | arXiv:**2506.15841v2** \[cs.CL\]（**17 Jul 2025**）；Zhou*, Qu* et al.（SMART / NUS / MIT / Yonsei） | `https://arxiv.org/abs/2506.15841` | **23** letter |
+| **可选补链** | *ReSum: Unlocking Long-Horizon Search Intelligence via Context Summarization* | arXiv:**2509.13313v3** \[cs.CL\]（**26 Mar 2026**）；Wu*, Li* et al.（CUHK / 通义 / HKUST / Penn State） | `https://arxiv.org/abs/2509.13313` | **29** letter |
 
 | 材料 | 代码 / 承诺（文内） |
 |---|---|
 | CHIME | Abstract：**Code will be released at** https://github.com/ATH-MaaS/Marco-DeepResearch（截至笔记日作 **承诺仓**，本篇不跟 commit） |
 | MEM1 | https://github.com/MIT-MI/MEM1（补链索引，不展开） |
 | ReSum | （本卡不跟读实现；仅作摘要范式对照） |
-
-**体积判定**：CHIME **811K**、MEM1 **4.3M**、ReSum **1.3M**，均 **<10MB** → 按本仓库「>10MB 正式外链」规矩 **三份均**（无需降级）。
 
 **一句话抓手：**
 - **CHIME**：自演化记忆写银行前先过 **Credit Attribution Gate**（`planning` / `execution` / `both` / `none`）→ 只更新被归因的 bank；检索 = 相似度 Top-N + 信用价值重排 Top-K。
@@ -241,16 +239,3 @@ Train 侧 CHIME 亦最高：Qwen **35.02**、DeepSeek **38.00**（相对最强�
 6. 把「Code will be released」当成已可复现的冻结 commit。
 
 **开放问题（文内已暗示、本卡不编造答案）：** 跨榜迁移弱；Gate 依赖骨干自省能力（RQ5）；记忆指导仍受执行能力上限约束（附录 B）。
-
----
-
-## 十、来源与体积验收（2026-09-22 CST）
-
-| 文件 | `ls` 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `https://arxiv.org/abs/2609.02074` | 829,476 B（**811K**） | 15 | **入库二进制** + 抽取 |
-| `https://arxiv.org/abs/2506.15841` | 4,492,356 B（**4.3M**） | 23 | **入库二进制**（补链）+ 抽取 |
-| `https://arxiv.org/abs/2509.13313` | 1,360,337 B（**1.3M**） | 29 | **入库二进制**（可选补链）+ 抽取 |
-
-{chime,mem1,resum}.txt`。
-笔记路径：`/workspace/AIResearch-drafts/Harness/记忆/CHIME长程规划记忆.md。

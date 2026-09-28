@@ -28,11 +28,11 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Karten, Crow & Jin (Princeton), *Agent Bazaar: Enabling Economic Alignment in Multi-Agent Marketplaces* | arXiv:**2605.17698v1** \[cs.LG\] **17 May 2026**；文内 Date **May 19, 2026**；`https://arxiv.org/abs/2605.17698`（**17** 页 A4；4,234,328 bytes） | POSG 双环境 + harness + REINFORCE++ + EAS |
-| **辅·项目页** | https://sethkarten.ai/papers/agent-bazaar.html | WebFetch 2026-09-22 | 摘要/贡献清单；标注 **COLM 2026**；与 *LLM Economist* 对照一句 |
-| **备链 PDF** | https://sethkarten.ai/data/agent_bazaar.pdf | 与 arXiv PDF 同文入口 | 主链失败时备用（本窗主链已 200） |
+| **主文** | Karten, Crow & Jin (Princeton), *Agent Bazaar: Enabling Economic Alignment in Multi-Agent Marketplaces* | arXiv:**2605.17698v1** \[cs.LG\] **17 May 2026**；文内 Date **May 19, 2026**；`https://arxiv.org/abs/2605.17698`（**17** 页 A4） | POSG 双环境 + harness + REINFORCE++ + EAS |
+| **辅·项目页** | https://sethkarten.ai/papers/agent-bazaar.html | 2026-09-22 核对 | 摘要/贡献清单；标注 **COLM 2026**；与 *LLM Economist* 对照一句 |
+| **备链 PDF** | https://sethkarten.ai/data/agent_bazaar.pdf | 与 arXiv PDF 同文入口 | 主链失败时备用 |
 
 **通信：** `sethkarten@princeton.edu`
 
@@ -259,9 +259,8 @@ $$
 
 | 项 | 状态 |
 |---|---|
-| `https://arxiv.org/abs/2605.17698` | 本窗自 arXiv PDF 下载（curl 成功；备链作者站） |
-| | 1189 行 |
-| 项目页 | WebFetch `sethkarten.ai/papers/agent-bazaar.html`（COLM 2026 标注） |
+| `https://arxiv.org/abs/2605.17698` | arXiv 主链；备链作者站 |
+| 项目页 | `sethkarten.ai/papers/agent-bazaar.html`（COLM 2026 标注） |
 | 检索截止 | 2026-09-22 Asia/Shanghai (CST) |
 
 ## 相关笔记

@@ -25,9 +25,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Li, Zou & Liu (SJTU / SII / GAIR), *ToRL: Scaling Tool-Integrated RL* | arXiv:**2503.23383v1** \[cs.CL\] **30 Mar 2025**；`https://arxiv.org/abs/2503.23383`（**10** 页 A4；CreationDate **2025-04-01** CST；565,259 bytes） | 从 **base** 做 Tool-Integrated RL；TIR 进 rollout；涌现工具策略与认知行为 |
+| **主文** | Li, Zou & Liu (SJTU / SII / GAIR), *ToRL: Scaling Tool-Integrated RL* | arXiv:**2503.23383v1** \[cs.CL\] **30 Mar 2025**；`https://arxiv.org/abs/2503.23383`（**10** 页 A4；CreationDate **2025-04-01** CST） | 从 **base** 做 Tool-Integrated RL；TIR 进 rollout；涌现工具策略与认知行为 |
 | **辅·代码/数据/模型** | `https://github.com/GAIR-NLP/ToRL`（README；数据集 `data/torl_data`；HF `GAIR/ToRL` / `GAIR/ToRL-7B`） | 仓库自报：训练管线、**28k** 题、模型权重；依赖 **veRL** + **SandboxFusion** | 复现入口；与正文数字交叉核对 |
 
 **一句话抓手：** 把 **代码解释器** 放进 RL 的 env 交互环（检测到 code fence → 暂停生成 → 执行 → 把 `output` 写回上下文 → 继续推理），并从 **未后训练的 Qwen2.5-Math base** 起训；ToRL-7B 在 AIME24 达 **43.3%**，相对同设置无工具 RL 约 **+14** 点、相对 Qwen2.5-Math-Instruct-TIR 约 **+17** 点（Abstract / Table 3）。
@@ -232,7 +232,7 @@ $$
 
 ## 九、来源与版本钉死
 
-- PDF：`https://arxiv.org/abs/2503.23383`（arXiv **2503.23383v1**，2025-03-30；本地 CreationDate 2025-04-01 CST）。
+- PDF：`https://arxiv.org/abs/2503.23383`（arXiv **2503.23383v1**，2025-03-30；CreationDate 2025-04-01 CST）。
 - 辅：`https://github.com/GAIR-NLP/ToRL`（README 表与 Table 3 一致；stargazers 等元数据随时间变，**不以星数为科学主张**）。
 - 笔记状态：`date: 2026-09-22` · `status: draft`。
 

@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2609.09072 # 424K / 15p（主）
- - https://arxiv.org/abs/2609.01736 # 458K / 21p（补链，不升主）
+ - https://arxiv.org/abs/2609.09072
+ - https://arxiv.org/abs/2609.01736
 arxiv: ["2609.09072", "2609.01736"]
 related: ["ToRL工具集成强化学习", "智能体工具与长程任务", "代码智能体Harness史线"]
 retrieval_cutoff: 2026-09-22
@@ -27,12 +27,12 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主** | *ToolLoop: Closed-Loop Tool-Use Data Synthesis via Decomposed Generation and Dynamic Self-Feedback* | arXiv:**2609.09072v1** \[cs.CL\]（**8 Sep 2026**）；作者 Zeng, Liu, Cao, Chen, Li, Liu, Wen, Chen（**vivo AI Lab**） | `https://arxiv.org/abs/2609.09072` | **424K**（433,483 B） | **15** A4 | |
-| **补链** | *Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives*（HEART / Tool Primitives / ToolFace） | arXiv:**2609.01736v1** \[cs.SE\]（**1 Sep 2026**）；作者 Jin, Wang, Yu, Luo, Wang（UIUC / Starc） | `https://arxiv.org/abs/2609.01736` | **458K**（468,562 B） | **21** letter | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主** | *ToolLoop: Closed-Loop Tool-Use Data Synthesis via Decomposed Generation and Dynamic Self-Feedback* | arXiv:**2609.09072v1** \[cs.CL\]（**8 Sep 2026**）；作者 Zeng, Liu, Cao, Chen, Li, Liu, Wen, Chen（**vivo AI Lab**） | `https://arxiv.org/abs/2609.09072` | **15** A4 |
+| **补链** | *Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives*（HEART / Tool Primitives / ToolFace） | arXiv:**2609.01736v1** \[cs.SE\]（**1 Sep 2026**）；作者 Jin, Wang, Yu, Luo, Wang（UIUC / Starc） | `https://arxiv.org/abs/2609.01736` | **21** letter |
 
 | 材料 | 文内设置 / 入口（本篇不展开实现） |
 |---|---|
@@ -42,8 +42,6 @@ timezone: Asia/Shanghai (CST)
 | API 池 | ToolBench + BFCL 子集，共 **5,281** 可执行 API；训练框架 **swift**；节点 **4× L40s 48GB**；seq **16k**；**2 epochs** |
 | 合成规模 | 保留 **11,024** 例（文称 **11K**）；Isolate 去 BFCL 重叠候选后约 **10K** |
 | HEART（补链） | ToolFace **25,519** 函数；Planner–Router–Verifier；**不**作本卡方法主写 |
-
-**体积判定（2026-09-22 CST，`ls -lh`）：** ToolLoop **424K**、HEART **458K**，均 **<20MB** → 按 Wave10 规矩 ****。
 
 **一句话抓手：**
 - **ToolLoop**：先抽「该调哪些函数名」当地真 → **反向**造自然 query → **正向**造 OpenAI 格式 tool calls；每步用 **LLM 语义 + 规则 + AST** 验不过就带 issue 重写（最多 3 次），从「造完再滤」改成「边造边修」。
@@ -254,6 +252,5 @@ Ethics：合成数据、不采 PII；人工标只标合成例；API 规格与基
 - [ ] 范式：generate-then-filter → generate–verify–refine；三阶段 + ≤3 重写
 - [ ] 数字锚：11K / 86.40% / Isolate 86.07%；消融 79.97→82.56→86.40；ACE 72.1% @ 18.3% 数据
 - [ ] 未把 ToRL RL 环、旗舰 MCP、SWE ACI 写进主轴
-- [ ] PDF：`ls -lh` 主 **424K**、补 **458K**，均可二进制入库
 
 **结论句：** ToolLoop 把 Toolformer 谱系里「造 FC 监督数据」的瓶颈，从「多造再滤」拧到「**先钉函数组合、再反向问句、再正向填参，且每步可修**」——用更少样本换更高 BFCL/ACEBench 一致性；它解决的是 **数据对齐**，不是 [[ToRL工具集成强化学习]] 的 **RL 探索**，也不是 [[代码智能体Harness史线]]/[[智能体工具与长程任务]] 的 **运行时 harness / 产品长程**。

@@ -5,9 +5,9 @@ date: 2026-09-22
 lines: [评测字段, 任务设计]
 status: archived
 sources:
- - https://arxiv.org/abs/2502.18940 # 5.84MiB / 18p；≪10MB → 官方 HTTPS 外链
- - https://arxiv.org/abs/2510.02663 # 1.91MiB / 18p；≪10MB → 官方 HTTPS 外链
- - https://arxiv.org/abs/2605.14322 # 4.46MiB / 24p；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2502.18940
+ - https://arxiv.org/abs/2510.02663
+ - https://arxiv.org/abs/2605.14322
 aux:
  - https://arxiv.org/abs/2502.18940
  - https://arxiv.org/pdf/2502.18940
@@ -39,27 +39,21 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **锚 1 · MathTutorBench** | Macina, Daheim, Hakimi, Kapur, Gurevych & Sachan, *MathTutorBench: A Benchmark for Measuring Open-ended Pedagogical Capabilities of LLM Tutors* | arXiv:**2502.18940**v2 \[cs.CL\]（页眉 **12 Oct 2025**）；ETH Zurich / UKP Darmstadt / ETH Learning Sciences；`https://arxiv.org/abs/2502.18940`（**5.84MiB**，6,120,260 B；**18** 页） | 数学对话辅导 **七任务 / 三技能轴**；开放生成用 **Scaffolding RM**（Qwen2.5-1.5B 微调，专家>新手 pairwise **0.84**） |
-| **锚 2 · TutorBench** | Srinivasa, Che, Zhang et al. (Scale AI), *TutorBench: A Benchmark To Assess Tutoring Capabilities Of Large Language Models* | arXiv:**2510.02663**v1 \[cs.LG\]（页眉 **3 Oct 2025**）；Preprint；`https://arxiv.org/abs/2510.02663`（**1.91MiB**，1,998,643 B；**18** 页） | **1,490** 样本；六科 STEM；**828** 含图；样本专属 rubric（共 **15,220** 条）+ Claude Sonnet 4 judge；顶分 **55.65%** |
-| **锚 3 · TeachArena** | Chen, Liu, Sheng, Li, Tu, Deng, Shum, Liu & Qu, *TeachArena: Are Language Agents Ready for Realistic Teaching Work?* | arXiv:**2605.14322**v3 \[cs.AI\]（页眉 **2 Aug 2026**）；HKUST + Qwen Team；`https://arxiv.org/abs/2605.14322`（**4.46MiB**，4,679,430 B；**24** 页） | **354** 审计任务；Stage1 判断 / Stage2 情境辅导 / Stage3 LMS 工作流；17 模型；Overall 顶 **0.803**（Claude Opus 4.8） |
+| **锚 1 · MathTutorBench** | Macina, Daheim, Hakimi, Kapur, Gurevych & Sachan, *MathTutorBench: A Benchmark for Measuring Open-ended Pedagogical Capabilities of LLM Tutors* | arXiv:**2502.18940**v2 \[cs.CL\]（页眉 **12 Oct 2025**）；ETH Zurich / UKP Darmstadt / ETH Learning Sciences；`https://arxiv.org/abs/2502.18940`（**18** 页） | 数学对话辅导 **七任务 / 三技能轴**；开放生成用 **Scaffolding RM**（Qwen2.5-1.5B 微调，专家>新手 pairwise **0.84**） |
+| **锚 2 · TutorBench** | Srinivasa, Che, Zhang et al. (Scale AI), *TutorBench: A Benchmark To Assess Tutoring Capabilities Of Large Language Models* | arXiv:**2510.02663**v1 \[cs.LG\]（页眉 **3 Oct 2025**）；Preprint；`https://arxiv.org/abs/2510.02663`（**18** 页） | **1,490** 样本；六科 STEM；**828** 含图；样本专属 rubric（共 **15,220** 条）+ Claude Sonnet 4 judge；顶分 **55.65%** |
+| **锚 3 · TeachArena** | Chen, Liu, Sheng, Li, Tu, Deng, Shum, Liu & Qu, *TeachArena: Are Language Agents Ready for Realistic Teaching Work?* | arXiv:**2605.14322**v3 \[cs.AI\]（页眉 **2 Aug 2026**）；HKUST + Qwen Team；`https://arxiv.org/abs/2605.14322`（**24** 页） | **354** 审计任务；Stage1 判断 / Stage2 情境辅导 / Stage3 LMS 工作流；17 模型；Overall 顶 **0.803**（Claude Opus 4.8） |
 
 **代码 / 数据（文内明示）：**
 
 | 论文 | 文内入口 |
 |---|---|
 | MathTutorBench | `https://github.com/eth-lre/mathtutorbench`；数据 CC-BY-4.0（Limitations 段） |
-| TutorBench | 样本子集 `https://huggingface.co/datasets/tutorbench/tutorbench`（文内：30 样本预览；**全文「将很快发布」**，2026-09-22 抽取口径） |
+| TutorBench | 样本子集 `https://huggingface.co/datasets/tutorbench/tutorbench`（文内：30 样本预览；**全文「将很快发布」**，截至 2026-09-22 口径） |
 | TeachArena | 脚注 2：「All code and data are available on Hugging Face」；Appendix E 钉 commit **`cbd99fcca76b`**；子集名 `stage1_pedagogical_judgment` / `stage0_situated_tutoring` / `stage2_teaching_workflows`。**完整 HF repo slug 文内未印出** → 入库时以 commit 钉为准，slug **待补** |
-
-| 文件 | 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `2502.18940-mathtutorbench.pdf` | **5.84MiB**（6,120,260 B） | 18 | **官方 HTTPS 外链**（≪10MB；≪80 页） |
-| `2510.02663-tutorbench.pdf` | **1.91MiB**（1,998,643 B） | 18 | **官方 HTTPS 外链** |
-| `2605.14322-teacharena.pdf` | **4.46MiB**（4,679,430 B） | 24 | **官方 HTTPS 外链** |
 
 **一句话抓手：** 「会做题」≠「会辅导」≠「会在 LMS 里把教学决策做完」——MathTutorBench 用轻量 RM 量开放脚手架；TutorBench 用样本专属量尺打多模态辅导；TeachArena 把教师判断、多轮政策与制度动作拆成可审计三面，并暴露 **knowing–teaching–acting** 排名重排。
 
@@ -180,7 +174,7 @@ Abstract：学生把 LLM 当学习助手已成常态，但多数基准量「高�
 | Judge | Claude Sonnet 4；权重 $\{-5,1,5\}$；归一化 $[0,1]$ |
 | 人机对齐 | 250 样本 × 每准则 3 人评；LLM-judge vs 多数票 **F1=0.81**（优于中位人类） |
 
-公开：HF 子集 `tutorbench/tutorbench`（文内 30 样本）；**完整集「will be released soon」**（2026-09-22 抽取仍为此口径）。
+公开：HF 子集 `tutorbench/tutorbench`（文内 30 样本）；**完整集「will be released soon」**（截至 2026-09-22 仍为此口径）。
 
 ### 4.2 三用例（§2.1）
 
@@ -311,7 +305,7 @@ Table 1 定位：τ-bench / TheAgentCompany / Toolathlon 有工具与状态，�
 ## 七、开放问题与跟读建议
 
 1. **RM / LLM-judge 漂移**：MathTutorBench 已证通用 RM 失效；TutorBench 钉 Claude Sonnet 4——换 judge 家族是否重排？文内未做跨 judge 全表 → 复现时需固定版本。
-2. **TutorBench 全文数据**：2026-09-22 抽取仍为「soon」；榜数字以论文 Table 1 为准，勿用 30 样本子集外推。
+2. **TutorBench 全文数据**：截至 2026-09-22 仍为「soon」；榜数字以论文 Table 1 为准，勿用 30 样本子集外推。
 3. **TeachArena HF slug**：仅有 commit `cbd99fcca76b`；入库脚本需补全 repo 路径后再 `git checkout` 钉死。
 4. **学习收益外环**：三文均声明不替代真人学习实验；与 [[LearnLM教育辅导]] 早期报告的课堂/Study Hall 线正交，本卡不并写。
 5. **Agent 产品叙事**：勿滑入 [[智能体工具与长程任务]] MCP/长程 System Card；TeachArena 工具面是 **教学状态契约**，不是通用工具环通史。
@@ -330,8 +324,7 @@ Table 1 定位：τ-bench / TheAgentCompany / Toolathlon 有工具与状态，�
 
 ## 九、来源与核验
 
-- 官方 PDF：`https://arxiv.org/abs/2502.18940` · `2510.02663-tutorbench.pdf` · `2605.14322-teacharena.pdf`
-- *.txt`（2026-09-22 CST）
+- 官方 PDF：`https://arxiv.org/abs/2502.18940` · `https://arxiv.org/abs/2510.02663` · `https://arxiv.org/abs/2605.14322`
 - arXiv abs/pdf 链接见 YAML `aux`
 - 代码/数据入口见 §一表；TeachArena 完整 HF slug **文内未给出** → 不编造
 

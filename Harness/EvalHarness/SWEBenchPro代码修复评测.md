@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2509.16941 # 1.6M / 20p
- - https://arxiv.org/abs/2609.08149 # 1.9M / 37p
+ - https://arxiv.org/abs/2509.16941
+ - https://arxiv.org/abs/2609.08149
 arxiv: ["2509.16941", "2609.08149"]
 related: ["代码智能体Harness史线", "评测与排行榜可靠性", "科研智能体", "智能体工具与长程任务"]
 aux_scale: "https://labs.scale.com/papers/swe-bench-pro"
@@ -33,13 +33,13 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主①** | *SWE-Bench Pro: Can AI Agents Solve Long-Horizon Software Engineering Tasks?*（Scale AI；Deng*, Da* 等） | arXiv:**2509.16941v2** \[cs.SE\]（文首 **14 Nov 2025**；元数据 id `2509.16941v2`） | `https://arxiv.org/abs/2509.16941` | **1.6M**（1,585,853 B） | **20** A4 | |
-| **主②** | *SWE-Bench Pro Verified: A Reliable Benchmark for Software Engineering Agents*（Zheng 等；华东师大 / 上海 AI Lab / 复旦） | arXiv:**2609.08149v2** \[cs.AI\]（文首 **16 Sep 2026**；页眉 **2026-9-17**） | `https://arxiv.org/abs/2609.08149` | **1.9M**（1,974,858 B） | **37** A4 | |
-| **辅·入口** | Scale Labs 论文页（摘要 / branding；**非**独立 PDF） | https://labs.scale.com/papers/swe-bench-pro | — | HTML | — | 2026-09-22 `WebFetch` |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主①** | *SWE-Bench Pro: Can AI Agents Solve Long-Horizon Software Engineering Tasks?*（Scale AI；Deng*, Da* 等） | arXiv:**2509.16941v2** \[cs.SE\]（文首 **14 Nov 2025**；元数据 id `2509.16941v2`） | `https://arxiv.org/abs/2509.16941` | **20** A4 |
+| **主②** | *SWE-Bench Pro Verified: A Reliable Benchmark for Software Engineering Agents*（Zheng 等；华东师大 / 上海 AI Lab / 复旦） | arXiv:**2609.08149v2** \[cs.AI\]（文首 **16 Sep 2026**；页眉 **2026-9-17**） | `https://arxiv.org/abs/2609.08149` | **37** A4 |
+| **辅·入口** | Scale Labs 论文页（摘要 / branding；**非**独立 PDF） | https://labs.scale.com/papers/swe-bench-pro | — | — |
 
 | 材料 | 数据 / 代码（文内自报） |
 |---|---|
@@ -50,7 +50,7 @@ timezone: Asia/Shanghai (CST)
 - **Pro**：用 **GPL/copyleft 公共库 + 创业公司商业库 + 留出库** 做抗污染长程修复；参考补丁均 **≥10 LOC**，均值约 **107.4 LOC / 4.1 files**；公共集前沿 **Pass@1 仍 <45%**（arXiv v2）。
 - **Pro Verified**：同一公共 **731** 题上，先堵 **本地 Git/文件 + 网络代码托管** 泄漏，再对 **102** 题做最小字段校正——有 hacking 习惯的模型分会大幅回落。
 
-**摘要数字对照（禁混用）：** Scale Labs 页摘要写「below **25%**」「GPT-5 … **23.3%**」；本地 arXiv **v2** 摘要写「below **45%** (Pass@1)」，正文 Table 1 公共集 Sonnet 4.5 = **43.6%**。**23.3%** 出现在 Pro 文 Table 5（**max turn 50 + max cost $2** 预算下 GPT-5 *medium*）。跟读以 **本地 v2 PDF** 为准，网页摘要作辅入口并标可能滞后。
+**摘要数字对照（禁混用）：** Scale Labs 页摘要写「below **25%**」「GPT-5 … **23.3%**」；arXiv **v2** 摘要写「below **45%** (Pass@1)」，正文 Table 1 公共集 Sonnet 4.5 = **43.6%**。**23.3%** 出现在 Pro 文 Table 5（**max turn 50 + max cost $2** 预算下 GPT-5 *medium*）。跟读以 **arXiv v2 PDF** 为准，网页摘要作辅入口并标可能滞后。
 
 ---
 
@@ -294,11 +294,6 @@ timezone: Asia/Shanghai (CST)
 
 | 项 | 状态 |
 |---|---|
-| PDF 下载 | `curl` arXiv PDF → 本地（草稿）；入库 （2026-09-22 CST） |
-| 体积 | Pro **1,585,853 B (1.6M)**；Verified **1,974,858 B (1.9M)**；均 **<20MB** |
 | 页数 | **20** / **37** |
-| 文本 | |
 | 辅页 | Scale Labs HTML 摘要已对照；与 v2「<45%」不一致已标 |
 | 禁编造 | 表数字均出自抽取文本；Figure 1 柱高标 **待核实读图** |
-
-**成稿路径：** [[SWEBenchPro代码修复评测]]

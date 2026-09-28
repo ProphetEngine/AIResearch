@@ -29,10 +29,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A · MoA** | Wang, Wang, Athiwaratkun, Zhang & Zou, *Mixture-of-Agents Enhances Large Language Model Capabilities* | arXiv:**2406.04692v1** \[cs.CL\] **7 Jun 2024**；`https://arxiv.org/abs/2406.04692`（**15** 页 letter；CreationDate **2024-06-10** CST；1,157,463 bytes） | 多层异构 LLM；collaborativeness；proposer/aggregator；AlpacaEval / MT-Bench / FLASK |
-| **主文 B · TUMIX** | Chen, Chen, Meng, Yin, Li, Fan, Wang, Pfister & Yoon, *TUMIX: Multi-Agent Test-Time Scaling with Tool-Use Mixture* | arXiv:**2510.01279v1** \[cs.CL\] **30 Sep 2025**；`https://arxiv.org/abs/2510.01279`（**27** 页 A4；2,186,953 bytes） | 单 LLM × 15 工具策略 agent；迭代共享精炼；LLM-as-Judge 早停；HLE/GPQA/AIME |
+| **主文 A · MoA** | Wang, Wang, Athiwaratkun, Zhang & Zou, *Mixture-of-Agents Enhances Large Language Model Capabilities* | arXiv:**2406.04692v1** \[cs.CL\] **7 Jun 2024**；`https://arxiv.org/abs/2406.04692`（**15** 页 letter；CreationDate **2024-06-10** CST） | 多层异构 LLM；collaborativeness；proposer/aggregator；AlpacaEval / MT-Bench / FLASK |
+| **主文 B · TUMIX** | Chen, Chen, Meng, Yin, Li, Fan, Wang, Pfister & Yoon, *TUMIX: Multi-Agent Test-Time Scaling with Tool-Use Mixture* | arXiv:**2510.01279v1** \[cs.CL\] **30 Sep 2025**；`https://arxiv.org/abs/2510.01279`（**27** 页 A4） | 单 LLM × 15 工具策略 agent；迭代共享精炼；LLM-as-Judge 早停；HLE/GPQA/AIME |
 | **辅·Google Research** | 页题 *TUMIX: Augmenting LLM Reasoning with a Dynamic Tool-Use Mixture* | https://research.google/pubs/tumix-augmenting-llm-reasoning-with-a-dynamic-tool-use-mixture/ （摘要与 arXiv 主张一致：+3.55%、49% 成本等） | 机构页交叉核对；**不以网页代替 PDF 表** |
 
 **代码（论文自报）：** MoA `https://github.com/togethercomputer/moa`
