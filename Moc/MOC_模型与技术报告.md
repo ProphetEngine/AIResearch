@@ -43,7 +43,7 @@ status: active
 - [[MiniMaxM1技术报告深读|TR MiniMax-M1]]
 - [[Mistral3公告短卡|TR Mistral / Ministral-3]]
 
-## 旗舰篇（现文件名保留 W* 前缀）
+## 旗舰篇（新一代模型深读）
 
 - [[GPT6Astra系统卡深读]]
 - [[DeepSeekV41Flash深读|DeepSeek-V4.1 Flash]]
