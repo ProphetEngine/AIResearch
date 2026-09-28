@@ -245,7 +245,7 @@ RQ2 机制（防御侧）：cGPU 模式加密 CVM–cGPU IO（bounce buffer）�
 
 ## 五、部署建议（只写防御配置杠杆）
 
-### 5.1 摘自 Blackwell §11（可跟读清单）
+### 5.1 摘自 Blackwell §11
 
 1. **始终 full CUDA graphs**——压掉 ∼12 µs/submission。
 2. **用带 CC 补丁的框架**（异步 D2H worker）；未打补丁单卡常见 **30–40%**，打补丁可 **<1%**。

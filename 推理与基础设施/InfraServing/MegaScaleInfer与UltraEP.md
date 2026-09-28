@@ -195,7 +195,7 @@ SLO：文设 **TBT = 150 ms**。异质表（Table 3）以 L20 归一化标价，
 
 ---
 
-## 五、交叉对照与跟读清单
+## 五、交叉对照与延伸阅读
 
 | 问题 | MegaScale-Infer | UltraEP |
 |---|---|---|
@@ -207,9 +207,9 @@ SLO：文设 **TBT = 150 ms**。异质表（Table 3）以 L20 归一化标价，
 | 与 DeepEP | 一句 CPU vs GPU–GPU 对照 | token 后端集成；复制带宽对照 |
 | 典型数字锚 | 最高 **1.90×**/GPU decode；M2N **4.2×** | **~94%** ideal；失衡 **→~1.01–1.04** |
 
-**建议跟读顺序：** §二划界 → MegaScale Fig.3–4 + Alg.1 + Fig.8/9 吞吐表 → UltraEP Fig.1–2 + Alg.1 + Fig.11/12 → 需要通信基底时回 **[[NVSHMEM与DeepEP通信]]**，需要路由史时回 **[[混合专家架构]]**，需要引擎选型时回 **[[推理引擎生态]]**——**不要**反向把本卡写成其中任一续篇。
+**建议阅读顺序：** §二划界 → MegaScale Fig.3–4 + Alg.1 + Fig.8/9 吞吐表 → UltraEP Fig.1–2 + Alg.1 + Fig.11/12 → 需要通信基底时回 **[[NVSHMEM与DeepEP通信]]**，需要路由史时回 **[[混合专家架构]]**，需要引擎选型时回 **[[推理引擎生态]]**。
 
-**刻意不写：** Switch/Mixtral 路由公式重推；NVSHMEM/IBGDA/DeepEP V1·V2 内核；ThunderKittens DSL；vLLM PagedAttention / 投机解码通史。
+**本篇不写：** Switch/Mixtral 路由公式重推；NVSHMEM/IBGDA/DeepEP V1·V2 内核；ThunderKittens DSL；vLLM PagedAttention / 投机解码通史。
 
 ---
 

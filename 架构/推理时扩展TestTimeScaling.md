@@ -281,7 +281,7 @@ System Card §5.3：o 系列因推理与 **test-time compute** 带来能力跃�
 7. **把第三方架构传闻当事实**
  凡未出现在 OpenAI/DeepSeek 一级来源的「搜索树层数、隐蔽 MoE、内部代号」等，一律 **待核实**。
 
-### 5.2 一级引用（跟读清单）
+### 5.2 一级引用
 
 1. OpenAI. *Introducing OpenAI o1-preview.* https://openai.com/index/introducing-openai-o1-preview/ （2024-09-12）
 2. OpenAI. *Learning to reason with LLMs.* https://openai.com/index/learning-to-reason-with-llms/ （2024-09-12）

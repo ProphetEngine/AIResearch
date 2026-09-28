@@ -260,13 +260,13 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 六、跟读清单与未决
+## 六、延伸阅读与未决
 
-**优先跟读：**
+**优先阅读：**
 1. BrowseComp Table 3 + Figure 1/4（Accuracy / 校准 / 算力）。
 2. Illusion Table 2–3 + Figure 1（人工 SR vs 自报幻象；WebJudge AR）。
 3. Illusion §5 Operator 错误分布（Filter/Sort 主导）。
 
-**本卡刻意不写：** Venus 训练、CUA 安全卡、OSWorld、WorfBench 图指标、Vending 净值、未公布的商业 BrowseComp 排行外推。
+**本篇不写：** Venus 训练、CUA 安全卡、OSWorld、WorfBench 图指标、Vending 净值、未公布的商业 BrowseComp 排行外推。
 
-**开放问题（文内已提示、此处不答）：** BrowseComp 第二合法答案残余不确定性；WebJudge 作 RL 奖励尚未在本文实证；在线站持续漂移下的版本可比性依赖维护承诺。
+**开放问题（文内已提示）：** BrowseComp 第二合法答案残余不确定性；WebJudge 作 RL 奖励尚未在本文实证；在线站持续漂移下的版本可比性依赖维护承诺。

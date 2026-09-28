@@ -194,7 +194,7 @@ Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不
 
 ---
 
-## 七、跟读清单（可复述）
+## 七、延伸阅读
 
 1. **EAGLE 扩数据不涨速** ← 特征预测约束 + 多步分布偏移。
 2. **Training-time test** ← 训练时把自预测 $a$ 喂回，对齐推理；去 $l_{\mathrm{fea}}$。

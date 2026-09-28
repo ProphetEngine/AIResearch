@@ -83,7 +83,7 @@ Omni 锚点： 文本·图像·音频·视频入 → 文本出 + 流式语音出
 
 ### 4.1 相对 Qwen2.5-Omni 的五条升级（§1）
 
-文内显式列举（跟读清单，勿与 [[SpeechLLM语音语言模型]] 混淆）：
+文内显式列举（勿与 [[SpeechLLM语音语言模型]] 混淆）：
 
 1. Thinker / Talker 均改为 **MoE**；
 2. **Whisper → AuT**（20M 小时监督，block-wise window attention 以支持实时 prefill 缓存）；
@@ -203,7 +203,9 @@ Omni 锚点： 文本·图像·音频·视频入 → 文本出 + 流式语音出
 
 ---
 
-## 七、跟读路线（建议 25–35 分钟）
+## 七、延伸阅读
+
+建议用时 25–35 分钟：
 
 1. **3-Omni** Abstract + §1 五升级清单 + Figure 2 文字说明（Thinker–Talker / MTP / Code2Wav）。
 2. §2.2 AuT → §2.1 Talker 与文本解耦 → §2.5 Table 1–2 延迟账。

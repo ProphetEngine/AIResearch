@@ -190,7 +190,7 @@ Figure 2 举例：
 
 ---
 
-## 七、跟读清单（可闭卷复述）
+## 七、延伸阅读
 
 1. **接入：** Whisper-large-v3 编码器 + 16 kHz / 128-mel / 25ms·10ms / pool×2 → ~**40 ms/帧** → 条件 **Qwen-7B** 做 $P(x_t\mid x_{<t},\mathrm{Enc}(a))$；总参 **8.2B**。
 2. **训练：** 自然语言提示多任务预训练 → Analysis∥VoiceChat 联合 SFT → DPO；**无 system prompt 切模**。

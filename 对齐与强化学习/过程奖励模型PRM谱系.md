@@ -225,13 +225,13 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 ---
 
-## 七、跟读清单（可复述）
+## 七、延伸阅读
 
 1. **ORM 看结局，PRM 看过程**——难题上逐步信用分配更关键（Lightman §6.1）。
 2. **Lightman：** 人标 PRM800K + Best-of-N → MATH500 子集 **78.2%**（vs ORM 72.4 / vote 69.6）；主动学习约 **2.6×** 效率；**故意不训 generator RL**。
 3. **聚合：** Lightman 主用 **product**；Math-Shepherd 验证用 **min**——读代码时别混。
 4. **Math-Shepherd：** 用 completer 从该步续写，HE/SE 估「能否到金标」→ 无人工逐步标；同一 PRM 既做 **256-rerank** 又做 **step-by-step PPO**（Mistral：**77.9→84.1** GSM8K，**28.6→33.0** MATH；再验证到 **89.1 / 43.5**）。
-5. **枢纽：** PRM = TTS 的逐步裁判 + 过程 RL 的 dense 奖励源；**不要**在本笔记重写 R1 阶段或 DAPO 技巧表。
+5. **枢纽：** PRM = TTS 的逐步裁判 + 过程 RL 的 dense 奖励源。
 
 ---
 

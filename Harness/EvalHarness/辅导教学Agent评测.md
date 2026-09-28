@@ -302,13 +302,13 @@ Table 1 定位：τ-bench / TheAgentCompany / Toolathlon 有工具与状态，�
 
 ---
 
-## 七、开放问题与跟读建议
+## 七、开放问题
 
 1. **RM / LLM-judge 漂移**：MathTutorBench 已证通用 RM 失效；TutorBench 钉 Claude Sonnet 4——换 judge 家族是否重排？文内未做跨 judge 全表 → 复现时需固定版本。
 2. **TutorBench 全文数据**：截至 2026-09-22 仍为「soon」；榜数字以论文 Table 1 为准，勿用 30 样本子集外推。
 3. **TeachArena HF slug**：仅有 commit `cbd99fcca76b`，完整 repo 路径文内未印出。
-4. **学习收益外环**：三文均声明不替代真人学习实验；与 [[LearnLM教育辅导]] 早期报告的课堂/Study Hall 线正交，本卡不并写。
-5. **Agent 产品叙事**：不滑入 [[智能体工具与长程任务]] MCP/长程 System Card；TeachArena 工具面是 **教学状态契约**，不是通用工具环通史。
+4. **学习收益外环**：三文均声明不替代真人学习实验；与 [[LearnLM教育辅导]] 早期报告的课堂/Study Hall 线正交。
+5. **Agent 产品叙事**：TeachArena 工具面是 **教学状态契约**，不是通用工具环通史（通用工具与长程任务见 [[智能体工具与长程任务]]）。
 
 ---
 

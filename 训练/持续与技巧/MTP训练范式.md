@@ -254,9 +254,9 @@ $$
 
 ---
 
-## 八、跟读清单（可复述）
+## 八、延伸阅读
 
-1. **划界** ← 本卡 = MTP **训练**；EntMTP = **推理选树**；EAGLE-3 / [[推理引擎生态]] 不重写。
+1. **划界** ← 本卡 = MTP **训练**；EntMTP = **推理选树**；EAGLE-3 / 引擎侧见 [[推理引擎生态]]。
 2. **AdaMTP** ← $\Delta E>\tau$ 切组 → $d_t$ → $\mathbf{1}(j{+}1\le d_t)$ 掩码；Avg 三骨干皆高于 NTP/MTP；GSM8K 上 Llama **2.12×**、Gemma **2.75×**。
 3. **MTP-D** ← $\mathrm{sg}$ + TopN=10k KL；4 头 **+7.5%** AR ≈ **+22.9%** 速；loop 可扩 8–16，摘要相对 1-head **+220.4%**。
 4. **OCC** ← $\Delta_{\mathrm{MTP}}=$ 相关 − 惩罚；CE 崩、Policy 先升后降；OCC Avg **61.7**（MiMo+DAPO）压过 Detach **58.9**，步时≈Detach。

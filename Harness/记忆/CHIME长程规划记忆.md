@@ -226,16 +226,15 @@ Train 侧 CHIME 亦最高：Qwen **35.02**、DeepSeek **38.00**（相对最强�
 
 ---
 
-## 九、跟读清单与误区
+## 九、延伸阅读与误区
 
-**建议跟读顺序：** §1 信用失败诊断 → Figure 1–2 与 §3.2 三组件 → Table 1–2 → RQ1/RQ2/RQ4 → 附录 B 边界；MEM1/ReSum 只读 Abstract 对照槽。
+**建议阅读顺序：** §1 信用失败诊断 → Figure 1–2 与 §3.2 三组件 → Table 1–2 → RQ1/RQ2/RQ4 → 附录 B 边界；MEM1/ReSum 只读 Abstract 对照槽。
 
 **常见误区：**
 1. 把 CHIME 当成 Mem0/Zep「又一层生产记忆 API」。
 2. 把分层银行当成 HippoRAG「文档 KG」。
 3. 把 Credit Gate 当成 Memory-R1「RL 学 CRUD」。
-4. 把 WebAnchor 对照写成「本卡在做 AB-MCTS」。
-5. 忽略 BFCL 上 DeepSeek 单榜 A-MapReduce 更高的例外，只报平均。
-6. 把「Code will be released」当成已可复现的冻结 commit。
+4. 忽略 BFCL 上 DeepSeek 单榜 A-MapReduce 更高的例外，只报平均。
+5. 把「Code will be released」当成已可复现的冻结 commit。
 
 **开放问题（文内已暗示）：** 跨榜迁移弱；Gate 依赖骨干自省能力（RQ5）；记忆指导仍受执行能力上限约束（附录 B）。

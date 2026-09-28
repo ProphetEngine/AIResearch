@@ -173,7 +173,7 @@ SWE-agent 把「编码 agent」从 **提示词 + 裸 shell** 提升为 **可消�
 
 最小用法（Figure 2）：`LLM` → `get_default_agent` → `Conversation(agent, workspace=...)` → `send_message` / `run`。本地改远程：把 workspace 换成 `DockerWorkspace`（Figure 5），其余配置不变——**local-first, deploy-anywhere**。
 
-### 4.3 SDK 九块积木（§4.2–4.10，跟读清单）
+### 4.3 SDK 九块积木（§4.2–4.10）
 
 1. **Event-sourced state**：不可变事件追加；`ConversationState` 单源真相；元数据写 `base_state.json`，事件分文件；崩溃恢复可从日志重放。
 2. **LLM 层**：经 LiteLLM 接 **100+** provider；Chat Completions + OpenAI Responses；原生 reasoning/extended thinking 字段；无 function-calling 模型用文本工具协议 mixin；**`RouterLLM`** 按消息选模型。

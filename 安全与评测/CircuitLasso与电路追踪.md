@@ -237,13 +237,13 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 ---
 
-## 七、跟读清单（建议顺序）
+## 七、延伸阅读
 
 1. 本卡 §二划界表（确认不是 [[机制可解释性入门]]/[[激活操控与表征工程]]/[[审慎对齐与断路器]]）。
 2. CircuitLasso：摘要 + §3 框架 + Figure 2 / Table 1–2。
 3. Circuit Tracing methods：Introduction → Building Replacement Model → Attribution Graphs → Validating… → Limitations（官方 HTML）。
 4. Biology：只读 Contents + 与自身问题相关的一案；勿把九案抄进通史。
-5. 需要概念阶梯时跳转 **[[机制可解释性入门]]**，不要在本卡重写。
+5. 需要概念阶梯时跳转 **[[机制可解释性入门]]**。
 
 ---
 

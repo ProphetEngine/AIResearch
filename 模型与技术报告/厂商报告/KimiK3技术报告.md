@@ -275,11 +275,11 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 八、结论与跟读建议
+## 八、结论与延伸阅读
 
 **结论（§8 转述）：** K3 是开源 **2.8T** 级原生视觉 MoE、**1M** 上下文，基于 KDA 与 AttnRes；自称首个开源 **3T-class** 模型；在长程编码 / agentic / 知识 / 推理 / 视觉上达 frontier-level，与最强闭源仍有差距，但立新的开源前沿并公开权重。
 
-**跟读顺序建议：**
+**建议阅读顺序：**
 
 1. Abstract + Fig.1 + Table 1（规模与主结果）
 2. §2.1–2.3（KDA lower-bound / AttnRes / SiTU+QB）—架构主杠杆

@@ -168,7 +168,7 @@ MiniMax-Text-01 base
 - Bai et al., 2024 — LongBench-v2
 - MiniMax et al., 2025 — MiniMax-Text-01（底座）
 
-### 4.3 跟读指针（本仓库）
+### 4.3 延伸阅读
 
 - **[[推理时扩展TestTimeScaling]]** test-time scaling / LRM 叙事
 - **[[长上下文位置编码与系统侧]]** 长上下文方法谱系（与 1M 窗口对照）
@@ -177,8 +177,6 @@ MiniMax-Text-01 base
 - **[[DeepSeekR1推理训练深读]]** / **[[Qwen3技术报告深读]]** — 同档开源推理模型配方对照
 
 ---
-
-*所有数字与机制主张均可回指本 PDF 对应节/表；未在正文出现的规格一律不补。*
 
 ## 相关笔记
 

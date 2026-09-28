@@ -206,17 +206,14 @@ $s_v=\max\bigl(c_a,\ \max_{u\in\mathrm{Parents}(v)} f_u\bigr)$——同 agent �
 | 代码 | `https://github.com/liaolea/M3MAD-Bench` |
 | 会议 | ACMMM **2026**（文内 MM ’26） |
 
-跟读建议：若后续要加深 MAD **评测协议**而非机制，可开 [[多智能体辩论]] 附录或独立短卡；**不要**并进本 OrchBench 正文。
-
 ---
 
-## 八、跟读清单与开放问题
+## 八、延伸阅读与开放问题
 
-**建议跟读顺序：** Abstract + Fig.1 → §Problem Formulation（$\pi=(\alpha,R)$）→ §Methodology 仿真六段 → Table 2/4/5/6/8/9 → Conclusion。Fig.4/5 曲线点以读图核实为准。
+**建议阅读顺序：** Abstract + Fig.1 → §Problem Formulation（$\pi=(\alpha,R)$）→ §Methodology 仿真六段 → Table 2/4/5/6/8/9 → Conclusion。Fig.4/5 曲线点以读图核实为准。
 
-**开放问题（不编答案）：**
+**开放问题：**
 
 1. 仿真质量模型（几何均值父质量 × 压缩敏感指数）对真实 worker 错误模式的覆盖边界在哪？
 2. 固定 DAG 假设下，「先分解再编排」的联合优化如何接入而不重新揉进端到端噪声？
 3. 与 HiddenBench / Silo-Bench 的「交互中通信」能否共用同一缺失转移仪器？
-4. 作者评测仓若后续公开，应补 `code_promised` 字段并核版本哈希。

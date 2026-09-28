@@ -294,14 +294,14 @@ inspect eval --run-config run.yaml
 
 ---
 
-## 七、跟读清单（建议顺序）
+## 七、延伸阅读
 
 1. 首页 Hello：SimpleQA（`generate` + `model_graded_qa`）与 CTF（`react` + `sandbox="docker"`）。
 2. Solvers → TaskState / `@solver` / chain；再扫 Scorers 表。
 3. Tasks：参数 `-T`、`--solver`、`setup`、`task_with`、四层配置、`export-config`。
 4. Sandboxing：`sandbox()` 接口、compose `network_mode`、limits、cleanup。
 5. Eval Logs + Log Viewer：`.eval`、`eval-retry`、流式读样本、bundle。
-6. （可选）Evals 列表：https://inspect.aisi.org.uk/evals/ —— **200+** 预置评测（文档数字）；本文不逐条抄基准。
+6. （可选）Evals 列表：https://inspect.aisi.org.uk/evals/ —— **200+** 预置评测（文档数字）。
 
 LLM 辅助文档索引（站点提供）：`llms.txt` / `llms-guide.txt`；页面可 Copy Page 为 Markdown。
 

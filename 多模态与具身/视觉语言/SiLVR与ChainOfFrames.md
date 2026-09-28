@@ -220,7 +220,7 @@ PDF 题名为 **TORM**（*Spatial-Temporal reasOning via inteRnalized Modeling*�
 
 ---
 
-### 7.1 建议跟读顺序
+### 7.1 延伸阅读
 
 1. SiLVR Abstract + §3（含 Algorithm 1）+ Table 1/2/3/5。
 2. CoF Abstract + §3.2–3.3 + Table 1/2/3 + Fig. 6。

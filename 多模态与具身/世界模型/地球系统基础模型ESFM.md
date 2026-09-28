@@ -241,17 +241,13 @@ Decoder：气压层 perceiver 可query **与观测不同的目标层** → 再 A
 
 ---
 
-## 七、跟读清单与反模式
+## 七、延伸阅读与反模式
 
-**应跟读：** Fig. 2–5 数据流；§2.1 NaN vs density channel；§2.2 六 bin + 站点 greedy；§2.3 AdaLN 式 (1)；§3–4 预训练/掩码与 Table 1–2；§5 缺失/MODIS/站点；附录 A.2–A.3 概率与超参。
+**建议阅读：** Fig. 2–5 数据流；§2.1 NaN vs density channel；§2.2 六 bin + 站点 greedy；§2.3 AdaLN 式 (1)；§3–4 预训练/掩码与 Table 1–2；§5 缺失/MODIS/站点；附录 A.2–A.3 概率与超参。
 
 **反模式：**
-1. 把本卡写成 **Aurora 1.3B / 四域微调** 复读（→ [[天气气候基础模型]]）。
-2. 写成 **ClimateAgent** 编排或政策 Agent（→ [[气候科学Agent]]）。
-3. 写成 **SkySense** 遥感解译（→ [[SkySense遥感基础模型]]）。
-4. 写成 **TabPFN/TimesFM** 通史（→ [[表格与时序基础模型]]）。
-5. 把「可扩到 Aurora large」当已完成缩放实验。
-6. 把 MODIS 更贴合当成「更接近真值大气」。
+1. 把「可扩到 Aurora large」当已完成缩放实验。
+2. 把 MODIS 更贴合当成「更接近真值大气」。
 
 ---
 
