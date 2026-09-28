@@ -14,7 +14,7 @@ archived: 2026-09-22
 # Tool-use RL：ToRL——从基座模型缩放工具集成 RL
 
 > **定位**：工具集成强化学习主题轴——仓库内 **「把代码解释器嵌进 RL 环境、从 base 直接探索工具策略」** 专篇。相对纯 CoT 的 outcome RL（R1 / SimpleRL 等）与蒸馏轨迹再 SFT 的 TIR（ToRA / MathCoder 等），ToRL 证明：**工具调用本身可以当探索动作**，不必先模仿人类/更强模型的工具脚本。
-> **攻坚线**：**架构思想（主）**——TIR rollout 环、沙箱选择、观测 mask、工具次数 $C$；**评测字段（辅）**——AIME/MATH 等相对「无工具 RL」与「Instruct-TIR」的增益、训练中 code ratio / pass ratio。
+> **研究线**：**架构思想（主）**——TIR rollout 环、沙箱选择、观测 mask、工具次数 $C$；**评测字段（辅）**——AIME/MATH 等相对「无工具 RL」与「Instruct-TIR」的增益、训练中 code ratio / pass ratio。
 > **范围与相邻笔记**：
 > - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单（Clip-Higher / Dynamic Sampling / token-level loss / Overlong 等）。本篇只用到「**用 GRPO 做组相对 RL**」这一抽象槽位；超参见 §3.1，不展开目标函数变体。
 > - **不重写** [[代码智能体Harness史线]] 的 SWE-agent ACI / OpenHands SDK（编辑器命令面、lint guardrail、生产 harness）。本篇沙箱是 **数学题上的 Python 解释器（Sandbox Fusion）**，不是软件工程 ACI。

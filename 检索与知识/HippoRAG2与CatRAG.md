@@ -20,7 +20,7 @@ timezone: Asia/Shanghai (CST)
 # RAG→记忆新范式：HippoRAG 2 + CatRAG（≠ GraphRAG / Self-RAG）
 
 > **定位**：**RAG / 记忆检索**——在 [[检索增强与知识外挂]] 稠密检索通史、[[图谱检索GraphRAG]] 社区摘要 GraphRAG、[[SelfRAG与CorrectiveRAG]] Self-RAG/CRAG 自适应检索之后，补近窗两刀：**HippoRAG 2**（把 RAG 推向**非参数长期记忆**的事实 / 联想 / 通感三维评测）与 **CatRAG**（在 HippoRAG 2 图上解决「静态图谬误 / hub 漂移」，做**查询自适应遍历**）。
-> **攻坚线**：**架构思想（主）**——OpenIE+PPR 记忆索引、dense-sparse、recognition memory、查询条件边权；**评测字段（辅）**——三轴记忆表 / FCR·JSR 完整性，不外推未测场景。
+> **研究线**：**架构思想（主）**——OpenIE+PPR 记忆索引、dense-sparse、recognition memory、查询条件边权；**评测字段（辅）**——三轴记忆表 / FCR·JSR 完整性，不外推未测场景。
 > **范围与相邻笔记**：
 > - **≠ [[检索增强与知识外挂]]**：不重写稠密双塔 / DPR / MIPS / 向量库产品通史；本卡只用「标准向量 RAG 缺联想与通感」对照槽。
 > - **≠ [[图谱检索GraphRAG]]**：不把 HippoRAG 写成 **GraphRAG 重写**。GraphRAG = 实体图 → Leiden 社区 → **预计算摘要扩库** → map-reduce 全局 QFS；HippoRAG 2 文内自述：KG **辅助检索过程**，**不**用摘要去膨胀检索语料（§2.2）。

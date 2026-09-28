@@ -17,7 +17,7 @@ archived: 2026-09-22
 # Materials FM：MatterSim（材料原子势 / 物性预测）
 
 > **定位**：材料基础模型主题轴——相对 **[[生物学基础模型]]**（biology FM）与 **[[天气气候基础模型]]**（weather / Earth-system FM）的 **正交平行线**：对象从蛋白坐标 / 地球场，落到 **原子图上的通用机器学习力场（MLFF）+ 宽温压物性**。主锚为 Microsoft Research AI for Science 的 **MatterSim**（arXiv **2405.04967v2**）。
-> **攻坚线**：**架构思想（主）**——主动学习拓宽构型空间 + 双骨干（M3GNet / Graphormer）分工；**评测字段（辅）**——能量/力/应力、声子、Gibbs 自由能、相图、MatBench 族。
+> **研究线**：**架构思想（主）**——主动学习拓宽构型空间 + 双骨干（M3GNet / Graphormer）分工；**评测字段（辅）**——能量/力/应力、声子、Gibbs 自由能、相图、MatBench 族。
 > **范围与相邻笔记**：
 > - 不重写 AF3 / ESM3 / Aurora（→ 只在接口表点名「科学 FM 平行轴」）。
 > - 不写成 DFT / MD / LAMMPS 作业手册或合成路径操作指南。

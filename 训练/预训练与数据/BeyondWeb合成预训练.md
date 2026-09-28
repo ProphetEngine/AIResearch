@@ -20,7 +20,7 @@ timezone: Asia/Shanghai (CST)
 # 合成预训练新轴：BeyondWeb（≠ Nemotron-CC）
 
 > **定位**：**数据侧横切**——DatologyAI *BeyondWeb: Lessons from Scaling Synthetic Data for Trillion-scale Pretraining*（arXiv:**2508.10975**v2，页眉 **19 Aug 2025**）。立「**预训练侧 source-rephrasing 合成新轴 + 系统消融**」：在 web 文档上做多样式/格式改写，把合成语料推到 **万亿 token 预算仍可持续受益**，并给出相对 Cosmopedia / WRAP / **Nemotron-Synth** / RedPajama 的 Pareto。
-> **攻坚线**：**架构思想（主）**——generator-driven vs source-rephrasing；质量种子 / 风格对齐 / 多样性三原则；改写器族与规模饱和；**评测字段（辅）**——Table 1 与 Fig.1（1B×1T、3B/8B×180B；14 基准 0+5-shot 均值）。
+> **研究线**：**架构思想（主）**——generator-driven vs source-rephrasing；质量种子 / 风格对齐 / 多样性三原则；改写器族与规模饱和；**评测字段（辅）**——Table 1 与 Fig.1（1B×1T、3B/8B×180B；14 基准 0+5-shot 均值）。
 > **范围与相邻笔记**：
 > - **≠ [[NemotronCC数据策展]]**：不写成 **Nemotron-CC** 全管线（Justext→分类器集成→全局去重→HQ 合成改写→6.3T）复述。本卡只把 **Nemotron-Synth**（Nemotron-CC 的 **HQ 合成子集**）当 **合成预训练对照基线**；CC 策展增量见 [[NemotronCC数据策展]]。
 > - **≠ [[合成数据与教科书式数据]]**：不写成 phi / *Textbooks Are All You Need* / Cosmopedia 式 **教科书 / de novo 生成器驱动** 通史。本卡主轴是 **对已有网页 source rephrasing**；§4.2 把 Cosmopedia 当「可被简单摘要逼近」的对照，不升教科书主文。

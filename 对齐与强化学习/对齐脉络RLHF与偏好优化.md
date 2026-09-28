@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # 对齐脉络：RLHF / 偏好优化 / 宪法式方法
 
-> 攻坚线：**架构思想（主）+ 数学原理（辅）**。入口论文：
+> 研究线：**架构思想（主）+ 数学原理（辅）**。入口论文：
 > - InstructGPT / RLHF：Ouyang et al., *Training language models to follow instructions with human feedback* (arXiv:2203.02155)
 > - Constitutional AI / RLAIF：Bai et al., *Constitutional AI: Harmlessness from AI Feedback* (arXiv:2212.08073)；Anthropic 介绍页同日发布
 > - DPO：Rafailov et al., *Direct Preference Optimization: Your Language Model is Secretly a Reward Model* (arXiv:2305.18290, NeurIPS 2023)

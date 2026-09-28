@@ -25,7 +25,7 @@ timezone: Asia/Shanghai (CST)
 # 全栈开放配方旗舰：OLMo 3 / Olmo 3（≠ Nemotron Ultra / gpt-oss / Gemma 4）
 
 > **定位**：全栈开放配方主题轴——立 **AI2「fully-open」全栈 model flow** 锚点：不仅放最终权重，还放 **每阶段数据 / 中间 checkpoint / 代码依赖**。主文：*Olmo 3*（Team Olmo / Allen Institute for AI 等，arXiv:**2512.13961**v2）。旗舰叙事落在 **Olmo 3.1 Think 32B**（全文自称 strongest fully-open thinking model）。
-> **攻坚线**：**架构思想 / 开放配方接口（主）** + **评测字段（文内系列对照，辅）**。
+> **研究线**：**架构思想 / 开放配方接口（主）** + **评测字段（文内系列对照，辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra技术报告深读]] 对照一句即可。
 > - **≠ [[GPToss模型卡深读]]**：不重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。

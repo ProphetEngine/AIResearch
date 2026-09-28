@@ -17,7 +17,7 @@ archived: 2026-09-22
 # Latent reasoning：Coconut（Chain of Continuous Thought）
 
 > **定位**：连续潜空间推理——相对 **[[推理时扩展TestTimeScaling]]**（语言空间 CoT / 采样 / 树搜索式 TTS 通史）补一块独立的 **连续潜空间推理** 切片：FAIR/Meta 的 **Coconut**（*Training Large Language Models to Reason in a Continuous Latent Space*，arXiv **2412.06769v4**）把 **last hidden state** 直接反馈为下一输入嵌入，在连续空间做隐式多路径搜索。
-> **攻坚线**：**架构思想（主）**——「continuous thought」回路 + 多阶段课程如何把语言 CoT 内化为潜推理；**评测字段（辅）**——相对 CoT / No-CoT / iCoT / pause 的准确率—生成 token 权衡（GSM8k / ProntoQA / ProsQA）。
+> **研究线**：**架构思想（主）**——「continuous thought」回路 + 多阶段课程如何把语言 CoT 内化为潜推理；**评测字段（辅）**——相对 CoT / No-CoT / iCoT / pause 的准确率—生成 token 权衡（GSM8k / ProntoQA / ProsQA）。
 > **范围与相邻笔记**：
 > - **≠ [[推理时扩展TestTimeScaling]]**：不写 o1/R1 产品通史、语言 CoT 提示/RL 训练配方；只取「语言空间推理有瓶颈 → 换到连续空间」这一接口。
 > - **≠ [[推理时树搜索ABMCTS]] AB-MCTS**：不写外层 **显式 token/答案树** + Thompson sampling；Coconut 的「BFS」是 **潜表示内并行编码多候选**，无外层搜索控制器。

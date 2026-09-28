@@ -15,7 +15,7 @@ archived: 2026-09-22
 # Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni
 
 > **定位**：原生 Omni 模态横切增量——相对 **[[SpeechLLM语音语言模型]]**（以 Qwen2-Audio 为锚的 Speech-LLM / Audio→Text）已入库的「编码器连续特征 ⊕ LLM 下一文本 token」栈，本篇只收 **原生 Omni**：同一 Thinker–Talker 端到端统一 **文本·图像·音频·视频**，并 **流式合成语音**。
-> **攻坚线**：**架构思想（主）**——AuT 替换 Whisper、Thinker/Talker MoE、多码本 RVQ + MTP + Code2Wav、TM-RoPE / 显式时间戳、ARIA；**评测字段（辅）**——36 / 215 音视频基准、VoiceBench、首包延迟、非降级对照同尺 Qwen。
+> **研究线**：**架构思想（主）**——AuT 替换 Whisper、Thinker/Talker MoE、多码本 RVQ + MTP + Code2Wav、TM-RoPE / 显式时间戳、ARIA；**评测字段（辅）**——36 / 215 音视频基准、VoiceBench、首包延迟、非降级对照同尺 Qwen。
 > **范围与相邻笔记**：
 > - **不重抄** [[SpeechLLM语音语言模型]] 的 Qwen2-Audio 章节：Whisper-large-v3 前端、40 ms/帧、三阶段（多任务预训练 / 联合 SFT / DPO）、Voice Chat vs Audio Analysis 接口表、ASR/S2TT 表内逐格数字。本篇仅在对照句点名「[[SpeechLLM语音语言模型]] = 音频理解→文本输出」前置。
 > - **不重写** [[多模态架构脉络]] 视觉 LMM 通史、[[Qwen3技术报告深读]] 全文；仅取「Qwen3 / Qwen3.5 骨干初始化、Strong-to-Weak Distillation / GSPO」接口。

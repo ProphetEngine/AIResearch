@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：多模态推理横切——在已入库 **[[音视频联合Flamingo]] AV-Flamingo（开源音视频联合基础模型卡）**、**[[视频生成正式报告]] 视频生成正式报告备忘**、**[[多模态架构脉络]] 多模态通史**、**[[QwenOmni音视频原生]] Qwen-Omni 产品卡**之外，补「**理解侧视频—语言推理框架**」空位。双主锚：
 > - **SiLVR**（*Simple Language-based Video Reasoning*）：**训练免费**；短 clip 视觉描述 + ASR 字幕 → **Adaptive Context Reduction** → 强推理 LLM（默认 DeepSeek-R1）在**纯语言空间**做复杂 VideoQA。
 > - **Chain-of-Frames（CoF）**：视频 LLM **单阶段**推理迹中显式引用帧 ID（Frame-k）；用 **CoF-DATA**（真实 VideoEspresso + 合成 CLEVRER，164,186 条）微调 InternVL 等，强化时序锚定。
-> **攻坚线**：**架构思想（主）**——语言管道 vs 帧锚定 CoT；**评测字段（辅）**——文内 VideoMME / Video-MMLU / CGBench / VSI-Bench 等表，不外推未测榜。
+> **研究线**：**架构思想（主）**——语言管道 vs 帧锚定 CoT；**评测字段（辅）**——文内 VideoMME / Video-MMLU / CGBench / VSI-Bench 等表，不外推未测榜。
 > **范围与相邻笔记**：
 > - **≠ [[音视频联合Flamingo]] AV-Flamingo**：不重写 OmniVinci 初始化、SigLip/AF-Whisper、CRTE、AV-Skills 课程、TAVIT/AV-Think、GRPO 产品配方。本卡对象是 **推理框架 / 数据形态**，不是开源 AV 基础模型卡。
 > - **≠ [[视频生成正式报告]]**：不重写文生视频 / Sora 正式报告缺口备忘；本卡是 **理解 / 推理**，不是生成。

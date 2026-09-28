@@ -13,7 +13,7 @@ archived: 2026-09-22
 
 # 扩散 / 生成式视觉与 LLM 交叉
 
-> 攻坚线：**架构思想（主）** + **数学原理（辅，扩散过程）**
+> 研究线：**架构思想（主）** + **数学原理（辅，扩散过程）**
 > 入口：Rombach et al., *High-Resolution Image Synthesis with Latent Diffusion Models*（LDM，[arXiv:2112.10752](https://arxiv.org/abs/2112.10752)）；Peebles & Xie, *Scalable Diffusion Models with Transformers*（DiT，[arXiv:2212.09748](https://arxiv.org/abs/2212.09748)）。
 > **与 [[多模态架构脉络]] 划界：** [[多模态架构脉络]] 走「对齐 → 条件语言生成 → 视觉指令 → 原生多模态主张」的**理解/对话**线；本卡走「像素/潜空间去噪 → 条件图像合成 → Transformer 骨干规模化 → 与 LLM 文本条件接口」的**生成**线。
 > **视频旗舰正式报告：** 无稳定公开 PDF → **待核实**；本笔记不引用二手概括代替 Sora 等正式技术报告。

@@ -17,7 +17,7 @@ archived: 2026-09-22
 # Privacy-preserving inference：GPU/CPU TEE 机密计算
 
 > **定位**：仓库缺 **云侧机密推理 / TEE 开销与远程证明** 横切；[[隐私与机器遗忘]] 已写机器遗忘，本篇改写 **data-in-use 机密部署**。锚点两篇可核 PDF：Confidential.ai 的 Blackwell B200 CC 吞吐实测（arXiv **2608.26575**）与 EnclaveX 端到端 CPU+GPU TEE（arXiv **2606.31408**）。
-> **攻坚线**：**架构思想（主）**——信任边界（CPU TEE ↔ GPU CC ↔ 应用层）与远程证明链；**评测字段（辅）**——CC tax / 吞吐 / TTFT·TPOT·ITL，以及 attestation 延迟。
+> **研究线**：**架构思想（主）**——信任边界（CPU TEE ↔ GPU CC ↔ 应用层）与远程证明链；**评测字段（辅）**——CC tax / 吞吐 / TTFT·TPOT·ITL，以及 attestation 延迟。
 > **范围与相邻笔记**：
 > - **≠ [[隐私与机器遗忘]] unlearning**：擦权重 / forget 集 ≠ 运行时加密隔离；本篇**不写**遗忘算法与 MIA。
 > - **≠ [[端侧小模型]] 端侧 SLM 通史**：端侧「数据不离机」是**另一轴**；本篇是 **公有云 / 多租户** 上的机密 VM + cGPU。

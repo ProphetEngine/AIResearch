@@ -12,7 +12,7 @@ archived: 2026-09-22
 # DeepSeek-V4.1-Flash Technical Report 深读卡
 
 > **定位**：DeepSeek-V4.1 Flash 增量技术报告主题轴（相对已入库 V3 / V3.2）。数字一律取自官方 PDF `https://arxiv.org/abs/2609.19969`（2026-09-22 CST）。
-> **攻坚线**：**架构思想（主）** + **AI Infra / KV·部署（辅）**。
+> **研究线**：**架构思想（主）** + **AI Infra / KV·部署（辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线与 671B/37B/14.8T/DualPipe/FP8 分块配方（见 [[混合专家架构]]、[[DeepSeekV3训练与MoE基建]]）；DSA 两阶段继续训与 GRPO 四稳定化全文（见 [[DeepSeekV32技术报告深读]]）；KV 量化通史（留给 [[KV缓存量化与压缩]]）。本卡只补「相对 V3/V3.2 **本 PDF 新公开** 的 CED / CSA2 / FP4 KV / SWA Bounded Replay」。
 > 本 PDF **对照锚点是 DeepSeek-V4 / V4-Flash / V4-Pro**，**未重开** V3 的 671B/37B 表，V3 数字不外推为 V4.1-Flash 主张；V4 本体无本仓库独立 TR → V4 侧数字仅录本 PDF 转述。
 

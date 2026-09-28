@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # 3：gpt-oss-120b / gpt-oss-20b Model Card 深读
 
-> 攻坚线：**架构思想（主：开源权重 MoE + harmony/可变 reasoning effort + agentic 工具）** + **评测字段（辅：推理/编码/工具/健康，开源对齐）**
+> 研究线：**架构思想（主：开源权重 MoE + harmony/可变 reasoning effort + agentic 工具）** + **评测字段（辅：推理/编码/工具/健康，开源对齐）**
 > 锚点：OpenAI, *gpt-oss-120b & gpt-oss-20b Model Card*（封面日期 **August 5, 2025**）
 > 官方 PDF（同源卡，文件哈希不同）：
 > - CDN：`https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf`（**35** 页 A4；Creator: LaTeX with hyperref；CreationDate **2025-08-12** CST）← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf

@@ -15,7 +15,7 @@ archived: 2026-09-22
 # Continuous batching / iteration-level scheduling 理论边界（Orca 专线）
 
 > **定位**：Infra 子题——钉死 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
-> **攻坚线**：**AI Infra（主）**。
+> **研究线**：**AI Infra（主）**。
 > **相对已入库**：[[推理引擎生态]] / [[AI基础设施总览]] 以 vLLM·SGLang·TRT-LLM **选型地图**与 PagedAttention 为主；Orca 在彼处仅为次级交叉。本篇 **只做理论边界 / Orca 专线**，不重写引擎选型表、PagedAttention 分页算法正文、投机解码通史。
 > **交叉基线**：vLLM（Kwon et al., arXiv:2309.06180）**仅作对照**——其 Discussion 明确 iteration-level scheduling 与 PagedAttention **互补**，不替代。
 > 业界口语「continuous batching」在 Orca 正文中对应 **iteration-level scheduling**（文中未以 continuous batching 作正式章节名）。

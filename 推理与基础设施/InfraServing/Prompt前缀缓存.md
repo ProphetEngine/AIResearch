@@ -16,7 +16,7 @@ official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
 # Prompt / Prefix Caching：模块化复用与计费经济学
 
 > **定位**：**Infra / 成本横切**——在 **[[推理引擎生态]]** 已立引擎级前缀复用（RadixAttention 选型轴）之后，本卡补两条独立切片：①学术侧 **Prompt Cache**（模块化注意力复用 / PML schema）；②商业 API 侧 **prompt / context caching 计费字段结构**（write / read / TTL）。SGLang 仅作「自动前缀树复用」交叉句，不重写 [[推理引擎生态]] 引擎选型表。
-> **攻坚线**：**AI Infra / 成本模型（主）**——模块边界、前缀命中、write/read/TTL 如何决定单位成本；**评测字段（辅）**——文内 TTFT 倍率、命中率、MB/token。
+> **研究线**：**AI Infra / 成本模型（主）**——模块边界、前缀命中、write/read/TTL 如何决定单位成本；**评测字段（辅）**——文内 TTFT 倍率、命中率、MB/token。
 > **范围与相邻笔记**：
 > - **≠ [[推理引擎生态]]**：不写 vLLM / SGLang / TensorRT-LLM 选型对照表；RadixAttention 只取「自动前缀 KV 复用 + 命中率接口」一句。
 > - **≠ [[KV缓存量化与压缩]]**：不写 K/V 非对称量化、残差窗、outlier 比特轴。

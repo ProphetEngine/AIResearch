@@ -21,7 +21,7 @@ timezone: Asia/Shanghai (CST)
 # 开源音视频联合模型：Audio-Visual Flamingo（Nemotron-Labs-AV-Flamingo）
 
 > **定位**：开源音视频联合旗舰增量——补仓库在 **[[QwenOmni音视频原生]] Qwen Omni 产品线 TR** 之外仍缺的 **「非 Qwen 栈」开源长视频音视联合理解（AV-LLM）** 锚点。主文：Ghosh, Goel, et al., *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos*（arXiv **2607.16107v1**）。
-> **攻坚线**：**架构思想（主）**——OmniVinci 初始化 + SigLip/AF-Whisper + 时序交错与 CRTE + 三阶段课程 + TAVIT/AV-Think；**评测字段（辅）**——文内 Omni / Audio / Video / ASR 表（Table 1）与 AV-Skills 消融（Table 6）。
+> **研究线**：**架构思想（主）**——OmniVinci 初始化 + SigLip/AF-Whisper + 时序交错与 CRTE + 三阶段课程 + TAVIT/AV-Think；**评测字段（辅）**——文内 Omni / Audio / Video / ASR 表（Table 1）与 AV-Skills 消融（Table 6）。
 > **范围与相邻笔记**：
 > - **≠ [[QwenOmni音视频原生]] Qwen Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、Qwen3/3.5-Omni 产品栈与 36/215 基准表；本卡仅在「同题相邻的闭源/开权 omni 对照」处点名，**不**展开 Qwen Omni 配方。
 > - **≠ [[SpeechLLM语音语言模型]] Speech-LLM**：不重写 Qwen2-Audio / Whisper→LLM 音频→文本对话栈；本卡是 **音视频联合理解 + 可选流式 TTS**，不是 Voice Chat / Audio Analysis 接口史。

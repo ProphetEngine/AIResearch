@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**可解释横切**——仓库已有 **[[机制可解释性入门]]**（特征→电路→归因图的 **MI 入门史**）与 **[[激活操控与表征工程]]**（**RepE / 推理期激活加向量**）。本卡立「**如何规模化发现与验证机制电路**」方法篇，两条正交接口：
 > - **CircuitLasso**（Yin, Wei, Gao, Dhurandhar, Natesan Ramamurthy, Yu；arXiv:**2606.16939v1**）：用 **观测式稀疏线性回归（Lasso）** 在神经元 / SAE 特征上恢复依赖骨架；宣称与干预式基线 **结构精度持平、算力更低**，并扩到高维 SAE。
 > - **Anthropic Circuit Tracing / attribution graphs**（Ameisen et al.，*Transformer Circuits Thread*，**2025-03-27**）：用 **cross-layer transcoder（CLT）→ replacement model → 逐提示归因图**，再以干预检验机理；**Biology** 同伴文把同套方法落到 Claude 3.5 Haiku 多行为案。
-> **攻坚线**：**架构思想 / 方法接口（主）**——观测稀疏回归 vs 可替换模型上的线性归因；**干预 faithfulness 字段（辅）**——InterpBench SHD/runtime、CoLA faithfulness/completeness、CLT 重构/L0、节点→logit / 特征→特征影响相关、局部替换模型扰动一致性。
+> **研究线**：**架构思想 / 方法接口（主）**——观测稀疏回归 vs 可替换模型上的线性归因；**干预 faithfulness 字段（辅）**——InterpBench SHD/runtime、CoLA faithfulness/completeness、CLT 重构/L0、节点→logit / 特征→特征影响相关、局部替换模型扰动一致性。
 > **范围与相邻笔记**：
 > - **≠ [[激活操控与表征工程]]（RepE / Activation Steering）**：本卡 **不** 主写推理期「加/减概念向量」操控行为；只在对照句点出「读表征」与「发现电路」正交。不把 CircuitLasso / 归因图写成 ActAdd/CAA/ITI 续作。
 > - **≠ [[机制可解释性入门]]（MI 通史）**：不重写 polysemanticity → SAE → sparse feature circuits 的 **入门阶梯叙事**；[[机制可解释性入门]] 已立概念骨架与 Circuit Tracing **证据结构摘要**。本卡下沉到 **可扩展电路学习算法接口 + 归因图方法细节与 faithfulness 字段**。

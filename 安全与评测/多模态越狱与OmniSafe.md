@@ -18,7 +18,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**评测横切**——立两篇近窗 **多模态 jailbreak / 安全评测基准**：
 > - **MMJailBench**（*A Factorized Benchmark for Disentangling Multimodal Jailbreak Vulnerabilities*）：把实例拆成 **有害意图 × 提示框架 × 视觉语义 × 指令载体** 四因子可控组合，做因子级归因。
 > - **OmniSafeBench-MM**（*A Unified Benchmark and Toolbox for Multimodal Jailbreak Attack–Defense Evaluation*）：统一 **数据集 + 攻击/防御方法库 + H–A–D 三维评分**，做攻防对照与安全–效用权衡。
-> **攻坚线**：**评测字段 / 因子与指标定义（主）** + **架构思想（辅，仅评测设计接口）**。
+> **研究线**：**评测字段 / 因子与指标定义（主）** + **架构思想（辅，仅评测设计接口）**。
 > **范围与相邻笔记**：
 > - **≠ [[安全红队与对抗评测]]**：不重写红队流程、众包协议与 ASR 闭环通史；本卡只写 **多模态基准的因子轴与汇总指标**。
 > - **≠ [[宪法分类器防御]] / [[审慎对齐与断路器]] / [[StatutoryAI法律规范对齐]]**：不写 Constitutional Classifiers 部署侧护栏、Deliberative Alignment / Circuit Breakers 对齐范式、Statutory AI 法律规范对齐；防御方法在本卡 **仅作 OmniSafe 工具箱分类名录 + 公开 ASR 聚合**，不展开训练/部署配方。

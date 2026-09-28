@@ -15,7 +15,7 @@ archived: 2026-09-22
 # Qwen3.8-Next / Flash-Next 架构 TR 深读
 
 > **定位**：相对已入库 [[Qwen3技术报告深读]] 的**架构世代增量**深读卡。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30320`（2026-09-22；28 页）。
-> **攻坚线**：**架构思想（主）** + **数学原理（线性注意力 / 稀疏索引，辅）** + **AI Infra（FlashQLA / Muon / 稳定性，辅）**。
+> **研究线**：**架构思想（主）** + **数学原理（线性注意力 / 稀疏索引，辅）** + **AI Infra（FlashQLA / Muon / 稳定性，辅）**。
 > **刻意不写**：Qwen3 的 Dense/MoE 全家桶表、think/no_think、thinking budget、Strong-to-Weak Distillation、四阶段后训练（见 [[Qwen3技术报告深读]]）；Adam→AdamW→Muon 通史（见 [[优化器与训练稳定性]]）。
 > 本 PDF **未给出** Flash-Next 总层数 / hidden / 专家数 / 预训练总 token 精确账本。
 

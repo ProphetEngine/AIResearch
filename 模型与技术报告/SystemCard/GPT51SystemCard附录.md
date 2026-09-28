@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # GPT-5.1 System Card Addendum 专项深读卡
 
-> 攻坚线：**架构思想（主）**
+> 研究线：**架构思想（主）**
 > 锚点：OpenAI, *GPT-5.1 Instant and GPT-5.1 Thinking System Card Addendum*（封面日期 **November 12, 2025**）
 > 官方 PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`（**5** 页；CreationDate/ModDate **2025-11-13** 00:38:05 CST）
 > 主卡对照：[[GPT5系统卡深读]]（GPT-5 System Card，封面 **2025-08-13**）

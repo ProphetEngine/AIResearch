@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # DeepSeek-R1 推理训练专项深读（技术报告级）
 
-> 攻坚线：**架构思想（主）** + **数学原理（辅）**
+> 研究线：**架构思想（主）** + **数学原理（辅）**
 > 锚点材料：DeepSeek-AI, *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning*（arXiv:2501.12948；PDF `https://arxiv.org/abs/2501.12948`，抽取页眉为 **v2 / 2026-01-04**）
 > **本笔记聚焦报告中的训练管线、奖励设计与公开算法形式**；test-time scaling「势」叙事、与 o1 对照的产品轴见 **[[推理时扩展TestTimeScaling]]**，此处不重复。
 > 只据 PDF 已读内容写要点；未在原文出现的超参、未核对的外部复现一律标「待核实」或不写。

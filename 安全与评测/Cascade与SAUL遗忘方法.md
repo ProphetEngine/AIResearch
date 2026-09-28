@@ -29,7 +29,7 @@ timezone: Asia/Shanghai (CST)
 > - **Cascade**（*Hierarchical Recoverability Control*，arXiv:**2609.16890**v1，页眉 **15 Sep 2026**）：把遗忘写成 **内部可辨识性（internal identifiability）最小化**，用 **路径 / 双曲表征 / 解码** 三级压低可恢复性。
 > - **SAUL**（*Sharpness-Aware Augmented-Lagrangian Unlearning*，arXiv:**2608.16249**v1，页眉 **17 Aug 2026**）：把遗忘写成 **显式约束**「忘够即可」，用 **增广拉格朗日控制器** 在满足阈值后 **关掉 forget 侧更新**，并配 **非对称锐度感知 + 双优化器状态**。
 > **补链（不升主）**：**GRAPHSU**（*Graph-Guided Selective Unlearning*，arXiv:**2608.26743**v1，页眉 **27 Aug 2026**）——用多视图支持路径图扩展删除范围，超出 forget seed；**仅补链/后置**。
-> **攻坚线**：**方法接口 / 遗忘—效用权衡（主）** + **文内 TOFU / MUSE / WMDP（及 GRAPHSU 的 PISTOL）字段（辅）**。
+> **研究线**：**方法接口 / 遗忘—效用权衡（主）** + **文内 TOFU / MUSE / WMDP（及 GRAPHSU 的 PISTOL）字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[隐私与机器遗忘]]**：不重做 **180+ 篇通史**、流水线阶段地图、OpenUnlearning **13×16 元评测全文**。本卡 **不复读** OpenUnlearning 指标 Faithfulness/Robustness 元评测；仅在需要时把 TOFU/MUSE/WMDP 当 **评测协议入口**。
 > - **≠ [[对齐脉络RLHF与偏好优化]]**：不写成 RLHF / DPO / CAI 对齐通史。SAUL 的约束优化与偏好优化 **共享「拉格朗日/对偶」词汇**，但目标是 **forget-set 损失阈值**，不是人类偏好 BT/DPO。

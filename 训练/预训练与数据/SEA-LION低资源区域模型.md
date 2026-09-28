@@ -21,7 +21,7 @@ timezone: Asia/Shanghai (CST)
 # 低资源区域专报：SEA-LION-v4.8（≠ [[多语言与跨语种]] 通史）
 
 > **定位**：**低资源区域专报**——立 **东南亚（SEA）区域适配栈**：在 NVIDIA Nemotron 3 开源基座上做 **继续预训练（CPT）+ SFT / 在线 on-policy 蒸馏（OPD）后训练**，并以更新版 **SEA-HELM** 做区域评测。主文：AI Singapore *SEA-LION-v4.8: A Technical Report*（arXiv:**2609.18310**v3，**18 Sep 2026**）。
-> **攻坚线**：**架构思想（区域 CPT / 蒸馏接口，主）** + **评测字段（SEA-HELM 语种分 / 能力分，辅）**。
+> **研究线**：**架构思想（区域 CPT / 蒸馏接口，主）** + **评测字段（SEA-HELM 语种分 / 能力分，辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[多语言与跨语种]]**：不重写 XLM-R / BLOOM / 旗舰「语种覆盖 × 配比」通史；本卡只写 **SEA 区域落地配方与 SEA-HELM 数字**，多语通史仅作动机一句。
 > - **≠ [[NemotronCC数据策展]]**：不重写 **Nemotron-CC 语料清洗篇**；本卡 CPT 混合只列文内 Table 2 组件与权重，不展开通用网页过滤管线。

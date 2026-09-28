@@ -14,7 +14,7 @@ archived: 2026-09-22
 # Quantization-aware training：ZeroQAT（端到端 on-device QAT @ 推理成本）
 
 > **定位**：仓库缺 **训练感知量化 / 端侧 QAT** 一手报告；锚点是 Tan et al. *End-to-End On-Device Quantization-Aware Training for LLMs at Inference Cost*（arXiv **2509.00031v2**）。主写 **零阶（ZO）前向估计梯度 → 去掉反传** 的 Full/PEFT QAT，以及 **可学习平滑 + 可学习权重量化器 + 轻量 Q/V 变体**；辅写精度—比特—内存表与 OnePlus 12 端侧字段。
-> **攻坚线**：**架构思想（主）**——ZO-QAT 为何绕开 STE、如何端到端联训模型与量化参数；**评测字段（辅）**——W2A16 / W4A4 的 PPL·零样本·下游 Acc，以及 A100 / 手机内存—时延。
+> **研究线**：**架构思想（主）**——ZO-QAT 为何绕开 STE、如何端到端联训模型与量化参数；**评测字段（辅）**——W2A16 / W4A4 的 PPL·零样本·下游 Acc，以及 A100 / 手机内存—时延。
 > **范围与相邻笔记**：
 > - **≠ [[KV缓存量化与压缩]] KV 量化**：本篇是 **权重 / 激活的训练期 QAT**，不是解码期 K/V cache 非对称压缩（KIVI / KVQuant）。
 > - **≠ [[端侧小模型]] on-device SLM 通史**：不写 MobileLLM / Phi-4 / LiteRT 产品谱系；只取「端侧能跑 QAT」这一效率接口。

@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # Claude Opus 4.1 System Card Addendum 专项深读卡
 
-> 攻坚线：**架构思想（主）**（增量发布如何用「abridged / voluntary」安全评测衔接 RSP；相对 Claude 4 主卡与后续 Opus 4.5 全卡的文档分层）
+> 研究线：**架构思想（主）**（增量发布如何用「abridged / voluntary」安全评测衔接 RSP；相对 Claude 4 主卡与后续 Opus 4.5 全卡的文档分层）
 > 锚点：Anthropic, *System Card Addendum: Claude Opus 4.1*（封面 **August 2025**；Changelog **September 15, 2025**）
 > 官方 PDF：`https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf`（**23** 页；Title: Claude 4.1 System Card）  
 > 落地页：https://www.anthropic.com/claude-opus-4-1-system-card

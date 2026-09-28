@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # Claude Opus 4.5 System Card 专项深读卡
 
-> 攻坚线：**架构思想（主）**（agentic / thinking / 工具面与 RSP 安全评测如何写进产品旋钮）
+> 研究线：**架构思想（主）**（agentic / thinking / 工具面与 RSP 安全评测如何写进产品旋钮）
 > 锚点：Anthropic, *System Card: Claude Opus 4.5*（封面 **November 2025**；Changelog 至 **December 5, 2025**）
 > 官方 PDF：`https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf`（**153** 页；Title: Claude Opus 4.5 System Card）
 > 发布页：https://www.anthropic.com/news/claude-opus-4-5

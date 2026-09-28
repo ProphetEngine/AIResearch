@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # Grok 4 Model Card 专项深读卡
 
-> 攻坚线：**架构思想（主）**（xAI 如何用 RMF / FAIF 把 reasoning + tool-use 前沿模型的风险拆成 abuse / propensities / dual-use，以及系统提示、input filter、拒训如何作为主要缓解）
+> 研究线：**架构思想（主）**（xAI 如何用 RMF / FAIF 把 reasoning + tool-use 前沿模型的风险拆成 abuse / propensities / dual-use，以及系统提示、input filter、拒训如何作为主要缓解）
 > 主锚点：xAI, *Grok 4 Model Card*（Last updated: **August 20, 2025**）
 > 官方 PDF：`https://data.x.ai/2025-08-20-grok-4-model-card.pdf`（**8** 页；CreationDate: 2025-08-22 15:02:14 CST）
 > 官方 URL：https://data.x.ai/2025-08-20-grok-4-model-card.pdf

@@ -16,7 +16,7 @@ archived: 2026-09-22
 # Mixture-of-Agents + TUMIX：异构聚合与工具策略混合的测试时扩展
 
 > **定位**：测试时聚合与工具混合主题轴——相对 [[推理时扩展TestTimeScaling]] 的 **测试时切片扩展**：不重开 ToT / 自一致性 / Best-of-N 通史，专攻 **多层异构 LLM 聚合（MoA）** 与 **同一底座上工具策略混合的多代理测试时缩放（TUMIX）**。
-> **攻坚线**：**架构思想（主）**——层间 Aggregate-and-Synthesize、proposer/aggregator 角色、工具–文本混合 agent 池、早停；**评测字段（辅）**——AlpacaEval LC / HLE·GPQA·AIME 成本–质量曲线。
+> **研究线**：**架构思想（主）**——层间 Aggregate-and-Synthesize、proposer/aggregator 角色、工具–文本混合 agent 池、早停；**评测字段（辅）**——AlpacaEval LC / HLE·GPQA·AIME 成本–质量曲线。
 > **范围与相邻笔记**：
 > - **不重写** [[推理时扩展TestTimeScaling]] 的 o1/R1 训练轴、ToT / self-consistency / Best-of-N 通史；本篇只把它们当作「单路径或多采样」对照坐标。
 > - **不重写** [[多智能体辩论]] 的 MAD 鞅诊断 / FREE-MAD 全轨迹打分 / 分层分歧仪器；本篇聚合是 **合成生成**（MoA）或 **工具策略并行+共享精炼**（TUMIX），不是辩论协议专篇。

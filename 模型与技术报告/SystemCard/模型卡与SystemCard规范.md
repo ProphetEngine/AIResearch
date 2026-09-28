@@ -10,7 +10,7 @@ archived: 2026-09-22
 
 # Model Card / System Card 规范
 
-> **攻坚线**：架构思想（主）
+> **研究线**：架构思想（主）
 > **跟读材料（官方优先）**：
 > 1. Mitchell et al., *Model Cards for Model Reporting*（FAT* ’19 / arXiv:1810.03993v2，2019-01-14）
 > - 介绍页：https://arxiv.org/abs/1810.03993

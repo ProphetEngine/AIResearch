@@ -4,7 +4,6 @@ topic: GaussianDreamer三维生成
 date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
-priority: P2
 sources:
  - https://arxiv.org/pdf/2310.08529
  - https://arxiv.org/pdf/2406.18462
@@ -19,7 +18,7 @@ archived: 2026-09-22
 # 3D Gaussian 生成线：GaussianDreamer → GaussianDreamerPro
 
 > **定位**：三维生成短卡——相对 **[[扩散生成式视觉与LLM]]**（2D 扩散视觉 / LDM·DiT）与 **[[视频生成正式报告]]**（视频生成正式报告缺口），补仓库缺的 **文本 → 3D Gaussian Splatting 资产生成** 短史。主轴与 LLM 咬合弱，故弱档；一手 PDF + 项目页齐全。
-> **攻坚线**：**架构思想（主）**——3D 先验初始化 → 2D 蒸馏丰富细节 → Pro 的几何绑定约束；**评测字段（辅）**——质量 / 一致性（T3 Bench、用户偏好）+ 可操纵性（动画 / 仿真）。
+> **研究线**：**架构思想（主）**——3D 先验初始化 → 2D 蒸馏丰富细节 → Pro 的几何绑定约束；**评测字段（辅）**——质量 / 一致性（T3 Bench、用户偏好）+ 可操纵性（动画 / 仿真）。
 > **范围与相邻笔记**：
 > - **不重写** [[扩散生成式视觉与LLM]] LDM / DiT / Stable Diffusion 通史——SD 2.1-base 只作 **冻结 2D 先验槽**。
 > - **不重写** NeRF 全谱（MipNeRF / Instant-NGP / DMTet 等）——仅在「表示对照」表点名。

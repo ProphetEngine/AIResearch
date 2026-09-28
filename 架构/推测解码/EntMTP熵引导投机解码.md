@@ -14,7 +14,7 @@ archived: 2026-09-22
 # 投机解码新变体：EntMTP（熵引导 MTP / 动态草稿树）
 
 > **定位**：EntMTP——在 **[[推理引擎生态]]** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补 **EAGLE-3**（training-time test + 多层特征融合）之后，只写近窗 **EntMTP**（*Entropy Guided Multi-Token Prediction*，arXiv **2606.27550**）：**训练免费**的运行时调度器，按局部可预测性在 **预编译 TopologyBank** 上切换草稿树拓扑。
-> **攻坚线**：**架构思想（主）**——离线吞吐 Pareto 前沿 → TopologyBank → 熵/路径价值驱动的 per-step 选树；**延迟 / 接受率字段（辅）**——相对 Hydra / Medusa **默认树** 的 tok/s、ρ、τ（Table 1）。
+> **研究线**：**架构思想（主）**——离线吞吐 Pareto 前沿 → TopologyBank → 熵/路径价值驱动的 per-step 选树；**延迟 / 接受率字段（辅）**——相对 Hydra / Medusa **默认树** 的 tok/s、ρ、τ（Table 1）。
 > **范围与相邻笔记**：
 > - **≠ [[推理引擎生态]]**：不写 Leviathan / Chen / Lookahead 通史与引擎选型全文；「草稿—并行校验、同分布」只当接口一句。
 > - **≠ [[EAGLE3投机解码]]**：不重写特征回归解除、多层融合、SGLang 大 batch 表；本文仅借用文中 **EAGLE-2 path value** 作为调度特征定义。

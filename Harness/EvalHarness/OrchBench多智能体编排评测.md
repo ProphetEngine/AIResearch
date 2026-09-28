@@ -18,7 +18,7 @@ timezone: Asia/Shanghai (CST)
 
 > **定位**：编排计划评测主题轴——仓库已有 **[[多智能体辩论]]**（辩论协议：多样性 / 置信度 / 反共识）、**[[MixtureOfAgents与TUMIX]]**（MoA 层间合成 / TUMIX 工具策略混合）、**[[AgentBazaar经济对齐]]**（多代理市场经济对齐）、**[[智能体工具与长程任务]]**（旗舰工具环 / 长程产品叙事）。本卡转问一刀**可隔离的编排计划评测**：
 > - **OrchBench**（*Evaluating Multi-Agent Orchestration Plans in Isolation via Deterministic Simulation*）：把端到端 MAS 成绩拆开——**固定任务 DAG + 上下文上限 $L$ + agent 预算 $A_{\max}$**，只评 planner 产出的 $\pi=(\alpha,R)$（子任务分配 × 跨 agent 信息转移与保留比）；**确定性仿真器**代替 worker / 工具 / 环境噪声，输出质量 $Q$、makespan 效率、token 效率与可解释协调失败。
-> **攻坚线**：**评测字段（主）**——仿真—真实相关、规模化缺失转移、信息覆盖 vs agent 数；**编排接口思想（辅）**——计划表示 $\pi=(\alpha,R)$、压缩敏感类、缺失转移惩罚 $\lambda$。
+> **研究线**：**评测字段（主）**——仿真—真实相关、规模化缺失转移、信息覆盖 vs agent 数；**编排接口思想（辅）**——计划表示 $\pi=(\alpha,R)$、压缩敏感类、缺失转移惩罚 $\lambda$。
 > **范围与相邻笔记**：
 > - **≠ [[多智能体辩论]]**：不重写 MAD 鞅诊断、FREE-MAD 全轨迹打分、分层分歧仪器、DynaDebate 路径生成。本卡**不是**同题 QA 委员会辩论；M3MAD-Bench 与 [[多智能体辩论]] 更近 → **仅 §七补链**，不升主。
 > - **≠ [[MixtureOfAgents与TUMIX]]**：不重写 MoA Aggregate-and-Synthesize、TUMIX 工具–文本混合池 / 早停。本卡评的是 **DAG 上的分配与 handoff 计划**，不是测试时异构合成或工具策略混合。

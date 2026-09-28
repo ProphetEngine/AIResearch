@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # Qwen3 Technical Report 深读笔记
 
-> 攻坚线：**架构思想（主）** + **AI Infra（辅）**
+> 研究线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：Qwen Team, *Qwen3 Technical Report*（arXiv:2505.09388）
 > 官方 PDF：`https://arxiv.org/abs/2505.09388`（pdfTeX CreationDate 2025-05-15 CST；35 页）
 > 许可（报告摘要）：**Apache 2.0**；权重入口：Hugging Face / ModelScope / GitHub QwenLM/Qwen3

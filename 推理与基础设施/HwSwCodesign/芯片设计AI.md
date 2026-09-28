@@ -28,7 +28,7 @@ archived: 2026-09-22
 # 芯片设计 AI：AlphaChip（宏布局 RL）+ ChipExpert（IC 专科 LLM）
 
 > **定位**：相对 [[硬件软件协同部署]]（加速器代际×精度×互联**选型白皮书**），本篇专写 **设计侧 AI** 两条正交轴：**(A) 宏布局 / floorplanning 的深度 RL**（Nature 2021 → 后命名 AlphaChip + Circuit Training）与 **(B) IC 设计专科开源 LLM**（ChipExpert）。
-> **攻坚线**：**架构思想（主）** + **评测 / 复现争议字段（辅，强制单列）**。
+> **研究线**：**架构思想（主）** + **评测 / 复现争议字段（辅，强制单列）**。
 > **范围与相邻笔记**：
 > - **不重写** [[硬件软件协同部署]] 的 Blackwell / TPU7x Ironwood / NVL72 选型地图与部署成本叙事。
 > - **不写成「已证实碾压商业工具」**：Nature 主张、独立评估（Kahng 等 / MacroPlacement）、Markov 元分析、作者 Addendum / 辩护文须**并列呈现**，不替任一侧下最终裁判。

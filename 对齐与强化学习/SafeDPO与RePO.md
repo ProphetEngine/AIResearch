@@ -26,7 +26,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**偏好优化横切**——仓库已有 RLHF/DPO 通史（**[[对齐脉络RLHF与偏好优化]]**）、可验证奖励组相对优势族（**[[GRPO与DAPO算法族]]**）、无参考/单阶段/非成对变体族（**[[SimPO与ORPO偏好优化]]**）。本卡立两条**可划界新刀**，不写成「又一篇 DPO / SimPO / GRPO」：
 > - **SafeDPO**（*Safe Direct Preference Optimization*）：把 **硬安全约束**（不安全响应概率为零）经 cost-augmented reward 与 **安全感知偏好变换 $T$** 收成 DPO 形目标；仅需偏好对 + 二元安全指示，**无需 reward / cost RM、无需在线采样**；额外超参仅安全间隔 $\Delta$。
 > - **RePO**（*Regret-based Preference Optimization*）：把人类偏好解释为 **遗憾最小化**（相对最优策略的相对次优性 + 行为策略未来序列前向 KL），而非即时/累积效用最大化；闭式更新兼容直接偏好优化，并给出无行为策略时的 **RePO_det**。
-> **攻坚线**：**架构思想 / 目标函数接口（主）**——约束安全变换 vs 反事实遗憾分解；**文内安全—有用性 / 偏好—推理字段（辅）**——PKU-SafeRLHF / XSTest、AlpacaEval2 / Arena-Hard / 数学推理表。
+> **研究线**：**架构思想 / 目标函数接口（主）**——约束安全变换 vs 反事实遗憾分解；**文内安全—有用性 / 偏好—推理字段（辅）**——PKU-SafeRLHF / XSTest、AlpacaEval2 / Arena-Hard / 数学推理表。
 > **范围与相邻笔记**：
 > - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 InstructGPT 三阶段、DPO 闭式最优策略证明、CAI 通史。本卡只在对照句点名 DPO 外壳。
 > - **≠ [[GRPO与DAPO算法族]]**：不写 GRPO→DAPO、Clip-Higher、可验证奖励 RL 配方与组相对基线谱系。RePO 实验虽含数学 verifier 偏好对，贡献是 **遗憾解释**，不是 GRPO 管线。

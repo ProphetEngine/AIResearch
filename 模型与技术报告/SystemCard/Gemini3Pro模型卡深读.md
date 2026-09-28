@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # Gemini 3 Pro Model Card 专项深读卡
 
-> 攻坚线：**架构思想（主）** + **AI Infra（辅）**
+> 研究线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：Google DeepMind, *Gemini 3 Pro Model Card*（**Model Release: November 2025**；**Last Updated: May 2026**）
 > 官方 PDF：`https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf`（**10** 页 letter；Title: *Gemini 3 Pro Model Card (May 2026)*；Producer: Skia/PDF m150 Google Docs Renderer）
 > 对照笔记：[[Gemini25技术报告深读]]（本地 2.5 技术报告）；旁及 [[开源与闭源前沿模型谱系]] / [[推理时扩展TestTimeScaling]] / [[多模态架构脉络]] / [[AI基础设施总览]]

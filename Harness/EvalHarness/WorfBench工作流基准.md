@@ -19,7 +19,7 @@ archived: 2026-09-22
 # Agentic workflow 生成基准：WorfBench + WorFEval
 
 > **定位**：工作流评测主题轴——相对 **[[智能体工具与长程任务]]**（旗舰工具环 / 长程产品叙述）与 **[[代码智能体Harness史线]]**（编码 ACI / 沙箱 harness），补仓库缺失的 **「把复杂任务分解为可执行 DAG 工作流」生成质量** 评测轴。锚点是浙大 / 阿里 *Benchmarking Agentic Workflow Generation*（arXiv **2410.07869v3**，**ICLR 2025**）：基准 **WorfBench** + 协议 **WorFEval**（子序列 / 子图匹配）。
-> **攻坚线**：**评测字段（主）**——$f1_{\mathrm{chain}}$ vs $f1_{\mathrm{graph}}$、四场景、held-out、端到端增益与并行耗时；**架构思想（辅）**——节点链 → DAG、工作流作先验 / CoT 增强 / 并行缩短路径。
+> **研究线**：**评测字段（主）**——$f1_{\mathrm{chain}}$ vs $f1_{\mathrm{graph}}$、四场景、held-out、端到端增益与并行耗时；**架构思想（辅）**——节点链 → DAG、工作流作先验 / CoT 增强 / 并行缩短路径。
 > **范围与相邻笔记**：
 > - **≠ [[智能体工具与长程任务]]**：不写 MCP / ReAct / System Card 长程产品通史；本卡测的是 **规划图是否对**，不是工具环上能否跑完。
 > - **≠ [[代码智能体Harness史线]]**：不写 SWE-agent ACI / OpenHands SDK / Docker 沙箱；本卡无「改仓库执行」闭环。

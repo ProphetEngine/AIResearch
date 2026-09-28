@@ -17,7 +17,7 @@ note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用
 # 分布式集合通信 Demystifying NVSHMEM（DeepEP 案例）
 
 > **定位**：**Infra / 通信横切**——立「**GPU 端发起、对称内存、一侧 put/get**」这条与 **NCCL 主机侧集体**互补的通信模型。主文是 Ma / Shen / Chen 等 *Demystifying NVSHMEM*（arXiv:**2606.05951**）；**DeepEP** 仅作主文 §VIII 案例 + GitHub 工程辅读（README / `docs/legacy.md`），**不是**本卡第二篇论文。
-> **攻坚线**：**AI Infra（主）**——对称堆、P2P 快路径 / IBGDA 慢路径、设备侧集体与 LL/LL128；**架构思想（辅）**——为何稀疏 EP 的数据依赖 all-to-all 更适合在 NVSHMEM 基底上自建 dispatch/combine，而不是直接套现成集体。
+> **研究线**：**AI Infra（主）**——对称堆、P2P 快路径 / IBGDA 慢路径、设备侧集体与 LL/LL128；**架构思想（辅）**——为何稀疏 EP 的数据依赖 all-to-all 更适合在 NVSHMEM 基底上自建 dispatch/combine，而不是直接套现成集体。
 > **范围与相邻笔记**：
 > - **≠ [[AI基础设施总览]]**：不写 Megatron TP/PP/DP 通论、FlashAttention、PagedAttention、FP8 训练栈全文；本卡只取「通信库 / 设备侧 RMA」一层。
 > - **≠ [[混合专家架构]]**：不写 Switch→Mixtral→V3 的 MoE **路由/稀疏史线**（总参 vs 激活参、aux-loss、$M=4$ 等）；EP 只当「专家切分 → 稀疏 all-to-all」接口一句。

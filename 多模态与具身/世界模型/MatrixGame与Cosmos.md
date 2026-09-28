@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > - **Matrix-Game 3.0**（Skywork AI）：**实时流式交互 WM** + **相机感知长程记忆** + 工业数据引擎 + few-step 蒸馏部署（720p / 至约 40 FPS）。
 > - **Cosmos World Foundation Model Platform**（NVIDIA）：**Physical AI 世界基础模型平台**——视频策展 / 连续·离散 tokenizer / 扩散与自回归预训练 WFM / 后训练样例 / guardrail。
 > **对照（不升主）**：**Genie 3** 仅有 DeepMind 博文（2025-08-05）、**无正式 PDF TR** → 不作主锚，仅作产品对照一句。
-> **攻坚线**：**架构思想 / 平台接口（主）** + **文内交互一致性 / 吞吐字段（辅）**。
+> **研究线**：**架构思想 / 平台接口（主）** + **文内交互一致性 / 吞吐字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[世界模型与VJEPA]]**：不重写 JEPA **mask-denoising 表征预测**入门、V-JEPA 2 probe / VidQA / AC 后训练长文。本卡预测落在 **像素 / 潜视频生成**（动作条件交互或 Video2World），与表征空间 JEPA **正交**。
 > - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等）。本卡对象是 **交互/流式 WM + Physical AI WFM 平台**，非「无可核长 TR」产品备忘。

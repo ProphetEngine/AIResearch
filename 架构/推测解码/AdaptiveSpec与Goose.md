@@ -16,7 +16,7 @@ related: ["推理引擎生态", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", 
 > **定位**：AdaptiveSpec + Goose——在 **[[EAGLE3投机解码]]** 已立 EAGLE-3 草稿头增量（training-time test + 多层特征融合）之后，本卡立**两条正交新轴**，不是「又一篇 EAGLE」：
 > - **AdaptiveSpec**（*Margins, Not Windows*）：**无训**、逐步自适应；在 **EAGLE-3 草稿器之上**同时动两条旋钮——① **margin 有损校验**（单位置目标概率比，非 FLy 窗口）；② **动态树形**（直接调 `nsteps/top-k/ndt`，非 TALON 固定预算重分配）。落在 **SGLang**。
 > - **Goose**（*Anisotropic Speculation Trees*）：**无训**各向异性脊柱树；联合 **PLD 上下文 n-gram**（高接受 spine）与 **TR 转移表**（低接受 branches），证明异构接受率下最优树非各向同性；**不训草稿头**。
-> **攻坚线**：**AI Infra / 投机解码拓扑与校验规则（主）** + **数学原理（辅）**（margin、接受异构、脊柱树期望产量下界）。
+> **研究线**：**AI Infra / 投机解码拓扑与校验规则（主）** + **数学原理（辅）**（margin、接受异构、脊柱树期望产量下界）。
 > **范围与相邻笔记**：
 > - **≠ [[EAGLE3投机解码]]**：不重写 training-time test、特征融合、EAGLE→EAGLE-2→EAGLE-3 谱系与 SGLang 吞吐表正文。AdaptiveSpec **以 EAGLE-3 为草稿器/静态基线**，贡献是 **margin 校验 + 逐步树形**；Goose 文内明示与 EAGLE-3 **跨类（cross-category）**——无神经草稿头，本卡只录对照句，不抄 EAGLE-3 方法。
 > - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang/TRT-LLM 选型通史，不写 Leviathan/Chen/Medusa/Lookahead 基线课。

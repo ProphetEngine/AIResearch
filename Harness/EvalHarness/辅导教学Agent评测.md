@@ -29,7 +29,7 @@ timezone: Asia/Shanghai (CST)
 > - **MathTutorBench**（ETH 等）：开放式数学对话辅导能力（专业知识 × 学生理解 × 教学法生成）+ 轻量 Scaffolding RM。
 > - **TutorBench**（Scale AI）：高中 / AP 六科 STEM、多模态、样本专属量尺（rubric）+ LLM-judge；三用例（自适应讲解 / 评估反馈 / 主动学习）。
 > - **TeachArena**（HKUST + Qwen）：真实教学工作流三面——教师判断 → 情境多轮辅导 → LMS 端到端动作；354 审计任务。
-> **攻坚线**：**评测字段 / 任务设计（主）**——评什么对象、证据单位、自动打分契约；**教学法原则对照（辅）**——仅作与 [[LearnLM教育辅导]] 原则表的接口对照，**不**重写 LearnLM 后训练配方。
+> **研究线**：**评测字段 / 任务设计（主）**——评什么对象、证据单位、自动打分契约；**教学法原则对照（辅）**——仅作与 [[LearnLM教育辅导]] 原则表的接口对照，**不**重写 LearnLM 后训练配方。
 > **范围与相邻笔记**：
 > - **≠ [[LearnLM教育辅导]]**：不写成 **LearnLM 第二张模型卡**。本卡**不**写 pedagogical IF 共训、SFT/RM/RL 进 Gemini、专家场景偏好对齐配方；LearnLM 仅在 MathTutorBench Table 4 / TeachArena 文内对照句 / TutorBench 相关工作中作为**被测或引用对象**出现。
 > - **≠ [[合成用户仿真]]**：不重写 τ-bench / ToolEmu「合成用户 / 合成工具」仿真评测主轴。TeachArena 虽引用 τ-bench 作 agent 工作流对照，本卡只取 **教学证据 → 决策 → LMS 状态** 契约，不写零售/航空用户仿。

@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # GPT-5.6 Preview / GA System Card 专项深读卡
 
-> 攻坚线：**架构思想（主）**
+> 研究线：**架构思想（主）**
 > 锚点：OpenAI Deployment Safety Hub
 > - **Preview PDF**：封面 **2026-06-25**（Hub 页标 Published June 26, 2026）
 > - **GA PDF**：封面 **2026-07-09**（Hub 页标 Published July 9, 2026）

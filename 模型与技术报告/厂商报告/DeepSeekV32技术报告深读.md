@@ -11,7 +11,7 @@ archived: 2026-09-22
 # TR · DeepSeek-V3.2 Technical Report 专项深读卡
 
 > **定位**：报告级增量深读卡（相对 V3 / V3.1-Terminus / V3.2-Exp）。数字一律取自官方 PDF `https://arxiv.org/abs/2512.02556`（2026-09-22）。
-> **攻坚线**：**架构思想（主）** + **AI Infra（辅）**。
+> **研究线**：**架构思想（主）** + **AI Infra（辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线（见 [[混合专家架构]]）；开闭源谱系坐标（见 [[开源与闭源前沿模型谱系]]）；V3 完整训练/DualPipe/FP8 配方表（见 [[DeepSeekV3训练与MoE基建]]）。本卡只补「V3.2 相对前代公开了什么」。
 > 本 PDF **未重述** 671B/37B、14.8T、DualPipe、FP8 分块等 V3 配方数字，V3 数字不外推为 V3.2 新主张。
 

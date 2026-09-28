@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：材料生成与统一力场方法轴——相对 **[[MatterSim材料基础模型]] MatterSim**（宽温压 MLFF / 物性**预测**主轴）的**正交增量**：
 > - **MatterGen**：条件**生成式**无机晶体设计（扩散联合精炼原子类型 / 坐标 / 晶格 + adapter 微调）。
 > - **MACE 跨域统一力场**（2510.25380）：分子 / 表面 / 无机晶体 **cross-domain** 多头 replay 后训练；以 **MACE-MP-0**（2401.00096）为 foundation 谱系基线（**正式外链**）。
-> **攻坚线**：**架构思想 / 任务接口（生成 vs 力场）（主）** + **文内稳定性 / 物性 / 跨域榜字段（辅）**。
+> **研究线**：**架构思想 / 任务接口（生成 vs 力场）（主）** + **文内稳定性 / 物性 / 跨域榜字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[MatterSim材料基础模型]] MatterSim**：不重写主动学习温压构型、M3GNet/Graphormer 双骨干、0–5000 K / 0–1000 GPa、Gibbs/相图主文。MatterGen 文内把 MatterSim 当 **pre-relax / 稳定性过滤 MLFF**（与 RSS/substitution 同配）——本卡只录**接口句**，不展开 MatterSim 方法。2510.25380 把 `mattersim-5M` 当跨域对照基线——只录榜名与文内得分，不复述 MatterSim 架构。
 > - **≠ [[生物学基础模型]]**：不写 AF3 坐标扩散 / ESM3 多轨道蛋白 LM。

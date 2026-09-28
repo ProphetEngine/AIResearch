@@ -16,7 +16,7 @@ archived: 2026-09-22
 # Preference optimization 新变体族：SimPO + ORPO（KTO 索引）
 
 > **定位**：横切——补齐 [[对齐脉络RLHF与偏好优化]] 明确**不覆盖**的偏好变体短史：仓库缺 **无参考模型 / 单阶段 / 非成对标签** 三条轴上的可核条目。本篇主写 **SimPO**（长度归一平均 log 概率作隐式奖励 + 目标奖励间隔）与 **ORPO**（SFT NLL + odds ratio 单阶段 monolithic）；**KTO** 仅作谱系索引（二元 desirable/undesirable、HALO 族）。
-> **攻坚线**：**架构思想（主）**——目标函数假设与数据形态；**评测字段（辅）**——AlpacaEval / Arena-Hard / MT-Bench 等文内表。
+> **研究线**：**架构思想（主）**——目标函数假设与数据形态；**评测字段（辅）**——AlpacaEval / Arena-Hard / MT-Bench 等文内表。
 > **范围与相邻笔记**：
 > - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 InstructGPT 三阶段 / DPO 闭式推导 / CAI；[[对齐脉络RLHF与偏好优化]] 已声明 IPO/KTO/ORPO 等不在精读范围。
 > - **≠ [[GRPO与DAPO算法族]]**：不写 GRPO→DAPO / 可验证奖励 RL / Clip-Higher 等。

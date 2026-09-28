@@ -20,7 +20,7 @@ timezone: Asia/Shanghai (CST)
 # 气候科学/政策 Agent：ClimateAgent + ClimateAgents（附录 ClimAgent）
 
 > **定位**：气候科学智能体主题轴——补 [[天气气候基础模型]]「天气/气候 **foundation model**」之后仍缺的轴：**多代理编排做气候数据科学 / 社会—气候分析**。主锚两篇：**(A) ClimateAgent**（HKUST；气候数据获取→分析→报告的端到端编排）与 **(B) ClimateAgents**（HIT；社会—气候动力学的多智能体研究助手）。附录索引 **ClimAgent**（开放式气候建模 + ClimaBench）。
-> **攻坚线**：**架构思想（主）**——角色分层 / 共享上下文 / API 自省与自纠；**评测字段（辅）**——工作流完成率、报告质量多维分、社会—气候案例与 Agentic Reviewer 文内分。
+> **研究线**：**架构思想（主）**——角色分层 / 共享上下文 / API 自省与自纠；**评测字段（辅）**——工作流完成率、报告质量多维分、社会—气候案例与 Agentic Reviewer 文内分。
 > **范围与相邻笔记**：
 > - **≠ [[天气气候基础模型]]**：不重写 Aurora / Earth-system FM 的 3D latent、预训练→多域微调、预报 rollout；本卡对象是 **LLM 多代理工作流**，不是格点地球场基础模型。
 > - **≠ [[科研智能体]]**：不重写 The AI Scientist / ChemCrow 通史；ChemCrow 若出现仅作 ClimateAgent related work 一句邻接，不复述化学工具表。

@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # GPT-5.2 System Card Update 专项深读卡
 
-> 攻坚线：**架构思想（主）**
+> 研究线：**架构思想（主）**
 > 锚点：OpenAI, *Update to GPT-5 System Card: GPT-5.2*（封面日期 **December 11, 2025**）
 > 官方 PDF：`https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf`（**27** 页；CreationDate/ModDate **2025-12-12** 00:46:24 CST）
 > 前序卡：[[GPT5系统卡深读]]

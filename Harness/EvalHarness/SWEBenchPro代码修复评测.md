@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：软件工程评测主题轴——在 [[代码智能体Harness史线]]（ACI / 沙箱 harness 史线）与 [[评测与排行榜可靠性]]（榜单可靠性通史）之后，单独立「**测什么 + 怎么验真**」：
 > - **SWE-Bench Pro**（Scale AI，arXiv **2509.16941**）：长程、抗污染、企业级仓库修复；公共 / 商业 / 留出三分集。
 > - **SWE-Bench Pro Verified**（上交所 AI Lab 等，arXiv **2609.08149**）：在 Pro **公共 731** 上叠 **反 reward-hacking 执行环境** + **102 题最小改动校正**。
-> **攻坚线**：**评测字段（主）**——规模切分、Pass@1 / accuracy、协议旋钮（增广 / 预算 / scaffold）、泄漏通道与修复前后分差。
+> **研究线**：**评测字段（主）**——规模切分、Pass@1 / accuracy、协议旋钮（增广 / 预算 / scaffold）、泄漏通道与修复前后分差。
 > **范围与相邻笔记**：
 > - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 控制环正文。两文只用 SWE-Agent 或 mini-swe-agent 作**统一评测脚手架引用**，不展开命令面 / 观测格式 / 四包 SDK。
 > - **≠ [[评测与排行榜可靠性]]**：不重写污染 / 路由 / thinking 模式 / System Card 榜单通史全文；本卡只录 **Pro 族专用字段**（copyleft 抗污染、三分集、anti-hacking、任务校正）。

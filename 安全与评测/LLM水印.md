@@ -17,7 +17,7 @@ archived: 2026-09-22
 # LLM watermarking：SynthID-Text（Nature）+ 理论/鲁棒性复核
 
 > **定位**：**生成文本水印 / 供给链溯源** 横切——相对 [[模型卡与SystemCard规范]]（Model/System Card 文档规范）与 [[训练数据污染检测]]（训练数据污染检测），本篇只写 **LLM 输出侧 generative watermarking**：Tournament 采样、检测统计、公开攻击面分类与检测指标。
-> **攻坚线**：**数学原理（主）**——Tournament / g-value / Mean Score vs Bayesian Score / TPR@FPR；**评测字段（辅）**——质量中性、延迟、意义保持变换下的 TPR/FPR/F1。
+> **研究线**：**数学原理（主）**——Tournament / g-value / Mean Score vs Bayesian Score / TPR@FPR；**评测字段（辅）**——质量中性、延迟、意义保持变换下的 TPR/FPR/F1。
 > **范围与相邻笔记**：
 > - **相对 [[模型卡与SystemCard规范]]**：不重写卡字段谱系；水印可作为「溯源/披露」邻接字段一句交叉。
 > - **相对 [[训练数据污染检测]]**：不写 quiz / n-gram / canary 污染探针；本篇 = **生成后文本是否带水印**，≠ 训练语料是否见过评测集。

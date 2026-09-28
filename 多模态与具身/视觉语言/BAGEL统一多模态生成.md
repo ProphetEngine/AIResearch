@@ -29,7 +29,7 @@ timezone: Asia/Shanghai (CST)
 # 统一多模态生成：BAGEL（≠ 视频生成报告 / ≠ LDM·DiT）
 
 > **定位**：统一多模态生成报告——ByteDance Seed *Emerging Properties in Unified Multimodal Pretraining*（arXiv:**2505.14683**v3 \[cs.CV\]，页眉 **27 Jul 2025**；正文 Date **July 29, 2025**）。立「**开源理解+生成统一 decoder-only（MoT）**」：在 **交错文本/图像/视频/网页** 万亿级 token 上预训练，报告 **涌现式** 复杂多模态推理（自由形式图像操纵、未来帧、3D、世界导航等）。
-> **攻坚线**：**架构思想（主）**——MoT / 双编码器（SigLIP2 + FLUX VAE）/ 广义因果注意力 / NTP⊕Rectified Flow；**评测字段（辅）**——Table 4–10 与 IntelligentBench 文内数字转述。
+> **研究线**：**架构思想（主）**——MoT / 双编码器（SigLIP2 + FLUX VAE）/ 广义因果注意力 / NTP⊕Rectified Flow；**评测字段（辅）**——Table 4–10 与 IntelligentBench 文内数字转述。
 > **范围与相邻笔记**：
 > - **≠ [[扩散生成式视觉与LLM]]**：不写成 **LDM / DiT 图像潜扩散层图通史**。本卡只写 BAGEL 的 **统一 MoT + RF 视觉头**；LDM/DiT 仅作谱系对照一句，不重写感知压缩 / U-Net→ViT 规模化。
 > - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等无可核长 TR）。本卡对象是 **统一理解+生成基础模型**；文内「视频交错数据 / 多帧生成」只作为 **训练源与世界建模定性展示**，不升「视频生成正式报告」主轴。

@@ -28,7 +28,7 @@ timezone: Asia/Shanghai (CST)
 > - **CaMeL**（*Defeating Prompt Injections by Design*，arXiv:**2503.18813**v2，页眉 **24 Jun 2025**）：能力标记 + 控制/数据流提取 + 自定义解释器策略强制——**系统层脚手架**，不改底层 LLM。
 > - **StruQ**（*StruQ: Defending Against Prompt Injection with Structured Queries*，arXiv:**2402.06363**v2，页眉 **25 Sep 2024**；USENIX Security 2025）：prompt/data **双通道结构化查询** + 安全前端 + **结构化指令微调**——**模型 API / 训练接口**改造。
 > **补链（不升主）**：**Adaptive Attacks…**（arXiv:**2503.00061**v2，页眉 **4 Mar 2025**）——说明检测/提示/微调类防御在自适应评测下脆弱；**只作动机补链**，不立主轴。
-> **攻坚线**：**架构思想 / 系统接口（主）** + **文内 AgentDojo / AlpacaEval 等安全—效用汇总字段（辅）**。
+> **研究线**：**架构思想 / 系统接口（主）** + **文内 AgentDojo / AlpacaEval 等安全—效用汇总字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[安全红队与对抗评测]]**：不重写红队通史、众包协议、ASR 闭环与攻击面地图。
 > - **≠ [[多模态越狱与OmniSafe]]**：不写成多模态越狱 / MMJail / OmniSafe。

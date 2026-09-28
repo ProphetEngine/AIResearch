@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # 4：Claude Opus 5 System Card 深读（+ Fable/Mythos 5.1 附录索引）
 
-> 攻坚线：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
+> 研究线：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
 > 主锚点：Anthropic, *System Card: Claude Opus 5*（封面 **July 24, 2026**）
 > 官方/CDN PDF：见下（**193** 页；Title: Claude Opus 5 System Card）
 > 官方 PDF（用户指定 CDN）：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf

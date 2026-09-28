@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # GPT-5 System Card 专项深读卡
 
-> 攻坚线：**架构思想（主）** + **AI Infra（辅）**
+> 研究线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：OpenAI, *GPT-5 System Card*（封面日期 **August 13, 2025**）
 > 官方 PDF：`https://cdn.openai.com/gpt-5-system-card.pdf`（**60** 页；CreationDate **2025-08-20** CST）
 

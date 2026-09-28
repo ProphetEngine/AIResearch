@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # GLM-4.5 Technical Report 深读笔记
 
-> 攻坚线：**架构思想（主）** + **AI Infra（辅）**
+> 研究线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：GLM-4.5 Team（Zhipu AI & Tsinghua University），*GLM-4.5: Agentic, Reasoning, and Coding (ARC) Foundation Models*（arXiv:2508.06471）
 > 官方 PDF：`https://arxiv.org/abs/2508.06471`（**26** 页；页眉 **arXiv:2508.06471v1 [cs.CL] 8 Aug 2025**）
 > 权重 / 代码（摘要与 §1）：https://github.com/zai-org/GLM-4.5 ；HF `zai-org/GLM-4.5`；评测工具 https://github.com/zai-org/glm-simple-evals ；亦列 Z.ai / BigModel.cn

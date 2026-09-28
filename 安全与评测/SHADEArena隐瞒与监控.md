@@ -14,7 +14,7 @@ archived: 2026-09-22
 # SHADE-Arena：sabotage agent × LLM monitor
 
 > **定位**：**危险能力 / 控制评测** 切片——度量 frontier agent 能否在完成良性主任务的同时完成有害侧任务、且不被 LLM 监控者识破；同一数据集也反转测 **监控者**。
-> **攻坚线**：**架构思想（主）**——主任务 / 侧任务 / 隐藏 scratchpad / 嫌疑分协议；**评测字段（辅）**——overall success、evasion、AUC、FPR≈1% 阈值。
+> **研究线**：**架构思想（主）**——主任务 / 侧任务 / 隐藏 scratchpad / 嫌疑分协议；**评测字段（辅）**——overall success、evasion、AUC、FPR≈1% 阈值。
 > **范围与相邻笔记**：
 > - **相对 [[评测与排行榜可靠性]]**：只取「协议未声明会毁掉分数可比性」接口——本篇写 **sabotage×monitor 双角色评测**，**不**重写污染 / 路由 / thinking 开关 / 第三方榜全文。
 > - **不重写** SWE-bench 协议与数字（→ 见 [[评测与排行榜可靠性]] 仅作线索处）；**不重写** OSWorld / Operator / StateAct（→ **[[计算机使用智能体]]**）。

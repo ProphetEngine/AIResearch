@@ -15,7 +15,7 @@ archived: 2026-09-22
 # KV Cache 量化与极限压缩
 
 > **定位**：横切——立 **K/V 非对称量化与误差轴**（per-channel Key、per-token Value、RoPE 前后、残差窗 / dense-sparse），**不**写权重量化通史，**不**重写 V4.1-Flash 产品解全文（见 [[DeepSeekV41Flash深读]]）。
-> **攻坚线**：**AI Infra（主）** + **数学原理 / 量化误差（辅）**。
+> **研究线**：**AI Infra（主）** + **数学原理 / 量化误差（辅）**。
 > **刻意不写**：AWQ/GPTQ/SmoothQuant 权重史；token eviction / H2O / StreamingLLM 正文；PagedAttention / continuous batching（见 [[长上下文位置编码与系统侧]]、[[推理引擎生态]]、[[连续批处理与Orca]]）；CSA2 / CED / SWA Bounded Replay 机制全文（[[DeepSeekV41Flash深读]]）。
 > 两文互相称 concurrent，不以「谁先谁后」叙事替代方法差异。
 

@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # 开源生态里程碑：LLaMA 系如何改变复现与竞赛格局
 
-> **攻坚线**：架构思想（主）
+> **研究线**：架构思想（主）
 > **跟读材料**：
 > - LLaMA 论文：Touvron et al., *LLaMA: Open and Efficient Foundation Language Models*，arXiv:2302.13971（2023-02）
 > - 官方 PDF：`https://arxiv.org/abs/2302.13971`

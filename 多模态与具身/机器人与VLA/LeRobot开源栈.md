@@ -15,7 +15,7 @@ archived: 2026-09-22
 # Open robotics stacks 增量：LeRobot
 
 > **定位**：开源机器人学习栈横切——在 **[[视觉语言动作谱系]]**（VLA 策略谱系：RT-2 → OpenVLA → π₀）之上，补一条 **开源端到端机器人学习栈 + 数据集标准** 增量轴；主锚为 Hugging Face **LeRobot**（arXiv **2602.22818**，ICLR 2026），对照锚为 **Open X-Embodiment（OXE）** 数据集仓（arXiv **2310.08864**）。
-> **攻坚线**：**架构思想（主）**——垂直集成（middleware → 数据 → 算法 → 异步推理）；**数据集标准（辅）**——`LeRobotDataset` vs OXE 的 **RLDS**。
+> **研究线**：**架构思想（主）**——垂直集成（middleware → 数据 → 算法 → 异步推理）；**数据集标准（辅）**——`LeRobotDataset` vs OXE 的 **RLDS**。
 > **范围与相邻笔记**：
 > - **不重写** [[视觉语言动作谱系]] 中 **RT-2 / OpenVLA / π₀** 的策略全文（动作离散化、co-fine-tune、flow matching、成功率表等只允许 **一句交叉指针**）。
 > - **OpenHands / 软件工程 coding agent** → **[[代码智能体Harness史线]]**；本项 **不混入**。

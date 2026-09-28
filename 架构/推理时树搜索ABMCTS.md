@@ -17,7 +17,7 @@ archived: 2026-09-22
 # Inference-time tree search：AB-MCTS（Adaptive Branching MCTS）
 
 > **定位**：AB-MCTS——相对 **[[推理时扩展TestTimeScaling]]**（test-time scaling 通史 / o1·R1 产品叙事）补一块独立的 **外层多答案树搜索切片**：Sakana AI 的 **AB-MCTS**（*Wider or Deeper?*，arXiv **2503.04412v5**）把 **repeated sampling（只宽）** 与 **sequential refinement（只深）** 统一进 **自适应分支** 的 MCTS，并开源 **TreeQuest**。
-> **攻坚线**：**架构思想（主）**——GEN 节点 + Thompson sampling 如何在「扩新枝 / 深挖旧枝」间做贝叶斯决策；**评测字段（辅）**——相对 repeated sampling / 固定宽度 standard MCTS 的同预算表。
+> **研究线**：**架构思想（主）**——GEN 节点 + Thompson sampling 如何在「扩新枝 / 深挖旧枝」间做贝叶斯决策；**评测字段（辅）**——相对 repeated sampling / 固定宽度 standard MCTS 的同预算表。
 > **范围与相邻笔记**：
 > - **≠ [[推理时扩展TestTimeScaling]]**：不写 o1/R1/s1 产品通史与「势」叙事；只取「推理期多算力 → 多答案生成」这一接口。
 > - **≠ [[过程奖励模型PRM谱系]]**：不写过程奖励模型怎么训 / ORM vs PRM 谱系；AB-MCTS 的 $R$ 是 **可执行外部评分**（测例通过率、验证集分数等），不是逐步神经判别器。

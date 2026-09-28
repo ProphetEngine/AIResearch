@@ -15,7 +15,7 @@ archived: 2026-09-22
 # KV 新方法：DuoAttention（头分工）+ KVzip（query-agnostic 压缩）
 
 > **定位**：**Infra**——相对 **[[KV缓存量化与压缩]]**（KV 低比特量化）与 **[[检索式注意力]]**（检索式注意力近似全注意力）补一条近窗横切：**头级分工（retrieval vs streaming）** 与 **与查询无关、可跨 query 复用的 KV 驱逐**。主锚两篇一手 PDF：**DuoAttention**（2410.10819）与 **KVzip**（2505.23416）。
-> **攻坚线**：**架构思想（主）**——谁必须全 KV、谁可 sink+近窗 / 谁可按重构分数驱逐；**显存 / 延迟—精度字段（辅）**——NIAH、LongBench、SCBench 多 query、A100 上的 decode/prefill 数字。
+> **研究线**：**架构思想（主）**——谁必须全 KV、谁可 sink+近窗 / 谁可按重构分数驱逐；**显存 / 延迟—精度字段（辅）**——NIAH、LongBench、SCBench 多 query、A100 上的 decode/prefill 数字。
 > **范围与相邻笔记**：
 > - **≠ [[KV缓存量化与压缩]]**：不写 K/V 非对称量化、残差窗、outlier 比特轴；两文均称量化可叠加，本篇只录「组合后容量」一句。
 > - **≠ [[检索式注意力]]**：不写 KV 向量 ANNS / 句级 token 缓存；本篇是 **头分工** 与 **prefill 期 query-agnostic 驱逐**，不是 decode 期检索近似。

@@ -20,7 +20,7 @@ archived: 2026-09-22
 # Diffusion Forcing 族：DF → Self Forcing（Causal Forcing 附录）
 
 > **定位**：Forcing 族谱——立 **序列生成里「噪声当软掩码 / 因果去噪」** 的一条族谱：**Diffusion Forcing（DF，NeurIPS 2024）** 把每 token 独立噪声级与因果 next-token 预测合成；**Self Forcing（SF，NeurIPS 2025）** 把 AR 视频扩散的训练对齐到推理期 **自 rollout + 视频级分布匹配**；附录 **Causal Forcing（CF，ICML 2026）** 指出 SF 式「双向教师 → AR 学生」的 ODE 初始化破坏 **帧级 injectivity**，改用 **AR 教师做因果 ODE 初始化再接 DMD**。
-> **攻坚线**：**架构思想（主）**——Teacher / Diffusion / Self / Causal Forcing 各自训什么条件分布、训练–推理是否同分布；**评测字段（辅）**——迷宫规划奖励、VBench / VisionReward / 吞吐–时延。
+> **研究线**：**架构思想（主）**——Teacher / Diffusion / Self / Causal Forcing 各自训什么条件分布、训练–推理是否同分布；**评测字段（辅）**——迷宫规划奖励、VBench / VisionReward / 吞吐–时延。
 > **范围与相邻笔记**：
 > - **≠ [[扩散语言模型]] 文本扩散**：不写 LLaDA / Dream 的 **离散 [MASK] MDM**；本卡是 **连续序列（视频 / 轨迹 / 时序）上的高斯噪声级**。
 > - **≠ [[视频生成正式报告]] Sora 备忘**：不写旗舰正式报告缺口 / System Card；本卡只跟学术 **AR–扩散杂交 forcing 族**。

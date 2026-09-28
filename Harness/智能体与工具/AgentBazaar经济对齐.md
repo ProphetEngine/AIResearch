@@ -15,7 +15,7 @@ archived: 2026-09-22
 # Agent Bazaar：Economic Alignment 与多代理市场失败
 
 > **定位**：经济代理主题轴——仓库缺 **economy / econ agents** 横切；锚点是近窗（2026-05）*Agent Bazaar*（Karten / Crow / Jin，Princeton；COLM 2026）。主写 **多代理市场系统性风险**（B2C 崩盘、C2C Sybil 柠檬市场）与 **Economic Alignment Score（EAS）**，辅写 harness + 定向 RL。
-> **攻坚线**：**评测字段（主）**——两环境失败模式、EAS 四分量、硬设置下跨模型可比；**架构思想（辅）**——Stabilizing Firms / Skeptical Guardians harness、REINFORCE++ 自适应课程。
+> **研究线**：**评测字段（主）**——两环境失败模式、EAS 四分量、硬设置下跨模型可比；**架构思想（辅）**——Stabilizing Firms / Skeptical Guardians harness、REINFORCE++ 自适应课程。
 > **范围与相邻笔记**：
 > - **不重写** [[多智能体辩论]] MAD 辩论协议 / 多数票 / 置信度调制（本篇是 **市场 POSG**，不是同题 QA 委员会）。
 > - **不重写** 金融交易 bot / QuantAgent / FinAgent **通史**（Related 仅点名「单代理交易」邻槽后立即回到本篇的系统性失败）。

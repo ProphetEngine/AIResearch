@@ -22,7 +22,7 @@ timezone: Asia/Shanghai (CST)
 # 开源前沿旗舰：Kimi K3 Technical Report（≠ Nemotron / OLMo / Coder-Next / DeepSeek-V4）
 
 > **定位**：开源前沿旗舰主题轴——Kimi Team *Kimi K3: Open Frontier Intelligence*（arXiv:**2607.24653**v2，页眉 **7 Aug 2026**；XMP identifier `…/2607.24653v2`）。立「**开源 3T 级原生多模态 MoE 旗舰 TR**」：在 **预训练规模轴（≈2.8T / 104B 激活）** 与 **1M 上下文 test-time / agentic RL 轴** 上同时推进，公开全权重。
-> **攻坚线**：**架构思想（主）**——Hybrid KDA–MLA、AttnRes、Stable LatentMoE（SiTU-GLU / Quantile Balancing）、MoonViT-V2、Per-Head Muon；**AI Infra（辅）**——FlashKDA / KCP、MoonEP、1M agentic RL + AgentENV、KDA-aware prefix cache / QAT 服务；**评测字段（文内表，辅）**——Table 2/3 与 Fig.1 主结果转述。
+> **研究线**：**架构思想（主）**——Hybrid KDA–MLA、AttnRes、Stable LatentMoE（SiTU-GLU / Quantile Balancing）、MoonViT-V2、Per-Head Muon；**AI Infra（辅）**——FlashKDA / KCP、MoonEP、1M agentic RL + AgentENV、KDA-aware prefix cache / QAT 服务；**评测字段（文内表，辅）**——Table 2/3 与 Fig.1 主结果转述。
 > **范围与相邻笔记**：
 > - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Attention + LatentMoE / NVIDIA 开源旗舰）配方复述。本卡只写 **Moonshot Kimi K3** 本体；Nemotron 数字若不在本 PDF → 不出现。
 > - **≠ [[OLMo3全栈开放配方]]**：不写成 **OLMo 3** 全开放数据/配方旗舰对照全文。

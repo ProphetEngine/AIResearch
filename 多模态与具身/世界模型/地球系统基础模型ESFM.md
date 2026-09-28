@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 # 地球系统 FM 增量：ESFM（≠ Aurora / ≠ ClimateAgent）
 
 > **定位**：地球系统基础模型增量——在 **[[天气气候基础模型]] Aurora**（地球系统 foundation **预报骨干**）与 **[[气候科学Agent]] ClimateAgent**（气候数据科学 / 政策 **Agent 编排**）已立之后，本卡只写 **ESFM**（*Earth System Foundation Model*，arXiv:**2605.00850**v1）作为 **异构缺失数据整合、多分辨率 tokenizer、站点/卫星、AdaLN 概率集合** 的 **统一框架增量**。
-> **攻坚线**：**架构思想 / 数据接口（主）** + **文内预报字段（辅）**。
+> **研究线**：**架构思想 / 数据接口（主）** + **文内预报字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[天气气候基础模型]]**：不重写 Aurora **1.3B** 骨干表、3D Perceiver + 3D Swin U-Net 层表、四域微调通史、Aurora 1.5 产品增量。本卡承认 ESFM **显式复用 Aurora 的 3D Swin UNet backbone**（文内引用 Bodnar et al. 2025），但只录 **ESFM 相对 Aurora 的接口增量**（逐变量 tokenization、NaN token、多分辨率 bin、axial attention、AdaLN-Zero 集合、掩码训练、KD 对齐），本卡不做 Aurora 复读。
 > - **≠ [[气候科学Agent]]**：不写成 ClimateAgent / ClimateAgents / ClimAgent 多代理编排、报告流水线、政策仿真。ESFM 是 **格点/站点场预报 FM**，不是 LLM Agent。

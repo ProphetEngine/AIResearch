@@ -18,7 +18,7 @@ archived: 2026-09-22
 # RAG 2.0 变体：Self-RAG + Corrective RAG（相对检索增强通史）
 
 > **定位**：相对 [[检索增强与知识外挂]]（Lewis 检索–生成通史）与 [[图谱检索GraphRAG]]（GraphRAG 社区摘要 + EraRAG 增量索引）的 **两条 agentic RAG 机制线**：**检索必要性自省（Self-RAG）** 与 **检索结果纠错 / 回退 Web（CRAG）**。
-> **攻坚线**：**架构思想（主）**——reflection tokens / 三动作触发；**评测字段（辅）**——幻觉/接地（FactScore、citation prec/rec、短答 accuracy）。
+> **研究线**：**架构思想（主）**——reflection tokens / 三动作触发；**评测字段（辅）**——幻觉/接地（FactScore、citation prec/rec、短答 accuracy）。
 > **范围与相邻笔记**：
 > - **不重写** [[检索增强与知识外挂]] 的稠密检索 / DPR 双塔 / MIPS / RAG-Token vs RAG-Sequence / 向量库产品对照。本篇只用「**固定 top-K 无差别塞入**」这一对照槽。
 > - **不重写** [[图谱检索GraphRAG]] 的实体图谱 → Leiden 社区摘要 → map-reduce，或 EraRAG 增量重建。本篇 **不是** 图索引。

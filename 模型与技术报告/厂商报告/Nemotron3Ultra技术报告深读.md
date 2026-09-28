@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 # 开源旗舰：Nemotron 3 Ultra（≠ Nemotron-CC）
 
 > **定位**：Nemotron 开源旗舰主题轴——立 NVIDIA **Nemotron 3 Ultra** 模型技术报告：Hybrid Mamba–Attention + LatentMoE、面向 **agentic reasoning** 的预训练 / 后训练 / 量化 / 推理配方与文内评测。主文：NVIDIA *Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning*（arXiv:**2606.15007**v1，**12 Jun 2026**）。
-> **攻坚线**：**架构思想（主）** + **评测字段（文内 agent / 推理表，辅）**。
+> **研究线**：**架构思想（主）** + **评测字段（文内 agent / 推理表，辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[NemotronCC数据策展]]**：不重写 **Nemotron-CC 语料清洗章**（过滤 / 去重 / 质量分类 / 合成改写管线）。本卡预训练数据只记 **Ultra 相对 Super 新增发布集 + 两阶段配比骨架**，不展开通用网页策展全文。
 > - **≠ [[SEA-LION低资源区域模型]]**：不写成 **SEA-LION 区域 CPT / OPD / SEA-HELM**；SEA 卡里 Ultra 仅作教师信号源一句 → 本卡才是 **基座旗舰 TR**。

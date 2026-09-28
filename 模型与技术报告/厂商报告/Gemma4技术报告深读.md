@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # 1：Gemma 4 Technical Report 深读
 
-> 攻坚线：**架构思想（主）** + **AI Infra / 效率·量化（辅）**
+> 研究线：**架构思想（主）** + **AI Infra / 效率·量化（辅）**
 > 锚点：Gemma Team, Google DeepMind, *Gemma 4 Technical Report*（arXiv **2607.02770v2**；页眉日期 **2026-06-19**；API published **2026-07-02**，updated **2026-07-24**）
 > 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）

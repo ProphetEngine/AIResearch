@@ -25,7 +25,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**Infra / 服务架构**——在 **[[混合专家架构]]** 已立 MoE **架构通史**、**[[NVSHMEM与DeepEP通信]]** 已立 **NVSHMEM 通信基底 + DeepEP 案例**之后，本卡只写 **服务侧如何把注意力与专家解耦、如何在机架级大 EP 上做近最优负载均衡**。两条主轴正交：
 > - **MegaScale-Infer**（*Disaggregated Expert Parallelism*）：**注意力节点 ↔ 专家节点**解耦 + ping-pong 微批 + 定制 **M2N** 通信；主战场是 **decode 吞吐 / 单位成本**。
 > - **UltraEP**（*exact-load, real-time balancer*）：在 **rack-scale node（RSN）** 上对 **每个 microbatch × 每层**做 **配额驱动复制 + 重路由**；主战场是 **训练 + serving prefill** 的秩级负载与理想吞吐贴近度。
-> **攻坚线**：**AI Infra / 服务架构（主）** + **文内吞吐 / 失衡字段（辅）**。
+> **研究线**：**AI Infra / 服务架构（主）** + **文内吞吐 / 失衡字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[混合专家架构]]**：不写 Switch→Mixtral→V3 路由公式、aux-loss、总参/激活参通史；MoE 稀疏只当「每专家 batch 变稀 → 利用率塌」接口一句。
 > - **≠ [[NVSHMEM与DeepEP通信]]**：不写 NVSHMEM 对称堆 / IBGDA / DeepEP V1·V2 内核剖面；**DeepEP 无独立 arXiv 号**；本卡若点 DeepEP，只录「token all-to-all 后端 / 对照一句」。

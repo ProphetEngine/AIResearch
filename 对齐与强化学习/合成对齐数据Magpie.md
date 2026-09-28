@@ -21,7 +21,7 @@ archived: 2026-09-22
 # 合成对齐数据：Magpie + ActiveUltraFeedback
 
 > **定位**：**数据侧横切**——对照两篇对齐数据流水线主文：**无种子提示的自合成指令数据**（Magpie）vs **不确定度驱动的主动偏好对选取**（ActiveUltraFeedback）。
-> **攻坚线**：**架构思想 / 数据流水线（主）** + **文内下游评测字段（辅）**（AlpacaEval / Arena-Hard / WildBench；GSM8K / IFEval / TruthfulQA / AlpacaEval 2 / RewardBench 2）。
+> **研究线**：**架构思想 / 数据流水线（主）** + **文内下游评测字段（辅）**（AlpacaEval / Arena-Hard / WildBench；GSM8K / IFEval / TruthfulQA / AlpacaEval 2 / RewardBench 2）。
 > **范围与相邻笔记**：
 > - **≠ [[合成数据与教科书式数据]]**：不写 phi / Textbooks Are All You Need 式 **教科书/代码合成预训练** 通史。
 > - **≠ [[SimPO与ORPO偏好优化]]**：不写 SimPO / ORPO / IPO **偏好损失函数** 推导与族谱（ActiveUF §5.5 仅把 IPO/SimPO 当**下游消费算法**点名）。

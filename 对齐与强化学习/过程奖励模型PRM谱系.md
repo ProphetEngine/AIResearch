@@ -16,7 +16,7 @@ archived: 2026-09-22
 # Process Reward Models（PRM）谱系
 
 > **定位**：横切——仓库缺「逐步奖励模型」独立笔记。本篇只立 **PRM 作为逐步奖励枢纽**：连接 **验证（rerank / Best-of-N）**、**test-time scaling**、**过程 RL（dense step reward）**。
-> **攻坚线**：**数学原理（主）** + **架构思想（辅）**。
+> **研究线**：**数学原理（主）** + **架构思想（辅）**。
 > **谱系三站**：人类过程监督（Lightman et al.）→ 自动过程标注（Math-Shepherd）→ 用法闭环（TTS / process RL；综述作地图）。
 > **范围与相邻笔记**：
 > - **不重写** DeepSeek-R1 **阶段表** / 规则奖励通史（→ [[DeepSeekR1推理训练深读]]）。

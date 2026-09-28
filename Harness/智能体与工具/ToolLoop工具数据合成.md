@@ -16,7 +16,7 @@ timezone: Asia/Shanghai (CST)
 # Toolformer 谱系新变体：ToolLoop 闭环工具数据合成（≠ ToRL / 旗舰工具环 / ACI）
 
 > **定位**：工具数据合成主题轴——在「Toolformer 式：为工具调用**合成训练对**」谱系上，补近窗一刀 **ToolLoop**：把 generate-then-filter 改成 **generate–verify–refine**，用三阶段分解（ground truth → 反向造 query → 正向造 tool calls）+ 每阶段 **dynamic self-feedback**，用 **11K** 合成样本把 4B 非推理模式推到 BFCL **86.40%**。
-> **攻坚线**：**架构思想（主）**——候选函数聚类、三阶段分解、阶段局部校验与重写；**评测字段（辅）**——BFCL non-live/live、ACEBench 五维、消融「无反馈 / 终滤 / 全闭环」、合成重试分布。
+> **研究线**：**架构思想（主）**——候选函数聚类、三阶段分解、阶段局部校验与重写；**评测字段（辅）**——BFCL non-live/live、ACEBench 五维、消融「无反馈 / 终滤 / 全闭环」、合成重试分布。
 > **范围与相邻笔记**：
 > - **≠ [[ToRL工具集成强化学习]] ToRL**：不重写「代码解释器 ⊂ RL env、从 base 探索工具策略」。ToRL = **训练期交互 RL**（Sandbox Fusion + GRPO）；本篇 = **离线合成 function-calling 数据 → SFT**，评测是 BFCL/ACEBench **静态 schema 命中**，不是 AIME 解释器环。
 > - **≠ [[智能体工具与长程任务]]**：不重写旗舰 System Card / MCP / Extended thinking with tools / 长程产品叙事；本篇只谈 **训练数据怎么造**。

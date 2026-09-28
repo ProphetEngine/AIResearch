@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # 5：Gemini 3.7 Flash Model Card 深读
 
-> 攻坚线：**架构思想（产品 / 安全字段）**
+> 研究线：**架构思想（产品 / 安全字段）**
 > 锚点：Google DeepMind, *Gemini 3.7 Flash Model Card*（**Published: August 2026**；卡页写 **Published 13 August 2026**）
 > 官方 PDF：`https://deepmind.google/models/model-cards/gemini-3-7-flash/`（**9** 页 A4；Title: *Gemini-3-7-Flash-Model-Card.pdf*；Producer: Skia/PDF m154 Google Docs Renderer）
 > 卡页：https://deepmind.google/models/model-cards/gemini-3-7-flash/

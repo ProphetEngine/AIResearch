@@ -19,7 +19,7 @@ archived: 2026-09-22
 # Speech translation / simultaneous：SeamlessM4T（及流式同传族）
 
 > **定位**：语音翻译与同传增量——仓库缺 **统一语音↔文本多任务翻译 FM** 与 **streaming / 同传** 叙事。主锚 Seamless Communication et al. *SeamlessM4T: Massively Multilingual & Multimodal Machine Translation*（arXiv **2308.11596v3**）；定稿对照 Nature *Joint speech and text machine translation for up to 100 languages*（DOI **10.1038/s41586-024-08359-z**）；流式同传族以姊妹文 *Seamless: Multilingual Expressive and Streaming Speech Translation*（arXiv **2312.05187v1**）+ Meta 发布页 + `seamless_communication` 仓库为辅。
-> **攻坚线**：**架构思想（主）**——w2v-BERT 2.0 → X2T → UnitY / UnitY2 → HiFi-GAN；**评测字段（辅）**——S2ST/S2TT 覆盖与流式策略（EMMA、AL/LAAL）。
+> **研究线**：**架构思想（主）**——w2v-BERT 2.0 → X2T → UnitY / UnitY2 → HiFi-GAN；**评测字段（辅）**——S2ST/S2TT 覆盖与流式策略（EMMA、AL/LAAL）。
 > **范围与相邻笔记**：
 > - **≠ [[SpeechLLM语音语言模型]] Qwen2-Audio**：那边是 **音→文对话 LLM**（Whisper 编码器 ⊕ Qwen 下一文本 token）；本篇是 **speech↔speech / speech↔text 翻译 FM**，不是聊天助手。
 > - **≠ [[多语言与跨语种]] 多语言文本通史**：XLM-R / BLOOM / 语种配比旋钮不重写；本篇只取 NLLB 作 **T2TT 初始化块** 的接口一句。

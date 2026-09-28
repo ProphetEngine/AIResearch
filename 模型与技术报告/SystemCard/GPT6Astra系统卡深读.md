@@ -8,7 +8,7 @@ archived: 2026-09-22
 
 # 1：GPT-6 Astra System Card 深读
 
-> 攻坚线：**架构思想（对齐 / 监控叙事）** + **评测字段（Preparedness / agentic safety）**
+> 研究线：**架构思想（对齐 / 监控叙事）** + **评测字段（Preparedness / agentic safety）**
 > 锚点：OpenAI Deployment Safety Hub
 > - **封面日期**：PDF 封面 **2026-09-03**
 > - **Hub Published**：September 3, 2026

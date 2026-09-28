@@ -19,7 +19,7 @@ timezone: Asia/Shanghai (CST)
 # 语音旗舰：Step-Audio 2 Technical Report（≠ Qwen-Omni / ≠ Speech-LLM 入门）
 
 > **定位**：语音旗舰切片——StepFun Audio Team *Step-Audio 2 Technical Report*（arXiv:**2507.16632v3** \[cs.CL\]，页眉 **27 Aug 2025**）。立「**非 Qwen 系**、工业强度端到端 **音→交织音文 token→波形**」旗舰 TR：latent 音频编码器 + 适配器 + 单 LLM 解码器输出 **离散文本/音频交织 token**，再经 CosyVoice 2 tokenizer 系 detokenizer（Flow Matching + HiFi-GAN）；并接 **RAG / 工具调用**（含独有 **audio search**）。
-> **攻坚线**：**架构思想 / 训练数据接口（主）** + **文内 ASR / 副语言 / MMAU / 翻译 / Toolcall / URO-Bench 字段（辅）**。
+> **研究线**：**架构思想 / 训练数据接口（主）** + **文内 ASR / 副语言 / MMAU / 翻译 / Toolcall / URO-Bench 字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[SpeechLLM语音语言模型]]**：不重写 Speech-LLM **入门**（Qwen2-Audio：Whisper 编码器 ⊕ LLM **只出文本**、Voice Chat / Audio Analysis 接口表、三阶段训练全文）。本卡对象是 **音入 + 音文交织出** 的端到端对话旗舰，不是「音频理解→文本」栈入门。
 > - **≠ [[QwenOmni音视频原生]]**：不写成 **Qwen3/3.5-Omni Thinker–Talker** 复述（AuT、TM-RoPE、多码本 RVQ+MTP、ARIA、首包延迟产品卡）。Step-Audio 2 是 **单 LLM 解码器 + 固定比交织 token**，文内对比 Qwen-Omni / Qwen2.5-Omni 仅作 **基线表**，不展开 Omni 架构正文。

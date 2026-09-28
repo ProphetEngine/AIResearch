@@ -14,7 +14,7 @@ archived: 2026-09-22
 # Memory-R1：RL 记忆维护策略（相对 13 增量）
 
 > **定位**：记忆维护主题轴 **弱档增量**——相对 **[[智能体长程记忆]]**（MemGPT 分页 OS / A-Mem 卡片盒网络）已入库的「外置记忆怎么分层、怎么长结构」，本篇只收 **「记什么 / 改什么 / 删什么 / 不动」可否被 outcome RL 学会**。
-> **攻坚线**：**架构思想（主）**——双 agent（Memory Manager + Answer Agent）+ `{ADD, UPDATE, DELETE, NOOP}` 动作面；**评测字段（辅）**——LoCoMo / MSC / LongMemEval 上相对 Mem0、MemoryOS、A-Mem、Memory-SFT 的 F1 / BLEU-1 / Judge。
+> **研究线**：**架构思想（主）**——双 agent（Memory Manager + Answer Agent）+ `{ADD, UPDATE, DELETE, NOOP}` 动作面；**评测字段（辅）**——LoCoMo / MSC / LongMemEval 上相对 Mem0、MemoryOS、A-Mem、Memory-SFT 的 F1 / BLEU-1 / Judge。
 > **范围与相邻笔记**：
 > - **不重写** [[智能体长程记忆]] 的 MemGPT 主存/外存/FIFO/分页告警全文，以及 A-Mem 笔记构造·建链·演化全文。本篇仅在对照句中点名二者为「启发式 / 结构记忆」前置，不复述公式与表。
 > - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单；本篇只用「PPO / GRPO 作组相对或近端策略优化槽位」。

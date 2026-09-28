@@ -10,7 +10,7 @@ archived: 2026-09-22
 
 # Gemini 2.5 Technical Report 深读笔记
 
-> 攻坚线：**架构思想（主）** + **AI Infra（辅）**
+> 研究线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：Gemini Team, Google, *Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities*
 > 官方 PDF：`https://arxiv.org/abs/2507.06261`（**73** 页 A4）
 > 本卡边界：只写报告正文/表已公开内容，不补参数量、专家数、未写明的层图；安全章（CBRN / cyber CTF 风格评测图等）仅作「未达 CCL」元结论索引，不转写攻击步骤。对照增量以 **[[开源与闭源前沿模型谱系]]**、**[[多模态架构脉络]]**（并旁及 [[长上下文位置编码与系统侧]] / [[推理时扩展TestTimeScaling]] / [[AI基础设施总览]]）为准。

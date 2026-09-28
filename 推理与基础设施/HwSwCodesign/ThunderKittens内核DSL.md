@@ -22,7 +22,7 @@ timezone: Asia/Shanghai (CST)
 # GPU Kernel DSL：ThunderKittens（Dr. Kernel 索引）
 
 > **定位**：**Infra / 编程模型**——立「**面向 AI 核的嵌入式 C++ / tile DSL**」短史：Stanford HazyResearch 的 **ThunderKittens（TK）**（arXiv:2410.20399；**ICLR 2025**）如何用**少数意见化抽象**（warp 级 16×16 tile + 块级 LCSF 异步模板 + 网格级持久化/块序）写出可与 CuBLAS / FlashAttention-3 对标、并在线性注意力 / SSM 上大幅领先基线的核。
-> **攻坚线**：**AI Infra / 编程模型（主）**——抽象落在 GPU 层次的哪一层、相对 CUTLASS/CuTe 与 Triton 的定位；**评测字段（辅）**——文内 H100 TFLOPS / NCU 剖面照录，不外推未测硬件。
+> **研究线**：**AI Infra / 编程模型（主）**——抽象落在 GPU 层次的哪一层、相对 CUTLASS/CuTe 与 Triton 的定位；**评测字段（辅）**——文内 H100 TFLOPS / NCU 剖面照录，不外推未测硬件。
 > **范围与相邻笔记**：
 > - **≠ [[硬件软件协同部署]]**：不写 Blackwell / TPU 白皮书代际 × 精度 × 互联；本篇对象是 **核侧编程抽象**，不是机架级硬件 datasheet。
 > - **≠ [[注意力效率族MQA到MLA]]**：不写 MHA→MQA/GQA→MLA 的**注意力算法变体通史**；本篇若点到 GQA / FA3，只作「TK 核实现的工作负载」，不重写 KV 头共享公式。

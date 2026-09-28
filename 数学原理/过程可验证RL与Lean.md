@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**形式化 / 可验证 RL 增量切片**——在 **[[形式化验证与LLM]]** 已立「VeriCoT（Z3）+ AlphaProof（Lean 树搜索 RL / TTRL）」、**[[可验证过程监督]]** 已立「可验证过程监督（VPS / VPRM）」之后，本卡只写 **Lean 细粒度过程反馈直接打进 RL** 的近窗两条：
 > - **Process-Verified RL**（*Process-Verified Reinforcement Learning for Theorem Proving via Lean*，arXiv:**2606.20068**v1，页眉 **ICLR 2026** / arXiv 行 **18 Jun 2026**）：把 Lean 阐述 / AST / 错误日志压成 **tactic 级稠密可验证奖励**，注入 GRPO 式目标（first-error propagation + first-token credit）。
 > - **Leanabell-Prover-V2**（*Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning*，arXiv:**2507.08649**v1，页眉 **11 Jul 2025**）：在 long CoT 里 **多轮调用 Lean 4 verifier**，用反馈做反思改写 + DAPO；feedback token masking。
-> **攻坚线**：**架构思想 / 奖励接口（主）** + **文内 MiniF2F / ProofNet（及 Leanabell 的 ProverBench）字段（辅）**。
+> **研究线**：**架构思想 / 奖励接口（主）** + **文内 MiniF2F / ProofNet（及 Leanabell 的 ProverBench）字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[形式化验证与LLM]]**：不复述 **AlphaProof IMO / TTRL / 树搜索通史**，不重写 VeriCoT→Z3 FOL 校验主文。本卡 **不**写 AlphaZero 式证明搜索、auto-formalization 课程或 IMO 2024 叙事；Lean 只作 **训练期过程奖励宿主**。
 > - **≠ [[可验证过程监督]]**：不重写 **VPS 结构先验 + 确定性声明核验** 或 **VPRM 医学 RoB 规则逐步分**。本卡信号来自 **Lean 内核/阐述**，不是棋类引擎或 Cochrane 指南决策树。

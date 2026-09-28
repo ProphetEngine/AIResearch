@@ -22,7 +22,7 @@ timezone: Asia/Shanghai (CST)
 # 开源代码旗舰：Qwen3-Coder-Next Technical Report
 
 > **定位**：代码专用模型主题轴——Qwen Team *Qwen3-Coder-Next Technical Report*（arXiv:**2603.00729**v1，页眉 **28 Feb 2026**；文首日期栏 **2026-03-03**）。立「**代码专用开源旗舰 TR**」：在 **可执行环境反馈**上缩放 agentic 中训 / RL，产出 **80B 总参 / 3B 激活（80A3）** 的开权重量，面向编码 agent 与本地开发。
-> **攻坚线**：**训练—agent 反馈接口（主）**——可验证任务合成、MegaFlow 编排、多 scaffold 轨迹、专家蒸馏与 reward-hacking blocker；**评测字段（辅）**——文内 SWE / Terminal / 函数级 / 通用表；**架构思想（仅接口）**——只记「基于 Qwen3-Next hybrid MoE、80A3、262k 上下文」等产品字段，不展开 GDN/QSA/GR 等通用 Next 架构课。
+> **研究线**：**训练—agent 反馈接口（主）**——可验证任务合成、MegaFlow 编排、多 scaffold 轨迹、专家蒸馏与 reward-hacking blocker；**评测字段（辅）**——文内 SWE / Terminal / 函数级 / 通用表；**架构思想（仅接口）**——只记「基于 Qwen3-Next hybrid MoE、80A3、262k 上下文」等产品字段，不展开 GDN/QSA/GR 等通用 Next 架构课。
 > **范围与相邻笔记**：
 > - **≠ [[Qwen38Next架构深读]]**：不把本卡写成 **Qwen3.8-Next / Flash-Next** 架构复述（GDN+全注意力、CPT 换 QSA、Gated Residual、n-gram、Muon/稳定性）。本报告仅声明底座为 **Qwen3-Next** hybrid MoE；架构细节一律 **交叉引用 [[Qwen38Next架构深读]] / 官方 Qwen3-Next 博文**，本卡不重开。
 > - **≠ [[SWEBenchPro代码修复评测]]**：不重写 **SWE-Bench Pro / Pro Verified** 的评测设计、三分集、anti-hacking 协议正文。本卡只把 Pro / Verified / Multilingual 当 **文内对照榜数字**（Table 3–4），不立评测轴。

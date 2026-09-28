@@ -12,7 +12,7 @@ archived: 2026-09-22
 # DeepSeek-V4 Technical Report 深读卡
 
 > **定位**：DeepSeek-V4 技术报告主题轴——补齐 [[DeepSeekV41Flash深读]] 多次声明的「V4 / V4-Flash / V4-Pro 无本仓库独立 TR」缺口。数字一律取自官方 PDF `https://arxiv.org/abs/2606.19348`（2026-09-22 CST）。
-> **攻坚线**：**架构思想（主）** + **评测字段（文内长上下文 / agent 表，辅）**。
+> **研究线**：**架构思想（主）** + **评测字段（文内长上下文 / agent 表，辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线与 DualPipe/FP8 分块配方（见 [[混合专家架构]]、[[DeepSeekV3训练与MoE基建]]）；DSA 两阶段继续训与 GRPO 四稳定化全文（见 [[DeepSeekV32技术报告深读]]）；**CED / CSA2 / FP4 main KV / SWA Bounded Replay** 全文（见 **[[DeepSeekV41Flash深读]]**）；通用 KV 量化通史（见 **[[KV缓存量化与压缩]]**，本卡只录 V4 **产品解**）。
 > 本 PDF 自称 **preview**；对照锚点是 **V3 / V3.2**，**不是** V4.1-Flash，[[DeepSeekV41Flash深读]] 的 CED/CSA2 数字不回贴为 V4 主张；V4.1-Flash 侧数字仅作划界引用。
 

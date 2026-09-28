@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：仓库量化三角此前已有 **[[KV缓存量化与压缩]]（KV cache）** 与 **[[ZeroQAT量化感知训练]]（训练期 ZO-QAT）**；本卡只补 **部署侧权重·激活 PTQ** 的横切缺口：
 > - **SpinQuant**（*LLM Quantization with Learned Rotations*，ICLR 2025）：在 FP 网络输出不变的旋转参数化上，用 **Cayley SGD** 学 **Stiefel 流形**上的旋转，压激活/权重离群，再接 GPTQ；含可吸收的 $R_1,R_2$ 与在线 Hadamard $R_3,R_4$。
 > - **ARCQuant**（*Boosting NVFP4 Quantization with Augmented Residual Channels*，arXiv **2601.07475v2**）：面向 **Blackwell NVFP4（g=16, E2M1+E4M3）**，用 **增广残差通道** 做双阶段补偿，保持 **统一 NVFP4 精度路径**，映射到标准 GEMM。
-> **攻坚线**：**架构思想 / 部署接口（主）** + **文内 W4A4(KV) / NVFP4 精度—吞吐字段（辅）**。
+> **研究线**：**架构思想 / 部署接口（主）** + **文内 W4A4(KV) / NVFP4 精度—吞吐字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[KV缓存量化与压缩]]**：不写 KIVI / KVQuant 的 **K per-channel · V per-token**、残差窗、RoPE 前后误差轴；SpinQuant 表中的 **W-A-KV** 比特列只作「联合配置字段」，本卡不写成 KV 量化通史。
 > - **≠ [[ZeroQAT量化感知训练]]**：不写 ZeroQAT 的 **零阶前向梯度 / STE 绕开 / 端侧 QAT 内存**；本卡是 **冻结权重的 PTQ**（旋转学习或残差增广），不是训练期 QAT。

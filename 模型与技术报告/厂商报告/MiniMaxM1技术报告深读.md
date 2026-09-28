@@ -10,7 +10,7 @@ archived: 2026-09-22
 
 # MiniMax-M1 Technical Report 专项深读卡
 
-> 攻坚线：**架构思想（主）** + **AI Infra（辅）**
+> 研究线：**架构思想（主）** + **AI Infra（辅）**
 > 锚点：MiniMax, *MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention*（arXiv:2506.13585）
 > 官方 PDF：`https://arxiv.org/abs/2506.13585`（**22** 页 A4）
 > 本卡边界：数字与机制一律取自本 PDF 正文/表，不补 Text-01 未在本报告复述的层宽/隐层维等细节。对照增量旁及 **[[推理时扩展TestTimeScaling]]**（test-time scaling）、**[[长上下文位置编码与系统侧]]**（长上下文）、**[[AI基础设施总览]]**（AI Infra）、**[[注意力效率族MQA到MLA]]**（attention efficiency）。

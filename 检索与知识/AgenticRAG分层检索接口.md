@@ -17,7 +17,7 @@ archived: 2026-09-24
 # Agentic RAG：分层检索接口（A-RAG）
 
 > **定位**：Agentic RAG / A-RAG——在 [[检索增强与知识外挂]]稠密检索通史、[[SelfRAG与CorrectiveRAG]] 自省与纠错、[[HippoRAG2与CatRAG]] 记忆式图检索之后，补近窗一刀：**把多粒度检索暴露成 agent 工具**，并考察 **test-time 扩展**。
-> **攻坚线**：**架构思想（主）**——`keyword_search` / `semantic_search` / `chunk_read` 分层接口 + 最简 ReAct 环；**评测字段（辅）**——LLM-Acc / Contain-Acc、检索 token 数、max-step 与 reasoning effort 扩展。
+> **研究线**：**架构思想（主）**——`keyword_search` / `semantic_search` / `chunk_read` 分层接口 + 最简 ReAct 环；**评测字段（辅）**——LLM-Acc / Contain-Acc、检索 token 数、max-step 与 reasoning effort 扩展。
 > **范围与相邻笔记**：
 > - **≠ [[SelfRAG与CorrectiveRAG]]**：不写 reflection tokens、Correct/Incorrect/Ambiguous 三动作、Web 回退；本文是 **工具接口自主编排**，不是「要不要检索 / 检索坏了怎么办」的固定策略机。
 > - **≠ [[HippoRAG2与CatRAG]]**：不写 OpenIE+PPR、查询自适应边权；本文 **不做图索引算法**，关键词层甚至不做离线倒排。

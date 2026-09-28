@@ -18,7 +18,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：Meta Reality Labs / Meta AI 在 **2024 MobileLLM（ICML）之后**的两条**增量产品/方法轴**，不写成「MobileLLM 原文复述」：
 > - **MobileLLM-Pro**（*Technical Report*，arXiv **2511.06719**）：**1.08B** 端侧基础模型；四阶段预训练（SDM 数据混合 → **隐式位置蒸馏**扩到 **128k** → **专家合并** → **4-bit QAT**）+ 三阶段指令微调；对标 Gemma 3-1B / Llama 3.2-1B。
 > - **MobileLLM-Flash**（*Latency-Guided On-Device LLM Design*，arXiv **2603.15954**）：在 Pro/浅宽骨干上做 **硬件在环 NAS**（剪枝继承权重 + Ax 两阶段 BO）；产出 **350M / 650M / 1.4B** 族；主张 **skip-attention 交错**优于 SWA；Executorch 原生算子、无定制内核。
-> **攻坚线**：**架构思想（主）**——隐式位置蒸馏 / 专家合并 / 延迟—质量 Pareto；**AI Infra（辅）**——端侧 TTFT、INT4 分发、Executorch 可移植。
+> **研究线**：**架构思想（主）**——隐式位置蒸馏 / 专家合并 / 延迟—质量 Pareto；**AI Infra（辅）**——端侧 TTFT、INT4 分发、Executorch 可移植。
 > **范围与相邻笔记**：
 > - **≠ [[端侧小模型]]**：不重写 **MobileLLM 2024**（arXiv **2402.14905**）的深薄四件套、immediate block-wise 权重共享、DRAM/SRAM 层级通史，也不重写 Phi-4 / Gemma 4 E2B 对照全文。本卡只在「家族命名与浅宽反转」处交叉引用。
 > - **≠ [[ZeroQAT量化感知训练]]**：不写 ZeroQAT 的 **零阶（ZO）前向估计梯度**、可学习平滑、Q/V 轻量变体算法课；Pro 的 QAT 是 **标准 STE + 可学习量化范围 + FP 自蒸馏**，接口不同。
