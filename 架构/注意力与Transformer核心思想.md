@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # 1　Attention / Transformer 核心思想转折
 
-入口论文：Vaswani et al., *Attention Is All You Need* (2017)。辅读：Harvard NLP *The Annotated Transformer*（逐行实现与重排讲解）。本笔记以**架构思想**为主线、**数学直觉**为辅线；公式与结论均据论文原文，不编造未读到的实验数字。
+入口论文：Vaswani et al., *Attention Is All You Need* (2017)。辅读：Harvard NLP *The Annotated Transformer*（逐行实现与重排讲解）。本笔记以**架构思想**为主线、**数学直觉**为辅线；公式与结论均据论文原文。
 
 ---
 
@@ -150,7 +150,7 @@ Transformer 把「可并行的全局注意力编码器 / 解码器」立成新�
 
 - 摘要与 §1–§4、§3.2 公式、Table 1/2/3 要点经 ar5iv HTML 与 Annotated Transformer 交叉阅读；未编造未在原文出现的指标。
 
-### 待核实
+### 局限与待核实
 
 - 摘要写英法 big 模型 **41.8 BLEU**，Table 2 亦为 41.8；但正文 §6.1 有一处写作 **41.0**——疑似笔误，引用时以摘要 / Table 2 为准，或对照官方 PDF 再核一次。
 - Annotated Transformer 实现里 LayerNorm 放在子层前（Pre-LN 风格注释），与论文公式书写的 Post-LN（先子层再 `LayerNorm(x+Sublayer(x))`）在代码顺序上不完全一致；跟读原论文思想时以论文公式为准，实现细节另册对照。

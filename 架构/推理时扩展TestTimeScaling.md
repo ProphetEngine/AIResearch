@@ -294,7 +294,7 @@ System Card §5.3：o 系列因推理与 **test-time compute** 带来能力跃�
 - `https://arxiv.org/abs/2412.16720`
 - `https://arxiv.org/abs/2501.12948`
 
-### 5.4 待核实清单（禁止当事实传播）
+### 5.4 局限与待核实
 
 - o1 / o1-pro 内部是否使用显式 MCTS、过程奖励模型、或特定搜索宽度。
 - o1 与 GPT-4o 是否同底座、参数量、专家数。
@@ -314,8 +314,6 @@ System Card §5.3：o 系列因推理与 **test-time compute** 带来能力跃�
 | 开源侧多了什么？ | R1-Zero 无 SFT 路径 + **蒸馏小模型** + 更细 Infra/成本表 |
 | 工程代价？ | 延迟↑、reasoning token 费用↑、KV/吞吐压力↑；需要 effort 路由 |
 | 安全？ | 推理有助于对齐，也放大危险能力；需新监控与缓解 |
-
-*稿状态：draft · 仅基于上述公开材料 · 2026-09-22*
 
 ## 相关笔记
 

@@ -8,21 +8,20 @@ sources:
  - https://arxiv.org/abs/2609.02897
  - https://arxiv.org/abs/2604.02047
 arxiv: ["2609.02897", "2604.02047"]
-related: ["B7", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", "ThunderKittens内核DSL", "KV缓存量化与压缩", "投机解码发展时间线"]
+related: ["推理引擎生态", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", "ThunderKittens内核DSL", "KV缓存量化与压缩", "投机解码发展时间线"]
 ---
 
 # 投机解码新轴：AdaptiveSpec + Goose（≠ EAGLE-3）
 
-> **定位**：AdaptiveSpec + Goose **P1 Infra**——在 **[[EAGLE3投机解码]]** 已立 EAGLE-3 草稿头增量（training-time test + 多层特征融合）之后，本卡立**两条正交新轴**，禁止写成「又一篇 EAGLE」：
+> **定位**：AdaptiveSpec + Goose——在 **[[EAGLE3投机解码]]** 已立 EAGLE-3 草稿头增量（training-time test + 多层特征融合）之后，本卡立**两条正交新轴**，不是「又一篇 EAGLE」：
 > - **AdaptiveSpec**（*Margins, Not Windows*）：**无训**、逐步自适应；在 **EAGLE-3 草稿器之上**同时动两条旋钮——① **margin 有损校验**（单位置目标概率比，非 FLy 窗口）；② **动态树形**（直接调 `nsteps/top-k/ndt`，非 TALON 固定预算重分配）。落在 **SGLang**。
 > - **Goose**（*Anisotropic Speculation Trees*）：**无训**各向异性脊柱树；联合 **PLD 上下文 n-gram**（高接受 spine）与 **TR 转移表**（低接受 branches），证明异构接受率下最优树非各向同性；**不训草稿头**。
 > **攻坚线**：**AI Infra / 投机解码拓扑与校验规则（主）** + **数学原理（辅）**（margin、接受异构、脊柱树期望产量下界）。
-> **硬划界（开篇钉死，禁止 EAGLE 重写）**：
+> **范围与相邻笔记**：
 > - **≠ [[EAGLE3投机解码]]**：不重写 training-time test、特征融合、EAGLE→EAGLE-2→EAGLE-3 谱系与 SGLang 吞吐表正文。AdaptiveSpec **以 EAGLE-3 为草稿器/静态基线**，贡献是 **margin 校验 + 逐步树形**；Goose 文内明示与 EAGLE-3 **跨类（cross-category）**——无神经草稿头，本卡只录对照句，不抄 EAGLE-3 方法。
-> - **≠ B7**：不写 vLLM/SGLang/TRT-LLM 选型通史，不写 Leviathan/Chen/Medusa/Lookahead 基线课。
+> - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang/TRT-LLM 选型通史，不写 Leviathan/Chen/Medusa/Lookahead 基线课。
 > - **≠ [[Prompt前缀缓存]] / [[NVSHMEM与DeepEP通信]] / [[ThunderKittens内核DSL]]**：不写 Prompt Caching 计费、NVSHMEM/DeepEP、ThunderKittens 内核 DSL。
 > - **≠ [[KV缓存量化与压缩]] / [[连续批处理与Orca]]**：不写 KV 量化、Orca 连续批处理。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。
 
 ---
 
@@ -50,9 +49,9 @@ related: ["B7", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", "ThunderKittens�
 | **EAGLE-3** | 训好的特征/token 草稿头（多层融合 + training-time test） | 固定/半固定树 + 严格匹配（[[EAGLE3投机解码]]） | [[EAGLE3投机解码]] | **否**（禁重写） |
 | **AdaptiveSpec** | **沿用 EAGLE-3 草稿器** | **逐步** margin 有损校验 + 直接调 `(nsteps, top-k, ndt)` | **本篇主文 A** | **是** |
 | **Goose** | **无训**：PLD n-gram + TR 邻接表 | **各向异性脊柱树**；贪婪游走无损校验 | **本篇主文 B** | **是** |
-| 引擎/缓存/内核 | — | 选型、前缀缓存、通信、TK | B7 / [[Prompt前缀缓存]] / [[NVSHMEM与DeepEP通信]] / [[ThunderKittens内核DSL]] / [[KV缓存量化与压缩]] / [[连续批处理与Orca]] | **否** |
+| 引擎/缓存/内核 | — | 选型、前缀缓存、通信、TK | [[推理引擎生态]] / [[Prompt前缀缓存]] / [[NVSHMEM与DeepEP通信]] / [[ThunderKittens内核DSL]] / [[KV缓存量化与压缩]] / [[连续批处理与Orca]] | **否** |
 
-跟读直觉：[[EAGLE3投机解码]] 问「**怎么把草稿头训得更吃数据、更长接受**」；AdaptiveSpec 问「**已有草稿器时，校验规则与树形能否每步自适应**」；Goose 问「**没有草稿头时，异构 token 源应排成什么树**」。三者可叠在同一「draft–verify」外壳下，但**贡献旋钮不同**——禁止把后两篇写成 EAGLE 续作。
+跟读直觉：[[EAGLE3投机解码]] 问「**怎么把草稿头训得更吃数据、更长接受**」；AdaptiveSpec 问「**已有草稿器时，校验规则与树形能否每步自适应**」；Goose 问「**没有草稿头时，异构 token 源应排成什么树**」。三者可叠在同一「draft–verify」外壳下，但**贡献旋钮不同**——后两篇不是 EAGLE 续作。
 
 ### 2.2 文内自划界（跟读）
 
@@ -181,8 +180,8 @@ RAR = 滚动接受率（EMA，$\alpha{=}0.3$）；再经除数 $d$ 饱和到 $[0
 
 | 卡 | 本篇取用 / 禁止 |
 |---|---|
-| **[[EAGLE3投机解码]]** | EAGLE-3 作 AdaptiveSpec 宿主与静态对照一句；**禁止**重写训练与特征融合 |
-| **B7** | draft–verify / 树注意力外壳一句；**禁止**引擎选型通史 |
+| **[[EAGLE3投机解码]]** | EAGLE-3 作 AdaptiveSpec 宿主与静态对照一句；不重写训练与特征融合 |
+| **[[推理引擎生态]]** | draft–verify / 树注意力外壳一句；不写引擎选型通史 |
 | **[[Prompt前缀缓存]] / [[NVSHMEM与DeepEP通信]] / [[ThunderKittens内核DSL]]** | 无交叉展开 |
 | **[[KV缓存量化与压缩]] / [[连续批处理与Orca]]** | 无交叉展开 |
 
@@ -198,4 +197,4 @@ RAR = 滚动接受率（EMA，$\alpha{=}0.3$）；再经除数 $d$ 饱和到 $[0
 
 ## 八、核心主张摘要
 
-- **核心主张（不编造）：** AdaptiveSpec 无训双轴，相对 EAGLE-3 平均约 +18–44% 吞吐（峰 +56%），准确率保留约 93%–无损；Goose 无训各向异性脊柱树，1.9–4.3× 无损加速，同预算相对 isotropic +12–33% τ。
+- **核心主张：** AdaptiveSpec 无训双轴，相对 EAGLE-3 平均约 +18–44% 吞吐（峰 +56%），准确率保留约 93%–无损；Goose 无训各向异性脊柱树，1.9–4.3× 无损加速，同预算相对 isotropic +12–33% τ。

@@ -21,10 +21,9 @@ archived: 2026-09-28
 
 > **定位**：把「注意力 × Mamba/SSM」怎么混、混在哪、长文检索谁扛」收成一份可对照的设计菜谱。主文 Bae、Acun、Lin 等（FAIR at Meta / Meta / KAIST AI），*Hybrid Architectures for Language Models: Systematic Analysis and Design Insights*（[arXiv:2510.04800](https://arxiv.org/abs/2510.04800)）。
 > **研究线**：架构思想——层间（inter-layer）与层内（intra-layer）杂交策略、块比例与摆放、长上下文检索分工。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[Nemotron3Ultra技术报告深读]]**：不写 Ultra 单机 Hybrid + LatentMoE、agentic 后训练或量化配方。
 > - **≠ [[Qwen38Next架构深读]]**：不写 GDN / QSA / Flash-Next 产品差分。
-> **禁止编造**：块比、摆放、消融结论一律锚定上述 PDF；不外推超大规模产品数字。
 
 ---
 

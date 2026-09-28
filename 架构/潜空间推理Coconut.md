@@ -16,13 +16,13 @@ archived: 2026-09-22
 
 # Latent reasoning：Coconut（Chain of Continuous Thought）
 
-> **定位**：连续潜空间推理 **P0**——相对 **[[推理时扩展TestTimeScaling]]**（语言空间 CoT / 采样 / 树搜索式 TTS 通史）补一块独立的 **连续潜空间推理** 切片：FAIR/Meta 的 **Coconut**（*Training Large Language Models to Reason in a Continuous Latent Space*，arXiv **2412.06769v4**）把 **last hidden state** 直接反馈为下一输入嵌入，在连续空间做隐式多路径搜索。
+> **定位**：连续潜空间推理——相对 **[[推理时扩展TestTimeScaling]]**（语言空间 CoT / 采样 / 树搜索式 TTS 通史）补一块独立的 **连续潜空间推理** 切片：FAIR/Meta 的 **Coconut**（*Training Large Language Models to Reason in a Continuous Latent Space*，arXiv **2412.06769v4**）把 **last hidden state** 直接反馈为下一输入嵌入，在连续空间做隐式多路径搜索。
 > **攻坚线**：**架构思想（主）**——「continuous thought」回路 + 多阶段课程如何把语言 CoT 内化为潜推理；**评测字段（辅）**——相对 CoT / No-CoT / iCoT / pause 的准确率—生成 token 权衡（GSM8k / ProntoQA / ProsQA）。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[推理时扩展TestTimeScaling]]**：不写 o1/R1 产品通史、语言 CoT 提示/RL 训练配方；只取「语言空间推理有瓶颈 → 换到连续空间」这一接口。
 > - **≠ [[推理时树搜索ABMCTS]] AB-MCTS**：不写外层 **显式 token/答案树** + Thompson sampling；Coconut 的「BFS」是 **潜表示内并行编码多候选**，无外层搜索控制器。
 > - **≠ 机制可解释性**：不写 SAE / 电路 / 归因图通史；文中对 latent 的 probe（把 continuous thought 解码成候选概念概率）只作 **行为解释证据**，不升 MI 方法论。
-> - **禁止编造**：表数字、阶段数、$c$、epoch、ProsQA 统计一律锚定官方 PDF（2026-09-22 CST）。AGCLR 仅作议程补链点名，本卡不展开。
+> - AGCLR 仅作补链点名，本卡不展开。
 
 ---
 
@@ -31,7 +31,7 @@ archived: 2026-09-22
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主文** | Hao, Sukhbaatar, Su, Li, Hu, Weston, Tian（FAIR at Meta / UCSD）, *Training Large Language Models to Reason in a Continuous Latent Space* | arXiv:**2412.06769v4** \[cs.CL\] **23 Aug 2026**；页眉 *Last updated: August 25, 2026*；`https://arxiv.org/abs/2412.06769`（**18** 页 letter） | 一手：范式、课程、ProsQA 潜搜索分析、主表 |
-| **镜像** | OpenReview PDF | https://openreview.net/pdf?id=KrWSrrYGpT | 议程备链；本笔记数字以 arXiv 官方 PDF 为准 |
+| **镜像** | OpenReview PDF | https://openreview.net/pdf?id=KrWSrrYGpT | 备用链接；本笔记数字以 arXiv 官方 PDF 为准 |
 | **代码** | facebookresearch/**coconut** | https://github.com/facebookresearch/coconut（文首页） | 复现入口；本卡不 walkthrough |
 
 **一句话抓手：** 把「推理状态」从 **词 token 序列** 换成 **可微的连续向量回路**——$h_t$ 不经 LM head 解码，直接当下一输入嵌入；再靠 **多阶段课程** 逐步用 $c$ 个 continuous thoughts 顶替语言推理步，让模型在潜空间里 **并行保留多条下一跳**，呈现类似 BFS 的规划行为。
@@ -215,7 +215,7 @@ Coconut 变体：**w/o curriculum**（直接末阶段）；**w/o thought**（同
 
 - **不写**：完整 iCoT / pause-token / ToT / RAP 复述；ProsQA 构图 Alg.1 逐步伪代码；训练并行优化实现；把 probe 写成 MI 方法论文。
 - **开放**：无语言链监督的 latent 学习；训练多次前向的效率；$c$ 更大时的细粒度课程；语言骨架 + 潜空间填槽的混合推理；扩展到预训练尺度。
-- **补链（不升主项）**：议程所列 **AGCLR（2606.07720）** 作概念瓶颈相关索引；文末引用的 Zhu et al. 2025a/b（叠加态理论与训练动态）可作后续理论跟读，本卡不展开公式。
+- **补链（不升主项）**：**AGCLR（2606.07720）** 作概念瓶颈相关索引；文末引用的 Zhu et al. 2025a/b（叠加态理论与训练动态）可作后续理论跟读，本卡不展开公式。
 
 ---
 

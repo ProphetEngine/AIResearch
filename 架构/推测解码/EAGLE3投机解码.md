@@ -1,5 +1,5 @@
 ---
-title: "EAGLE-3 投机解码增量切片（相对 B7，6）"
+title: "EAGLE-3 投机解码增量切片（相对 [[推理引擎生态]]）"
 topic: EAGLE3投机解码
 date: 2026-09-22
 lines: [AI Infra, 数学原理]
@@ -9,19 +9,18 @@ sources:
  - https://github.com/SafeAILab/EAGLE
  - https://papers.nips.cc/paper_files/paper/2025/file/c7b5a35ea98b62512a869c19ea7b03cb-Paper-Conference.pdf
 arxiv: ["2503.01840"]
-related: ["B7", "AI基础设施总览", "投机解码发展时间线"]
+related: ["推理引擎生态", "AI基础设施总览", "投机解码发展时间线"]
 archived: 2026-09-22
 ---
 
-# EAGLE-3 投机解码增量切片（相对 B7）
+# EAGLE-3 投机解码增量切片（相对 [[推理引擎生态]]）
 
-> **定位**：EAGLE-3 投机解码 P1 Infra 切片——在 **B7** 已立的投机解码**基线**（Leviathan / Chen / Medusa / Lookahead 与引擎选型轴）之上，只补 **EAGLE-3** 相对 **EAGLE / EAGLE-2** 的可核对增量。
+> **定位**：EAGLE-3 投机解码切片——在 **[[推理引擎生态]]** 已立的投机解码**基线**（Leviathan / Chen / Medusa / Lookahead 与引擎选型轴）之上，只补 **EAGLE-3** 相对 **EAGLE / EAGLE-2** 的可核对增量。
 > **攻坚线**：**AI Infra（主）** + **数学原理（接受长度 / 推测接受率，辅）**。
-> **硬划界（禁止重写）**：
-> - **禁止重写 B7** 投机解码通史与 Leviathan / Chen / Medusa / Lookahead 正文（→ [[推理引擎生态]]）；本篇不复述「草稿—校验」框架证明。
-> - **禁止重写** [[AI基础设施总览]] / B7 的 PagedAttention、Radix、PD 分离全文；SGLang 只写论文给出的 **EAGLE-3 吞吐表**，不重写引擎架构。
-> - **禁止**把 Table 1 中 Medusa / Lookahead / Hydra 等对照列展开成谱系课（数字仅作「相对 EAGLE-2」旁证时点到）。
-> **禁止编造**：倍率、τ、吞吐、批次、数据倍数一律锚定官方 PDF（2026-09-22 CST）；层号若正文未写具体层索引则标「未公开具体层下标」。
+> **范围与相邻笔记**：
+> - **≠ [[推理引擎生态]]**：不重写投机解码通史与 Leviathan / Chen / Medusa / Lookahead 正文；本篇不复述「草稿—校验」框架证明。
+> - **≠ [[AI基础设施总览]]**：不重写 PagedAttention、Radix、PD 分离全文；SGLang 只写论文给出的 **EAGLE-3 吞吐表**，不重写引擎架构。
+> - 不把 Table 1 中 Medusa / Lookahead / Hydra 等对照列展开成谱系课（数字仅作「相对 EAGLE-2」旁证时点到）。
 
 ---
 
@@ -35,15 +34,15 @@ archived: 2026-09-22
 | 官方 PDF | `https://arxiv.org/abs/2503.01840`（**12** 页 A4；CreationDate **2025-04-24** CST） |
 | 可选镜像 | NeurIPS 2025 Conference PDF：https://papers.nips.cc/paper_files/paper/2025/file/c7b5a35ea98b62512a869c19ea7b03cb-Paper-Conference.pdf |
 | 代码 | https://github.com/SafeAILab/EAGLE（摘要末句） |
-| 相对 B7 | B7「待核实」明示：EAGLE / EAGLE-2 须单独 PDF 后再补 → **本篇即该增量** |
+| 相对 [[推理引擎生态]] | [[推理引擎生态]]「待核实」明示：EAGLE / EAGLE-2 须单独 PDF 后再补 → **本篇即该增量** |
 
 **一句话抓手：** EAGLE 系在特征层做草稿；扩数据却几乎不涨速。EAGLE-3 用 **training-time test** 去掉特征回归约束、改直接预测 token，并把目标模型 **低/中/高层特征融合** 喂给草稿头——从而出现「数据↑ → 加速比↑」的 scaling 曲线（Figure 1），相对 EAGLE-2 约 **1.4×** 延迟加速，并在 **SGLang** 大 batch 仍给出正吞吐增益。
 
 ---
 
-## 二、相对 B7 / EAGLE-2 的增量立轴（不展开通史）
+## 二、相对 [[推理引擎生态]] / EAGLE-2 的增量立轴（不展开通史）
 
-| 已覆盖（B7） | 本篇只补 |
+| 已覆盖（[[推理引擎生态]]） | 本篇只补 |
 |---|---|
 | 投机采样「草稿—并行校验、同分布」思想；Medusa / Lookahead 等入口 PDF | **不**重写；Table 1 有对照列时只录 EAGLE-2 vs EAGLE-3 |
 | 引擎选型：vLLM / SGLang / TRT-LLM；投机为 decode 轴因子 | **SGLang 集成表**（§4.3 Table 3–4）；vLLM Table 5 仅作附录交叉一句 |
@@ -111,7 +110,7 @@ Figure 7（MT-bench，LLaMA-Instruct 3.1 8B）：$n\textrm{-}\alpha$ = 输入含
 
 多步时：尚未被目标校验的位置 **没有** 真 $g$，用上一步草稿输出 $a$ 顶替，再与新 token embedding 拼接（与 training-time test 一致）。
 
-**未公开：** 正文写 low/middle/high，**未**给出具体层下标（如第几层）——笔记不编造层号。
+**未公开：** 正文写 low/middle/high，**未**给出具体层下标（如第几层）。
 
 ### 4.3 消融：两刀都必要（Table 2）
 
@@ -162,7 +161,7 @@ Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不
 
 ## 六、SGLang 集成叙述（生产框架吞吐）
 
-> 本节只录论文 §4.3 与 Acknowledgement；**不**重写 SGLang Radix/FSM（→ B7）。
+> 本节只录论文 §4.3 与 Acknowledgement；**不**重写 SGLang Radix/FSM（→ [[推理引擎生态]]）。
 
 ### 6.1 设定与声明
 
@@ -191,7 +190,7 @@ Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不
 
 ### 6.4 与 vLLM 表的交叉（非本篇主轴）
 
-§4.4 Table 5 另给 vLLM 大 batch 对照（链长最大 2、无树、MT-Bench）。正文写结果在 **RTX3090**，表题写 **A100**——**论文内部硬件表述不一致，照录不调和**；详细数字不占本篇主表。选型含义仍落在 B7：「投机因子 × 引擎实现」需版本锁定后再比。
+§4.4 Table 5 另给 vLLM 大 batch 对照（链长最大 2、无树、MT-Bench）。正文写结果在 **RTX3090**，表题写 **A100**——**论文内部硬件表述不一致，照录不调和**；详细数字不占本篇主表。选型含义仍落在 [[推理引擎生态]]：「投机因子 × 引擎实现」需版本锁定后再比。
 
 ---
 
@@ -205,7 +204,7 @@ Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不
 
 ---
 
-## 八、待核实 / 不写
+## 八、局限与待核实
 
 - 低/中/高层的 **具体层索引**与 FC 初始化：PDF 未给 → 读代码仓库再补。
 - EAGLE-3 在 TRT-LLM / 更新版 vLLM 默认图与接受率曲线：超出本 PDF 主表。
@@ -216,11 +215,9 @@ Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不
 
 ## 九、一句话收束
 
-相对 B7 的投机**基线**，EAGLE-3 的可研增量不在「再讲一遍草稿校验」，而在：**用 training-time test 拆掉特征回归枷锁，用低/中/高融合特征抬草稿表达力，让加速比重新吃上数据 scaling，并在 SGLang 大 batch 上交出仍为正的吞吐表**。
+相对 [[推理引擎生态]] 的投机**基线**，EAGLE-3 的可研增量不在「再讲一遍草稿校验」，而在：**用 training-time test 拆掉特征回归枷锁，用低/中/高融合特征抬草稿表达力，让加速比重新吃上数据 scaling，并在 SGLang 大 batch 上交出仍为正的吞吐表**。
 
 ---
-
-*笔记状态：draft · 攻坚线 AI Infra · 相对 B7 增量切片 · PDF 已归档 2026-09-22 CST*
 
 ## 相关笔记
 

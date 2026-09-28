@@ -13,13 +13,12 @@ archived: 2026-09-22
 
 # 投机解码新变体：EntMTP（熵引导 MTP / 动态草稿树）
 
-> **定位**：EntMTP **P1 Infra**——在 **B7** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补 **EAGLE-3**（training-time test + 多层特征融合）之后，只写近窗 **EntMTP**（*Entropy Guided Multi-Token Prediction*，arXiv **2606.27550**）：**训练免费**的运行时调度器，按局部可预测性在 **预编译 TopologyBank** 上切换草稿树拓扑。
+> **定位**：EntMTP——在 **[[推理引擎生态]]** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补 **EAGLE-3**（training-time test + 多层特征融合）之后，只写近窗 **EntMTP**（*Entropy Guided Multi-Token Prediction*，arXiv **2606.27550**）：**训练免费**的运行时调度器，按局部可预测性在 **预编译 TopologyBank** 上切换草稿树拓扑。
 > **攻坚线**：**架构思想（主）**——离线吞吐 Pareto 前沿 → TopologyBank → 熵/路径价值驱动的 per-step 选树；**延迟 / 接受率字段（辅）**——相对 Hydra / Medusa **默认树** 的 tok/s、ρ、τ（Table 1）。
-> **硬划界**：
-> - **≠ B7**：不写 Leviathan / Chen / Lookahead 通史与引擎选型全文；「草稿—并行校验、同分布」只当接口一句。
+> **范围与相邻笔记**：
+> - **≠ [[推理引擎生态]]**：不写 Leviathan / Chen / Lookahead 通史与引擎选型全文；「草稿—并行校验、同分布」只当接口一句。
 > - **≠ [[EAGLE3投机解码]]**：不重写特征回归解除、多层融合、SGLang 大 batch 表；本文仅借用文中 **EAGLE-2 path value** 作为调度特征定义。
-> - **禁止升格**：Hydra / Medusa / Lookahead **不得**写成新主文或谱系课——只作本 PDF 对照列与默认树基线；细节回指 **B7 / [[EAGLE3投机解码]]**。
-> **禁止编造**：倍率、tok/s、τ、节点数、阈值、硬件一律锚定官方 PDF（2026-09-22 CST）。
+> - **不升格**：Hydra / Medusa / Lookahead 不写成新主文或谱系课——只作本 PDF 对照列与默认树基线；细节回指 **[[推理引擎生态]] / [[EAGLE3投机解码]]**。
 
 ---
 
@@ -32,7 +31,7 @@ archived: 2026-09-22
 | arXiv | **2606.27550v1** \[cs.CL\]（**25 Jun 2026**） |
 | 官方 PDF | `https://arxiv.org/abs/2606.27550`（**7** 页 letter；arXiv GenPDF） |
 | HTML | https://arxiv.org/html/2606.27550v1（议程备链；数字以官方 PDF 为准） |
-| 代码 | 正文 / 摘要 **未给出** GitHub 链接 → 本卡不编造仓址 |
+| 代码 | 正文 / 摘要 **未给出** GitHub 链接 |
 
 **一句话抓手：** 现有 MTP 头（Medusa / Hydra 路线）推理期锁死 **一张静态草稿树**——验证算力与推测深度不随上下文熵变化；EntMTP **不改**目标权重、**不松** Hydra 式接受条件，只在离线挑好的 **任务特异 Pareto 树** 上做 **O(1) 拓扑切换**，把推测深度对齐到局部可预测性。
 
@@ -44,7 +43,7 @@ archived: 2026-09-22
 
 | 已入库 | 本卡只取 | 本卡不写 |
 |---|---|---|
-| **B7 投机通史** | 「廉价草稿 + 目标并行校验、边际分布不变」 | Leviathan / Chen 证明、Lookahead、引擎对比全文 |
+| **[[推理引擎生态]] 投机通史** | 「廉价草稿 + 目标并行校验、边际分布不变」 | Leviathan / Chen 证明、Lookahead、引擎对比全文 |
 | **[[EAGLE3投机解码]]** | EAGLE-2 **path value** $V_i$ 可作置信度代理（文 §2.2 / §4） | training-time test、低/中/高融合、SGLang Table 3–4 |
 | **文内 Hydra / Medusa** | 默认树 tok/s 与「静态拓扑」诊断 | 独立成篇的 Hydra/Medusa 方法课、头结构设计通史 |
 
@@ -133,7 +132,7 @@ $\tau$ 在与树搜索 **同一 100-prompt 校准集** 上一维扫描；候选 
 - $\rho$：相对同设定 vanilla AR 的 wall-clock **输出 tok/s** 加速比
 - $\tau$：每轮 draft–verify **平均接受长度**（硬件无关，隔离拓扑质量）
 
-摘要另点名 LitBench；**主表 Table 1 仅三任务**（HumanEval / GSM8K / ShareGPT）。LitBench 出现在 Appendix A 特征日志规模（约 320k step rows），**无 Table 1 同行数字** → 本卡不编造 LitBench tok/s。
+摘要另点名 LitBench；**主表 Table 1 仅三任务**（HumanEval / GSM8K / ShareGPT）。LitBench 出现在 Appendix A 特征日志规模（约 320k step rows），**无 Table 1 同行数字**，故本卡不列 LitBench tok/s。
 
 ---
 
@@ -163,7 +162,7 @@ $\tau$ 在与树搜索 **同一 100-prompt 校准集** 上一维扫描；候选 
 
 **batch size = 1**：文称 $\mathrm{EntMTP}_\tau$ 在三任务上同时压过 Hydra、Medusa 默认与 $\mathrm{EntMTP}^*$。
 
-### 5.2 增益从哪来（§6.1，禁止升格 Hydra 方法）
+### 5.2 增益从哪来（§6.1，不升格 Hydra 方法）
 
 | 贡献块 | 文内分解 |
 |---|---|
@@ -193,23 +192,21 @@ $\tau$ 在与树搜索 **同一 100-prompt 校准集** 上一维扫描；候选 
 
 ---
 
-## 八、待核实 / 不写
+## 八、局限与待核实
 
-- 官方代码仓：PDF **未给** → 不编造 URL。
+- 官方代码仓：PDF **未给**。
 - LitBench **主表 tok/s**：摘要点名，Table 1 无行 → 缺数不补。
 - $\mathrm{EntMTP}\text{-}l$ 阶梯的完整 K 路消融表：正文以 $\mathrm{EntMTP}^*$ / $\mathrm{EntMTP}_\tau$ 为主结果。
 - 多卡 / 大 batch / 非 Vicuna-7B：超出本 7 页主设定。
-- Hydra / Medusa / Lookahead / EAGLE-3 **方法全文** → **B7 / [[EAGLE3投机解码]]**；本卡对照列到此为止。
+- Hydra / Medusa / Lookahead / EAGLE-3 **方法全文** → **[[推理引擎生态]] / [[EAGLE3投机解码]]**；本卡对照列到此为止。
 
 ---
 
 ## 九、一句话收束
 
-相对 B7 的投机基线与 [[EAGLE3投机解码]] 的 EAGLE-3 训练增量，EntMTP 可研切片是：**在 Hydra 式 MTP 栈上，用任务吞吐 Pareto + TopologyBank，把「熵/路径价值 → 选哪张预编译草稿树」做成几乎零开销的训练免费调度，从而在不改分布的前提下挤出约 1.1× 相对默认 Hydra 树的 tok/s。**
+相对 [[推理引擎生态]] 的投机基线与 [[EAGLE3投机解码]] 的 EAGLE-3 训练增量，EntMTP 可研切片是：**在 Hydra 式 MTP 栈上，用任务吞吐 Pareto + TopologyBank，把「熵/路径价值 → 选哪张预编译草稿树」做成几乎零开销的训练免费调度，从而在不改分布的前提下挤出约 1.1× 相对默认 Hydra 树的 tok/s。**
 
 ---
-
-*笔记状态：draft · 攻坚线架构思想 + 延迟/接受率 · PDF 已归档 2026-09-22 CST*
 
 ## 相关笔记
 

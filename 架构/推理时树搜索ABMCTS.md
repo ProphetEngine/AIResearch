@@ -16,14 +16,14 @@ archived: 2026-09-22
 
 # Inference-time tree search：AB-MCTS（Adaptive Branching MCTS）
 
-> **定位**：AB-MCTS **P0**——相对 **[[推理时扩展TestTimeScaling]]**（test-time scaling 通史 / o1·R1 产品叙事）补一块独立的 **外层多答案树搜索切片**：Sakana AI 的 **AB-MCTS**（*Wider or Deeper?*，arXiv **2503.04412v5**）把 **repeated sampling（只宽）** 与 **sequential refinement（只深）** 统一进 **自适应分支** 的 MCTS，并开源 **TreeQuest**。
+> **定位**：AB-MCTS——相对 **[[推理时扩展TestTimeScaling]]**（test-time scaling 通史 / o1·R1 产品叙事）补一块独立的 **外层多答案树搜索切片**：Sakana AI 的 **AB-MCTS**（*Wider or Deeper?*，arXiv **2503.04412v5**）把 **repeated sampling（只宽）** 与 **sequential refinement（只深）** 统一进 **自适应分支** 的 MCTS，并开源 **TreeQuest**。
 > **攻坚线**：**架构思想（主）**——GEN 节点 + Thompson sampling 如何在「扩新枝 / 深挖旧枝」间做贝叶斯决策；**评测字段（辅）**——相对 repeated sampling / 固定宽度 standard MCTS 的同预算表。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[推理时扩展TestTimeScaling]]**：不写 o1/R1/s1 产品通史与「势」叙事；只取「推理期多算力 → 多答案生成」这一接口。
 > - **≠ [[过程奖励模型PRM谱系]]**：不写过程奖励模型怎么训 / ORM vs PRM 谱系；AB-MCTS 的 $R$ 是 **可执行外部评分**（测例通过率、验证集分数等），不是逐步神经判别器。
 > - **≠ [[形式化验证与LLM]]**：不写 Lean 形式证明搜索 / TTRL；本卡是 **自然语言+代码答案树**，宿主是测试/验证反馈，不是证明器内核。
 > - **≠ [[EAGLE3投机解码]] 投机解码**：不写草稿模型–目标模型 token 级加速；本卡是 **答案级** 宽深搜索，不是解码器内部并行。
-> - **禁止编造**：表数字、温度、预算、Pass@k 一律锚定官方 PDF（2026-09-22 CST）与 TreeQuest README / Sakana 博客可核字段。
+> **主要来源**：[arXiv:2503.04412](https://arxiv.org/abs/2503.04412)、[TreeQuest](https://github.com/SakanaAI/treequest)、[Sakana 博客](https://sakana.ai/ab-mcts/)（2026-09-22 CST）。
 
 ---
 
@@ -269,7 +269,7 @@ AB-MCTS ──► 每节点动态：GEN（宽） vs 已有孩子（深）
 
 ---
 
-## 九、核验备忘（禁编造）
+## 九、核验要点
 
 | 项 | 值 |
 |---|---|
@@ -277,8 +277,6 @@ AB-MCTS ──► 每节点动态：GEN（宽） vs 已有孩子（深）
 | 主表 Avg.Rank | M **2.3** / A-G **2.7** / A-B **2.7** / RS **3.5** / StdMCTS **4.2** / Seq **5.5** |
 | 预算 | 主实验 **128**；ARC scaling **512**；ARC-AGI-2 Multi-LLM **250** |
 | 开源 | TreeQuest Apache-2.0；博客 2025-07-01 |
-
-*本笔记为草稿（status: draft）；数字以官方 PDF 为准；博客/README 仅作辅入口与 Multi-LLM 叙事对齐。*
 
 ## 相关笔记
 

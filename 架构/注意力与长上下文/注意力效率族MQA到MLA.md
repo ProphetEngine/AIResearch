@@ -14,7 +14,7 @@ archived: 2026-09-22
 - Ainslie et al., *GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints* (arXiv:2305.13245；下文称 GQA 论文)。MQA 原始动机可追溯至 Shazeer (2019) *Fast Transformer Decoding: One Write-Head Is All You Need*（GQA 论文引用）。
 - DeepSeek-AI, *DeepSeek-V3 Technical Report* (arXiv:2412.19437；下文称 V3 报告) **§2.1.1 Multi-Head Latent Attention**。MLA 架构在报告中明确归功于 DeepSeek-V2（DeepSeek-AI, 2024c）；V3 在 Transformer 框架内**复用并简述**该机制。
 
-本笔记以**架构思想**为主线、**数学直觉**为辅线；公式、机制与实验数字均据上述文本，不编造未读到的对比表或吞吐数字。MQA 的「单 KV 头」定义以 GQA 论文对 Shazeer (2019) 的转述为准。
+本笔记以**架构思想**为主线、**数学直觉**为辅线；公式、机制与实验数字均据上述文本。MQA 的「单 KV 头」定义以 GQA 论文对 Shazeer (2019) 的转述为准。
 
 ---
 
@@ -235,20 +235,19 @@ GQA 论文还提醒：更大模型上，KV cache 随模型维近似线性，而 
 - Vaswani, A., et al. (2017). *Attention Is All You Need*.（标准 MHA）
 - DeepSeek-AI. (2024). DeepSeek-V2 技术报告（V3 文中作 DeepSeek-AI, 2024c）——**MLA 原始验证与更细消融；本笔记未展开精读**。
 
-### 5.3 待核实 / 后续可补
+### 5.3 局限与待核实
 
-- [ ] 精读 DeepSeek-V2 中 MLA 专章：与 MHA/GQA 的消融、缓存字节表、训练稳定性叙述。
-- [ ] MQA 原始论文（Shazeer 2019）中的「one write-head」表述与实现约束。
-- [ ] 当代 decoder-only 开源模型（LLaMA 等）默认 GQA 组数与推理栈中的具体 KV layout（非本两篇正文范围）。
-- [ ] V3 实现是否在推理中吸收 $W^{UK}/W^{UV}$ 等（影响「576 维」直觉是否等于实际存储）。
+- 精读 DeepSeek-V2 中 MLA 专章：与 MHA/GQA 的消融、缓存字节表、训练稳定性叙述。
+- MQA 原始论文（Shazeer 2019）中的「one write-head」表述与实现约束。
+- 当代 decoder-only 开源模型（LLaMA 等）默认 GQA 组数与推理栈中的具体 KV layout（非本两篇正文范围）。
+- V3 实现是否在推理中吸收 $W^{UK}/W^{UV}$ 等（影响「576 维」直觉是否等于实际存储）。
 
 ---
 
-*草稿状态：draft。架构主线据 GQA 全文 + V3 §2.1.1；数学辅线为 cache 规模直觉，算术示例已标明非官方对比表。*
+*架构主线据 GQA 全文 + V3 §2.1.1；数学辅线为 cache 规模直觉，算术示例已标明非官方对比表。*
 
 ## 相关笔记
 
-### P0
 - [[注意力与Transformer核心思想]]
 - [[DecoderOnly与GPT路线]]
 - [[规模定律与预训练范式]]
@@ -256,8 +255,6 @@ GQA 论文还提醒：更大模型上，KV cache 随模型维近似线性，而 
 - [[对齐脉络RLHF与偏好优化]]
 - [[推理时扩展TestTimeScaling]]
 - [[开源与闭源前沿模型谱系]]
-
-### P1
 - [[长上下文位置编码与系统侧]]
 - [[多模态架构脉络]]
 - [[AI基础设施总览]]
