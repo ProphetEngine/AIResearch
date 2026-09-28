@@ -22,7 +22,9 @@ status: active
 ## 增量节点
 
 - [[GRPO与DAPO算法族|GRPO→DAPO 算法族]]
+- [[AgenticRL景观与能力模块]]
 - [[过程奖励模型PRM谱系|Process Reward Models]]
+- [[生成式奖励模型GenRM与奖励推理化]]
 - [[形式化验证与LLM|Formal Verification for LLM]]
 - [[SimPO与ORPO偏好优化|SimPO / ORPO]]
 - [[测试时训练|Test-Time Training]]

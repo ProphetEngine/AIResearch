@@ -23,6 +23,7 @@ status: active
 
 - [[检索式注意力|RetrievalAttention]]
 - [[原生稀疏注意力NSA]]
+- [[混合Mamba与注意力架构设计菜谱]]
 - [[DuoAttention与KVzip|DuoAttention / KVZip]]
 - [[上下文蒸馏|Context Distillation]]
 - [[Prompt前缀缓存|Prompt / Prefix Caching]]
