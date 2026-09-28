@@ -1,12 +1,12 @@
 ---
-title: MOC · Harness
+title: MOC · 智能体Harness
 date: 2026-09-23
 type: moc
 cluster: D
 status: active
 ---
 
-# MOC · Harness
+# MOC · 智能体Harness
 
 工具使用、长程记忆、Computer-Use、多智能体协作与生产 Memory 层；评测基准按对象挂在本簇「评测」子节。气候政策 agent 见 [[MOC_专科基础模型|I]]（不在本簇）。
 

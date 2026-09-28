@@ -272,7 +272,7 @@ $$
 
 ## 相关笔记
 
-- [[Gemini37FlashModelCard|Gemini 3.7 Flash]]
+- [[Gemini37Flash模型卡深读]]
 - [[KV缓存量化与压缩|KV Cache 量化]]
 - [[连续批处理与Orca|Continuous Batching / Orca]]
 - [[机制可解释性入门|机制可解释性]]

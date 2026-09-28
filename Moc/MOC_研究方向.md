@@ -22,5 +22,5 @@ status: active
 
 ## 相关宏观
 
-- [[MOC_架构类型]] · [[MOC_训练方法]] · [[MOC_数学原理]] · [[MOC_Harness]]
+- [[MOC_架构类型]] · [[MOC_训练方法]] · [[MOC_数学原理]] · [[MOC_智能体Harness]]
 - [[MOC_阅读入口]]

@@ -12,8 +12,8 @@ archived: 2026-09-22
 > 锚点：Gemma Team, Google DeepMind, *Gemma 4 Technical Report*（arXiv **2607.02770v2**；页眉日期 **2026-06-19**；API published **2026-07-02**，updated **2026-07-24**）
 > 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*；741,872 bytes）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）
-> 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3ProModelCard.md；模型与技术报告/SystemCard/Gemini37FlashModelCard.md
-> **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37FlashModelCard]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**勿重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
+> 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md；模型与技术报告/SystemCard/Gemini37Flash模型卡深读.md
+> **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**勿重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
 > **禁止编造：** 专家数/路由算法、未给的层宽表、训练 token 总量、视频管线细节若 TR 未写则标「未公开 / 仅 docs」。数字一律锚定 Table / 正文句。
 
 ---
@@ -203,7 +203,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 
 ## 6. 评测摘录（相对 Gemma 3，非相对 Gemini 闭源榜）
 
-> 主对照是 **Gemma 3 27B**（Table 5/6/9）与 Arena 开源榜（Table 4）。**不要**与 [[Gemini37FlashModelCard]] / 3 Pro 第 5 页闭源友商表无脚注合并。
+> 主对照是 **Gemma 3 27B**（Table 5/6/9）与 Arena 开源榜（Table 4）。**不要**与 [[Gemini37Flash模型卡深读]] / 3 Pro 第 5 页闭源友商表无脚注合并。
 
 ### 6.1 Arena Text（Table 4，as of **2026-06-19**）
 
@@ -293,7 +293,7 @@ Gemma 4 把 Google 近月的「多模态 + 推理」能力，落成一套 **可�
 | 一手 PDF | `https://arxiv.org/abs/2607.02770` ← https://arxiv.org/pdf/2607.02770 |
 | 文本抽取 | |
 | 辅 docs | https://ai.google.dev/gemma/docs/core （2026-07-08） |
-| 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3ProModelCard.md；模型与技术报告/SystemCard/Gemini37FlashModelCard.md |
+| 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md；模型与技术报告/SystemCard/Gemini37Flash模型卡深读.md |
 
 **检索截止：** 2026-09-22（Asia/Shanghai，CST）。数字与断言均来自上述 PDF/docs；未出现的专家拓扑、token 预算、视频栈细节未写入主张表。
 

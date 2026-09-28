@@ -14,7 +14,7 @@ aux:
  - https://github.com/MoonshotAI/MoonEP
  - https://github.com/kvcache-ai/AgentENV
 arxiv: ["2607.24653"]
-related: ["KimiK2技术报告深读", "Kimik15技术报告深读", "DeepSeekV4技术报告深读", "Nemotron3Ultra", "OLMo3全栈开放配方", "Qwen3CoderNext", "开源与闭源前沿模型谱系", "混合专家架构", "推理时扩展TestTimeScaling"]
+related: ["KimiK2技术报告深读", "Kimik15技术报告深读", "DeepSeekV4技术报告深读", "Nemotron3Ultra技术报告深读", "OLMo3全栈开放配方", "Qwen3CoderNext技术报告深读", "开源与闭源前沿模型谱系", "混合专家架构", "推理时扩展TestTimeScaling"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
@@ -24,9 +24,9 @@ timezone: Asia/Shanghai (CST)
 > **定位**：开源前沿旗舰主题轴——Kimi Team *Kimi K3: Open Frontier Intelligence*（arXiv:**2607.24653**v2，页眉 **7 Aug 2026**；XMP identifier `…/2607.24653v2`）。立「**开源 3T 级原生多模态 MoE 旗舰 TR**」：在 **预训练规模轴（≈2.8T / 104B 激活）** 与 **1M 上下文 test-time / agentic RL 轴** 上同时推进，公开全权重。
 > **攻坚线**：**架构思想（主）**——Hybrid KDA–MLA、AttnRes、Stable LatentMoE（SiTU-GLU / Quantile Balancing）、MoonViT-V2、Per-Head Muon；**AI Infra（辅）**——FlashKDA / KCP、MoonEP、1M agentic RL + AgentENV、KDA-aware prefix cache / QAT 服务；**评测字段（文内表，辅）**——Table 2/3 与 Fig.1 主结果转述。
 > **硬划界（开篇钉死）**：
-> - **≠ [[Nemotron3Ultra]]**：禁止写成 **Nemotron 3 Ultra**（Hybrid Mamba–Attention + LatentMoE / NVIDIA 开源旗舰）配方复述。本卡只写 **Moonshot Kimi K3** 本体；Nemotron 数字若不在本 PDF → 不出现。
+> - **≠ [[Nemotron3Ultra技术报告深读]]**：禁止写成 **Nemotron 3 Ultra**（Hybrid Mamba–Attention + LatentMoE / NVIDIA 开源旗舰）配方复述。本卡只写 **Moonshot Kimi K3** 本体；Nemotron 数字若不在本 PDF → 不出现。
 > - **≠ [[OLMo3全栈开放配方]]**：禁止写成 **OLMo 3** 全开放数据/配方旗舰对照全文。
-> - **≠ [[Qwen3CoderNext]]**：禁止写成 **Qwen3-Coder-Next**「代码专用小激活脚印 + 可执行反馈中训」轴。K3 的编码能力只作为 **文内 coding / agent 评测与 RL 域之一**，不立「Coder 专用旗舰」主轴。
+> - **≠ [[Qwen3CoderNext技术报告深读]]**：禁止写成 **Qwen3-Coder-Next**「代码专用小激活脚印 + 可执行反馈中训」轴。K3 的编码能力只作为 **文内 coding / agent 评测与 RL 域之一**，不立「Coder 专用旗舰」主轴。
 > - **≠ [[DeepSeekV4技术报告深读]]**：禁止写成 **DeepSeek-V4**（CSA+HCA / mHC / 百万上下文）配方复述。本 PDF 虽保留 **Gated MLA** 与 **MoonEP↔DeepEP** 对照句，但 **主注意力是 KDA 混合栈**，残差是 **AttnRes**——**禁止**滑成「又一篇 DeepSeek 百万上下文 TR」。
 > - **≠ [[开源与闭源前沿模型谱系]]**：禁止写成开闭源谱系通史 / 代际叙事；本卡是 **单篇 TR 深读**，他厂型号只出现在 **文内 Table 2/3 数字转述**。
 > - **≠ [[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]**：K2 的 MuonClip / MLA-only / 1.04T 表、K1.5 的 RL 通史不重开；本卡只录 **相对 K2 的 ∆（Table 1）** 与 K3 新增件。
@@ -72,22 +72,22 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
-| **Nemotron 3 Ultra** | Hybrid Mamba–Attn + LatentMoE 开源旗舰 | **[[Nemotron3Ultra]]** | **否** |
+| **Nemotron 3 Ultra** | Hybrid Mamba–Attn + LatentMoE 开源旗舰 | **[[Nemotron3Ultra技术报告深读]]** | **否** |
 | **OLMo 3** | 全开放数据/配方旗舰 | **[[OLMo3全栈开放配方]]** | **否** |
-| **Qwen3-Coder-Next** | 代码专用 80A3 + 可执行反馈中训 | **[[Qwen3CoderNext]]** | **否**（禁滑成 Coder 卡） |
+| **Qwen3-Coder-Next** | 代码专用 80A3 + 可执行反馈中训 | **[[Qwen3CoderNext技术报告深读]]** | **否**（禁滑成 Coder 卡） |
 | **DeepSeek-V4** | CSA+HCA / mHC / 1M 上下文 | **[[DeepSeekV4技术报告深读]]** | **否**（禁 DeepSeek 配方复述） |
 | **开闭源谱系** | 代际 / thinking 产品化通史 | **[[开源与闭源前沿模型谱系]]** | **否** |
 | **Kimi K2 / K1.5** | 前代 TR 全文 | **[[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]** | **否**（仅 ∆） |
 | **Kimi K3 开源前沿旗舰** | 3T 架构 + 1M agentic RL + Infra + 文内评测 | **本篇** | **是** |
 
-跟读直觉：[[DeepSeekV4技术报告深读]] 问「**DeepSeek 如何压百万上下文 KV/算力**」；[[Nemotron3Ultra]] 问「**NVIDIA 开源旗舰 Hybrid+LatentMoE**」；[[Qwen3CoderNext]] 问「**小激活脚印上的代码 agent 反馈栈**」；本卡问「**Moonshot 如何同时推开源预训练规模到 3T 类、并用 KDA/AttnRes/Stable LatentMoE + 1M RL 立开源前沿**」。共享「MoE / 长上下文 / agent RL」词汇，但 **厂商栈与主杠杆不同**——禁止写成「DeepSeek/Nemotron 配方换皮」。
+跟读直觉：[[DeepSeekV4技术报告深读]] 问「**DeepSeek 如何压百万上下文 KV/算力**」；[[Nemotron3Ultra技术报告深读]] 问「**NVIDIA 开源旗舰 Hybrid+LatentMoE**」；[[Qwen3CoderNext技术报告深读]] 问「**小激活脚印上的代码 agent 反馈栈**」；本卡问「**Moonshot 如何同时推开源预训练规模到 3T 类、并用 KDA/AttnRes/Stable LatentMoE + 1M RL 立开源前沿**」。共享「MoE / 长上下文 / agent RL」词汇，但 **厂商栈与主杠杆不同**——禁止写成「DeepSeek/Nemotron 配方换皮」。
 
 `
  开源「旗舰 TR」近窗
  │
  ┌─────────┼─────────┬──────────────┐
  │ │ │ │
- [[Nemotron3Ultra]] [[OLMo3全栈开放配方]] [[Qwen3CoderNext]] [[DeepSeekV4技术报告深读]]
+ [[Nemotron3Ultra技术报告深读]] [[OLMo3全栈开放配方]] [[Qwen3CoderNext技术报告深读]] [[DeepSeekV4技术报告深读]]
  Nemotron OLMo3 Coder-Next DeepSeek-V4
  Ultra (CSA/HCA)
  │ │ │ │
@@ -104,9 +104,9 @@ timezone: Asia/Shanghai (CST)
 | 不写 | 原因 |
 |---|---|
 | DeepSeek MoE/MLA/DeepEP 通史与 V4 CSA 配方 | → [[DeepSeekV4技术报告深读]] / DeepSeek 系列技术报告；本 PDF 仅借用 MLA 周期层与 DeepEP 对照句 |
-| Nemotron LatentMoE / Mamba hybrid 全文 | → [[Nemotron3Ultra]]；名称「LatentMoE」同源引用 ≠ 同一配方卡 |
+| Nemotron LatentMoE / Mamba hybrid 全文 | → [[Nemotron3Ultra技术报告深读]]；名称「LatentMoE」同源引用 ≠ 同一配方卡 |
 | OLMo 开放数据账本 | → [[OLMo3全栈开放配方]] |
-| Qwen Coder MegaFlow / 80A3 训练栈 | → [[Qwen3CoderNext]] |
+| Qwen Coder MegaFlow / 80A3 训练栈 | → [[Qwen3CoderNext技术报告深读]] |
 | [[开源与闭源前沿模型谱系]] 开闭源谱系长表 | 本卡单篇深读 |
 | K2 MuonClip / 15.5T token 账本全文 | → [[KimiK2技术报告深读]]；本卡只录相对 ∆ |
 | 博文案例的「芯片设计 / MiniTriton」完整复现步骤 | 辅材料；以 §7 Case Studies 提纲为准，不编造指标 |

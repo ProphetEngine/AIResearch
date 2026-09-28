@@ -195,7 +195,7 @@ UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 
 |---|---|
 | Preview PDF | `https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf` |
 | GA PDF | `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf` |
-| 本深读卡 | 模型与技术报告/SystemCard/GPT56SystemCard.md |
+| 本深读卡 | 模型与技术报告/SystemCard/GPT56系统卡深读.md |
 | Hub GA | https://deploymentsafety.openai.com/gpt-5-6 |
 | Hub Preview | https://deploymentsafety.openai.com/gpt-5-6-preview |
 | Preview PDF URL | https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf |
@@ -203,9 +203,9 @@ UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 
 
 ## 相关笔记
 
-- [[GPT5SystemCard|TR GPT-5]]
+- [[GPT5系统卡深读]]
 - [[GPT51SystemCard附录|TR GPT-5.1]]
 - [[GPT52SystemCard更新|TR GPT-5.2]]
-- [[GPT56SystemCard|TR GPT-5.6]]
+- [[GPT56系统卡深读]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描]]
 

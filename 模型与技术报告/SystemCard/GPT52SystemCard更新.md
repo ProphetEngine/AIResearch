@@ -11,7 +11,7 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）**
 > 锚点：OpenAI, *Update to GPT-5 System Card: GPT-5.2*（封面日期 **December 11, 2025**）
 > 官方 PDF：`https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf`（**27** 页；CreationDate/ModDate **2025-12-12** 00:46:24 CST）
-> 前序卡：模型与技术报告/SystemCard/GPT5SystemCard.md；扫描清单：模型与技术报告/SystemCard与TR扫描2025至2026.md
+> 前序卡：模型与技术报告/SystemCard/GPT5系统卡深读.md；扫描清单：模型与技术报告/SystemCard与TR扫描2025至2026.md
 > **禁编造**：能力/安全数字仅写正文或表格显式值；Figure 1–16 等图内百分点未可靠抽出处标「待核实读图」。
 
 ---
@@ -165,7 +165,7 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 
 ### 4.3 相关研究会笔记
 
-- 模型与技术报告/SystemCard/GPT5SystemCard.md — GPT-5 主卡（High Bio 防护栈、safe-completions、router）
+- 模型与技术报告/SystemCard/GPT5系统卡深读.md — GPT-5 主卡（High Bio 防护栈、safe-completions、router）
 - 模型与技术报告/SystemCard与TR扫描2025至2026.md — 5.1 / 5.2 / 5.6 下载与系列清单
 - 模型与技术报告/开源与闭源前沿模型谱系.md — 谱系产品叙事
 - Harness/智能体与工具/智能体工具与长程任务.md — 工具 / 长程 / 注入
@@ -178,12 +178,12 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 ## 相关笔记
 
 ### 技术报告专项
-- [[GPT5SystemCard|TR GPT-5]]
+- [[GPT5系统卡深读]]
 - [[GPT51SystemCard附录|TR GPT-5.1 Addendum]]
 - [[GPT52SystemCard更新|TR GPT-5.2 Update]]
 - [[Gemini25技术报告深读|TR Gemini 2.5]]
-- [[Gemini3ProModelCard|TR Gemini 3 Pro Model Card]]
-- [[ClaudeOpus41SystemCard|TR Claude Opus 4.1]]
-- [[ClaudeOpus45SystemCard|TR Claude Opus 4.5]]
+- [[Gemini3Pro模型卡深读]]
+- [[ClaudeOpus41系统卡附录深读]]
+- [[ClaudeOpus45系统卡深读]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
 

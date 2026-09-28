@@ -1,5 +1,5 @@
 ---
-topic: GPT6AstraSystemCard
+topic: GPT6Astra系统卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
@@ -310,19 +310,19 @@ SecureBio 外部评测：正文有专门小节（§10.1.1.4）；细节数字以
 
 | 类型 | 路径 |
 |---|---|
-| 本深读卡 | 模型与技术报告/SystemCard/GPT6AstraSystemCard.md |
+| 本深读卡 | 模型与技术报告/SystemCard/GPT6Astra系统卡深读.md |
 | 官方 PDF | `https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf` |
 | 文本抽取 | |
 | Hub | https://deploymentsafety.openai.com/gpt-6-astra |
 | PDF URL | https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf |
-| 对照深读（相对增量基准） | 模型与技术报告/SystemCard/GPT56SystemCard.md |
+| 对照深读（相对增量基准） | 模型与技术报告/SystemCard/GPT56系统卡深读.md |
 
 ## 相关笔记
 
-- [[GPT6AstraSystemCard|GPT-6 Astra]]
+- [[GPT6Astra系统卡深读]]
 - [[DeepSeekV41Flash深读|DeepSeek-V4.1 Flash]]
 - [[Qwen38Next架构深读|Qwen3.8-Next]]
-- [[ClaudeOpus5SystemCard|Claude Opus 5]]
+- [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族|GRPO→DAPO]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描]]
 

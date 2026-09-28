@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 锚点：Anthropic, *System Card Addendum: Claude Opus 4.1*（封面 **August 2025**；Changelog **September 15, 2025**）
 > 官方 PDF：`https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf`（**23** 页；Title: Claude 4.1 System Card）  
 > 落地页：https://www.anthropic.com/claude-opus-4-1-system-card
-> 对照：Claude 4 主卡 `https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf`；后续全卡笔记 [[ClaudeOpus45SystemCard]]
+> 对照：Claude 4 主卡 `https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf`；后续全卡笔记 [[ClaudeOpus45系统卡深读]]
 > **禁止编造**：本卡为 **Addendum**，几乎不给能力榜；下文数字与主张均锚定原文表格/段落；图柱未抽出可读数的标「待核实读图」。
 
 ---
@@ -169,7 +169,7 @@ Claude Opus 4.1 是 Opus 4 的增量版；本卡是挂在 **Claude 4 SC（May 20
 
 ## 四、相对 Opus 4.5 System Card 的位置
 
-| 维度 | Opus 4.1 Addendum（本卡） | Opus 4.5 System Card（模型与技术报告/SystemCard/ClaudeOpus45SystemCard.md） |
+| 维度 | Opus 4.1 Addendum（本卡） | Opus 4.5 System Card（模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md） |
 |---|---|---|
 | 时间线 | 封面 **Aug 2025**；Changelog **Sep 15, 2025** | 封面 **Nov 2025**；Changelog 至 **Dec 5, 2025** |
 | 体裁 / 页数 | **Addendum**，**23** 页；挂在 Claude 4 SC 下 | **完整** System Card，**153** 页 |
@@ -217,7 +217,7 @@ Anthropic. Claude 4 System Card. May 2025
 
 ```text
 Anthropic. System Card: Claude Opus 4.5. November 2025
-（见 模型与技术报告/SystemCard/ClaudeOpus45SystemCard.md）
+（见 模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md）
 ```
 
 ### 5.3 相关路径
@@ -225,7 +225,7 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 | 路径 | 说明 |
 |---|---|
 | `https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf` | 官方 PDF（23 页） |
-| 模型与技术报告/SystemCard/ClaudeOpus41SystemCard.md | 本深读卡（draft） |
+| 模型与技术报告/SystemCard/ClaudeOpus41系统卡附录深读.md | 本深读卡（draft） |
 
 ---
 
@@ -234,12 +234,12 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 ## 相关笔记
 
 ### 技术报告专项
-- [[GPT5SystemCard|TR GPT-5]]
+- [[GPT5系统卡深读]]
 - [[GPT51SystemCard附录|TR GPT-5.1 Addendum]]
 - [[GPT52SystemCard更新|TR GPT-5.2 Update]]
 - [[Gemini25技术报告深读|TR Gemini 2.5]]
-- [[Gemini3ProModelCard|TR Gemini 3 Pro Model Card]]
-- [[ClaudeOpus41SystemCard|TR Claude Opus 4.1]]
-- [[ClaudeOpus45SystemCard|TR Claude Opus 4.5]]
+- [[Gemini3Pro模型卡深读]]
+- [[ClaudeOpus41系统卡附录深读]]
+- [[ClaudeOpus45系统卡深读]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
 

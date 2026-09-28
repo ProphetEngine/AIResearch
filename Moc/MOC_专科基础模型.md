@@ -65,6 +65,6 @@ status: active
 ## 相关主题
 
 - [[MOC_多模态与具身|C 多模态 / 世界模型]]（具身子节）
-- [[MOC_Harness|D 智能体]]（科学 agent 等交叉）
+- [[MOC_智能体Harness]]（科学 agent 等交叉）
 - [[MOC_模型与技术报告|J 模型谱系与 TR]]
 

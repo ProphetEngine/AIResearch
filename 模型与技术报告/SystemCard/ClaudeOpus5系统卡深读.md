@@ -1,5 +1,5 @@
 ---
-topic: ClaudeOpus5SystemCard
+topic: ClaudeOpus5系统卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
@@ -14,7 +14,7 @@ archived: 2026-09-22
 > 官方 PDF（用户指定 CDN，已 curl 核验）：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
 > 索引页：https://www.anthropic.com/system-cards（条目 **Claude Opus 5 / July 2026**）
 > 公告：https://www.anthropic.com/news/claude-opus-5（**Jul 24, 2026**）
-> 对照笔记：模型与技术报告/SystemCard/ClaudeOpus45SystemCard.md（相对增量）；安全与评测/安全红队与对抗评测.md（**勿重写**红队方法全文）
+> 对照笔记：模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md（相对增量）；安全与评测/安全红队与对抗评测.md（**勿重写**红队方法全文）
 > **禁编造**：数字与主张仅锚定 Opus 5 System Card / 索引页链出的 5.1 卡正文；卡未提 Opus 4.5 时**不以 4.5 数字硬横比**。Fable/Mythos 5.1 **仅附录索引**，不全文重写。
 
 ---
@@ -210,7 +210,7 @@ Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / com
 
 > **硬约束：** Opus 5 System Card **从未点名 Opus 4.5**；卡内定量对照主轴是 **Opus 4.8 / Fable 5 / Mythos 5**。下表把「已入库 4.5 深读卡」与「本卡 + 公告」做**结构/政策增量**对照，**禁止**把 4.5 的 SWE-bench Verified 80.9% 与 5 的 96.0% 当成同 harness 直接相减。
 
-| 维度 | Opus 4.5（模型与技术报告/SystemCard/ClaudeOpus45SystemCard.md，封面 Nov 2025） | Opus 5（本卡，Jul 24, 2026） |
+| 维度 | Opus 4.5（模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md，封面 Nov 2025） | Opus 5（本卡，Jul 24, 2026） |
 |---|---|---|
 | 谱系位置 | Claude 4 族旗舰之一；对照 Opus 4/4.1、Sonnet 4.5 等 | 明确写成 **Opus 4.8 升级**；同窗对照 **Fable 5 / Mythos 5** |
 | 部署安全级 | **ASL-3** | **ASL-3**（明示与 **Opus 4.8** 同档组合） |
@@ -255,7 +255,7 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 | https://www.anthropic.com/system-cards · Opus 5 CDN PDF | Opus 5 官方 PDF（本地） |
 | | Opus 5 入库抽取 |
 | https://www.anthropic.com/claude-fable-and-mythos-5.1 · | 5.1 卡 URL+抽取 |
-| 模型与技术报告/SystemCard/ClaudeOpus5SystemCard.md | 本深读卡 |
+| 模型与技术报告/SystemCard/ClaudeOpus5系统卡深读.md | 本深读卡 |
 
 ---
 
@@ -282,10 +282,10 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 
 ## 相关笔记
 
-- [[GPT6AstraSystemCard|GPT-6 Astra]]
+- [[GPT6Astra系统卡深读]]
 - [[DeepSeekV41Flash深读|DeepSeek-V4.1 Flash]]
 - [[Qwen38Next架构深读|Qwen3.8-Next]]
-- [[ClaudeOpus5SystemCard|Claude Opus 5]]
+- [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族|GRPO→DAPO]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描]]
 

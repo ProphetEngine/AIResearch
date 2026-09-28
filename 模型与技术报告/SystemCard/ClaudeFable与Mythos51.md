@@ -7,7 +7,7 @@ status: archived
 sources:
  # slim: url+extract — system card PDF removed (>15MB)
  - https://www.anthropic.com/claude-fable-and-mythos-5-1
-related: ["ClaudeOpus5SystemCard", "宪法分类器防御", "安全论证SafetyCases", "B5", "ClaudeOpus45SystemCard"]
+related: ["ClaudeOpus5系统卡深读", "宪法分类器防御", "安全论证SafetyCases", "B5", "ClaudeOpus45系统卡深读"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 archived: 2026-09-22
@@ -15,10 +15,10 @@ archived: 2026-09-22
 
 # Claude Fable 5.1 & Mythos 5.1 System Card（安全评测字段 × Fable/Mythos 访问边界）
 
-> **定位**：System Card 安全字段主题轴——兑现 [[ClaudeOpus5SystemCard]] 附录里「5.1 卡仅索引、勿当正文」的派工；主锚点 Anthropic *System Card: Claude Fable 5.1 & Claude Mythos 5.1*（封面 **September 1, 2026**）。主写 **该卡预部署安全评测字段地图** 与 **Fable vs Mythos 访问/护栏边界**；能力榜（§8）与福利访谈（§7）只作索引，不扩写。
+> **定位**：System Card 安全字段主题轴——兑现 [[ClaudeOpus5系统卡深读]] 附录里「5.1 卡仅索引、勿当正文」的派工；主锚点 Anthropic *System Card: Claude Fable 5.1 & Claude Mythos 5.1*（封面 **September 1, 2026**）。主写 **该卡预部署安全评测字段地图** 与 **Fable vs Mythos 访问/护栏边界**；能力榜（§8）与福利访谈（§7）只作索引，不扩写。
 > **攻坚线**：**评测字段（主）**——RSP（CB / Autonomy / Alignment risk）· Cyber（能力梯 + 护栏覆盖 + 鲁棒）· Safeguards/Agentic/Alignment 的可核对指标名；**架构思想（辅）**——同权重双配置 + 受信访问程序 + fallback。
 > **硬划界（禁止重写）**：
-> - **≠ [[ClaudeOpus5SystemCard]] Opus 5 全文**：Opus 5 的 RSP/cyber/对齐深读已入库；本篇**不**复述 Opus 5 表与叙事，只在对照点一句。
+> - **≠ [[ClaudeOpus5系统卡深读]] Opus 5 全文**：Opus 5 的 RSP/cyber/对齐深读已入库；本篇**不**复述 Opus 5 表与叙事，只在对照点一句。
 > - **≠ [[宪法分类器防御]] Classifiers 通史**：本卡 cyber 护栏「probe → LLM classifier」只记**本部署形态与覆盖字段**；不写 Constitutional Classifiers / Classifiers++ 论文架构通史。
 > - **≠ [[安全论证SafetyCases]] safety cases 通史**：本篇是 **system card 字段清单 + 访问边界**，不写 CAE 树 / scheming inability / Assurance 2.0。
 > - **禁止编造**：数字与主张锚定官方 PDF（2026-09-22 CST）与公告页；图内未抽出的柱高标「待核实读图」。**禁止**复述可操作攻击/利用步骤。
@@ -33,7 +33,7 @@ archived: 2026-09-22
 | **辅·产品公告** | https://www.anthropic.com/claude-fable-and-mythos-5-1 | WebFetch 2026-09-22 CST | 定价/EFS/CVP·LSVP/Claude Security 产品表述；与卡交叉核验访问边界 |
 | **备链 CDN**（用户指定） | `https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf` | 原官方 ；以 CDN + 为准 | 缺抽取时回落 CDN |
 
-**交叉索引（勿当正文）：** 模型与技术报告/SystemCard/ClaudeOpus5SystemCard.md 附录 A
+**交叉索引（勿当正文）：** 模型与技术报告/SystemCard/ClaudeOpus5系统卡深读.md 附录 A
 
 **一句话抓手：** Fable 5.1 与 Mythos 5.1 是**同一套权重、两套护栏**——通用面走 Fable（生物/cyber 双用途额外拦 + 分类器触发时多面 **fallback 到 Opus 4.8**）；受信面走 Mythos（**LSVP** 放宽生命科学；**CVP**「近期」纳入 Mythos 级 cyber；Enterprise **Claude Security** 已由 Mythos 5.1 驱动）。安全叙事的核字段是：RSP 上 **CB-1 / 未过 CB-2**、AI R&D 风险仍低、**对齐灾难风险由 very low → low**；cyber 能力（护栏关）为发布以来最强且 **FCF Tier 1**；Fable 侧 **放开源码漏洞发现、继续拦二进制**，并自称 **无 critical-severity jailbreak**。
 
@@ -45,7 +45,7 @@ archived: 2026-09-22
 
 | 已入库 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **[[ClaudeOpus5SystemCard]]** Opus 5 System Card | 「同窗旗舰对照」「源码发现放开先例」接口；5.1 附录索引的兑现 | Opus 5 全文 RSP/cyber/对齐表、相对 4.5 增量 |
+| **[[ClaudeOpus5系统卡深读]]** Opus 5 System Card | 「同窗旗舰对照」「源码发现放开先例」接口；5.1 附录索引的兑现 | Opus 5 全文 RSP/cyber/对齐表、相对 4.5 增量 |
 | **[[宪法分类器防御]]** Constitutional Classifiers | 本卡 §3.2 一句「modeled on constitutional classifiers」→ **本部署** probe→LLM | CC / CC++ 论文架构、拒答率开销通史 |
 | **[[安全论证SafetyCases]]** safety cases | 「主张–证据」自觉一句即可 | CAE / inability / Assurance 2.0 评审通史 |
 | **B5** 红队 | 外部小时数 / 「未获 e2e exploit」等**结果字段** | 攻击剧本、ASR 闭环全文 |
@@ -271,7 +271,7 @@ Exec 总括：发布以来 **最强 overall cyber**；内部套件 **≥ Mythos 
 
 ## 六、与相邻笔记的「只索引」句
 
-- **相对 [[ClaudeOpus5SystemCard]]：** Opus 5 已把「Fable 级分类器 + 源码发现放开」写进日常旗舰；5.1 卡是同产品线的 **能力↑ + 假阳性↓但仍宽于 Opus** 的更新卷，且对齐灾难风险口径改为 **low**。
+- **相对 [[ClaudeOpus5系统卡深读]]：** Opus 5 已把「Fable 级分类器 + 源码发现放开」写进日常旗舰；5.1 卡是同产品线的 **能力↑ + 假阳性↓但仍宽于 Opus** 的更新卷，且对齐灾难风险口径改为 **low**。
 - **相对 [[宪法分类器防御]]：** 本卡 cyber 护栏是 classifiers 族的一次**生产实例**（probe→LLM），不是分类器方法论通史。
 - **相对 [[安全论证SafetyCases]]：** 本卡提供 **RSP/FCF 主张与评测证据表**；结构化 safety case / 外部 Assurance 评审不在本篇范围。
 

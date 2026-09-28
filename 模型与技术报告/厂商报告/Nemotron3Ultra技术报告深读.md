@@ -1,6 +1,6 @@
 ---
 title: "开源旗舰：Nemotron 3 Ultra（≠ Nemotron-CC）"
-topic: Nemotron3Ultra
+topic: Nemotron3Ultra技术报告深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
@@ -78,7 +78,7 @@ timezone: Asia/Shanghai (CST)
 [[NemotronCC数据策展]] = Nemotron-CC：网页怎么洗成可训语料
 [[SEA-LION低资源区域模型]] = SEA-LION：强基座如何 CPT+OPD 成区域模型
 [[OLMo3全栈开放配方]] = OLMo 3：可复现开放研究配方旗舰
-[[Nemotron3Ultra]] = Nemotron 3 Ultra：NVIDIA 开源 agentic 旗舰怎么训、怎么评、怎么快
+[[Nemotron3Ultra技术报告深读]] = Nemotron 3 Ultra：NVIDIA 开源 agentic 旗舰怎么训、怎么评、怎么快
 `
 
 ---
@@ -222,6 +222,6 @@ Base (1M 扩展)
 | 主 PDF | `https://arxiv.org/abs/2606.15007` | **3.79MiB / 65p** | **入库二进制**（≪10MB） |
 | 辅 PDF | [`NVIDIA Labs TR`](https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf) | **3.70MiB / 65p** | ****（近同文辅；仅 URL + ；主张以 arXiv 为准） |
 | 抽取 | （+ `nvidia-labs.txt`） | ~281KB / ~279KB 文本 | **优先保留**（页数长，抽取优先） |
-| 笔记 | [[Nemotron3Ultra]] | 本文件 | status:**archived** |
+| 笔记 | [[Nemotron3Ultra技术报告深读]] | 本文件 | status:**archived** |
 
 **禁止入库：** 模型权重、量化包、原始数据集 shard。

@@ -8,8 +8,8 @@ sources:
 - https://arxiv.org/abs/2512.13961
 arxiv: ["2512.13961"]
 related:
- - "Nemotron3Ultra" # Nemotron 3 Ultra（工业开源性能旗舰；本卡写全栈开放配方，对照不重写）
- - "GPTossModelCard"
+ - "Nemotron3Ultra技术报告深读" # Nemotron 3 Ultra（工业开源性能旗舰；本卡写全栈开放配方，对照不重写）
+ - "GPToss模型卡深读"
  - "Gemma4技术报告深读"
  - "Qwen3技术报告深读"
  - "DeepSeekV3训练与MoE基建"
@@ -27,8 +27,8 @@ timezone: Asia/Shanghai (CST)
 > **定位**：全栈开放配方主题轴——立 **AI2「fully-open」全栈 model flow** 锚点：不仅放最终权重，还放 **每阶段数据 / 中间 checkpoint / 代码依赖**。主文：*Olmo 3*（Team Olmo / Allen Institute for AI 等，arXiv:**2512.13961**v2）。旗舰叙事落在 **Olmo 3.1 Think 32B**（全文自称 strongest fully-open thinking model）。
 > **攻坚线**：**架构思想 / 开放配方接口（主）** + **评测字段（文内系列对照，辅）**。
 > **硬划界（开篇钉死）**：
-> - **≠ [[Nemotron3Ultra]]**：禁止写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra]] 对照一句即可。
-> - **≠ [[GPTossModelCard]]**：禁止重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
+> - **≠ [[Nemotron3Ultra技术报告深读]]**：禁止写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra技术报告深读]] 对照一句即可。
+> - **≠ [[GPToss模型卡深读]]**：禁止重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
 > - **≠ [[Gemma4技术报告深读]]**：禁止重写 **Gemma 4** TR（Google Apache 开源权重族 / PLE / QAT）；本卡是 AI2 dense 7B/32B + Dolma/Dolci 全栈。
 > - **≠ 已入库 Qwen / DeepSeek / Llama pending**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），**禁止**把其架构/训练配方抄入本卡当 Olmo 主张。
 > **禁止编造**：型号、token 量、表数字、算力日一律锚定本地抽取（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
@@ -60,8 +60,8 @@ timezone: Asia/Shanghai (CST)
 
 | 已入库 / 同主题 | 本卡只取 | 本卡不写 |
 |---|---|---|
-| **[[Nemotron3Ultra]]** Nemotron 3 Ultra | 「工业开源性能旗舰」对照位一句 | Hybrid Mamba–Transformer MoE、Nemotron agent 表、CC 语料清洗 |
-| **[[GPTossModelCard]]** gpt-oss | 「另一路开源权重推理卡」对照 | harmony / MXFP4 / effort 旋钮 / OpenAI Preparedness 开源剖面 |
+| **[[Nemotron3Ultra技术报告深读]]** Nemotron 3 Ultra | 「工业开源性能旗舰」对照位一句 | Hybrid Mamba–Transformer MoE、Nemotron agent 表、CC 语料清洗 |
+| **[[GPToss模型卡深读]]** gpt-oss | 「另一路开源权重推理卡」对照 | harmony / MXFP4 / effort 旋钮 / OpenAI Preparedness 开源剖面 |
 | **[[Gemma4技术报告深读]]** Gemma 4 | 「Google 开源权重族」对照 | PLE / QAT / encoder-free / Gemma thinking 符 |
 | **[[Qwen3技术报告深读]] / DeepSeek-V3 / Llama-4-pending** | 文内基线名与 Table 数字对照 | 其 MoE/MTP/GRPO 配方正文；禁止用其未公开字段「补全」Olmo |
 | **[[对齐脉络RLHF与偏好优化]] / [[推理时扩展TestTimeScaling]]** | SFT–DPO–RLVR / thinking traces 作接口槽 | RLHF 通史、TTS 通史全文 |
@@ -73,8 +73,8 @@ timezone: Asia/Shanghai (CST)
 跟读口诀：
 
 `
-[[Nemotron3Ultra]] = 工业开源性能旗舰（Nemotron 3 Ultra）
-[[GPTossModelCard]] = OpenAI 开源权重推理卡（gpt-oss）
+[[Nemotron3Ultra技术报告深读]] = 工业开源性能旗舰（Nemotron 3 Ultra）
+[[GPToss模型卡深读]] = OpenAI 开源权重推理卡（gpt-oss）
 [[Gemma4技术报告深读]] = Google 开源权重族（Gemma 4）
 [[OLMo3全栈开放配方]] = AI2 全栈开放配方旗舰（Olmo 3 model flow） ← 本卡
 `
@@ -210,7 +210,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 ## 七、评测字段摘录（辅；禁跨表硬比绝对分）
 
-> 协议、解码、是否 thinking、是否 Avg@k 均不同源表自洽；**禁止**与 [[GPTossModelCard]] / [[Gemma4技术报告深读]] / Qwen3 TR 表直接「决胜负」。
+> 协议、解码、是否 thinking、是否 Avg@k 均不同源表自洽；**禁止**与 [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] / Qwen3 TR 表直接「决胜负」。
 
 ### 7.1 旗舰快照 Table 1 / Table 14（Olmo 3.1 Think 32B 选列）
 
@@ -273,7 +273,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 | 不写 | 原因 |
 |---|---|
-| Nemotron 3 Ultra / gpt-oss / Gemma 4 架构与表 | 划界 ≠ [[Nemotron3Ultra]] / [[GPTossModelCard]] / [[Gemma4技术报告深读]] |
+| Nemotron 3 Ultra / gpt-oss / Gemma 4 架构与表 | 划界 ≠ [[Nemotron3Ultra技术报告深读]] / [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] |
 | Qwen3 / DeepSeek / Llama4 配方回填 | ≠ 已入库 TR；仅基线名 |
 | 未抽出的 Figure 精确点、附录全表逐格 | 页数极长；需要时回 或 PDF |
 | 权重 / 数据集整包下载入库 | 体积与许可另议；本卡只链配方接口 |
@@ -285,8 +285,8 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 ## 十、交叉双链
 
-- **[[Nemotron3Ultra]]**：工业开源性能旗舰对照（Nemotron 3 Ultra）——同主题并行，不互相重写。
-- **[[GPTossModelCard]] / [[Gemma4技术报告深读]]**：另两路「开源权重卡」样本。
+- **[[Nemotron3Ultra技术报告深读]]**：工业开源性能旗舰对照（Nemotron 3 Ultra）——同主题并行，不互相重写。
+- **[[GPToss模型卡深读]] / [[Gemma4技术报告深读]]**：另两路「开源权重卡」样本。
 - [[Qwen3技术报告深读]] / [[DeepSeekV3训练与MoE基建]] / [[Llama4待核实备忘]]：基线与 pending 位。
 - **[[对齐脉络RLHF与偏好优化]] / [[推理时扩展TestTimeScaling]]**：偏好优化与 test-time thinking 通史接口。
 - 同主题过程监督 / 工具环（[[可验证过程监督]] / [[ToolLoop工具数据合成]]）可作 RLVR / function-calling **下游用法**交叉，不升本卡主轴。
@@ -302,4 +302,4 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 | 深读 PDF | [arXiv:2512.13961](https://arxiv.org/abs/2512.13961)（**6,817,890 B / 118p**） |
 | 备注 | 正式引用 arXiv HTTPS（页数较长，跟读以章节为准） |
 | 主结论 | AI2 **fully-open model flow** 旗舰：Dolma 3 三阶段 Base（至 ~6T 级 + 65K）→ Dolci 后训练三角（Think / Instruct / RL-Zero）；旗舰 **Olmo 3.1 Think 32B** 文内称 strongest fully-open thinking @32B，并以更少 token 逼近 Qwen 3 开源权重 thinking |
-| 划界 | ≠ [[Nemotron3Ultra]]；≠ [[GPTossModelCard]]；≠ [[Gemma4技术报告深读]]；≠ Qwen/DeepSeek/Llama pending 正文 |
+| 划界 | ≠ [[Nemotron3Ultra技术报告深读]]；≠ [[GPToss模型卡深读]]；≠ [[Gemma4技术报告深读]]；≠ Qwen/DeepSeek/Llama pending 正文 |

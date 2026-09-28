@@ -218,7 +218,7 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 | 路径 | 说明 |
 |---|---|
 | `https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf` | 官方 PDF |
-| 模型与技术报告/SystemCard/ClaudeOpus45SystemCard.md | 本深读卡（draft） |
+| 模型与技术报告/SystemCard/ClaudeOpus45系统卡深读.md | 本深读卡（draft） |
 
 ---
 
@@ -230,9 +230,9 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 - [[DeepSeekV3训练与MoE基建|TR DeepSeek-V3]]
 - [[Qwen3技术报告深读|TR Qwen3]]
 - [[DeepSeekR1推理训练深读|TR DeepSeek-R1]]
-- [[GPT5SystemCard|TR GPT-5]]
+- [[GPT5系统卡深读]]
 - [[Gemini25技术报告深读|TR Gemini 2.5]]
-- [[ClaudeOpus45SystemCard|TR Claude Opus 4.5]]
+- [[ClaudeOpus45系统卡深读]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
 
 ### 相关深度笔记

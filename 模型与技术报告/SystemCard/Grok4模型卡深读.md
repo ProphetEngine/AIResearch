@@ -251,7 +251,7 @@ Grok 4 卡是一份 **8 页、几乎纯安全评测** 的 model card：能力侧
 ## 相关笔记
 
 ### 技术报告专项
-- [[Grok4ModelCard|TR Grok 4 Model Cards]]
+- [[Grok4模型卡深读]]
 - [[Kimik15技术报告深读|TR Kimi k1.5]]
 - [[KimiK2技术报告深读|TR Kimi K2]]
 - [[Llama4待核实备忘|TR Llama 4 待核实备忘]]

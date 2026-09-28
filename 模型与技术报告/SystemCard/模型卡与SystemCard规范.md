@@ -19,8 +19,8 @@ archived: 2026-09-22
 > - Annotated Template：https://huggingface.co/docs/hub/en/model-card-annotated
 > - Guidebook（引用 Mitchell；模板演进）：https://huggingface.co/docs/hub/en/model-card-guidebook
 > 3. **对照（增量，不重写各卡正文）**：A 表已入库深读卡
-> - System Card 系：[[GPT5SystemCard]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56SystemCard]]；[[ClaudeOpus41SystemCard]]、[[ClaudeOpus45SystemCard]]
-> - Model Card 系：[[Gemini3ProModelCard]]、[[Grok4ModelCard]]
+> - System Card 系：[[GPT5系统卡深读]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]
+> - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]
 > - [[MOC_模型与技术报告]]
 > **硬性约定**：写「文档体裁 → 字段接口 → 归档最小集」；**禁止**重写各厂卡的能力/安全数字与案例正文。禁止编造未在 Mitchell / HF / 已入库 TR 笔记中出现的字段名或承诺。未核对标「待核实」。
 
@@ -118,7 +118,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 | 维度 | 经典 Model Card（Mitchell / 短 HF README） | A 表所见「厂商卡」实践（据各 TR 元信息 / PDF TOC） |
 |------|--------------------------------------------|-----------------------------------------------------|
 | 典型页数 | Mitchell 倡「一至两页」短记录；示例为插图卡 | GPT-5 SC **60** 页；Claude 4 SC **124** 页；Claude Opus 4.5 SC **153** 页；Gemini 3 Pro MC **10** 页；Grok 4 MC **8** 页（各 TR 笔记） |
-| 标题习惯 | Model Card | OpenAI / Anthropic 多用 **System Card**；Google DeepMind Gemini 3 Pro 仍称 **Model Card**；xAI Grok 4/4.1 称 Model Card，**Grok 4.20 改称 System Card**（见 [[Grok4ModelCard]] §3.4） |
+| 标题习惯 | Model Card | OpenAI / Anthropic 多用 **System Card**；Google DeepMind Gemini 3 Pro 仍称 **Model Card**；xAI Grok 4/4.1 称 Model Card，**Grok 4.20 改称 System Card**（见 [[Grok4模型卡深读]] §3.4） |
 | 文档关系 | 常随权重/仓库发布 | 常为**独立 PDF**；可有 **Addendum / Update**（GPT-5.1、GPT-5.2、Claude Opus 4.1）挂在主卡下，而非每次全量重写 |
 | Changelog | Mitchell 强调版本差分 | Anthropic Opus 4.5 / Claude 4 卡带显式 Changelog；OpenAI 系 Update 卡声明缓解「largely the same」再报增量（见 GPT-5.2 TR） |
 
@@ -146,7 +146,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 1. **从「分群误差条」到「威胁模型目录」**：前沿 SC 的一级目录常按 jailbreak / injection / CBRN / cyber / agentic / RSP 组织，而非按 demographic unitary×intersectional 主轴。BBQ 等公平基准仍出现，但通常是**专节**而非整卡骨架。
 2. **从「单模型工件」到「系统」**：OpenAI 强调统一系统、router、thinking 变体、工具与防护栈；Anthropic 强调 hybrid thinking、effort、计算机使用与 ASL；卡名 System Card 与此一致。
 3. **从「一次发布」到「卡族」**：主卡 + Addendum + Update；以及 Preview vs GA（GPT-5.6 TR）。归档必须记下**卡类型**与**相对哪张主卡**。
-4. **名称漂移**：xAI 同系文档可从 Model Card 改称 System Card（[[Grok4ModelCard]] §3.4），**不能**仅凭文件名推断字段完备度。
+4. **名称漂移**：xAI 同系文档可从 Model Card 改称 System Card（[[Grok4模型卡深读]] §3.4），**不能**仅凭文件名推断字段完备度。
 5. **HF 机读层与厂商 PDF 层并行**：开源权重发布仍大量依赖 HF README/YAML；闭源旗舰则以 PDF SC/MC 为权威。研究会 A 表两者都收，字段模板需能覆盖。
 
 ---
@@ -262,15 +262,15 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 | 笔记 | 官方 PDF（示例） |
 |------|------------------|
-| [[GPT5SystemCard]] | `https://cdn.openai.com/gpt-5-system-card.pdf` |
+| [[GPT5系统卡深读]] | `https://cdn.openai.com/gpt-5-system-card.pdf` |
 | [[GPT51SystemCard附录]] | `https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf` |
 | [[GPT52SystemCard更新]] | `https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf` |
-| [[GPT56SystemCard]] | `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf` 等 |
-| [[ClaudeOpus41SystemCard]] | `https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf` |
-| [[ClaudeOpus45SystemCard]] | `https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf` |
+| [[GPT56系统卡深读]] | `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf` 等 |
+| [[ClaudeOpus41系统卡附录深读]] | `https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf` |
+| [[ClaudeOpus45系统卡深读]] | `https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf` |
 | Claude 4 主卡（对照） | `https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf` |
-| [[Gemini3ProModelCard]] | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
-| [[Grok4ModelCard]] | `https://data.x.ai/2025-08-20-grok-4-model-card.pdf` 等 |
+| [[Gemini3Pro模型卡深读]] | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
+| [[Grok4模型卡深读]] | `https://data.x.ai/2025-08-20-grok-4-model-card.pdf` 等 |
 
 ### 相关研究会笔记
 

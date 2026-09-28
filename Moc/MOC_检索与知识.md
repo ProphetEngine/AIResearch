@@ -27,6 +27,6 @@ status: active
 
 ## 相关主题
 
-- [[MOC_Harness|D 智能体 · 记忆]]
+- [[MOC_智能体Harness]]
 - [[MOC_注意力与长上下文|B 长上下文与注意力效率]]
 

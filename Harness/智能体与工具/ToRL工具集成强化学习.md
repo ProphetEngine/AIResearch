@@ -226,7 +226,7 @@ $$
 | [[代码智能体Harness史线]] | 「隔离执行」同属 harness 直觉 | 本篇是数学解释器，不是 SWE ACI |
 | [[智能体工具与长程任务]] | 工具增强推理产品能力 | 不写 MCP / 旗舰工具环 |
 | [[DeepSeekR1推理训练深读]] / SimpleRL | 无工具 RL 对照 | 不写 R1 阶段表 |
-| [[GPTossModelCard]] gpt-oss | developer terminal tool **评测** | 不是 tool-use RL 算法 |
+| [[GPToss模型卡深读]] gpt-oss | developer terminal tool **评测** | 不是 tool-use RL 算法 |
 
 ---
 
@@ -240,7 +240,7 @@ $$
 
 - [[多智能体辩论|Multi-Agent Debate]]
 - [[形式化验证与LLM|Formal Verification for LLM]]
-- [[GPTossModelCard|gpt-oss Model Card]]
+- [[GPToss模型卡深读]]
 - [[计算机使用智能体|Computer-Use Agents]]
 - [[ToRL工具集成强化学习|Tool-Use RL / ToRL]]
 

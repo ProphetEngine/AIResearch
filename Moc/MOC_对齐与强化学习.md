@@ -41,6 +41,6 @@ status: active
 ## 相关主题
 
 - [[MOC_安全与评测|F 安全 · 治理 · 评测可靠性]]
-- [[MOC_Harness|D 智能体]]
+- [[MOC_智能体Harness]]
 - [[MOC_模型与技术报告|J 模型谱系与 TR]]
 

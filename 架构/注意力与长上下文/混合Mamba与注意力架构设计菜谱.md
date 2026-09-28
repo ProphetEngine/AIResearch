@@ -8,12 +8,12 @@ sources:
   - https://arxiv.org/abs/2510.04800
 arxiv: ["2510.04800"]
 related:
-  - "Nemotron3Ultra"
+  - "Nemotron3Ultra技术报告深读"
   - "Qwen38Next架构深读"
   - "长上下文与注意力效率时间线"
 retrieval_cutoff: 2026-09-25
 timezone: Asia/Shanghai (CST)
-boundary: "≠ Nemotron3Ultra 单机 Hybrid+LatentMoE 配方深读；≠ Qwen38Next架构深读 的 GDN/QSA 产品深读"
+boundary: "≠ Nemotron3Ultra技术报告深读 单机 Hybrid+LatentMoE 配方深读；≠ Qwen38Next架构深读 的 GDN/QSA 产品深读"
 archived: 2026-09-28
 ---
 
@@ -22,7 +22,7 @@ archived: 2026-09-28
 > **定位**：把「注意力 × Mamba/SSM」怎么混、混在哪、长文检索谁扛」收成一份可对照的设计菜谱。主文 Bae、Acun、Lin 等（FAIR at Meta / Meta / KAIST AI），*Hybrid Architectures for Language Models: Systematic Analysis and Design Insights*（[arXiv:2510.04800](https://arxiv.org/abs/2510.04800)）。
 > **研究线**：架构思想——层间（inter-layer）与层内（intra-layer）杂交策略、块比例与摆放、长上下文检索分工。
 > **硬划界**：
-> - **≠ [[Nemotron3Ultra]]**：不写 Ultra 单机 Hybrid + LatentMoE、agentic 后训练或量化配方。
+> - **≠ [[Nemotron3Ultra技术报告深读]]**：不写 Ultra 单机 Hybrid + LatentMoE、agentic 后训练或量化配方。
 > - **≠ [[Qwen38Next架构深读]]**：不写 GDN / QSA / Flash-Next 产品差分。
 > **禁止编造**：块比、摆放、消融结论一律锚定上述 PDF；不外推超大规模产品数字。
 
@@ -98,7 +98,7 @@ archived: 2026-09-28
 
 ## 五、与库内交叉
 
-[[Nemotron3Ultra]] 是 **某一产品** 上 Hybrid Mamba–Attention + LatentMoE 的整机配方；本篇是 Meta 对照实验给出的 **通用混法菜谱**，不替代 Ultra 深读。[[Qwen38Next架构深读]] 讲的是 GDN / QSA 等 **另一套线性×注意力产品差分**；本篇基元是 Mamba 2 + 标准注意力，设计原则可类比迁移，但不重写 Qwen 产品章。
+[[Nemotron3Ultra技术报告深读]] 是 **某一产品** 上 Hybrid Mamba–Attention + LatentMoE 的整机配方；本篇是 Meta 对照实验给出的 **通用混法菜谱**，不替代 Ultra 深读。[[Qwen38Next架构深读]] 讲的是 GDN / QSA 等 **另一套线性×注意力产品差分**；本篇基元是 Mamba 2 + 标准注意力，设计原则可类比迁移，但不重写 Qwen 产品章。
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "开源代码旗舰：Qwen3-Coder-Next Technical Report（≠ 3 / 6）"
-topic: Qwen3CoderNext
+topic: Qwen3CoderNext技术报告深读
 date: 2026-09-22
 lines: [架构思想, 训练—agent 反馈接口, 评测字段]
 status: archived
@@ -14,7 +14,7 @@ aux:
  - https://www.modelscope.cn/models/Qwen/Qwen3-Coder-Next
  - https://github.com/QwenLM/Qwen3-Coder
 arxiv: ["2603.00729"]
-related: ["Qwen38Next架构深读", "SWEBenchPro代码修复评测", "代码智能体Harness史线", "Nemotron3Ultra", "OLMo3全栈开放配方", "Qwen3技术报告深读", "ToolLoop工具数据合成"]
+related: ["Qwen38Next架构深读", "SWEBenchPro代码修复评测", "代码智能体Harness史线", "Nemotron3Ultra技术报告深读", "OLMo3全栈开放配方", "Qwen3技术报告深读", "ToolLoop工具数据合成"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[Qwen38Next架构深读]]**：禁止把本卡写成 **Qwen3.8-Next / Flash-Next** 架构复述（GDN+全注意力、CPT 换 QSA、Gated Residual、n-gram、Muon/稳定性）。本报告仅声明底座为 **Qwen3-Next** hybrid MoE；架构细节一律 **交叉引用 [[Qwen38Next架构深读]] / 官方 Qwen3-Next 博文**，本卡不重开。
 > - **≠ [[SWEBenchPro代码修复评测]]**：禁止重写 **SWE-Bench Pro / Pro Verified** 的评测设计、三分集、anti-hacking 协议正文。本卡只把 Pro / Verified / Multilingual 当 **文内对照榜数字**（Table 3–4），不立评测轴。
 > - **≠ [[代码智能体Harness史线]]**：禁止重写 SWE-agent ACI / OpenHands SDK / harness 控制环通史；scaffold 名仅作 **数据生成与评测脚手架引用**。
-> - **≠ [[Nemotron3Ultra]] / [[OLMo3全栈开放配方]]**：禁止写成 Nemotron 3 Ultra / OLMo 3 开源旗舰对照全文；他厂模型只出现在 **文内表数字转述**。
+> - **≠ [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]]**：禁止写成 Nemotron 3 Ultra / OLMo 3 开源旗舰对照全文；他厂模型只出现在 **文内表数字转述**。
 > - **≠ [[Qwen3技术报告深读]]**：禁止重写 Qwen3 Dense/MoE 全家桶、think/no_think、四阶段后训练通史。
 > **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。图柱未与表对齐的读数标 **待核实读图**。文内未给出的精确总 token 账本 / 层宽专家表 → **不得外推**。
 
@@ -67,7 +67,7 @@ timezone: Asia/Shanghai (CST)
 | **Qwen3 通史** | Dense/MoE 全家桶、think 协议 | **[[Qwen3技术报告深读]]** | **否** |
 | **SWE-Bench Pro 评测设计** | 长程抗污染、三分集、Verified 校正 | **[[SWEBenchPro代码修复评测]]** | **否**（仅引文内分数） |
 | **Agent harness / ACI** | SWE-agent 控制环、OpenHands SDK | **[[代码智能体Harness史线]]** | **否**（仅 scaffold 名） |
-| **Nemotron 3 Ultra / OLMo 3** | 他厂开源旗舰 TR | **[[Nemotron3Ultra]] / [[OLMo3全栈开放配方]]** | **否** |
+| **Nemotron 3 Ultra / OLMo 3** | 他厂开源旗舰 TR | **[[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]]** | **否** |
 | **可执行反馈的代码专用训练栈** | 任务合成、MegaFlow、专家 RL、蒸馏 | **本篇** | **是** |
 
 跟读直觉：[[Qwen38Next架构深读]] 问「**通用 Next 怎么训得稳、推得省**」；本卡问「**同一小激活脚印上，如何用可执行反馈把 agentic 编码推上去**」。二者共享「Next / MoE」命名空间，但主杠杆完全不同——禁止滑成架构附录。
@@ -78,7 +78,7 @@ timezone: Asia/Shanghai (CST)
  ┌──────────┼──────────┐
  ▼ ▼ ▼
  通用架构 TR 代码 agent TR 评测/harness
- [[Qwen38Next架构深读]] 本篇 [[Qwen3CoderNext]] [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]]
+ [[Qwen38Next架构深读]] 本篇 [[Qwen3CoderNext技术报告深读]] [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]]
  (禁复述) 可执行反馈栈 (仅引数字/名)
 `
 
@@ -219,12 +219,12 @@ Qwen3-Next base（架构细部 → [[Qwen38Next架构深读]] / 官方博文，�
 `
 
 **跟读口诀：**
-[[Qwen38Next架构深读]] = 通用 Next 怎么省怎么稳 → [[Qwen3CoderNext]] = 3B 激活上如何用可执行反馈练成编码 agent → [[SWEBenchPro代码修复评测]]/[[代码智能体Harness史线]] = 测什么 / 沙箱怎么转（本卡只借分数与名字）。
+[[Qwen38Next架构深读]] = 通用 Next 怎么省怎么稳 → [[Qwen3CoderNext技术报告深读]] = 3B 激活上如何用可执行反馈练成编码 agent → [[SWEBenchPro代码修复评测]]/[[代码智能体Harness史线]] = 测什么 / 沙箱怎么转（本卡只借分数与名字）。
 
 1. **二进制**：`https://arxiv.org/abs/2603.00729`（**2.55MB / 23p**）→ **官方 HTTPS 外链**；GitHub 官方镜像 **辅链**，不必强制双存。
 2. **抽取**：已落 。
-3. **笔记路径**：[[Qwen3CoderNext]]（本文件）。
-4. **交叉链**：`related` → [[Qwen38Next架构深读]] / [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]] / [[Nemotron3Ultra]] / [[OLMo3全栈开放配方]] / [[Qwen3技术报告深读]] / [[ToolLoop工具数据合成]]；正文禁止展开其主课。
+3. **笔记路径**：[[Qwen3CoderNext技术报告深读]]（本文件）。
+4. **交叉链**：`related` → [[Qwen38Next架构深读]] / [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]] / [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]] / [[Qwen3技术报告深读]] / [[ToolLoop工具数据合成]]；正文禁止展开其主课。
 5. **待核实 / 禁外推**：中训精确总 token（仅「trillions」）；Figure 1 柱高；80A3 的层/专家/隐宽细表（**本 PDF 未给**）；勿把「基于 Qwen3-Next」误写成「Qwen3.8-Next 架构附录」。
 6. **勿混并**：SWE-Bench Pro **分数**（本卡）≠ Pro **基准设计**（[[SWEBenchPro代码修复评测]]）；Table 10 与 Table 11 任务量 **分表引用**。
 

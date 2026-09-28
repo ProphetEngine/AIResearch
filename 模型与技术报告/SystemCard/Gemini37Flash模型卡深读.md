@@ -1,5 +1,5 @@
 ---
-topic: Gemini37FlashModelCard
+topic: Gemini37Flash模型卡深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 官方 PDF：`https://deepmind.google/models/model-cards/gemini-3-7-flash/`（**9** 页 A4；Title: *Gemini-3-7-Flash-Model-Card.pdf*；Producer: Skia/PDF m154 Google Docs Renderer）
 > 卡页：https://deepmind.google/models/model-cards/gemini-3-7-flash/
 > PDF URL：https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-7-Flash-Model-Card.pdf
-> 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3ProModelCard.md
+> 对照笔记：模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md
 > **只写增量**：相对 2.5 TR / 3 Pro Model Card 已入库面；本卡大量字段「see Gemini 3.6 Flash model card」——**本仓库未入库 3.6 Flash 卡**，不得把 3 Pro / 2.5 数字外推为 3.7 架构主张。
 > **禁止编造**：参数量、专家数、未写明的层图/训练规模一律标「未公开 / defer 至 3.6」；能力榜分仅写第 5 页表 / 卡页可读数字。
 
@@ -50,7 +50,7 @@ archived: 2026-09-22
 
 ## 2. 相对 Gemini 2.5 TR / 3 Pro Model Card 的增量对照
 
-> 对照源：本卡原文 + 本地 模型与技术报告/厂商报告/Gemini25技术报告深读.md、模型与技术报告/SystemCard/Gemini3ProModelCard.md。只写两侧可锚定或本卡显式相对前代的句子。本卡对照列主轴是 **3.6 Flash**（未入库），故下表「相对 2.5 / 3 Pro」= 产品字段与安全框架差分，**不是**把 3.7 能力表硬并到 3 Pro 第 5 页同名榜。
+> 对照源：本卡原文 + 本地 模型与技术报告/厂商报告/Gemini25技术报告深读.md、模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md。只写两侧可锚定或本卡显式相对前代的句子。本卡对照列主轴是 **3.6 Flash**（未入库），故下表「相对 2.5 / 3 Pro」= 产品字段与安全框架差分，**不是**把 3.7 能力表硬并到 3 Pro 第 5 页同名榜。
 
 ### 2.1 产品 / 文档形态
 
@@ -218,7 +218,7 @@ archived: 2026-09-22
 | 主 PDF | `https://deepmind.google/models/model-cards/gemini-3-7-flash/` |
 | 卡页 | https://deepmind.google/models/model-cards/gemini-3-7-flash/ |
 | 方法页 | https://deepmind.google/models/evals-methodology/gemini-3-7-flash |
-| 2.5 / 3 Pro 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3ProModelCard.md |
+| 2.5 / 3 Pro 对照 | 模型与技术报告/厂商报告/Gemini25技术报告深读.md；模型与技术报告/SystemCard/Gemini3Pro模型卡深读.md |
 
 ### 5.3 跟读回填建议（不写进事实栏）
 
@@ -235,7 +235,7 @@ Gemini 3.7 Flash Model Card（**2026-08-13** 发布，**9** 页）把该型号�
 
 ## 相关笔记
 
-- [[Gemini37FlashModelCard|Gemini 3.7 Flash]]
+- [[Gemini37Flash模型卡深读]]
 - [[KV缓存量化与压缩|KV Cache 量化]]
 - [[连续批处理与Orca|Continuous Batching / Orca]]
 - [[机制可解释性入门|机制可解释性]]

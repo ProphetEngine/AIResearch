@@ -11,7 +11,7 @@ archived: 2026-09-22
 > 攻坚线：**架构思想（主）**
 > 锚点：OpenAI, *GPT-5.1 Instant and GPT-5.1 Thinking System Card Addendum*（封面日期 **November 12, 2025**）
 > 官方 PDF：`https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf`（**5** 页；CreationDate/ModDate **2025-11-13** 00:38:05 CST）
-> 主卡对照：模型与技术报告/SystemCard/GPT5SystemCard.md（GPT-5 System Card，封面 **2025-08-13**）
+> 主卡对照：模型与技术报告/SystemCard/GPT5系统卡深读.md（GPT-5 System Card，封面 **2025-08-13**）
 > 扫描入口：模型与技术报告/SystemCard与TR扫描2025至2026.md（deploymentsafety / CDN PDF）
 > **禁编造**：本 addendum **无能力榜分、无参数量/架构细节**；数字仅取正文/表格显式值；线上 A/B 仅写作者定性结论（wide error bars / low statistical confidence），不臆造百分点。
 
@@ -44,7 +44,7 @@ archived: 2026-09-22
 
 ## 2. 相对 GPT-5 System Card 的增量对照
 
-> 对照轴：本 addendum ↔ 模型与技术报告/SystemCard/GPT5SystemCard.md 所据主卡（封面 2025-08-13，60 页）。
+> 对照轴：本 addendum ↔ 模型与技术报告/SystemCard/GPT5系统卡深读.md 所据主卡（封面 2025-08-13，60 页）。
 > 仅写两边都能锚定的差分；主卡有而本卡未重跑/未复述的项标「本卡未覆盖」。
 
 | 维度 | GPT-5 System Card（主卡） | 本 Addendum（5.1） |
@@ -184,7 +184,7 @@ archived: 2026-09-22
 
 ### 4.3 相关研究会笔记
 
-- 模型与技术报告/SystemCard/GPT5SystemCard.md — GPT-5 主卡深读（本卡直接增量对象）
+- 模型与技术报告/SystemCard/GPT5系统卡深读.md — GPT-5 主卡深读（本卡直接增量对象）
 - 模型与技术报告/SystemCard与TR扫描2025至2026.md — 系列卡下载与 P1「5.1/5.2 增补卡」排队
 - 模型与技术报告/开源与闭源前沿模型谱系.md — 统一系统 / Instant·Thinking 产品谱系
 - Harness/智能体与工具/智能体工具与长程任务.md — 工具/路由叙事（本卡未新增注入数字）
@@ -196,12 +196,12 @@ archived: 2026-09-22
 ## 相关笔记
 
 ### 技术报告专项
-- [[GPT5SystemCard|TR GPT-5]]
+- [[GPT5系统卡深读]]
 - [[GPT51SystemCard附录|TR GPT-5.1 Addendum]]
 - [[GPT52SystemCard更新|TR GPT-5.2 Update]]
 - [[Gemini25技术报告深读|TR Gemini 2.5]]
-- [[Gemini3ProModelCard|TR Gemini 3 Pro Model Card]]
-- [[ClaudeOpus41SystemCard|TR Claude Opus 4.1]]
-- [[ClaudeOpus45SystemCard|TR Claude Opus 4.5]]
+- [[Gemini3Pro模型卡深读]]
+- [[ClaudeOpus41系统卡附录深读]]
+- [[ClaudeOpus45系统卡深读]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
 

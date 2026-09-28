@@ -47,5 +47,5 @@ status: active
 
 - [[MOC_对齐与强化学习|E 对齐 · RL]]
 - [[MOC_模型与技术报告|J 模型谱系与 TR]]
-- [[MOC_Harness|D 智能体]]（智能体场景安全）
+- [[MOC_智能体Harness]]（智能体场景安全）
 

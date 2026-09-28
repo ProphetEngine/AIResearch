@@ -252,9 +252,9 @@ archived: 2026-09-22
 - [[DeepSeekV3训练与MoE基建|TR DeepSeek-V3]]
 - [[Qwen3技术报告深读|TR Qwen3]]
 - [[DeepSeekR1推理训练深读|TR DeepSeek-R1]]
-- [[GPT5SystemCard|TR GPT-5]]
+- [[GPT5系统卡深读]]
 - [[Gemini25技术报告深读|TR Gemini 2.5]]
-- [[ClaudeOpus45SystemCard|TR Claude Opus 4.5]]
+- [[ClaudeOpus45系统卡深读]]
 - [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
 
 ### 相关深度笔记
