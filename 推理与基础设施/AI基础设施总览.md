@@ -219,19 +219,19 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 ## 相关笔记
 
 ### P0
-- [[注意力与Transformer核心思想|Attention / Transformer]]
-- [[DecoderOnly与GPT路线|Decoder-only / GPT]]
-- [[规模定律与预训练范式|规模定律与预训练]]
-- [[混合专家架构|MoE / 稀疏激活]]
-- [[对齐脉络RLHF与偏好优化|对齐 RLHF / DPO]]
-- [[推理时扩展TestTimeScaling|Test-time scaling]]
-- [[开源与闭源前沿模型谱系|前沿模型谱系]]
+- [[注意力与Transformer核心思想]]
+- [[DecoderOnly与GPT路线]]
+- [[规模定律与预训练范式]]
+- [[混合专家架构]]
+- [[对齐脉络RLHF与偏好优化]]
+- [[推理时扩展TestTimeScaling]]
+- [[开源与闭源前沿模型谱系]]
 
 ### P1
-- [[长上下文位置编码与系统侧|长上下文]]
-- [[多模态架构脉络|多模态]]
-- [[AI基础设施总览|AI Infra]]
-- [[注意力效率族MQA到MLA|注意力效率]]
-- [[LLaMA开源生态里程碑|LLaMA 生态]]
+- [[长上下文位置编码与系统侧]]
+- [[多模态架构脉络]]
+- [[AI基础设施总览]]
+- [[注意力效率族MQA到MLA]]
+- [[LLaMA开源生态里程碑]]
 
 

@@ -242,9 +242,9 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 
 ## 相关笔记
 
-- [[MatterSim材料基础模型|MatterSim]]
-- [[芯片设计AI|AlphaChip / ChipExpert]]
-- [[科研智能体|Science Agents]]
-- [[AgentBazaar经济对齐|Agent Bazaar]]
-- [[网络防御基准|Cyber Defense Benchmark]]
+- [[MatterSim材料基础模型]]
+- [[芯片设计AI]]
+- [[科研智能体]]
+- [[AgentBazaar经济对齐]]
+- [[网络防御基准]]
 

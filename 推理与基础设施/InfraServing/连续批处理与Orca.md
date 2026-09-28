@@ -189,12 +189,12 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 ## 相关笔记
 
 - [[Gemini37Flash模型卡深读]]
-- [[KV缓存量化与压缩|KV Cache 量化]]
-- [[连续批处理与Orca|Continuous Batching / Orca]]
-- [[机制可解释性入门|机制可解释性]]
-- [[世界模型与VJEPA|World Models / V-JEPA]]
-- [[SpeechLLM语音语言模型|Speech LLM]]
-- [[视觉语言动作谱系|Robotics / VLA]]
-- [[智能体长程记忆|Agent 长期记忆]]
-- [[可扩展监督与弱到强|Scalable Oversight]]
+- [[KV缓存量化与压缩]]
+- [[连续批处理与Orca]]
+- [[机制可解释性入门]]
+- [[世界模型与VJEPA]]
+- [[SpeechLLM语音语言模型]]
+- [[视觉语言动作谱系]]
+- [[智能体长程记忆]]
+- [[可扩展监督与弱到强]]
 
