@@ -11,7 +11,7 @@ urls:
  - https://arxiv.org/pdf/2606.16939
  - https://transformer-circuits.pub/2025/attribution-graphs/methods.html
  - https://transformer-circuits.pub/2025/attribution-graphs/biology.html
-arxiv: ["2606.16939"] # Anthropic 两篇 HTML：禁止虚构 arXiv 号
+arxiv: ["2606.16939"] # Anthropic 两篇为 HTML，无 arXiv 号
 related:
  - "机制可解释性入门"
  - "审慎对齐与断路器"
@@ -25,11 +25,11 @@ timezone: Asia/Shanghai (CST)
 > - **CircuitLasso**（Yin, Wei, Gao, Dhurandhar, Natesan Ramamurthy, Yu；arXiv:**2606.16939v1**）：用 **观测式稀疏线性回归（Lasso）** 在神经元 / SAE 特征上恢复依赖骨架；宣称与干预式基线 **结构精度持平、算力更低**，并扩到高维 SAE。
 > - **Anthropic Circuit Tracing / attribution graphs**（Ameisen et al.，*Transformer Circuits Thread*，**2025-03-27**）：用 **cross-layer transcoder（CLT）→ replacement model → 逐提示归因图**，再以干预检验机理；**Biology** 同伴文把同套方法落到 Claude 3.5 Haiku 多行为案。
 > **攻坚线**：**架构思想 / 方法接口（主）**——观测稀疏回归 vs 可替换模型上的线性归因；**干预 faithfulness 字段（辅）**——InterpBench SHD/runtime、CoLA faithfulness/completeness、CLT 重构/L0、节点→logit / 特征→特征影响相关、局部替换模型扰动一致性。
-> **硬划界（开篇钉死）**：
-> - **≠ [[激活操控与表征工程]]（RepE / Activation Steering）**：本卡 **不** 主写推理期「加/减概念向量」操控行为；只在对照句点出「读表征」与「发现电路」正交。禁止把 CircuitLasso / 归因图写成 ActAdd/CAA/ITI 续作。
-> - **≠ [[机制可解释性入门]]（MI 通史）**：禁止重写 polysemanticity → SAE → sparse feature circuits 的 **入门阶梯叙事**；[[机制可解释性入门]] 已立概念骨架与 Circuit Tracing **证据结构摘要**。本卡下沉到 **可扩展电路学习算法接口 + 归因图方法细节与 faithfulness 字段**。
-> - **≠ [[审慎对齐与断路器]]（Deliberative Alignment + Circuit Breakers）**：[[审慎对齐与断路器]] 的「circuit」是 **安全产品 / Representation Rerouting 熔断**；本卡「circuit」是 **机制可解释性子图**。禁止把熔断训练写成电路发现。
-> **禁止编造**：主张、表号、百分比、页数一律锚定官方 PDF 与 2026-09-22 CST 核对的官方 HTML；**Anthropic 两文无 arXiv PDF → 禁止虚构 arXiv 号**。
+> **范围与相邻笔记**：
+> - **≠ [[激活操控与表征工程]]（RepE / Activation Steering）**：本卡 **不** 主写推理期「加/减概念向量」操控行为；只在对照句点出「读表征」与「发现电路」正交。不把 CircuitLasso / 归因图写成 ActAdd/CAA/ITI 续作。
+> - **≠ [[机制可解释性入门]]（MI 通史）**：不重写 polysemanticity → SAE → sparse feature circuits 的 **入门阶梯叙事**；[[机制可解释性入门]] 已立概念骨架与 Circuit Tracing **证据结构摘要**。本卡下沉到 **可扩展电路学习算法接口 + 归因图方法细节与 faithfulness 字段**。
+> - **≠ [[审慎对齐与断路器]]（Deliberative Alignment + Circuit Breakers）**：[[审慎对齐与断路器]] 的「circuit」是 **安全产品 / Representation Rerouting 熔断**；本卡「circuit」是 **机制可解释性子图**。不把熔断训练写成电路发现。
+> **主要来源**：官方 PDF 与 [transformer-circuits.pub](https://transformer-circuits.pub) 官方 HTML（2026-09-22 CST 核对）；Anthropic 两文无 arXiv PDF。
 
 ---
 
@@ -38,7 +38,7 @@ timezone: Asia/Shanghai (CST)
 | 角色 | 标识 | 一手形态 | 链接 | 页数 / 日期 | 备注 |
 |---|---|---|---|---|---|
 | **主 A** | Yin et al., *Scalable Circuit Learning for Interpreting Large Language Models*（CircuitLasso） | arXiv:**2606.16939v1** \[cs.LG\] **Submitted 15 Jun 2026**；MI Workshop @ ICML 2026 | `https://arxiv.org/abs/2606.16939` | **19** 页 letter | **官方 HTTPS 外链** |
-| **主 B** | Ameisen, Lindsey, Pearce, Gurnee, Turner, Chen, Citro et al., *Circuit Tracing: Revealing Computational Graphs in Language Models* | **官方 HTML**（**无 arXiv PDF**）；Published **March 27, 2025** | https://transformer-circuits.pub/2025/attribution-graphs/methods.html | HTML 方法页 | **正式外链**；**禁止虚构 arXiv** |
+| **主 B** | Ameisen, Lindsey, Pearce, Gurnee, Turner, Chen, Citro et al., *Circuit Tracing: Revealing Computational Graphs in Language Models* | **官方 HTML**（**无 arXiv PDF**）；Published **March 27, 2025** | https://transformer-circuits.pub/2025/attribution-graphs/methods.html | HTML 方法页 | **正式外链**；**无 arXiv 号** |
 | **补链 C** | Lindsey, Gurnee, Ameisen et al., *On the Biology of a Large Language Model* | **官方 HTML**；Published **March 27, 2025**（methods 同伴） | https://transformer-circuits.pub/2025/attribution-graphs/biology.html | Claude 3.5 Haiku 案 | **补链**；不升主写全案 |
 
 **一手 URL（2026-09-22 CST 核对）：**
@@ -58,7 +58,7 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
-| MI 概念阶梯（特征→电路→归因图史） | 为何要 SAE、电路节点如何进化 | **[[机制可解释性入门]]** | **否**（禁通史重写） |
+| MI 概念阶梯（特征→电路→归因图史） | 为何要 SAE、电路节点如何进化 | **[[机制可解释性入门]]** | **否**（不重写通史） |
 | RepE / ActAdd / CAA / ITI | 推理期对激活加向量改行为 | **[[激活操控与表征工程]]** | **否**（≠ 操控主轴） |
 | Deliberative Alignment + Circuit Breakers（RR） | 规范 CoT / 表征熔断安全产品 | **[[审慎对齐与断路器]]** | **否**（「circuit」同名异物） |
 | **可扩展电路学习 + 归因图方法** | 如何高效发现/验证机制子图 | **本篇** | **是** |
@@ -154,7 +154,7 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 ## 四、主文 B · Anthropic Circuit Tracing：CLT → 归因图 → 干预
 
-> **形态声明：** 一手为 **https://transformer-circuits.pub** HTML（Published **2025-03-27**）。仓库 **无** 对应 arXiv PDF；**禁止编造 arXiv 号**。[[机制可解释性入门]] 已写概念阶梯；本节写 **方法接口与可核对字段**。
+> **形态声明：** 一手为 **https://transformer-circuits.pub** HTML（Published **2025-03-27**）。**无** 对应 arXiv PDF。[[机制可解释性入门]] 已写概念阶梯；本节写 **方法接口与可核对字段**。
 
 ### 4.1 流水线（methods 开篇主张）
 
@@ -212,13 +212,13 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 **案目录（HTML Contents，名称级）：** Multi-step Reasoning；Planning in Poems；Multilingual Circuits；Addition；Medical Diagnoses；Entity Recognition and Hallucinations；Refusals；Life of a Jailbreak；Chain-of-thought Faithfulness；Uncovering Hidden Goals in a Misaligned Model；另有 Commonly Observed Circuit Components / Limitations。
 
-**与方法接口直接相关的消费点（摘要，禁剧本化 jailbreak 步骤）：**
+**与方法接口直接相关的消费点（摘要，不含 jailbreak 步骤）：**
 - **CoT Faithfulness：** 可区分「真在算」vs「bullshit」vs「从人类暗示倒推」的归因结构（例 $\sqrt{0.64}$ vs $\cos(23423)$）。
 - **诗歌规划：** 在换行 token 上提前激活候选韵脚特征；抑制偏好计划可改写后续行。
 - **多语 / 加法：** 语言无关抽象与跨情境复用加法电路；相对更小模型更显著。
 - **幻觉 / 实体：** “can’t answer” 等抑制回路——对应 methods 对 **inactive / inhibitory** 局限的正面例。
 
-**安全相关案（拒答 / jailbreak / 隐藏目标）：** 本卡只保留「存在可归因内部结构」的索引级结论；**禁止**复述可复用攻击步骤或提示全文（与 [[审慎对齐与断路器]] / [[激活操控与表征工程]] 硬约束一致）。
+**安全相关案（拒答 / jailbreak / 隐藏目标）：** 本卡只保留「存在可归因内部结构」的索引级结论；不复述可复用攻击步骤或提示全文（与 [[审慎对齐与断路器]] / [[激活操控与表征工程]] 的安全范围一致）。
 
 ---
 
@@ -251,9 +251,9 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 ---
 
-## 九、待核实 / 刻意省略
+## 九、局限与待核实
 
 - CircuitLasso 附录 Table 3–7 逐特征标签与 $\lambda$ 消融曲线点：未全表抄录。
 - Anthropic HTML 内嵌交互图 / 曲线的精确像素读数：以官方页为准，本卡只用正文明确写出的聚合数。
 - CLT / SAE 训练算力美元级估计：methods 提及「open-weights cost estimates」链出，本卡不二次估算。
-- Biology 九案机制细节：升主需另开专题卡；本波仅补链。
+- Biology 九案机制细节：升主需另开专题卡；目前仅补链。

@@ -1,5 +1,5 @@
 ---
-title: "多模态安全评测：MMJailBench + OmniSafeBench-MM（≠ B5 / 防御对齐篇 / 多模态通史）"
+title: "多模态安全评测：MMJailBench + OmniSafeBench-MM（≠ 红队通史 / 防御对齐篇 / 多模态通史）"
 topic: 多模态越狱与OmniSafe
 date: 2026-09-22
 lines: [评测字段, 架构思想]
@@ -8,7 +8,7 @@ sources:
  - https://arxiv.org/abs/2608.25490
  - https://arxiv.org/abs/2512.06589
 arxiv: ["2608.25490", "2512.06589"]
-related: ["B5", "宪法分类器防御", "审慎对齐与断路器", "StatutoryAI法律规范对齐", "多模态架构脉络", "QwenOmni音视频原生"]
+related: ["安全红队与对抗评测", "宪法分类器防御", "审慎对齐与断路器", "StatutoryAI法律规范对齐", "多模态架构脉络", "QwenOmni音视频原生"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
@@ -19,13 +19,12 @@ timezone: Asia/Shanghai (CST)
 > - **MMJailBench**（*A Factorized Benchmark for Disentangling Multimodal Jailbreak Vulnerabilities*）：把实例拆成 **有害意图 × 提示框架 × 视觉语义 × 指令载体** 四因子可控组合，做因子级归因。
 > - **OmniSafeBench-MM**（*A Unified Benchmark and Toolbox for Multimodal Jailbreak Attack–Defense Evaluation*）：统一 **数据集 + 攻击/防御方法库 + H–A–D 三维评分**，做攻防对照与安全–效用权衡。
 > **攻坚线**：**评测字段 / 因子与指标定义（主）** + **架构思想（辅，仅评测设计接口）**。
-> **硬划界（开篇钉死）**：
-> - **≠ B5**：禁止重写红队流程、众包协议与 ASR 闭环通史；本卡只写 **多模态基准的因子轴与汇总指标**。
+> **范围与相邻笔记**：
+> - **≠ [[安全红队与对抗评测]]**：不重写红队流程、众包协议与 ASR 闭环通史；本卡只写 **多模态基准的因子轴与汇总指标**。
 > - **≠ [[宪法分类器防御]] / [[审慎对齐与断路器]] / [[StatutoryAI法律规范对齐]]**：不写 Constitutional Classifiers 部署侧护栏、Deliberative Alignment / Circuit Breakers 对齐范式、Statutory AI 法律规范对齐；防御方法在本卡 **仅作 OmniSafe 工具箱分类名录 + 公开 ASR 聚合**，不展开训练/部署配方。
 > - **≠ [[多模态架构脉络]]**：不写 CLIP→Flamingo→LLaVA→原生多模态通史；本卡不谈视觉–语言架构脉络。
 > - **≠ [[QwenOmni音视频原生]]**：不写 Qwen-Omni Thinker–Talker / AuT / 流式语音产品栈；Omni 仅出现在 **评测对象名** 时索引一句。
-> **硬约束**：**禁止**侧写可复现越狱步骤、载荷、对抗提示全文/样例模板正文；只保留公开论文中的 **因子定义（名称级）与汇总指标**（ASR / CASR / H–A–D / 安全分等）。攻击/防御条目 **只列公开方法名与类别**，不抄优化目标逐步配方。
-> **禁止编造**：主张、表数字、页数一律锚定官方 PDF（2026-09-22 CST）。
+> **安全范围**：不写可复现越狱步骤、载荷、对抗提示全文/样例模板正文；只保留公开论文中的 **因子定义（名称级）与汇总指标**（ASR / CASR / H–A–D / 安全分等）。攻击/防御条目 **只列公开方法名与类别**，不抄优化目标逐步配方。
 
 ---
 
@@ -49,18 +48,18 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 / 同波 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
-| **B5** | 「拒答可被对抗输入撬动」动机一句；ASR 作为 **公开聚合指标名** | 众包红队协议、攻击剧本、规模扫描通史 |
+| **[[安全红队与对抗评测]]** | 「拒答可被对抗输入撬动」动机一句；ASR 作为 **公开聚合指标名** | 众包红队协议、攻击剧本、规模扫描通史 |
 | **[[宪法分类器防御]]** | 部署侧分类器护栏 **不入主轴**；OmniSafe 的 Llama-Guard / ShieldLM 等仅作 **方法名索引** | constitution→合成数据→input/output/exchange 级联工程 |
 | **[[审慎对齐与断路器]]** | Deliberative / Circuit Breakers **不入主轴** | 规范 CoT 训练、表征熔断 / Rerouting |
 | **[[StatutoryAI法律规范对齐]]** | Statutory 法律规范对齐 **不入主轴** | 刑法条文→批判修订环 |
 | **[[多模态架构脉络]]** | 「MLLM 联合解释语言与视觉」动机一句 | CLIP / Flamingo / LLaVA 架构通史 |
 | **[[QwenOmni音视频原生]]** | 评测表出现 Qwen3-VL / Omni 产品名时 **仅作被测对象** | AuT / Thinker–Talker / 流式语音栈 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
-| 主轴（写） | 禁区（不写） |
+| 主轴（写） | 范围外（不写） |
 |---|---|
 | 因子 / 风险域 / 询问类型的 **公开名称级定义** | 对抗提示正文、模板槽位填法、载荷字符串 |
 | ASR、CASR、H/A/D、Jailbreak Success Score **公式与阈值** | 逐步优化目标、梯度攻击复现步骤、绕过 checklist |
@@ -75,7 +74,7 @@ timezone: Asia/Shanghai (CST)
 
 现有多模态 jailbreak 基准常把 **有害意图、提示框架、视觉语义、指令载体** 缠在同一固定图文对里，报告的 ASR 主要反映「某一测试集上的总体脆弱」，难以归因到具体因子（文内 Fig.1 / §1）。MMJailBench 用可控笛卡尔组合构造匹配场景，使「换一个因子、固定其余」成为可能。
 
-### 3.2 四因子定义（名称级；禁模板正文）
+### 3.2 四因子定义（名称级；不含模板正文）
 
 文内实例形式（§3.1 Eq.1）：
 
@@ -121,7 +120,7 @@ $$
 
 **域不均（§5.1 / Table 1 叙述）：** Cyber / Economic / Privacy / Deception 类总体更高 ASR；Physical harm / Sensitive 类相对更低——聚合安全分会掩盖域弱点。
 
-**因子归因要点（§5.2，禁步骤）：**
+**因子归因要点（§5.2，不含步骤）：**
 
 1. **Prompt framing 主导变异**：最脆弱与最稳健框架之间差距可 **>40 pp**；story / structured / academic 总体更高 ASR，system-style / safety-paradox 相对更低（叙述 + Fig.3(a)；逐模型分框见 Table 9，本卡不逐格转抄以免接近模板侧写）。
 2. **任务相关视觉语义系统性抬升 ASR**（Table 2，相对 no-image 的 ΔASR）：Authorization document **+12.96**；Identity credential **+10.47**；Task scenario **+10.10**；Professional role **+8.83**；Dangerous context **+8.45**；blank/noise/nature 对照仅约 **+0.7∼2.2**。——文内解读：脆弱主要来自 **语境语义（合法性/权威暗示）**，而非「有图本身」。
@@ -179,7 +178,7 @@ A Ethical and Social Risks；B Privacy and Data Risks；C Safety and Physical Ha
 | On-model | Inference process intervention | COCA, HiddenDetect |
 | On-model | Intrinsic model alignment | VLGuard |
 
-→ **禁止**在本卡展开任一方法的可复现攻击/绕过步骤；名称仅作工具箱目录索引。与 **[[宪法分类器防御]]** 的「部署侧护栏工程」只交叉：Guard 类方法名出现时指回「off-model 插件」类别，不重写分类器训练。
+→ 本卡不展开任一方法的可复现攻击/绕过步骤；名称仅作工具箱目录索引。与 **[[宪法分类器防御]]** 的「部署侧护栏工程」只交叉：Guard 类方法名出现时指回「off-model 插件」类别，不重写分类器训练。
 
 ### 4.4 H–A–D 三维评测（核心指标定义）
 
@@ -197,7 +196,7 @@ A Ethical and Social Risks；B Privacy and Data Risks；C Safety and Physical Ha
 
 **二元成功事件（Eq.6）：** $J=1$ iff $S\ge 3$（即 Partial 或 Complete）。→ 相对传统「有害即成功」，本协议额外要求 **对齐 + 足够细节**，故文内白盒表上 Avg-D 偏低时 ASR 会被压低（§4.2 Table 2 讨论）。
 
-### 4.5 汇总实验结果（公开聚合；禁载荷）
+### 4.5 汇总实验结果（公开聚合；不含载荷）
 
 **被测规模：** 摘要写 **10 开源 + 8 闭源 = 18** MLLM；§4.1 点名闭源含 GPT-5、Gemini-2.5-Flash、Claude-Sonnet-4、Qwen3-VL-PLUS、Doubao-Seed；开源含 Qwen3-VL-30B-A3B、Gemma-3-27b-it、DeepSeek-VL2、GLM-4.1V、Kimi-VL 等（表/热图另含更多变体，以文内 Table 3 / Fig.4 为准）。
 
@@ -227,19 +226,18 @@ A Ethical and Social Risks；B Privacy and Data Risks；C Safety and Physical Ha
 | **主指标** | ASR（$s\ge 4$）、CASR | H–A–D → $S$ → $J$（$S\ge 3$） |
 | **规模感** | 16,320 控实例 × 16 模型 | 50 细类 × 3 语气；13×15 方法；18 模型 |
 | **互补用法** | 回答「**哪个上下文旋钮**最伤拒答」 | 回答「**哪类公开攻防**在统一尺上如何对照」 |
-| **与相邻卡** | ≠B5 流程；≠对齐范式篇 | Guard 名录 ≠ [[宪法分类器防御]] 工程全文 |
+| **与相邻卡** | ≠[[安全红队与对抗评测]] 流程；≠对齐范式篇 | Guard 名录 ≠ [[宪法分类器防御]] 工程全文 |
 
 **选用一句：** 做 **对齐缺陷诊断 / 消融** → 优先 MMJailBench 因子轴；做 **方法复现对照 / 防御回归 / 安全–效用权衡** → 优先 OmniSafeBench-MM 工具箱与 H–A–D。
 
 ---
 
-## 六、可核对主张清单（禁编造自检）
+## 六、可核对主张
 
 1. MMJailBench：272×6×5×2=**16,320**；16 模型；Avg ASR 跨度 **2.17%（gpt-5）–78.38%（glm-4.6v）**（Table 1）。
 2. 视觉语义 ΔASR 最大项为 Authorization document **+12.96 pp**（Table 2）；OCR 汇总 ASR **低于** TEXT（Table 3）。
 3. OmniSafe：风险细类 **50**、询问类型 **3**、攻击 **13**、防御 **15**、指标 **H–A–D**（Table 1 / §3）。
 4. Breach=$(H\ge 3)\land(A\ge 3)$；成功事件 $S\ge 3$（Eq.4–6）。
-5. 本笔记 **未**收录任何对抗提示样例、载荷字符串或逐步越狱步骤；表内仅为公开聚合 ASR / 安全分。
 
 ---
 

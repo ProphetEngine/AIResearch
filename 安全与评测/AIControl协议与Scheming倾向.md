@@ -18,7 +18,7 @@ archived: 2026-09-24
 # AI Control 协议与 scheming 倾向
 
 > **定位**：在「模型可能故意颠覆安全措施」前提下，把 **控制协议（蓝红评测）** 与近一年 **scheming 倾向（propensity）评测** 收成同一知识单元；配套栈以 ControlArena 公开文档为准。
-> **硬划界**：不重写 [[SHADEArena隐瞒与监控]] 任务表；不重写 [[安全论证SafetyCases]] CAE 树；不写具体越狱 / 攻击 payload 或可复用攻击步骤（仅防御、评测与协议层）。
+> **范围与相邻笔记**：不重写 [[SHADEArena隐瞒与监控]] 任务表；不重写 [[安全论证SafetyCases]] CAE 树；不写具体越狱 / 攻击 payload 或可复用攻击步骤（仅防御、评测与协议层）。
 
 ---
 

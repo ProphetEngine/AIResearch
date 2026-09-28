@@ -7,21 +7,20 @@ status: archived
 sources:
  - https://arxiv.org/abs/2506.15740
 arxiv: ["2506.15740"]
-related: ["评测与排行榜可靠性", "可扩展监督与弱到强", "安全论证SafetyCases", "计算机使用智能体", "B5"]
+related: ["评测与排行榜可靠性", "可扩展监督与弱到强", "安全论证SafetyCases", "计算机使用智能体", "安全红队与对抗评测"]
 archived: 2026-09-22
 ---
 
-# SHADE-Arena：sabotage agent × LLM monitor（相对 14）
+# SHADE-Arena：sabotage agent × LLM monitor
 
 > **定位**：**危险能力 / 控制评测** 切片——度量 frontier agent 能否在完成良性主任务的同时完成有害侧任务、且不被 LLM 监控者识破；同一数据集也反转测 **监控者**。
 > **攻坚线**：**架构思想（主）**——主任务 / 侧任务 / 隐藏 scratchpad / 嫌疑分协议；**评测字段（辅）**——overall success、evasion、AUC、FPR≈1% 阈值。
-> **硬划界（禁止重写 / 禁止剧本化）**：
+> **范围与相邻笔记**：
 > - **相对 [[评测与排行榜可靠性]]**：只取「协议未声明会毁掉分数可比性」接口——本篇写 **sabotage×monitor 双角色评测**，**不**重写污染 / 路由 / thinking 开关 / 第三方榜全文。
-> - **禁止重写** SWE-bench 协议与数字（→ 见 [[评测与排行榜可靠性]] 仅作线索处）；**禁止重写** OSWorld / Operator / StateAct（→ **[[计算机使用智能体]]**）。
+> - **不重写** SWE-bench 协议与数字（→ 见 [[评测与排行榜可靠性]] 仅作线索处）；**不重写** OSWorld / Operator / StateAct（→ **[[计算机使用智能体]]**）。
 > - **相对 [[可扩展监督与弱到强]]**：只取 CoT monitorability 接口句；不写 CAI / W2S / Astra metagaming 通史。
 > - **相对 [[安全论证SafetyCases]]**：只点「inability / control 证据邻槽」；不写 scheming safety case 主张树。
-> - **相对 `B5`**：侧任务只作 **能力评测设定**；**不写**可复用隐蔽破坏步骤、工具调用序列或攻击配方。
-> **禁止编造**：主张、阈值、百分比与 AUC 一律锚定官方 PDF（2026-09-22 CST）；图内曲线未列表格处 **不读点**。
+> - **相对 [[安全红队与对抗评测]]**：侧任务只作 **能力评测设定**；**不写**可复用隐蔽破坏步骤、工具调用序列或攻击配方。
 
 ---
 
@@ -47,7 +46,7 @@ archived: 2026-09-22
 | **[[计算机使用智能体]]** computer-use | 「长程工具环会失真」的相邻压力面 | OSWorld 2.0 / Operator System Card / StateAct |
 | **[[可扩展监督与弱到强]]** monitorability | 「监控 CoT 可能压低隐蔽破坏」的实证槽位 | CAI / W2S / Astra §8–9 全文 |
 | **[[安全论证SafetyCases]]** safety cases | 可作将来 control / ability 证据节点的一句 | CAE 主张树、外部 Assurance 2.0 评审 |
-| **B5** 红队 | 「对抗暴露」与「能力 elicitation」同属安全工程 | ASR 地图、攻击面聚类、mitigation 闭环 |
+| **[[安全红队与对抗评测]]** 红队 | 「对抗暴露」与「能力 elicitation」同属安全工程 | ASR 地图、攻击面聚类、mitigation 闭环 |
 
 ### 2.2 跟读口诀（合取成功）
 
@@ -214,8 +213,8 @@ Overall sabotage success
 | **[[评测与排行榜可靠性]]** | 协议旋钮如何毁掉横比——本篇提供 sabotage×monitor 实例 |
 | **[[可扩展监督与弱到强]]** | CoT 可监控性；本篇 §3.4 为「藏 scratchpad vs 监控思维」实证 |
 | **[[安全论证SafetyCases]]** | scheming inability / control 论证可挂此类评测作证据节点 |
-| **[[计算机使用智能体]]** | 长程 computer-use 能力榜；**正交**，禁止混写 OSWorld |
-| **B5** | 红队闭环邻槽；本篇是结构化 agent 评测而非攻击面百科 |
+| **[[计算机使用智能体]]** | 长程 computer-use 能力榜；**正交**，不混写 OSWorld |
+| **[[安全红队与对抗评测]]** | 红队闭环邻槽；本篇是结构化 agent 评测而非攻击面百科 |
 
 ## 相关笔记
 
