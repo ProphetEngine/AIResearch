@@ -292,8 +292,8 @@ Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** →
 | 已有 | 本篇关系 |
 |---|---|
 | [[DeepSeekR1推理训练深读]] §三 GRPO 公式与 Zero/R1 超参 | **交叉引用即可**；不重画 R1 阶段表 / 奖励式 (4)(8–10) 管线 |
-| `[[对齐脉络RLHF与偏好优化]]` RLHF / DPO / CAI | 上游对齐通史；本篇不重写偏好优化 |
-| `[[推理时扩展TestTimeScaling]]` test-time scaling | 只交叉「R1 用 GRPO」一句；算法族细节以本篇为准 |
+| [[对齐脉络RLHF与偏好优化]] RLHF / DPO / CAI | 上游对齐通史；本篇不重写偏好优化 |
+| [[推理时扩展TestTimeScaling]] test-time scaling | 只交叉「R1 用 GRPO」一句；算法族细节以本篇为准 |
 
 ---
 

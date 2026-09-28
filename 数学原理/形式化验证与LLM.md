@@ -15,14 +15,14 @@ archived: 2026-09-22
 
 # Formal verification for LLM：VeriCoT + AlphaProof
 
-> **定位**：相对 `[[过程奖励模型PRM谱系]]`（PRM 过程奖励）与 `[[GRPO与DAPO算法族]]` / R1（可验证奖励 RL），本篇只补 **符号 / 证明器接地的正确性保证** 枢纽：
+> **定位**：相对 [[过程奖励模型PRM谱系]]（PRM 过程奖励）与 [[GRPO与DAPO算法族]] / R1（可验证奖励 RL），本篇只补 **符号 / 证明器接地的正确性保证** 枢纽：
 > - **VeriCoT**：非数学域 NL CoT → FOL（SMT-LIB）+ Z3 逐步蕴涵/矛盾检查；
 > - **AlphaProof**：Lean 交互证明环境上的 AlphaZero 式 RL + 测试时 RL（TTRL）。
 > **研究线**：**架构思想（主）**——谁在仿什么、校验器接在哪；**数学原理（辅）**——FOL 蕴涵判定与 Lean 证明搜索里的状态/回报。
 > **范围与相邻笔记**：
-> - **不重写** `[[过程奖励模型PRM谱系]]` 的 PRM 标注流水线 / ORM vs PRM 谱系 / Math-Shepherd 自动逐步标签（本篇不写「逐步奖励模型怎么训」）。
-> - **不重写** `[[GRPO与DAPO算法族]]` 的 GRPO→DAPO 技巧清单，以及 [[DeepSeekR1推理训练深读]] 的 **R1 阶段表** / 规则奖励通史。
-> - **不重写** `[[推理时扩展TestTimeScaling]]` TTS 通史；AlphaProof 的 tree-search / TTRL 只作 **形式证明侧** 的 inference scaling，不串 o1/R1 产品叙事。
+> - **不重写** [[过程奖励模型PRM谱系]] 的 PRM 标注流水线 / ORM vs PRM 谱系 / Math-Shepherd 自动逐步标签（本篇不写「逐步奖励模型怎么训」）。
+> - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单，以及 [[DeepSeekR1推理训练深读]] 的 **R1 阶段表** / 规则奖励通史。
+> - **不重写** [[推理时扩展TestTimeScaling]] TTS 通史；AlphaProof 的 tree-search / TTRL 只作 **形式证明侧** 的 inference scaling，不串 o1/R1 产品叙事。
 > **主要来源**：官方 PDF 与 Nature 文 [doi:10.1038/s41586-025-09833-y](https://doi.org/10.1038/s41586-025-09833-y)（2026-09-22 CST）；VeriCoT 作者页 PDF 未另采。
 
 ---

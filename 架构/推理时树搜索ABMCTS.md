@@ -66,7 +66,7 @@ AB-MCTS 明确落在第 3 族，并主张：在 **编码等可拿外部反馈** 
 - Progressive Widening 的完整博弈论通史（文仅对照：PW 用访问次数启发式，**不**用已观察奖励做分支决策；Appendix C.4 有对照实验，本笔记只记结论）。
 - 完整 LATS / RAP / SWE-Search / RepoUnderstander 方法复述（§2 点名作「standard MCTS」谱系入口）。
 - TreeQuest 源码 walkthrough、PyMC 调参 playbook。
-- 把 Multi-LLM 写成 MoA / Debate 通史（→ 可交叉 `[[多智能体辩论]]` / `[[MixtureOfAgents与TUMIX]]`，本卡只写附录 D 的 **多 GEN / 多生成器选择**）。
+- 把 Multi-LLM 写成 MoA / Debate 通史（→ 可交叉 [[多智能体辩论]] / [[MixtureOfAgents与TUMIX]]，本卡只写附录 D 的 **多 GEN / 多生成器选择**）。
 
 ---
 
@@ -261,11 +261,11 @@ AB-MCTS ──► 每节点动态：GEN（宽） vs 已有孩子（深）
 
 ## 八、交叉引用
 
-- TTS 产品 / 训练侧通史 → `[[推理时扩展TestTimeScaling]]`
-- 过程奖励训练 → `[[过程奖励模型PRM谱系]]`
-- 形式证明树搜索 → `[[形式化验证与LLM]]`
-- 解码器投机加速 → `[[EAGLE3投机解码]]`
-- 多代理辩论 / MoA → `[[多智能体辩论]]` / `[[MixtureOfAgents与TUMIX]]`（仅接口，本卡不重写）
+- TTS 产品 / 训练侧通史 → [[推理时扩展TestTimeScaling]]
+- 过程奖励训练 → [[过程奖励模型PRM谱系]]
+- 形式证明树搜索 → [[形式化验证与LLM]]
+- 解码器投机加速 → [[EAGLE3投机解码]]
+- 多代理辩论 / MoA → [[多智能体辩论]] / [[MixtureOfAgents与TUMIX]]（仅接口，本卡不重写）
 
 ---
 
