@@ -6,7 +6,7 @@ lines: [AI Infra, 架构思想]
 status: archived
 archived: 2026-09-22
 sources:
- - https://arxiv.org/abs/2606.05951 # 824K / 12p；主文
+ - https://arxiv.org/abs/2606.05951
  - https://github.com/deepseek-ai/DeepEP # 工程辅：README + docs/legacy.md（V1）
 arxiv: ["2606.05951"]
 related: ["AI基础设施总览", "混合专家架构", "DeepSeekV3训练与MoE基建"]
@@ -24,20 +24,16 @@ note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用
 > - **≠ [[DeepSeekV3训练与MoE基建]] / [[DeepSeekV4技术报告深读]] 通信小节全文重写**：不重写 DualPipe 气泡表、20 SM / 3.2 experts/node、dispatch 前 FP8 / combine BF16 等 **报告配方轴**；本卡只跟 NVSHMEM 运行时如何被 DeepEP **调用**，以及 HT/LL 内核如何叠在对称堆与 IBGDA 上。
 > **硬约束**：**DeepEP 无独立 arXiv 主文**——引用只写 `github.com/deepseek-ai/DeepEP`（主文 References [33]）；**禁止虚构** DeepEP paper arXiv 号。主文分析对象为 **DeepEP V1（NVSHMEM）**；V2 已切 **NCCL Gin**，本卡只点一句边界，不升主轴。
 > **禁止编造**：带宽、延迟、算法名一律锚定官方 PDF（2026-09-22 CST）与公开 README/legacy；未在源出现的对比表不写。
-> **入库体积**（`ls -lh`）：主 PDF **824K** ≪ **20MB** → **可入库**；无权重 / 数据集 / 视频。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 材料 | 标识 / 路径 | 体积 / 页 | 备注 |
+| 角色 | 材料 | 标识 / 链接 | 页数 | 备注 |
 |---|---|---|---|---|
-| **主文** | Ma, Shen\*, Chen 等（ETH Zürich + NVIDIA），*Demystifying NVSHMEM: A System-Level Analysis on Symmetric Memory and Device-Initiated Operations in GPU Communication* | arXiv:**2606.05951v1** \[cs.DC\]（**4 Jun 2026**）；`https://arxiv.org/abs/2606.05951` | **824K**（843,450 B）；**12** 页 | 分析目标库版本：**NVSHMEM 3.3.9** |
-| **抽取** | | | ~112K 文本 | 跟读用 |
+| **主文** | Ma, Shen\*, Chen 等（ETH Zürich + NVIDIA），*Demystifying NVSHMEM: A System-Level Analysis on Symmetric Memory and Device-Initiated Operations in GPU Communication* | arXiv:**2606.05951v1** \[cs.DC\]（**4 Jun 2026**）；`https://arxiv.org/abs/2606.05951` | **12** 页 | 分析目标库版本：**NVSHMEM 3.3.9** |
 | **工程辅** | DeepSeek-AI，*DeepEP: an efficient expert-parallel communication library* | **仅 GitHub**：https://github.com/deepseek-ai/DeepEP ；Citation bibtex `publisher = {GitHub}` | — | **无独立 arXiv**；主文以 GitHub 引用为 [33] |
 | **辅读切片** | DeepEP **V1 legacy**（NVSHMEM 后端） | `docs/legacy.md`（仓内） | — | 与主文 §VIII「聚焦 V1」对齐；主 README 现以 **V2 / NCCL Gin** 为主 |
-
-**体积判定**：主 PDF **824K < 20MB**，按规矩 **二进制可入库**。DeepEP 为开源仓，不下载整仓权重或二进制工件。
 
 **一句话抓手：**
 - **NVSHMEM** = 把 OpenSHMEM/PGAS 的 **对称堆 + 一侧 RMA** 直接暴露给 **CUDA 线程/warp/block**，补 NCCL「主机发起集体」不擅长的细粒度、数据依赖通信。
@@ -307,7 +303,7 @@ $$
 
 | 主张 | 锚点 |
 |---|---|
-| 主文 arXiv / 页数 / 体积 | `2606.05951v1`；12 页；`ls -lh` → **824K** |
+| 主文 arXiv / 页数 | `2606.05951v1`；12 页 |
 | 分析库版本 | NVSHMEM **3.3.9** |
 | DeepEP 文献形态 | GitHub only；主文 [33]；**无**独立 arXiv |
 | 本卡不写 | [[AI基础设施总览]] 通论；[[混合专家架构]] MoE 史；[[DeepSeekV3训练与MoE基建]] / [[DeepSeekV4技术报告深读]] 通信小节全文；DeepEP V2 内核深读 |
@@ -325,8 +321,5 @@ $$
 
 ## 十二、回报摘要（给编排用）
 
-- **笔记路径**：`/workspace/AIResearch-drafts/推理与基础设施/InfraServing/NVSHMEM与DeepEP通信.md
-- **PDF 路径**：`https://arxiv.org/abs/2606.05951`
-- **PDF 体积**：`ls -lh` → **824K**（可入库，≪20MB）
-- **抽取**：
+- **PDF**：`https://arxiv.org/abs/2606.05951`
 - **摘要**：主文系统拆解 NVSHMEM 3.3.9 的对称堆、P2P/IBGDA 一侧路径与设备集体；以 DeepSeek **DeepEP V1**（GitHub，无独立 arXiv）证明「稀疏 EP 只需在跨节点临界点薄用 NVSHMEM」。划界避开 [[AI基础设施总览]] / [[混合专家架构]] / [[DeepSeekV3训练与MoE基建]] · [[DeepSeekV4技术报告深读]] 通信全文。

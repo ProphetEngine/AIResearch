@@ -6,8 +6,8 @@ lines: [AI Infra, 成本模型]
 status: archived
 archived: 2026-09-22
 sources:
- - https://arxiv.org/abs/2311.04934 # 885K
- - https://arxiv.org/abs/2312.07104 # 1.4M（仅前缀复用交叉）
+ - https://arxiv.org/abs/2311.04934
+ - https://arxiv.org/abs/2312.07104
 arxiv: ["2311.04934", "2312.07104"]
 related: ["推理引擎生态", "KV缓存量化与压缩", "DuoAttention与KVzip"]
 official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
@@ -21,24 +21,23 @@ official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
 > - **≠ B7**：不写 vLLM / SGLang / TensorRT-LLM 选型对照表；RadixAttention 只取「自动前缀 KV 复用 + 命中率接口」一句。
 > - **≠ [[KV缓存量化与压缩]]**：不写 K/V 非对称量化、残差窗、outlier 比特轴。
 > - **≠ [[DuoAttention与KVzip]]**：不写 DuoAttention 头分工、KVzip query-agnostic 驱逐。
-> **禁止编造**：学术数字一律锚定官方 PDF（2026-09-22 CST）；官方定价页**只核对 write / read / TTL 字段结构**，标注抓取时间 **Asia/Shanghai 2026-09-22**；**绝对 $/MTok 表易过时 → 本卡不抄作事实**，倍率若出现仅作「当日结构倍率」说明。
-> **入库体积**：Prompt Cache **885K**；SGLang **1.4M**（均 **<20MB**）→ 二进制可入库。
+> **禁止编造**：学术数字一律锚定官方 PDF（2026-09-22 CST）；官方定价页**只核对 write / read / TTL 字段结构**，标注核对时间 **Asia/Shanghai 2026-09-22**；**绝对 $/MTok 表易过时 → 本卡不抄作事实**，倍率若出现仅作「当日结构倍率」说明。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题（PDF） | arXiv | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主** | *Prompt Cache: Modular Attention Reuse for Low-Latency Inference* | **2311.04934v2** \[cs.CL\]（**25 Apr 2024**）；MLSys 2024 | `https://arxiv.org/abs/2311.04934` | **885K**（905,557 B） | 14 | （91K） |
-| **交叉** | *SGLang: Efficient Execution of Structured Language Model Programs* | **2312.07104v2** \[cs.AI\]（**6 Jun 2024**） | `https://arxiv.org/abs/2312.07104` | **1.4M**（1,383,463 B） | 20 | （100K） |
+| 角色 | 标题（PDF） | arXiv | 链接 | 页数 |
+|---|---|---|---|---|
+| **主** | *Prompt Cache: Modular Attention Reuse for Low-Latency Inference* | **2311.04934v2** \[cs.CL\]（**25 Apr 2024**）；MLSys 2024 | `https://arxiv.org/abs/2311.04934` | 14 |
+| **交叉** | *SGLang: Efficient Execution of Structured Language Model Programs* | **2312.07104v2** \[cs.AI\]（**6 Jun 2024**） | `https://arxiv.org/abs/2312.07104` | 20 |
 
 | 材料 | 作者 / 机构（摘要页） | 代码（文内明示） |
 |---|---|---|
 | Prompt Cache | Gim, Chen, Lee, Sarda, Khandelwal, Zhong（Yale / Google） | https://github.com/yale-sys/prompt-cache |
 | SGLang（交叉） | Zheng, Yin, Xie 等（Stanford / Berkeley / SJTU 等） | https://github.com/sgl-project/sglang |
 
-**官方文档（计费字段核对，非论文；抓取：Asia/Shanghai 2026-09-22）：**
+**官方文档（计费字段核对，非论文；核对：Asia/Shanghai 2026-09-22）：**
 
 | 厂商 | 产品页 | 本卡用途 |
 |---|---|---|
@@ -160,7 +159,7 @@ RadixAttention = 自动前缀树 + LRU（严格前缀匹配）← 仅交叉，�
 
 ## 五、商业 API 缓存：只锁 write / read / TTL 字段结构
 
-> **抓取时间：Asia/Shanghai 2026-09-22（CST）。**
+> **核对时间：Asia/Shanghai 2026-09-22（CST）。**
 > **规矩：** 下列为各官方「prompt / context caching」产品页**字段与计费轴结构**；**不把绝对 $/MTok 表当永久事实**；若页上出现倍率，仅标「当日结构倍率」，落地请回活页。
 
 ### 5.1 三家字段骨架（同日核对）
@@ -215,17 +214,5 @@ Anthropic 页：TTL 从「写或读该条目的请求**开始**」计时，流�
 4. **命中率 SLA**：Radix LRU vs 云侧「可能更长保留」——生产 agent 长系统提示下，write 溢价与 TTFT SLA 如何联合优化（只问字段，不编费率）？
 
 ---
-
-## 七、來源与抽取索引
-
-| 路径 | 体积 | 页数 | 用途 |
-|---|---|---|---|
-| `https://arxiv.org/abs/2311.04934` | **885K**（905,557 B） | 14 | Prompt Cache 全文 |
-| `https://arxiv.org/abs/2312.07104` | **1.4M**（1,383,463 B） | 20 | 仅 RadixAttention / 前缀复用交叉 |
-| | 91K | — | |
-| | 100K | — | 同上 |
-| Anthropic / OpenAI / Google 官方 caching 文档 | HTML | — | write/read/TTL **字段结构**；抓取 **2026-09-22 CST** |
-
-**体积政策：** 两篇 PDF 均 **<20MB**，二进制保留；无权重 / 数据集 / 视频。官方费率**不**以过时数字入库。
 
 **状态：** `archived` · date **2026-09-22** · 跟读语言：中文。

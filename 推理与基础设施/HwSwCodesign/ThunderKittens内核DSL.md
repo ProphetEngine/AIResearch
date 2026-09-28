@@ -6,11 +6,11 @@ lines: [AI Infra, 编程模型]
 status: archived
 archived: 2026-09-22
 sources:
- - https://arxiv.org/abs/2410.20399 # 13M / 30p（arXiv 主读）
+ - https://arxiv.org/abs/2410.20399
  # ICLR 会刊近重复，以官方 URL 为准
  - https://openreview.net/forum?id=0fJfVOSUra
  - https://proceedings.iclr.cc/paper_files/paper/2025/file/05dc08730e32441edff52b0fa6caab5f-Paper-Conference.pdf
- - https://arxiv.org/abs/2602.05885 # 1.3M / 21p（补链，仅索引）
+ - https://arxiv.org/abs/2602.05885
 arxiv: ["2410.20399", "2602.05885"]
 related: ["硬件软件协同部署", "注意力效率族MQA到MLA", "AI基础设施总览", "推理引擎生态"]
 github_tk: "https://github.com/HazyResearch/ThunderKittens"
@@ -32,13 +32,13 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主①** | *ThunderKittens: Simple, Fast, and Adorable AI Kernels* | arXiv:**2410.20399v1** \[cs.LG\]（**27 Oct 2024**）； CreationDate **2024-10-29 CST** | `https://arxiv.org/abs/2410.20399` | **13M**（13,844,355 B） | **30** letter | |
-| **主①会刊（近重复，外链）** | *ThunderKittens: Simple, Fast, and Adorable Kernels* | **ICLR 2025** 会刊；作者较 arXiv 增 Arjun Parthasarathy（Columbia）与 Daniel Y. Fu 归属 UCSD / Together AI | https://openreview.net/forum?id=0fJfVOSUra<br>https://proceedings.iclr.cc/paper_files/paper/2025/file/05dc08730e32441edff52b0fa6caab5f-Paper-Conference.pdf | | **34** letter | |
-| **补链（仅索引）** | *Dr. Kernel: Reinforcement Learning Done Right for Triton Kernel Generations* | arXiv:**2602.05885v2** \[cs.LG\]（**6 Feb 2026**） | `https://arxiv.org/abs/2602.05885` | **1.3M**（1,266,552 B） | **21** letter | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主①** | *ThunderKittens: Simple, Fast, and Adorable AI Kernels* | arXiv:**2410.20399v1** \[cs.LG\]（**27 Oct 2024**）； CreationDate **2024-10-29 CST** | `https://arxiv.org/abs/2410.20399` | **30** letter |
+| **主①会刊（近重复，外链）** | *ThunderKittens: Simple, Fast, and Adorable Kernels* | **ICLR 2025** 会刊；作者较 arXiv 增 Arjun Parthasarathy（Columbia）与 Daniel Y. Fu 归属 UCSD / Together AI | https://openreview.net/forum?id=0fJfVOSUra<br>https://proceedings.iclr.cc/paper_files/paper/2025/file/05dc08730e32441edff52b0fa6caab5f-Paper-Conference.pdf | **34** letter |
+| **补链（仅索引）** | *Dr. Kernel: Reinforcement Learning Done Right for Triton Kernel Generations* | arXiv:**2602.05885v2** \[cs.LG\]（**6 Feb 2026**） | `https://arxiv.org/abs/2602.05885` | **21** letter |
 
 | 材料 | 作者 / 机构（文首） | 代码（文内明示） |
 |---|---|---|
@@ -46,7 +46,7 @@ timezone: Asia/Shanghai (CST)
 | ThunderKittens（ICLR） | 同上 + Parthasarathy；Fu 另标 UCSD / Together AI | 同仓（结论文亦给出） |
 | Dr. Kernel | Liu, Xu, Li, Zheng, Li, Liu, He（HKUST / TikTok / CUHK(SZ) / NTU） | https://github.com/hkust-nlp/KernelGYM |
 
-**体积判定**：两份入库 PDF 均 **<20MB**，按验收规矩 ****；ICLR 会刊与 arXiv 主张同族（摘要数字口径一致），仅保留 OpenReview / ICLR proceedings URL 与 ，本卡以 **arXiv 30 页**为跟读主文，ICLR 作会刊/署名核对。
+**版本说明**：ICLR 会刊与 arXiv 主张同族（摘要数字口径一致），仅保留 OpenReview / ICLR proceedings URL；本卡以 **arXiv 30 页**为跟读主文，ICLR 作会刊/署名核对。
 
 **一句话抓手：**
 - **TK**：别堆嵌套模板或整页编译器——用 **16×16 tile + PyTorch 味算子 + LCSF 异步模板**，在嵌入式 C++ 里把 tensor core / TMA / WGMMA 用「对」且好调。

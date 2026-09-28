@@ -32,25 +32,25 @@ archived: 2026-09-22
 > **硬划界（禁止重写）**：
 > - **禁止重写** [[硬件软件协同部署]] 的 Blackwell / TPU7x Ironwood / NVL72 选型地图与部署成本叙事。
 > - **禁止写成「已证实碾压商业工具」**：Nature 主张、独立评估（Kahng 等 / MacroPlacement）、Markov 元分析、作者 Addendum / 辩护文须**并列呈现**，不替任一侧下最终裁判。
-> - **禁止编造**：Nature 全文 PDF 本窗被登录墙拦截，方法细节以 **arXiv:2004.10746** + Nature 着陆页摘要 / Change history 为准；评测数字锚定本地 （2026-09-22 CST）。
+> - **禁止编造**：Nature 全文 PDF 需登录（idp 登录墙），未读；方法细节以 **arXiv:2004.10746** + Nature 着陆页摘要 / Change history 为准；评测数字锚定官方 PDF（2026-09-22 CST）。
 
 ---
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A（Nature）** | Mirhoseini, Goldie, et al. | *A graph placement methodology for fast chip design*；**Nature 594:207–212 (2021)**；Published **2021-06-09**；DOI **10.1038/s41586-021-03544-w**；摘要见 | 宏布局 RL 正式发表；主张「&lt;6 h、优于或可比人类」 |
+| **主文 A（Nature）** | Mirhoseini, Goldie, et al. | *A graph placement methodology for fast chip design*；**Nature 594:207–212 (2021)**；Published **2021-06-09**；DOI **10.1038/s41586-021-03544-w**；摘要见 https://www.nature.com/articles/s41586-021-03544-w | 宏布局 RL 正式发表；主张「&lt;6 h、优于或可比人类」 |
 | **主文 A′（可读全文）** | 同上团队 | *Chip Placement with Deep Reinforcement Learning*；arXiv:**2004.10746v1**（**2020-04-22**）；`https://arxiv.org/abs/2004.10746`（**15** 页 letter；CreationDate **2020-04-23** CST） | 方法细节（PPO、proxy cost、预训练/微调）主读取源 |
-| **Addendum** | Goldie, Mirhoseini, et al. | DOI **10.1038/s41586-024-08032-5**；Published **2024-09-26**；PDF 本窗亦被 idp 墙；内容索引 DeepMind blog + 作者辩护文 | **正式命名 AlphaChip**；补充方法澄清 |
+| **Addendum** | Goldie, Mirhoseini, et al. | DOI **10.1038/s41586-024-08032-5**；Published **2024-09-26**；PDF 同样需登录（idp 墙），未读；内容索引 DeepMind blog + 作者辩护文 | **正式命名 AlphaChip**；补充方法澄清 |
 | **批判必读** | Markov | *The False Dawn…*；arXiv:**2306.09633v10**（**2024-09-28**）；`https://arxiv.org/abs/2306.09633`（**18** 页） | 复现缺口、基线、诚信/政策指控的元分析 |
 | **独立评估** | Cheng, Kahng, Kundu, Wang, Wang | *An Updated Assessment…*；arXiv:**2302.11014v3**（**2026-03-10**）；`https://arxiv.org/abs/2302.11014`（**16** 页） | 公开 MacroPlacement 流上评估 **CT-Scratch / CT-AC** vs 加强 SA / 人类 / 商业工具 |
 | **主文 B** | Xu et al. (NCTIE / SEU) | *ChipExpert…*；arXiv:**2408.00804v1**；`https://arxiv.org/abs/2408.00804`（**17** 页 A4；CreationDate **2024-08-05** CST） | Llama-3 8B IC 专科 LLM + ChatICD-Bench |
-| **辅·博客** | DeepMind | https://deepmind.google/blog/how-alphachip-transformed-computer-chip-design/（**2024-09-26**）→ | 命名、checkpoint、TPU/Axion/MediaTek 叙事 |
+| **辅·博客** | DeepMind | https://deepmind.google/blog/how-alphachip-transformed-computer-chip-design/（**2024-09-26**） | 命名、checkpoint、TPU/Axion/MediaTek 叙事 |
 | **辅·作者辩护（索引）** | Goldie, Mirhoseini, Dean | arXiv:**2411.10053**；`https://arxiv.org/abs/2411.10053` | 对 ISPD/Markov 批评的逐条反驳与时间线 |
 | **开源** | Circuit Training / MacroPlacement / ChipExpert | CT：`google-research/circuit_training`；评估：`TILOS-AI-Institute/MacroPlacement`；CE：`NCTIE/ChipExpert` + HF `ChipExpert-8B-Instruct` / `ChatICD-Bench` | 复现入口（**非**「可复现 Nature 表 1」的充分条件） |
 
-**落盘说明：** Nature / Addendum PDF `curl` → **303 → idp.nature.com**（见 ）。笔记内凡写「Nature 主张」均指着陆页摘要 + Change history；架构步骤以 arXiv 为准，并标明预印本≠期刊版可能存在差异。
+**全文说明：** Nature / Addendum 全文 PDF 需 idp.nature.com 登录，未读。笔记内凡写「Nature 主张」均指着陆页摘要 + Change history；架构步骤以 arXiv 为准，并标明预印本≠期刊版可能存在差异。
 
 **一句话抓手：** AlphaChip 把 **宏布局** 做成「可预训练的序贯放置游戏」；ChipExpert 把 **IC 知识问答** 做成「CPT→SFT→DPO→RAG」专科 LLM——前者争的是 **PPA / 复现**，后者争的是 **领域 QA 分数**，二者都不是 GPU/TPU **选型**问题。
 
@@ -219,7 +219,7 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 
 ## 七、开放问题 / 待核实
 
-1. **Nature / Addendum 全文 PDF**：本窗登录墙；若后续取得，应对照 arXiv 做「期刊版 vs 预印本」diff（尤其表格与预训练描述）。
+1. **Nature / Addendum 全文 PDF**：需登录，未读；若后续取得，应对照 arXiv 做「期刊版 vs 预印本」diff（尤其表格与预训练描述）。
 2. **CT-AC 预训练数据清单**：公开指导有，完整数据与「是否污染测试块」在批评侧仍为开放指控——本笔记不裁决。
 3. **ChatICD-Bench 题目数量、评委人数、自动评协议**：正文以图为主；精确 *n* **待核实**读图/附录。
 4. **MediaTek / Axion 量化收益**：仅 blog 级主张；无独立对照实验入库。

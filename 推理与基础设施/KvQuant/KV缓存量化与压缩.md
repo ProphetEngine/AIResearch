@@ -57,7 +57,7 @@ archived: 2026-09-22
 | 标题 | *KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache* |
 | 页眉 | **arXiv:2402.02750v2** \[cs.CL\] **25 Jul 2024** |
 | 会议 | ICML 2024（Proceedings PMLR 235） |
-| 本地 | `https://arxiv.org/abs/2402.02750`（15 页） |
+| 链接 | `https://arxiv.org/abs/2402.02750`（15 页） |
 | 代码 | https://github.com/jy-yuan/KIVI |
 
 ### 2.1 核心设计：非对称轴 + 残差窗解决流式 per-channel
@@ -115,7 +115,7 @@ LongBench 均值：Llama2-7B 16bit **44.52** / KIVI-2 **44.27**；Mistral-7B **4
 | 标题 | *KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization* |
 | 页眉 | **arXiv:2401.18079v6** \[cs.LG\] **28 May 2025** |
 | 会议 | NeurIPS 2024 |
-| 本地 | `https://arxiv.org/abs/2401.18079`（27 页） |
+| 链接 | `https://arxiv.org/abs/2401.18079`（27 页） |
 | 代码 | https://github.com/SqueezeAILab/KVQuant |
 
 ### 3.1 四件套 + Attention Sink（§3）

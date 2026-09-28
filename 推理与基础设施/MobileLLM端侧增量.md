@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
 sources:
- - https://arxiv.org/abs/2511.06719 # 1.35M / 22p
- - https://arxiv.org/abs/2603.15954 # 1.34M / 16p
+ - https://arxiv.org/abs/2511.06719
+ - https://arxiv.org/abs/2603.15954
 arxiv: ["2511.06719", "2603.15954"]
 related: ["端侧小模型", "ZeroQAT量化感知训练", "硬件软件协同部署", "Gemma4技术报告深读", "B7"]
 retrieval_cutoff: 2026-09-22
@@ -25,26 +25,20 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[硬件软件协同部署]]**：不写 NVIDIA Blackwell / TPU 机架白皮书、FP4/NVLink 代际表；本卡延迟数字来自 **手机 CPU/HTP + Executorch**，不是数据中心 codesign。
 > - **≠ B7**：不写 vLLM/SGLang 选型通史；Executorch / xnnpack 仅作部署字段。
 > **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。文内叙述与表冲突时 **以表为准** 并标注。
-> **二进制**：两篇均 **≪10MB**（见 §一）→ **官方 HTTPS 外链**。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A** | Huber, Chang, Wen, Fedorov et al. (Meta Reality Labs), *MobileLLM-Pro Technical Report* | arXiv:**2511.06719**v1 \[cs.LG\] **10 Nov 2025**；文首 Date **November 11, 2025**；`https://arxiv.org/abs/2511.06719`（**1.35M**，1,419,954 B；**22** 页 letter） | **1B Pro**：四阶段预训练 + IFT + INT4 CPU/加速器分发 |
-| **主文 B** | Huang, Fedorov et al. (Meta AI), *MobileLLM-Flash: Latency-Guided On-Device LLM Design for Industry Scale Deployment* | arXiv:**2603.15954**v2 \[cs.LG\] **27 Apr 2026**；文首 Date **April 29, 2026**；`https://arxiv.org/abs/2603.15954`（**1.34M**，1,402,638 B；**16** 页 letter） | **Flash 族**：延迟在环 NAS + skip-attn；350M/650M/1.4B |
+| **主文 A** | Huber, Chang, Wen, Fedorov et al. (Meta Reality Labs), *MobileLLM-Pro Technical Report* | arXiv:**2511.06719**v1 \[cs.LG\] **10 Nov 2025**；文首 Date **November 11, 2025**；`https://arxiv.org/abs/2511.06719`（**22** 页 letter） | **1B Pro**：四阶段预训练 + IFT + INT4 CPU/加速器分发 |
+| **主文 B** | Huang, Fedorov et al. (Meta AI), *MobileLLM-Flash: Latency-Guided On-Device LLM Design for Industry Scale Deployment* | arXiv:**2603.15954**v2 \[cs.LG\] **27 Apr 2026**；文首 Date **April 29, 2026**；`https://arxiv.org/abs/2603.15954`（**16** 页 letter） | **Flash 族**：延迟在环 NAS + skip-attn；350M/650M/1.4B |
 
 **权重 / 代码（文内明示）：**
 - Pro 集合：`https://huggingface.co/collections/facebook/mobilellm-pro`
 - 具体卡：`facebook/MobileLLM-Pro-base`、`MobileLLM-Pro-base-int4-cpu`、`MobileLLM-Pro-base-int4-accelerator`、`facebook/MobileLLM-Pro`（instruct）
 - Flash：**文内未声明独立 HF 集合 URL**（以 PDF 为准；标「待核实」）。
-
-| 文件 | 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `2511.06719-mobilellm-pro.pdf` | **1.35M**（1,419,954 B） | 22 | **官方 HTTPS 外链**（≪10MB；全文抽取可并存） |
-| `2603.15954-mobilellm-flash.pdf` | **1.34M**（1,402,638 B） | 16 | **官方 HTTPS 外链**（≪10MB；全文抽取可并存） |
 
 **一句话抓手：**
 - **Pro**：在 ~1B 档用 **教师 logits（Llama 4-Scout）** 串起「数据混合 → 不喂长文却扩 128k → 专家合并 → INT4 QAT」，把 **Gemma 3-1B / Llama 3.2-1B** 在 11 项预训练榜上整体压过，量化平均分仅掉 **0.73 / 1.39** 个点（CPU / Accelerator）。
@@ -255,11 +249,9 @@ Pro：Scout-KD × SDM × IPD(128k) × Merge × INT4-QAT
 Flash：真机 TTFT × 剪枝 BO × Skip>SWA × Executorch 可移植
 `
 
-1. **二进制**：两 PDF 均约 **1.35M / 1.34M ≪ 10MB** → **官方 HTTPS 外链**；全文 已落 。
-2. **笔记路径**：推理与基础设施/MobileLLM端侧增量.md（本文件）。
-3. **交叉链**：`related` 指向 [[端侧小模型]] / [[ZeroQAT量化感知训练]] / [[硬件软件协同部署]] / [[Gemma4技术报告深读]] / B7；正文禁止展开其主课。
-4. **待核实**：Flash 权重/代码公开入口（PDF 未给 HF URL）；Pro IFT Table 11 正文「32.7%」与表「45.23」不一致——引用时锁表。
-5. **勿混并**：Pro 128k NIH 与 Flash 4k TTFT、Pro/Flash 的 MMLU/HumanEval **分表引用**，禁止合成「统一端侧榜」。
+1. **交叉链**：`related` 指向 [[端侧小模型]] / [[ZeroQAT量化感知训练]] / [[硬件软件协同部署]] / [[Gemma4技术报告深读]] / B7；正文禁止展开其主课。
+2. **待核实**：Flash 权重/代码公开入口（PDF 未给 HF URL）；Pro IFT Table 11 正文「32.7%」与表「45.23」不一致——引用时锁表。
+3. **勿混并**：Pro 128k NIH 与 Flash 4k TTFT、Pro/Flash 的 MMLU/HumanEval **分表引用**，禁止合成「统一端侧榜」。
 
 ---
 

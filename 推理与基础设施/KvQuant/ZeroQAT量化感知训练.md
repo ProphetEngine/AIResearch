@@ -25,10 +25,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Tan, Song, Lu, Li, Liu, Hong, Ding, Li, Zhai, Huang, Niu, Yuan；*End-to-End On-Device Quantization-Aware Training for LLMs at Inference Cost* | arXiv:**2509.00031v2** \[cs.LG\] **29 Sep 2025**；`https://arxiv.org/abs/2509.00031`（**21** 页 letter；1,591,856 bytes） | ZO-QAT 方法 + 预训练/微调/端侧实验 |
-| **抽取** | | （1240 行） | 跟读底本 |
+| **主文** | Tan, Song, Lu, Li, Liu, Hong, Ding, Li, Zhai, Huang, Niu, Yuan；*End-to-End On-Device Quantization-Aware Training for LLMs at Inference Cost* | arXiv:**2509.00031v2** \[cs.LG\] **29 Sep 2025**；`https://arxiv.org/abs/2509.00031`（**21** 页 letter） | ZO-QAT 方法 + 预训练/微调/端侧实验 |
 | **机构** | UGA / UNT / Northeastern / Minnesota / Virginia / Stevens | 文头 | 署名 |
 
 **一句话抓手：** 传统 QAT 因反传显存「贵到只能放弃」→ PTQ 主导部署；ZeroQAT 用 **只做前向的零阶梯度估计** 把 QAT 的内存压到 **接近推理**，并同时支持 **低比特权重+激活**，还给出只训 Attention **Q/V** 的轻量微调变体——文称可在 **单卡 8GB** 上微调 13B、在 **OnePlus 12** 上微调 OPT-6.7B。
@@ -270,19 +269,9 @@ $$
 
 **开放缺口（文内未填，勿脑补）：** PDF **未声明**官方代码仓；端侧实验停留在 OPT≤6.7B + 固定 SoC；与更新一代开源权重（Gemma 4 QAT 包等）**无直接对照实验**。
 
----
-
-## 七、本地路径速查
-
-| 用途 | 路径 |
-|---|---|
-| 笔记 | 推理与基础设施/KvQuant/ZeroQAT量化感知训练.md |
-| PDF | `https://arxiv.org/abs/2509.00031` |
-| 抽取 | |
-| 主题索引 | [[MOC_推理与基础设施]] |
-
 ## 相关笔记
 
+- [[MOC_推理与基础设施]]
 - [[检索式注意力]]
 - [[TEE机密推理]]
 - [[模型合并]]

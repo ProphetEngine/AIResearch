@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [AI Infra, 服务架构]
 status: archived
 sources:
- - https://arxiv.org/abs/2504.02263 # 1.1M / 24p（主 A）
- - https://arxiv.org/abs/2606.04101 # 2.7M / 15p（主 B）
+ - https://arxiv.org/abs/2504.02263
+ - https://arxiv.org/abs/2606.04101
 arxiv: ["2504.02263", "2606.04101"]
 related:
  - "混合专家架构"
@@ -32,21 +32,15 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[ThunderKittens内核DSL]]**：不写 ThunderKittens tile DSL / 核编程抽象。
 > - **≠ B7**：不写 vLLM/SGLang/TRT-LLM 引擎选型通史、PagedAttention、投机解码族；基线名只作评测对照。
 > **禁止编造**：倍率、失衡比、硬件表一律锚定官方 PDF（2026-09-22 CST）。
-> **二进制**：两篇均 **≪20MB**（见 §一）→ **官方 HTTPS 外链**。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A** | Zhu, Jiang, Jin 等（ByteDance Seed / PKU），*MegaScale-Infer: Serving Mixture-of-Experts at Scale with Disaggregated Expert Parallelism* | arXiv:**2504.02263**v4 \[cs.DC\] **26 Jul 2025**；`https://arxiv.org/abs/2504.02263`（**1,143,163** B ≈ **1.1M**；**24** 页 letter） | **解耦 EP 服务**：Attention–Expert 分节点 + ping-pong + M2N |
-| **主文 B** | Wei, Jin, Dai 等（PKU / 小红书 / 上海 AI Lab 等），*UltraEP: Unleash MoE Training and Inference on Rack-Scale Nodes with Near-Optimal Load Balancing* | arXiv:**2606.04101**v3 \[cs.DC\] **18 Jun 2026**；`https://arxiv.org/abs/2606.04101`（**2,846,924** B ≈ **2.7M**；**15** 页 letter；CreationDate **2026-06-19 CST**） | **机架级 exact-load 均衡**：配额规划 + RSN tile/relay 通信 |
-
-| 文件 | 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `2504.02263-megascale-infer.pdf` | **1.1M**（1,143,163 B） | 24 | **官方 HTTPS 外链**（≪20MB） |
-| `2606.04101-ultraep.pdf` | **2.7M**（2,846,924 B） | 15 | **官方 HTTPS 外链**（≪20MB） |
+| **主文 A** | Zhu, Jiang, Jin 等（ByteDance Seed / PKU），*MegaScale-Infer: Serving Mixture-of-Experts at Scale with Disaggregated Expert Parallelism* | arXiv:**2504.02263**v4 \[cs.DC\] **26 Jul 2025**；`https://arxiv.org/abs/2504.02263`（**24** 页 letter） | **解耦 EP 服务**：Attention–Expert 分节点 + ping-pong + M2N |
+| **主文 B** | Wei, Jin, Dai 等（PKU / 小红书 / 上海 AI Lab 等），*UltraEP: Unleash MoE Training and Inference on Rack-Scale Nodes with Near-Optimal Load Balancing* | arXiv:**2606.04101**v3 \[cs.DC\] **18 Jun 2026**；`https://arxiv.org/abs/2606.04101`（**15** 页 letter；CreationDate **2026-06-19 CST**） | **机架级 exact-load 均衡**：配额规划 + RSN tile/relay 通信 |
 
 **一句话抓手：**
 - **MegaScale-Infer**：稀疏 decode 时「整模同节点」会把专家 GEMM 饿死——把 **Attention 复制、Expert 切开**，用 **ping-pong 微批**填空闲，用 **M2N** 扛动态 token 路由。
@@ -225,8 +219,7 @@ SLO：文设 **TBT = 150 ms**。异质表（Table 3）以 L20 归一化标价，
 | 字段 | 值 |
 |---|---|
 | 一手 PDF | `https://arxiv.org/abs/2504.02263`；`https://arxiv.org/abs/2606.04101` |
-| 抽取 | `*.txt`（及 ） |
-| 核验时刻 | 2026-09-22 CST（`curl` arXiv PDF → → ） |
+| 核验时刻 | 2026-09-22 CST |
 | DeepEP 引用 | UltraEP Ref.[9] = GitHub；MegaScale 文内对照句；**无独立 arXiv** |
 | 禁编造声明 | 未外推未见表硬件倍率；生产「1.5–2.0× / >92% ideal」仅照录作者自述部署段 |
 

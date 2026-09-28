@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [架构思想, 部署接口]
 status: archived
 sources:
- - https://arxiv.org/abs/2405.16406 # ≈10.21MB / 24p（主 A）
- - https://arxiv.org/abs/2601.07475 # ≈5.23MB / 15p（主 B）
+ - https://arxiv.org/abs/2405.16406
+ - https://arxiv.org/abs/2601.07475
 arxiv: ["2405.16406", "2601.07475"]
 related:
  - "KV缓存量化与压缩"
@@ -31,21 +31,15 @@ timezone: Asia/Shanghai (CST)
 > - **≠ B7**：不写 vLLM / SGLang / TRT-LLM 引擎选型、PagedAttention、投机解码族；ARCQuant 文内 vLLM 吞吐表仅作 **部署字段索引**。
 > - **≠ BitNet v2**：原生低比特 **从零训练** → **本波不升主**（波 13 议程 §四；维护期补链）。
 > **禁止编造**：公式编号、表数字、倍率一律锚定官方 PDF（2026-09-22 CST）。议程称 ARCQuant 为 ACL 2026；**官方 PDF 首页未印会议标识** → 本笔记以 **arXiv:2601.07475v2 \[cs.LG\] 4 Jul 2026** 为准，不虚构 proceedings 页码。
-> **二进制**：两篇均 **≪20MB**（见 §一）→ **官方 HTTPS 外链**；SpinQuant ≈10.21MB，主管允许可入。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A** | Liu, Zhao, Fedorov, Soran, Choudhary, Krishnamoorthi, Chandra, Tian, Blankevoort（Meta），*SpinQuant: LLM Quantization with Learned Rotations* | arXiv:**2405.16406v4** \[cs.LG\] **20 Feb 2025**；ICLR 2025；`https://arxiv.org/abs/2405.16406`（**10,207,972** B ≈ **10.21MB**；**24** 页 letter；CreationDate **2025-02-21 CST**） | **可学习旋转 PTQ**：Stiefel + Cayley；`no_had` / `had` 两档 |
-| **主文 B** | Meng, Luo, Zhao, Liu, Zhang*, Ma（天津大学），*ARCQuant: Boosting NVFP4 Quantization with Augmented Residual Channels for LLMs* | arXiv:**2601.07475v2** \[cs.LG\] **4 Jul 2026**；`https://arxiv.org/abs/2601.07475`（**5,234,557** B ≈ **5.23MB**；**15** 页 A4） | **NVFP4 增广残差通道**：统一精度 GEMM + 双阶段误差界 |
-
-| 文件 | 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `2405.16406-spinquant.pdf` | **10.21MB**（10,207,972 B） | 24 | **官方 HTTPS 外链**（≪20MB；主管允许可入） |
-| `2601.07475-arcquant.pdf` | **5.23MB**（5,234,557 B） | 15 | **官方 HTTPS 外链**（≪20MB） |
+| **主文 A** | Liu, Zhao, Fedorov, Soran, Choudhary, Krishnamoorthi, Chandra, Tian, Blankevoort（Meta），*SpinQuant: LLM Quantization with Learned Rotations* | arXiv:**2405.16406v4** \[cs.LG\] **20 Feb 2025**；ICLR 2025；`https://arxiv.org/abs/2405.16406`（**24** 页 letter；CreationDate **2025-02-21 CST**） | **可学习旋转 PTQ**：Stiefel + Cayley；`no_had` / `had` 两档 |
+| **主文 B** | Meng, Luo, Zhao, Liu, Zhang*, Ma（天津大学），*ARCQuant: Boosting NVFP4 Quantization with Augmented Residual Channels for LLMs* | arXiv:**2601.07475v2** \[cs.LG\] **4 Jul 2026**；`https://arxiv.org/abs/2601.07475`（**15** 页 A4） | **NVFP4 增广残差通道**：统一精度 GEMM + 双阶段误差界 |
 
 **代码锚（PDF 声明）：**
 - SpinQuant：`github.com/facebookresearch/SpinQuant`
@@ -273,7 +267,7 @@ $$
 | 重写 MobileLLM / Phi-4 / Gemma 小尺寸通史 | 推理与基础设施/端侧小模型.md / [[Gemma4技术报告深读]] |
 | 写成 vLLM/SGLang/TRT-LLM 选型手册 | 推理与基础设施/InfraServing/推理引擎生态.md |
 | 把 BitNet v2 升为本卡主文 | 波 13 议程 §四；维护期补链 |
-| 无 PDF 依据合并跨文倍率或虚构 ACL 页码 | 只引本地抽取与 arXiv 版次 |
+| 无 PDF 依据合并跨文倍率或虚构 ACL 页码 | 只引官方 PDF 与 arXiv 版次 |
 
 ---
 
@@ -287,6 +281,5 @@ $$
 
 ---
 
-**成稿路径：** `/workspace/AIResearch-drafts/推理与基础设施/KvQuant/SpinQuant与ARCQuant量化.md
-**PDF：** `https://arxiv.org/abs/2405.16406`（10.21MB / 24p，外链引用）· `https://arxiv.org/abs/2601.07475`（5.23MB / 15p，外链引用）
+**PDF：** `https://arxiv.org/abs/2405.16406`（24 页）· `https://arxiv.org/abs/2601.07475`（15 页）
 **状态：** archived · date 2026-09-22 · 检索截止 2026-09-22 CST

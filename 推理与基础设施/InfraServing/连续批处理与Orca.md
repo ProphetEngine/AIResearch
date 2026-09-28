@@ -169,11 +169,11 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 
 ---
 
-## 六、引用与本地路径
+## 六、引用
 
-| 文献 / 入口 | 标识 | 本地 / URL |
+| 文献 / 入口 | 标识 | 链接 |
 |---|---|---|
-| Yu et al., *Orca* | OSDI 2022 | `https://www.usenix.org/conference/osdi22/presentation/yu`；https://www.usenix.org/system/files/osdi22-yu.pdf ；会议页 https://www.usenix.org/conference/osdi22/presentation/yu |
+| Yu et al., *Orca* | OSDI 2022 | https://www.usenix.org/system/files/osdi22-yu.pdf ；会议页 https://www.usenix.org/conference/osdi22/presentation/yu |
 | Kwon et al., *PagedAttention / vLLM*（对照基线） | arXiv:2309.06180 | `https://arxiv.org/abs/2309.06180`；交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] §1.3 |
 
 **次级交叉（点到为止，不入库为本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；B7 投机解码四篇一手 PDF。

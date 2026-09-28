@@ -29,10 +29,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A（开销面）** | Asad & Grunseid (Confidential.ai), *Benchmarking Confidential Computing Performance on NVIDIA Blackwell GPUs* | arXiv:**2608.26575v2** \[cs.DC\] **1 Sep 2026**（文内 **June 2026**）；`https://arxiv.org/abs/2608.26575`（**23** 页 A4；439,825 bytes） | Intel TDX + NVIDIA CC on **8× B200**；配对 CC-on/off；机制归因 + 部署建议 |
-| **主文 B（端到端边界）** | Schambach, Le, Arnautov & Fetzer, *EnclaveX: End-to-End Confidential AI with CPU/GPU TEEs* | arXiv:**2606.31408v1** \[cs.CR\] **30 Jun 2026**；`https://arxiv.org/abs/2606.31408`（**8** 页 letter；881,245 bytes） | Intel TDX + **H200** cGPU + SCONE；应用层证明对抗 K8s admin；CVM vs native 开销 |
+| **主文 A（开销面）** | Asad & Grunseid (Confidential.ai), *Benchmarking Confidential Computing Performance on NVIDIA Blackwell GPUs* | arXiv:**2608.26575v2** \[cs.DC\] **1 Sep 2026**（文内 **June 2026**）；`https://arxiv.org/abs/2608.26575`（**23** 页 A4） | Intel TDX + NVIDIA CC on **8× B200**；配对 CC-on/off；机制归因 + 部署建议 |
+| **主文 B（端到端边界）** | Schambach, Le, Arnautov & Fetzer, *EnclaveX: End-to-End Confidential AI with CPU/GPU TEEs* | arXiv:**2606.31408v1** \[cs.CR\] **30 Jun 2026**；`https://arxiv.org/abs/2606.31408`（**8** 页 letter） | Intel TDX + **H200** cGPU + SCONE；应用层证明对抗 K8s admin；CVM vs native 开销 |
 
 **一句话抓手：** 云上机密推理要把 **prompt / KV / 权重** 从「宿主机特权方可读」推进到 **硬件根信任**；开销不是一个常数——Blackwell 上配置对时可达 **约 1–3%**，配置错可达 **30–40%**；仅有 CVM 不够时，还要 **应用层 attestation 后再放密钥**（EnclaveX）。
 
@@ -295,16 +295,6 @@ RQ2 机制（防御侧）：cGPU 模式加密 CVM–cGPU IO（bounce buffer）�
 | EnclaveX：SCONE≈CVM；CVM vs native TPS **35–63%** | Fig.2 / RQ1–2 |
 | 应用层 attestation 附加 ∼**+1.3%**（相对已有 CVM+cGPU 证明） | RQ3 |
 | 侧信道排除；CUDA-event 计时在 CC 下关闭 | EnclaveX §3.1；Blackwell §3.3 / §9 |
-
----
-
-## 八、本地路径
-
-| 类型 | 路径 |
-|---|---|
-| 笔记 | 推理与基础设施/TEE机密推理.md |
-| PDF | `https://arxiv.org/abs/2608.26575` · `https://arxiv.org/abs/2606.31408` |
-| 抽取 | · |
 
 ## 相关笔记
 
