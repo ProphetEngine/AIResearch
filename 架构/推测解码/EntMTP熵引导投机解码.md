@@ -25,13 +25,12 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 字段 | 核实值（PDF / ） |
+| 字段 | 核实值（PDF） |
 |---|---|
 | 标题 | *EntMTP: Accelerating LLM Inference with Entropy Guided Multi Token Prediction* |
 | 作者 | Carrie Chen（Cornell University；`cc2864@cornell.edu`） |
 | arXiv | **2606.27550v1** \[cs.CL\]（**25 Jun 2026**） |
-| 官方 PDF | `https://arxiv.org/abs/2606.27550`（**7** 页 letter；1,364,886 bytes；arXiv GenPDF） |
-| 抽取 | （同步 ） |
+| 官方 PDF | `https://arxiv.org/abs/2606.27550`（**7** 页 letter；arXiv GenPDF） |
 | HTML | https://arxiv.org/html/2606.27550v1（议程备链；数字以官方 PDF 为准） |
 | 代码 | 正文 / 摘要 **未给出** GitHub 链接 → 本卡不编造仓址 |
 

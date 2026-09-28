@@ -29,11 +29,11 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Inoue, Misaki, Imajuku, Kuroki, Nakamura, Akiba (Sakana AI), *Wider or Deeper? Scaling LLM Inference-Time Compute with Adaptive Branching Tree Search* | arXiv:**2503.04412v5** \[cs.AI\] **7 Nov 2025**；Accepted as a **spotlight** at **NeurIPS 2025**；`https://arxiv.org/abs/2503.04412`（**30** 页 letter；5,138,162 bytes） | 一手：问题设定、Alg.1、AB-MCTS-M/A、主表、附录 Multi-LLM |
-| **辅（代码）** | SakanaAI/**treequest** | https://github.com/SakanaAI/treequest → | Apache-2.0；`ABMCTSA` / `ABMCTSM`；ask–tell 批采样；Python ≥ 3.11 |
-| **辅（博客）** | Sakana AI, *Inference-Time Scaling and Collective Intelligence…*（**2025-07-01**） | https://sakana.ai/ab-mcts/ → | Multi-LLM 叙事与 ARC-AGI-2 图口径（与附录 D 对齐） |
+| **主文** | Inoue, Misaki, Imajuku, Kuroki, Nakamura, Akiba (Sakana AI), *Wider or Deeper? Scaling LLM Inference-Time Compute with Adaptive Branching Tree Search* | arXiv:**2503.04412v5** \[cs.AI\] **7 Nov 2025**；Accepted as a **spotlight** at **NeurIPS 2025**；`https://arxiv.org/abs/2503.04412`（**30** 页 letter） | 一手：问题设定、Alg.1、AB-MCTS-M/A、主表、附录 Multi-LLM |
+| **辅（代码）** | SakanaAI/**treequest** | https://github.com/SakanaAI/treequest | Apache-2.0；`ABMCTSA` / `ABMCTSM`；ask–tell 批采样；Python ≥ 3.11 |
+| **辅（博客）** | Sakana AI, *Inference-Time Scaling and Collective Intelligence…*（**2025-07-01**） | https://sakana.ai/ab-mcts/ | Multi-LLM 叙事与 ARC-AGI-2 图口径（与附录 D 对齐） |
 | **辅（实验码）** | SakanaAI/**ab-mcts-arc2** | https://github.com/SakanaAI/ab-mcts-arc2 | ARC-AGI-2 复现入口（博客点名；本笔记不展开仓库实现） |
 
 **一句话抓手：** 在有 **外部反馈分数** $r=R(t_{\rm out})$ 的任务上，不要事先钉死「每层生几个孩子」——让搜索树在每个节点用 **后验预测 + Thompson sampling** 动态决定 **GEN（再采样一条新答案 = 变宽）** 还是 **沿已有孩子继续 refine（变深）**，从而把 LLM 的温度多样性与多轮修订放进同一框架。
@@ -269,12 +269,11 @@ AB-MCTS ──► 每节点动态：GEN（宽） vs 已有孩子（深）
 
 ---
 
-## 九、本地核验（禁编造备忘）
+## 九、核验备忘（禁编造）
 
 | 项 | 值 |
 |---|---|
 | PDF | `https://arxiv.org/abs/2503.04412`；标题 *Wider or Deeper?…*；**30** 页；arXiv **2503.04412v5**；NeurIPS 2025 spotlight |
-| 抽取 | （2026-09-22 CST） |
 | 主表 Avg.Rank | M **2.3** / A-G **2.7** / A-B **2.7** / RS **3.5** / StdMCTS **4.2** / Seq **5.5** |
 | 预算 | 主实验 **128**；ARC scaling **512**；ARC-AGI-2 Multi-LLM **250** |
 | 开源 | TreeQuest Apache-2.0；博客 2025-07-01 |

@@ -28,9 +28,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Hao, Sukhbaatar, Su, Li, Hu, Weston, Tian（FAIR at Meta / UCSD）, *Training Large Language Models to Reason in a Continuous Latent Space* | arXiv:**2412.06769v4** \[cs.CL\] **23 Aug 2026**；页眉 *Last updated: August 25, 2026*；`https://arxiv.org/abs/2412.06769`（**18** 页 letter；3,211,318 bytes） | 一手：范式、课程、ProsQA 潜搜索分析、主表 |
+| **主文** | Hao, Sukhbaatar, Su, Li, Hu, Weston, Tian（FAIR at Meta / UCSD）, *Training Large Language Models to Reason in a Continuous Latent Space* | arXiv:**2412.06769v4** \[cs.CL\] **23 Aug 2026**；页眉 *Last updated: August 25, 2026*；`https://arxiv.org/abs/2412.06769`（**18** 页 letter） | 一手：范式、课程、ProsQA 潜搜索分析、主表 |
 | **镜像** | OpenReview PDF | https://openreview.net/pdf?id=KrWSrrYGpT | 议程备链；本笔记数字以 arXiv 官方 PDF 为准 |
 | **代码** | facebookresearch/**coconut** | https://github.com/facebookresearch/coconut（文首页） | 复现入口；本卡不 walkthrough |
 
@@ -224,8 +224,6 @@ Coconut 变体：**w/o curriculum**（直接末阶段）；**w/o thought**（同
 1. **Coconut = 把 CoT 的「词回路」改成「连续 hidden 回路」**，用 `<bot>`/`<eot>` 切换模式，用多阶段课程把语言步逐步换成 $c$ 个 continuous thoughts。
 2. **在 ProsQA 这类需规划的逻辑图上**，潜表示可并行编码多下一跳并推迟承诺，行为上像 **隐式 BFS**——这与 [[推理时树搜索ABMCTS]] 的 **显式外层树** 不是同一层机制。
 3. **实证**：逻辑任务上相对 CoT **更高或持平准确率、更少 token / 更短墙钟**；GSM8k 上相对 No-CoT 大涨、相对 CoT 未超越但效率前沿更好；**无课程则几乎失败**。
-
-**本地路径：** 架构/潜空间推理Coconut.md · PDF `https://arxiv.org/abs/2412.06769` · 抽取
 
 ## 相关笔记
 

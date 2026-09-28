@@ -27,13 +27,13 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 字段 | 核实值（PDF / / arXiv API） |
+| 字段 | 核实值（PDF / arXiv API） |
 |---|---|
 | 标题 | *EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test* |
 | 作者 | Yuhui Li, Fangyun Wei, Chao Zhang, Hongyang Zhang（Peking University / Microsoft Research / University of Waterloo / Vector Institute） |
 | arXiv | **2503.01840v3** \[cs.CL\]（published **2025-03-03**；updated **2025-04-23**） |
-| 官方 PDF | `https://arxiv.org/abs/2503.01840`（**12** 页 A4；CreationDate **2025-04-24** CST；946,062 bytes） |
-| 可选镜像 | NeurIPS 2025 Conference PDF（`curl -I` → **200**；`Content-Disposition: …eagle-3-…-Paper-Conference.pdf`） |
+| 官方 PDF | `https://arxiv.org/abs/2503.01840`（**12** 页 A4；CreationDate **2025-04-24** CST） |
+| 可选镜像 | NeurIPS 2025 Conference PDF：https://papers.nips.cc/paper_files/paper/2025/file/c7b5a35ea98b62512a869c19ea7b03cb-Paper-Conference.pdf |
 | 代码 | https://github.com/SafeAILab/EAGLE（摘要末句） |
 | 相对 B7 | B7「待核实」明示：EAGLE / EAGLE-2 须单独 PDF 后再补 → **本篇即该增量** |
 
@@ -47,7 +47,7 @@ archived: 2026-09-22
 |---|---|
 | 投机采样「草稿—并行校验、同分布」思想；Medusa / Lookahead 等入口 PDF | **不**重写；Table 1 有对照列时只录 EAGLE-2 vs EAGLE-3 |
 | 引擎选型：vLLM / SGLang / TRT-LLM；投机为 decode 轴因子 | **SGLang 集成表**（§4.3 Table 3–4）；vLLM Table 5 仅作附录交叉一句 |
-| 「勿编造未归档 EAGLE 倍率」 | 本 PDF 已落盘 → 倍率全部出摘要 / Table 1–4 |
+| 「勿编造未归档 EAGLE 倍率」 | 倍率全部出自官方 PDF 摘要 / Table 1–4 |
 
 **EAGLE → EAGLE-2 → EAGLE-3（论文自述，一句链）：**
 
@@ -210,7 +210,7 @@ Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不
 - 低/中/高层的 **具体层索引**与 FC 初始化：PDF 未给 → 读代码仓库再补。
 - EAGLE-3 在 TRT-LLM / 更新版 vLLM 默认图与接受率曲线：超出本 PDF 主表。
 - 405B / 671B：作者声明未测。
-- NeurIPS 相机就绪与 arXiv v3 是否逐字同文：镜像已 200，本笔记数字以落盘 arXiv PDF 为准。
+- NeurIPS 相机就绪与 arXiv v3 是否逐字同文：未逐字核对，本笔记数字以 arXiv v3 PDF 为准。
 
 ---
 

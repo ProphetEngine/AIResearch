@@ -148,7 +148,6 @@ Transformer 把「可并行的全局注意力编码器 / 解码器」立成新�
 
 ### 归档备注
 
-- PDF 下载：已成功写入 `https://arxiv.org/abs/1706.03762`（约 2.2 MB，`%PDF-1.5`）。
 - 摘要与 §1–§4、§3.2 公式、Table 1/2/3 要点经 ar5iv HTML 与 Annotated Transformer 交叉阅读；未编造未在原文出现的指标。
 
 ### 待核实

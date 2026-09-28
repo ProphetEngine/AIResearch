@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [AI Infra, 数学原理]
 status: archived
 sources:
- - https://arxiv.org/abs/2609.02897 # 550K / 13p
- - https://arxiv.org/abs/2604.02047 # 647K / 29p
+ - https://arxiv.org/abs/2609.02897
+ - https://arxiv.org/abs/2604.02047
 arxiv: ["2609.02897", "2604.02047"]
 related: ["B7", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", "ThunderKittens内核DSL", "KV缓存量化与压缩", "投机解码发展时间线"]
 ---
@@ -23,23 +23,17 @@ related: ["B7", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", "ThunderKittens�
 > - **≠ [[Prompt前缀缓存]] / [[NVSHMEM与DeepEP通信]] / [[ThunderKittens内核DSL]]**：不写 Prompt Caching 计费、NVSHMEM/DeepEP、ThunderKittens 内核 DSL。
 > - **≠ [[KV缓存量化与压缩]] / [[连续批处理与Orca]]**：不写 KV 量化、Orca 连续批处理。
 > **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。
-> **二进制**：两篇均 **≪10MB**（见 §一）→ **官方 HTTPS 外链**。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A** | Urbán, Kwon, Venieris & Mascolo, *Margins, Not Windows: Training-Free Per-Step Lossy Speculative Decoding* | arXiv:**2609.02897**v1 \[cs.CL\] **3 Jul 2026**；`https://arxiv.org/abs/2609.02897`（**550K**，562,524 B；**13** 页 A4） | **AdaptiveSpec**：margin 有损校验 + DCS 动态树；SGLang；vs EAGLE-3 / TALON\* / FLy\* |
-| **主文 B** | Jin, Nguyen & Inoue (JAIST), *Goose: Anisotropic Speculation Trees for Training-Free Speculative Decoding* | arXiv:**2604.02047**v2 \[cs.CL\] **10 Aug 2026**；COLM 2026；`https://arxiv.org/abs/2604.02047`（**647K**，662,064 B；**29** 页 letter） | **Goose**：各向异性脊柱树（PLD spine + TR branches）；无训；vs isotropic / PLD / TR / SuffixDecoding / EAGLE-2 |
+| **主文 A** | Urbán, Kwon, Venieris & Mascolo, *Margins, Not Windows: Training-Free Per-Step Lossy Speculative Decoding* | arXiv:**2609.02897**v1 \[cs.CL\] **3 Jul 2026**；`https://arxiv.org/abs/2609.02897`（**13** 页 A4） | **AdaptiveSpec**：margin 有损校验 + DCS 动态树；SGLang；vs EAGLE-3 / TALON\* / FLy\* |
+| **主文 B** | Jin, Nguyen & Inoue (JAIST), *Goose: Anisotropic Speculation Trees for Training-Free Speculative Decoding* | arXiv:**2604.02047**v2 \[cs.CL\] **10 Aug 2026**；COLM 2026；`https://arxiv.org/abs/2604.02047`（**29** 页 letter） | **Goose**：各向异性脊柱树（PLD spine + TR branches）；无训；vs isotropic / PLD / TR / SuffixDecoding / EAGLE-2 |
 
 **代码（文内明示，本篇不展开实现）：** Goose → `GOOSE_Speculative_Decoding`（摘要页符号链接式标注；完整 URL 以文内仓库为准）。AdaptiveSpec 未在摘要页给出独立 GitHub。
-
-| 文件 | 体积 | 备注 |
-|---|---|---|
-| `2609.02897-adaptivespec.pdf` | **550K** | **官方 HTTPS 外链**（≪10MB） |
-| `2604.02047-goose.pdf` | **647K** | **官方 HTTPS 外链**（≪10MB） |
 
 **一句话抓手：**
 - **AdaptiveSpec**：别再死守「严格 token 匹配 + 静态树」——用目标分布的 **margin** 放行近义错配，用草稿置信×滚动接受率 **每步改树深宽与节点数**；两条轴正交、增益可叠加。
@@ -202,11 +196,6 @@ RAR = 滚动接受率（EMA，$\alpha{=}0.3$）；再经除数 $d$ 饱和到 $[0
 
 ---
 
-## 八、回报摘要（供父代理）
+## 八、核心主张摘要
 
-- **笔记：** `/workspace/AIResearch-drafts/架构/推测解码/AdaptiveSpec与Goose.md
-- **PDF：**
- - `https://arxiv.org/abs/2609.02897` — **550K** — **外链引用**
- - `https://arxiv.org/abs/2604.02047` — **647K** — **外链引用**
-- **** `{adaptivespec,goose}.txt`
 - **核心主张（不编造）：** AdaptiveSpec 无训双轴，相对 EAGLE-3 平均约 +18–44% 吞吐（峰 +56%），准确率保留约 93%–无损；Goose 无训各向异性脊柱树，1.9–4.3× 无损加速，同预算相对 isotropic +12–33% τ。

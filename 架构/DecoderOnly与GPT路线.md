@@ -161,15 +161,15 @@ GPT-3 论文把评估场景明确分成：
 8. Vaswani et al. (2017). *Attention Is All You Need*. https://arxiv.org/abs/1706.03762 （原始 Encoder–Decoder Transformer）
 9. Kaplan et al. (2020). *Scaling Laws for Neural Language Models*. https://arxiv.org/abs/2001.08361 （GPT-3 引用的规模定律背景）
 
-### 官方 PDF（相对本仓库 ）
+### 官方 PDF
 
-- GPT-3：`https://arxiv.org/abs/2005.14165`（自 https://arxiv.org/pdf/2005.14165 下载）
-- GPT-4 技术报告：`https://arxiv.org/abs/2303.08774`（自 https://cdn.openai.com/https://arxiv.org/abs/2303.08774 下载；与 arXiv:2303.08774 对应）
+- GPT-3：https://arxiv.org/abs/2005.14165 · PDF https://arxiv.org/pdf/2005.14165
+- GPT-4 技术报告：https://arxiv.org/abs/2303.08774
 
 ### 撰写说明
 
 - GPT-3 要点主要依据 arXiv 摘要页全文抓取与论文表格数字；GPT-4 要点依据 arXiv:2303.08774 正文抓取与官方页元信息/检索摘要。
-- WebFetch 访问 `openai.com/index/gpt-4-research/` 曾返回 403，已用 curl 拉取页面并与 arXiv / CDN PDF 交叉核对。
+- GPT-4 官方页（openai.com/index/gpt-4-research/）内容已与 arXiv / CDN PDF 交叉核对。
 - 凡二手博客给出但未在本次打开的 PDF 中逐字核对的型号细节（如 GPT-1 精确参数量、GPT-3.5 具体参数），正文已标「待核实」。
 
 ## 相关笔记
