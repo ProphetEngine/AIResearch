@@ -335,9 +335,9 @@ LLM 辅助文档索引（站点提供）：`llms.txt` / `llms-guide.txt`；页�
 
 ## 相关笔记
 
-- [[Inspect评测Harness|Inspect Eval Harness]]
-- [[NemotronCC数据策展|Nemotron-CC 数据策展]]
-- [[评测与排行榜可靠性|评测与排行榜可靠性]]
-- [[代码智能体Harness史线|代码智能体 Harness 史线]]
-- [[WorfBench工作流基准|WorfBench 工作流基准]]
-- [[智能体工具与长程任务|智能体、工具与长程任务]]
+- [[Inspect评测Harness]]
+- [[NemotronCC数据策展]]
+- [[评测与排行榜可靠性]]
+- [[代码智能体Harness史线]]
+- [[WorfBench工作流基准]]
+- [[智能体工具与长程任务]]
