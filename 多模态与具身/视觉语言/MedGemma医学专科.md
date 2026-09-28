@@ -283,10 +283,10 @@ docs 允许的适应类型（须同等验证）：**prompt / ICL**、**fine-tuni
 
 ## 相关笔记
 
-- [[端侧小模型|On-device SLM]]
-- [[MedGemma医学专科|MedGemma]]
-- [[生物学基础模型|Biology Foundation Models]]
-- [[表格与时序基础模型|Tabular / Time-series FM]]
-- [[合成用户仿真|Synthetic User Simulation]]
-- [[Gemma4技术报告深读|Gemma 4]]
+- [[端侧小模型]]
+- [[MedGemma医学专科]]
+- [[生物学基础模型]]
+- [[表格与时序基础模型]]
+- [[合成用户仿真]]
+- [[Gemma4技术报告深读]]
 

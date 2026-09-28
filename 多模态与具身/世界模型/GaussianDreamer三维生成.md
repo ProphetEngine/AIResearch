@@ -276,6 +276,6 @@ ISM 接口（相对 SDS，文引 LucidDreamer）：用 DDIM inversion 得 $x_t$�
 
 ## 相关笔记
 
-- [[GaussianDreamer三维生成|GaussianDreamer]]
-- [[LeRobot开源栈|LeRobot]]
+- [[GaussianDreamer三维生成]]
+- [[LeRobot开源栈]]
 

@@ -272,9 +272,9 @@ EMMA：单调多头注意力同传策略 → AL / LAAL / Ending Offset
 
 ## 相关笔记
 
-- [[检索式注意力|RetrievalAttention]]
-- [[TEE机密推理|TEE Confidential Inference]]
-- [[模型合并|Model Merging]]
-- [[ZeroQAT量化感知训练|ZeroQAT]]
-- [[SeamlessM4T语音翻译|SeamlessM4T]]
+- [[检索式注意力]]
+- [[TEE机密推理]]
+- [[模型合并]]
+- [[ZeroQAT量化感知训练]]
+- [[SeamlessM4T语音翻译]]
 

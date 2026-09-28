@@ -196,6 +196,6 @@ Figure 2 侧写：Franka 场景多样性高；xArm 与 Google Robot 因若干大
 
 ## 相关笔记
 
-- [[GaussianDreamer三维生成|GaussianDreamer]]
-- [[LeRobot开源栈|LeRobot]]
+- [[GaussianDreamer三维生成]]
+- [[LeRobot开源栈]]
 

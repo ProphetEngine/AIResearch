@@ -232,8 +232,8 @@ Omni 锚点： 文本·图像·音频·视频入 → 文本出 + 流式语音出
 
 ## 相关笔记
 
-- [[SHADEArena隐瞒与监控|SHADE-Arena]]
-- [[天气气候基础模型|Weather / Climate FM]]
-- [[QwenOmni音视频原生|Qwen Omni]]
-- [[LearnLM教育辅导|LearnLM]]
+- [[SHADEArena隐瞒与监控]]
+- [[天气气候基础模型]]
+- [[QwenOmni音视频原生]]
+- [[LearnLM教育辅导]]
 
