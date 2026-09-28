@@ -236,20 +236,20 @@ Base（Table 2）：GLM-4.5-Base 355B/32B；内部评测框架；未训指令数
 ## 相关笔记
 
 ### 技术报告专项
-- [[DeepSeekV3训练与MoE基建|TR DeepSeek-V3]]
-- [[DeepSeekV32技术报告深读|TR DeepSeek-V3.2]]
-- [[Qwen3技术报告深读|TR Qwen3]]
-- [[DeepSeekR1推理训练深读|TR DeepSeek-R1]]
+- [[DeepSeekV3训练与MoE基建]]
+- [[DeepSeekV32技术报告深读]]
+- [[Qwen3技术报告深读]]
+- [[DeepSeekR1推理训练深读]]
 - [[GPT5系统卡深读]]
-- [[Gemini25技术报告深读|TR Gemini 2.5]]
+- [[Gemini25技术报告深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[KimiK2技术报告深读|TR Kimi K2]]
-- [[GLM45技术报告深读|TR GLM-4.5]]
-- [[MiniMaxM1技术报告深读|TR MiniMax-M1]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
+- [[KimiK2技术报告深读]]
+- [[GLM45技术报告深读]]
+- [[MiniMaxM1技术报告深读]]
+- [[SystemCard与TR扫描2025至2026]]
 
 ### 相关深度笔记
-- [[混合专家架构|MoE]]
-- [[开源与闭源前沿模型谱系|前沿谱系]]
-- [[AI基础设施总览|AI Infra]]
+- [[混合专家架构]]
+- [[开源与闭源前沿模型谱系]]
+- [[AI基础设施总览]]
 

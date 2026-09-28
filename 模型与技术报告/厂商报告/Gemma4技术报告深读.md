@@ -299,9 +299,9 @@ Gemma 4 把 Google 近月的「多模态 + 推理」能力，落成一套 **可�
 
 ## 相关笔记
 
-- [[Gemma4技术报告深读|Gemma 4]]
-- [[AXK2技术报告深读|AX-K2]]
-- [[UIVenus2GUI智能体|UI-Venus-2]]
-- [[宪法分类器防御|Constitutional Classifiers]]
-- [[过程奖励模型PRM谱系|Process Reward Models]]
+- [[Gemma4技术报告深读]]
+- [[AXK2技术报告深读]]
+- [[UIVenus2GUI智能体]]
+- [[宪法分类器防御]]
+- [[过程奖励模型PRM谱系]]
 

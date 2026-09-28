@@ -298,9 +298,9 @@ Fig. 4：Stage 2 与全注意力 LM loss 差约 **$10^{-4}$** 量级。
 ## 相关笔记
 
 - [[GPT6Astra系统卡深读]]
-- [[DeepSeekV41Flash深读|DeepSeek-V4.1 Flash]]
-- [[Qwen38Next架构深读|Qwen3.8-Next]]
+- [[DeepSeekV41Flash深读]]
+- [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]
-- [[GRPO与DAPO算法族|GRPO→DAPO]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描]]
+- [[GRPO与DAPO算法族]]
+- [[SystemCard与TR扫描2025至2026]]
 

@@ -227,16 +227,16 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 ## 相关笔记
 
 ### 技术报告专项
-- [[DeepSeekV3训练与MoE基建|TR DeepSeek-V3]]
-- [[Qwen3技术报告深读|TR Qwen3]]
-- [[DeepSeekR1推理训练深读|TR DeepSeek-R1]]
+- [[DeepSeekV3训练与MoE基建]]
+- [[Qwen3技术报告深读]]
+- [[DeepSeekR1推理训练深读]]
 - [[GPT5系统卡深读]]
-- [[Gemini25技术报告深读|TR Gemini 2.5]]
+- [[Gemini25技术报告深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
+- [[SystemCard与TR扫描2025至2026]]
 
 ### 相关深度笔记
-- [[开源与闭源前沿模型谱系|前沿谱系]]
-- [[智能体工具与长程任务|智能体与工具]]
-- [[评测与排行榜可靠性|评测可靠性]]
+- [[开源与闭源前沿模型谱系]]
+- [[智能体工具与长程任务]]
+- [[评测与排行榜可靠性]]
 

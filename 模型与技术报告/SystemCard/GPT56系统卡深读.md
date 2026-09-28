@@ -204,8 +204,8 @@ UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 
 ## 相关笔记
 
 - [[GPT5系统卡深读]]
-- [[GPT51SystemCard附录|TR GPT-5.1]]
-- [[GPT52SystemCard更新|TR GPT-5.2]]
+- [[GPT51SystemCard附录]]
+- [[GPT52SystemCard更新]]
 - [[GPT56系统卡深读]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描]]
+- [[SystemCard与TR扫描2025至2026]]
 

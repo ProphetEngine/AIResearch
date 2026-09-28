@@ -324,8 +324,8 @@ V3/V3.2 卡讲清「基座与 DSA/RL」；[[DeepSeekV41Flash深读]] 讲清「�
 
 ## 相关笔记
 
-- [[测试时训练|Test-Time Training]]
-- [[潜空间推理Coconut|Coconut]]
-- [[审慎对齐与断路器|Deliberative / Circuit Breakers]]
-- [[DeepSeekV4技术报告深读|DeepSeek-V4]]
+- [[测试时训练]]
+- [[潜空间推理Coconut]]
+- [[审慎对齐与断路器]]
+- [[DeepSeekV4技术报告深读]]
 

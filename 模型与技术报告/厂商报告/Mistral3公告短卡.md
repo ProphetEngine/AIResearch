@@ -34,9 +34,9 @@ Mistral AI 于 **2025-12-02** 发布 Mistral 3：包含面向边缘/本地的 Mi
 
 ### 技术报告专项
 - [[Grok4模型卡深读]]
-- [[Kimik15技术报告深读|TR Kimi k1.5]]
-- [[KimiK2技术报告深读|TR Kimi K2]]
-- [[Llama4待核实备忘|TR Llama 4 待核实备忘]]
-- [[Mistral3公告短卡|TR Mistral / Ministral-3]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
+- [[Kimik15技术报告深读]]
+- [[KimiK2技术报告深读]]
+- [[Llama4待核实备忘]]
+- [[Mistral3公告短卡]]
+- [[SystemCard与TR扫描2025至2026]]
 

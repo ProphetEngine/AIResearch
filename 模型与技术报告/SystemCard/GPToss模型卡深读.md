@@ -255,9 +255,9 @@ OpenAI 在 **2025-08-05** 放出 **gpt-oss-120b / 20b**：Apache 2.0、纯文本
 
 ## 相关笔记
 
-- [[多智能体辩论|Multi-Agent Debate]]
-- [[形式化验证与LLM|Formal Verification for LLM]]
+- [[多智能体辩论]]
+- [[形式化验证与LLM]]
 - [[GPToss模型卡深读]]
-- [[计算机使用智能体|Computer-Use Agents]]
-- [[ToRL工具集成强化学习|Tool-Use RL / ToRL]]
+- [[计算机使用智能体]]
+- [[ToRL工具集成强化学习]]
 

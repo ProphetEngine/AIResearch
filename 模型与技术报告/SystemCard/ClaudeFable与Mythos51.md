@@ -313,7 +313,7 @@ https://www.anthropic.com/claude-fable-and-mythos-5-1
 
 ## 相关笔记
 
-- [[SkySense遥感基础模型|SkySense]]
-- [[蛋白质设计|Protein Design]]
-- [[ClaudeFable与Mythos51|Claude Fable / Mythos 5.1]]
+- [[SkySense遥感基础模型]]
+- [[蛋白质设计]]
+- [[ClaudeFable与Mythos51]]
 

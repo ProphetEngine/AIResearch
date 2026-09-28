@@ -86,14 +86,14 @@ archived: 2026-09-22
 ## 相关笔记
 
 ### 技术报告专项
-- [[DeepSeekV3训练与MoE基建|TR DeepSeek-V3]]
-- [[Qwen3技术报告深读|TR Qwen3]]
-- [[DeepSeekR1推理训练深读|TR DeepSeek-R1]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
+- [[DeepSeekV3训练与MoE基建]]
+- [[Qwen3技术报告深读]]
+- [[DeepSeekR1推理训练深读]]
+- [[SystemCard与TR扫描2025至2026]]
 
 ### 相关深度笔记
-- [[混合专家架构|MoE]]
-- [[推理时扩展TestTimeScaling|Test-time scaling]]
-- [[开源与闭源前沿模型谱系|前沿谱系]]
-- [[AI基础设施总览|AI Infra]]
+- [[混合专家架构]]
+- [[推理时扩展TestTimeScaling]]
+- [[开源与闭源前沿模型谱系]]
+- [[AI基础设施总览]]
 

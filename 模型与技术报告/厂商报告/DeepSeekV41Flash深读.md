@@ -296,9 +296,9 @@ V3/V3.2 卡讲清「基座怎么训、DSA/RL 怎么叠加」；本卡讲清「�
 ## 相关笔记
 
 - [[GPT6Astra系统卡深读]]
-- [[DeepSeekV41Flash深读|DeepSeek-V4.1 Flash]]
-- [[Qwen38Next架构深读|Qwen3.8-Next]]
+- [[DeepSeekV41Flash深读]]
+- [[Qwen38Next架构深读]]
 - [[ClaudeOpus5系统卡深读]]
-- [[GRPO与DAPO算法族|GRPO→DAPO]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描]]
+- [[GRPO与DAPO算法族]]
+- [[SystemCard与TR扫描2025至2026]]
 

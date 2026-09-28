@@ -235,11 +235,11 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 
 ### 技术报告专项
 - [[GPT5系统卡深读]]
-- [[GPT51SystemCard附录|TR GPT-5.1 Addendum]]
-- [[GPT52SystemCard更新|TR GPT-5.2 Update]]
-- [[Gemini25技术报告深读|TR Gemini 2.5]]
+- [[GPT51SystemCard附录]]
+- [[GPT52SystemCard更新]]
+- [[Gemini25技术报告深读]]
 - [[Gemini3Pro模型卡深读]]
 - [[ClaudeOpus41系统卡附录深读]]
 - [[ClaudeOpus45系统卡深读]]
-- [[SystemCard与TR扫描2025至2026|TR 扫描 2025-06→2026-09]]
+- [[SystemCard与TR扫描2025至2026]]
 
