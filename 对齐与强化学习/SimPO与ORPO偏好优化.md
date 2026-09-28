@@ -300,7 +300,7 @@ $$
 
 ## 相关笔记
 
-- [[推理时树搜索ABMCTS|AB-MCTS]]
-- [[SimPO与ORPO偏好优化|SimPO / ORPO]]
-- [[VendingBench经营长程评测|Vending-Bench]]
+- [[推理时树搜索ABMCTS]]
+- [[SimPO与ORPO偏好优化]]
+- [[VendingBench经营长程评测]]
 

@@ -316,8 +316,8 @@ Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** →
 
 ## 相关笔记
 
-- [[GRPO与DAPO算法族|GRPO→DAPO]]
-- [[DeepSeekR1推理训练深读|TR DeepSeek-R1]]
-- [[对齐脉络RLHF与偏好优化|对齐]]
-- [[推理时扩展TestTimeScaling|Test-time scaling]]
+- [[GRPO与DAPO算法族]]
+- [[DeepSeekR1推理训练深读]]
+- [[对齐脉络RLHF与偏好优化]]
+- [[推理时扩展TestTimeScaling]]
 
