@@ -29,10 +29,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A** | Lightman et al., *Let’s Verify Step by Step* | OpenAI CDN PDF（CreationDate **2023-06-01**）；arXiv **2305.20050**；`https://arxiv.org/abs/2305.20050`（**29** 页 letter；4,498,809 bytes） | 人类逐步标注 → **PRM800K**；MATH 上 PRM ≫ ORM（Best-of-N） |
-| **主文 B** | Wang et al., *Math-Shepherd* | arXiv **2312.08935v3** \[cs.AI\] **19 Feb 2024**；`https://arxiv.org/abs/2312.08935`（**15** 页；827,225 bytes） | **无人工标注**的自动过程监督；**验证 + step-by-step PPO** |
+| **主文 A** | Lightman et al., *Let’s Verify Step by Step* | OpenAI CDN PDF（CreationDate **2023-06-01**）；arXiv **2305.20050**；`https://arxiv.org/abs/2305.20050`（**29** 页 letter） | 人类逐步标注 → **PRM800K**；MATH 上 PRM ≫ ORM（Best-of-N） |
+| **主文 B** | Wang et al., *Math-Shepherd* | arXiv **2312.08935v3** \[cs.AI\] **19 Feb 2024**；`https://arxiv.org/abs/2312.08935`（**15** 页） | **无人工标注**的自动过程监督；**验证 + step-by-step PPO** |
 | **可选地图** | Zheng et al., *A Survey of Process Reward Models* | arXiv **2510.08049v3** \[cs.CL\] **29 Apr 2026**；`https://arxiv.org/abs/2510.08049`（**17** 页 A4） | data → build → use（TTS / RL）全环综述；GitHub: `despzcm/Survey-of-Process-Reward-Model` |
 
 **一句话抓手：** ORM 只看终答对错；PRM 给**每一步**打分，既可做 **Best-of-N / 搜索** 的验证器，又可做 **逐步 dense reward** 喂 RL——Lightman 用人类标注证明过程监督在难题上显著更强并放出 PRM800K；Math-Shepherd 用「从该步续写能否得到金标答案」自动造逐步标签，打通验证与过程 PPO；后续工作把这条枢纽接到更广的 TTS / 过程 RL 闭环（见综述地图，细节不展开算法族）。
@@ -239,7 +239,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 | 项 | 状态 |
 |---|---|
-| Uesato et al. 2022 原文数字表 | 仅经 Lightman/Shepherd 转述；未落盘深读 |
+| Uesato et al. 2022 原文数字表 | 仅经 Lightman/Shepherd 转述；未深读 |
 | Lightman generator/ORM 具体 GPT-4 变体与 MathMix 构造细节 | Appendix A 未全文展开进本卡 |
 | Math-Shepherd SE vs HE 完整消融曲线 | §5 有分析；本卡只录 HE 主实验设定 |
 | 综述中 OmegaPRM / GenPRM / PURE min-form 等 | **仅索引**，数字待各自 PDF |

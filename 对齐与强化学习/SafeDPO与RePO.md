@@ -5,9 +5,9 @@ date: 2026-09-22
 lines: [架构思想, 目标函数接口, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2505.20065 # 1.9M / 40p（主 A）
- - https://arxiv.org/abs/2606.09124 # 4.6M / 33p（主 B）
- - https://arxiv.org/abs/2511.09385 # 608K / 20p（补链，不升主）
+ - https://arxiv.org/abs/2505.20065
+ - https://arxiv.org/abs/2606.09124
+ - https://arxiv.org/abs/2511.09385
 arxiv: ["2505.20065", "2606.09124", "2511.09385"]
 related:
  - "对齐脉络RLHF与偏好优化"
@@ -38,27 +38,19 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主 A** | *SafeDPO: A Simple Approach to Direct Preference Optimization with Enhanced Safety* | arXiv:**2505.20065v2** \[cs.LG\]（**4 Mar 2026**）；ICLR 2026；Kim, Kim, Kim, Lee, Bae*, Jang†§, Lee‡§（LG AI Research） | `https://arxiv.org/abs/2505.20065` | **1.81MB**（1,897,644 B） | **40** | |
-| **主 B** | *A Regret Minimization Framework on Preference Learning in Large Language Models* | arXiv:**2606.09124v1** \[cs.AI\]（**8 Jun 2026**）；ICML 2026（PMLR 306）；Kim*, Cho*†, Kim, Kim, Jang‡, Lee‡, Lee‡（SNU / LG AI Research / UNIST / HodooAI） | `https://arxiv.org/abs/2606.09124` | **4.58MB**（4,805,395 B） | **33** | |
-| **补链** | *AMaPO: Adaptive Margin-attached Preference Optimization for Language Model Alignment* | arXiv:**2511.09385v2** \[cs.CL\]（**15 Nov 2025**）；AAAI 2026；Deng, Feng, Lei*（川大） | `https://arxiv.org/abs/2511.09385` | **0.59MB**（622,109 B） | **20** | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主 A** | *SafeDPO: A Simple Approach to Direct Preference Optimization with Enhanced Safety* | arXiv:**2505.20065v2** \[cs.LG\]（**4 Mar 2026**）；ICLR 2026；Kim, Kim, Kim, Lee, Bae*, Jang†§, Lee‡§（LG AI Research） | `https://arxiv.org/abs/2505.20065` | **40** |
+| **主 B** | *A Regret Minimization Framework on Preference Learning in Large Language Models* | arXiv:**2606.09124v1** \[cs.AI\]（**8 Jun 2026**）；ICML 2026（PMLR 306）；Kim*, Cho*†, Kim, Kim, Jang‡, Lee‡, Lee‡（SNU / LG AI Research / UNIST / HodooAI） | `https://arxiv.org/abs/2606.09124` | **33** |
+| **补链** | *AMaPO: Adaptive Margin-attached Preference Optimization for Language Model Alignment* | arXiv:**2511.09385v2** \[cs.CL\]（**15 Nov 2025**）；AAAI 2026；Deng, Feng, Lei*（川大） | `https://arxiv.org/abs/2511.09385` | **20** |
 
 | 材料 | 代码 / 数据（文内） |
 |---|---|
 | SafeDPO | 训练仓：**未见**作者自发布 URL。数据：`PKU-Alignment/PKU-SafeRLHF-30K`；参考起点：`alpaca-7b-reproduced-llama-2`；评判：`beaver-7b-unified-reward` / `beaver-7b-unified-cost` |
 | RePO | 训练仓：**未见**作者自发布 URL。基线实现索引：OpenRLHF（DPO/IPO/KTO）、RPO、TDPO 第三方仓（附录） |
 | AMaPO（补链） | `https://github.com/Shiroha-Offical/AMaPO`（文首标注；本卡不跟 commit） |
-
-**体积判定（2026-09-22 CST，`ls` / `os.path.getsize`）：**
-
-| 文件 | 体积 | 备注 |
-|---|---|---|
-| `2505.20065-safedpo.pdf` | **1.81MB** | **官方 HTTPS 外链**（≪10MB） |
-| `2606.09124-repo.pdf` | **4.58MB** | **官方 HTTPS 外链**（≪10MB） |
-| `2511.09385-amapo.pdf` | **0.59MB** | **官方 HTTPS 外链**（补链；≪10MB） |
 
 **一句话抓手：**
 - **SafeDPO**：别再训 cost RM / 多阶段 SafeRLHF——用安全标签 **换序/丢弃** 偏好对，再可选加 $\Delta$ 间隔，把硬约束收成单阶段 DPO。
@@ -315,7 +307,7 @@ $$
 4. 把 RePO 写成 KTO「又一个非 BT」——KTO 是二元标签+前景理论（[[SimPO与ORPO偏好优化]]）；RePO 仍用成对 BT 外壳，改的是 **score=负遗憾**。
 5. 只报 RePO 赢的榜、抹掉 Arena-Hard / AMC23 上 KTO 更高的行。
 6. 把 AMaPO 当第三主文——与 SimPO margin 轴过近，议程指定补链。
-7. 编造 SafeDPO/RePO 官方 GitHub——本地抽取 **未见**；仅 AMaPO 有文首仓。
+7. 编造 SafeDPO/RePO 官方 GitHub——官方 PDF **未见**；仅 AMaPO 有文首仓。
 
 **开放问题（文内已暗示，本卡不编造答案）：** SafeDPO 数据集单一、≤13B；过拒–安全帕累托如何调 $\Delta$ 以外的机制；RePO 的 $\bar D_{\mathrm{KL}}$ 截断偏差与跨域 tokenizer；遗憾偏置在非 verifier 域是否仍成立。
 
@@ -329,15 +321,6 @@ $$
 - **与本卡双主的关系：** AMaPO 不引入安全约束，也不改「奖励 vs 遗憾」语义；若后续单独立项，应挂 [[SimPO与ORPO偏好优化]] 延伸而非本卡续篇。
 
 ---
-
-| 文件 | `ls` 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `https://arxiv.org/abs/2505.20065` | 1,897,644 B（**1.81MB**） | 40 | **入库二进制** + 抽取 |
-| `https://arxiv.org/abs/2606.09124` | 4,805,395 B（**4.58MB**） | 33 | **入库二进制** + 抽取 |
-| `https://arxiv.org/abs/2511.09385` | 622,109 B（**0.59MB**） | 20 | **入库二进制**（补链）+ 抽取 |
-
-{safedpo,repo,amapo}.txt`（并镜像 ）。
-笔记路径：`/workspace/AIResearch-drafts/对齐与强化学习/SafeDPO与RePO.md。
 
 **本卡主张锚点（抽查用）：**
 - SafeDPO $T$ 三分支与式 (11)(12)；命题 4.3/4.4；Table 17 harmless ratio **96.87%**；XSTest 过拒 **12.4%** / 无害 **100%**。

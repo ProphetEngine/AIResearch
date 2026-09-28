@@ -33,7 +33,7 @@ archived: 2026-09-22
 
 ## 一、材料元信息与对照抓手
 
-| 材料 | 标识 | 本地 | 页数 / 版本 | 流水线角色 |
+| 材料 | 标识 | 链接 / 元数据 | 页数 / 版本 | 流水线角色 |
 |---|---|---|---|---|
 | **主文 A** | Xu, Jiang, Niu, Deng, Poovendran, Choi, Lin (UW / AI2), *Magpie: Alignment Data Synthesis from Scratch by Prompting Aligned LLMs with Nothing* | arXiv:**2406.08464v2** \[cs.CL\] **7 Oct 2024**；`https://arxiv.org/abs/2406.08464` | **32** 页（ CreationDate **2024-10-08** CST） | **无种子、无提示工程**：只喂 chat **pre-query template**，自回归吐出 user query，再生成 response → SFT / DPO 数据 |
 | **主文 B** | Melikidze, Schneider, Lam, Wertich, Hakimi, Pásztor, Krause (ETH / UZH), *ActiveUltraFeedback: Efficient Preference Data Generation using Active Learning* | arXiv:**2603.09692v2** \[cs.LG\] **1 Jun 2026**（published **2026-03-10**）；ICML 2026（文眉 PMLR 306）；`https://arxiv.org/abs/2603.09692` | **40** 页 | **主动学习选偏好对**：多模型池生成候选 → ENN 奖励+不确定度 → DRTS / DeltaUCB 等选对 → LLM judge 标注 → 再训奖励模型 |
@@ -296,11 +296,10 @@ Base 绝对分：GSM8K **0.758** / IFEval **0.713** / TruthfulQA **0.468** / Alp
 
 ## 八、来源与核验
 
-| 项 | 路径 / 标识 |
+| 项 | 链接 / 标识 |
 |---|---|
 | Magpie PDF | `https://arxiv.org/abs/2406.08464`（32 页，v2，2024-10-08 CST） |
 | ActiveUF PDF | `https://arxiv.org/abs/2603.09692`（40 页，v2） |
-| 文本抽取 | · `activeultrafeedback.txt`（2026-09-22 CST） |
 | arXiv API | 2406.08464v2；2603.09692v2（查询 2026-09-22） |
 
 **未覆盖（有意）：** Magpie 附录全部 filter 消融表、生成温度对难度的细曲线；ActiveUF 全部 GPU-hour 表与种子稳定性数值表——需要时回 PDF App.F/G，不在本卡扩写。

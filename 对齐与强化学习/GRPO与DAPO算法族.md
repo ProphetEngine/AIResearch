@@ -308,10 +308,10 @@ Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** →
 
 ## 九、来源清单
 
-1. Shao et al., 2024. *DeepSeekMath* — arXiv:**2402.03300**；本地 `https://arxiv.org/abs/2402.03300`。
-2. Yu et al., 2025. *DAPO* — arXiv:**2503.14476**；本地 `https://arxiv.org/abs/2503.14476`；https://dapo-sia.github.io/ 。
-3. Liu et al., 2025. *Understanding R1-Zero-Like Training*（**Dr. GRPO**）— arXiv:**2503.20783**；本地 `https://arxiv.org/abs/2503.20783`。
-4. Mroueh, 2025. *RL with Verifiable Rewards: GRPO’s Effective Loss…* — arXiv:**2503.06639**；本地 `https://arxiv.org/abs/2503.06639`（可选动力学）。
+1. Shao et al., 2024. *DeepSeekMath* — arXiv:**2402.03300**；`https://arxiv.org/abs/2402.03300`。
+2. Yu et al., 2025. *DAPO* — arXiv:**2503.14476**；`https://arxiv.org/abs/2503.14476`；https://dapo-sia.github.io/ 。
+3. Liu et al., 2025. *Understanding R1-Zero-Like Training*（**Dr. GRPO**）— arXiv:**2503.20783**；`https://arxiv.org/abs/2503.20783`。
+4. Mroueh, 2025. *RL with Verifiable Rewards: GRPO’s Effective Loss…* — arXiv:**2503.06639**；`https://arxiv.org/abs/2503.06639`（可选动力学）。
 5. 交叉：模型与技术报告/厂商报告/DeepSeekR1推理训练深读.md（阶段表权威源，本篇不复制）。
 
 ## 相关笔记

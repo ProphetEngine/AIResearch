@@ -26,20 +26,18 @@ related: ["宪法分类器防御", "对齐脉络RLHF与偏好优化", "法律专
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文** | Delage, Canu, Décombas & Foureur (**JustAI** / **INSA Rouen Normandie**), *Statutory AI: Aligning Large Language Models With Legal Norms* | arXiv:**2608.28593v1** \[cs.AI\] **13 Jun 2026**；`https://arxiv.org/abs/2608.28593`（**166K**，**15** 页 letter） | **规范来源变体**：刑法主题分类 → 条文字典 → **单轮** CoT 批判/修订；与 CAI 批判环对照 |
-| **补链** | Bai et al. (Anthropic), *Constitutional AI: Harmlessness from AI Feedback* | arXiv:**2212.08073v1** \[cs.CL\] **15 Dec 2022**；`https://arxiv.org/abs/2212.08073`（**2.0M**，**34** 页； CreationDate **2022-12-19 CST**） | **谱系**：SL 批判修订（SL-CAI）+ RLAIF；本卡**不**重写全管线 |
+| **主文** | Delage, Canu, Décombas & Foureur (**JustAI** / **INSA Rouen Normandie**), *Statutory AI: Aligning Large Language Models With Legal Norms* | arXiv:**2608.28593v1** \[cs.AI\] **13 Jun 2026**；`https://arxiv.org/abs/2608.28593`（**15** 页 letter） | **规范来源变体**：刑法主题分类 → 条文字典 → **单轮** CoT 批判/修订；与 CAI 批判环对照 |
+| **补链** | Bai et al. (Anthropic), *Constitutional AI: Harmlessness from AI Feedback* | arXiv:**2212.08073v1** \[cs.CL\] **15 Dec 2022**；`https://arxiv.org/abs/2212.08073`（**34** 页；CreationDate **2022-12-19 CST**） | **谱系**：SL 批判修订（SL-CAI）+ RLAIF；本卡**不**重写全管线 |
 
 **开源（主文自报，本篇不展开实现）：** `https://github.com/justai-labs/statutory-ai`
 
 **一句话抓手：**
 - **CAI**：少量人类写的 **constitution 原则** 驱动 AI 自批自改，再可选进 SL / RLAIF。
 - **Statutory AI**：把原则换成 **已有成文法律条文**（本稿五类刑法主题），先 **主题分类** 再 **一次** 批判/修订；文称有害率降幅约 **52–59 pp**，较同设定 CAI 批判环约高 **10 pp**，且计算时间砍半以上。
-
-**体积判定：** 两 PDF 均 **<20MB**，按验收规矩 ****。
 
 ---
 
@@ -221,16 +219,6 @@ Abstract：**计算时间削减超过 50%**（与单轮 vs 最多四轮、以及
 
 ---
 
-## 七、來源与抽取索引
-
-| 路径 | 体积 | 页数 | 用途 |
-|---|---|---|---|
-| `https://arxiv.org/abs/2608.28593` | **166K** | 15 | Statutory AI 全文（主） |
-| `https://arxiv.org/abs/2212.08073` | **2.0M** | 34 | CAI 谱系补链 |
-| | — | — | |
-| | — | — | 同上 |
-
-**体积政策：** 两篇均 **≪20MB**，二进制保留；无权重 / 数据集 / 视频附件。
 **安全政策：** 笔记 **未** 收录对抗提示样例、越狱步骤或可复现绕过配方；评测仅保留表内聚合字段。
 
 **状态：** `draft` · date **2026-09-22** · 跟读语言：中文。
