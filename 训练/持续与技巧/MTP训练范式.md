@@ -18,13 +18,12 @@ archived: 2026-09-22
 
 # MTP 训练范式：AdaMTP + MTP-D + OCC（≠ EntMTP）
 
-> **定位**：MTP训练范式 **P1 Infra / 训练横切**——在 **B7** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补（草稿头训练增量）、**[[EntMTP熵引导投机解码]]** 已写（**训练免费**的运行时选树调度）之后，本卡只写 **MTP 头/损失本身怎么训**：三条训练范式主文 **AdaMTP**（熵分段 + 动态掩码 MTP）、**MTP-D**（主头→MTP 头自蒸馏 + looped 扩头）、**OCC**（RL 后训联合 MTP 的最优系数在线校准）；**FastMTP** 仅作「训推对齐」补链，不升第三主轴。
+> **定位**：**Infra / 训练横切**——在 **[[推理引擎生态]]** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补（草稿头训练增量）、**[[EntMTP熵引导投机解码]]** 已写（**训练免费**的运行时选树调度）之后，本卡只写 **MTP 头/损失本身怎么训**：三条训练范式主文 **AdaMTP**（熵分段 + 动态掩码 MTP）、**MTP-D**（主头→MTP 头自蒸馏 + looped 扩头）、**OCC**（RL 后训联合 MTP 的最优系数在线校准）；**FastMTP** 仅作「训推对齐」补链，不升第三主轴。
 > **攻坚线**：**架构思想（主）**——监督深度 / 蒸馏对象 / RL 系数如何改 MTP 训练目标；**训练目标与系数字段（辅）**——文内 Avg、AR/CAR、speedup、AIME avg@32 等照录。
-> **硬划界（开篇写清）**：
-> - **≠ [[EntMTP熵引导投机解码]] EntMTP**：EntMTP 是推理期 **TopologyBank 选树**、**不改**目标权重；本卡改的是 **训练损失 / 头对齐 / RL λ**。二者都谈「熵」，但 AdaMTP 的熵用于 **训练数据分段与损失掩码**，EntMTP 的熵/path-value 用于 **在线换草稿树**——勿混。
+> **范围与相邻笔记**：
+> - **≠ [[EntMTP熵引导投机解码]] EntMTP**：EntMTP 是推理期 **TopologyBank 选树**、**不改**目标权重；本卡改的是 **训练损失 / 头对齐 / RL λ**。二者都谈「熵」，但 AdaMTP 的熵用于 **训练数据分段与损失掩码**，EntMTP 的熵/path-value 用于 **在线换草稿树**——二者不同。
 > - **≠ [[EAGLE3投机解码]] EAGLE-3**：不重写 training-time test、低/中/高特征融合、SGLang 大 batch 表；FastMTP 文内只「兼容 EAGLE-style 递归草稿」时点到接口，不展开 EAGLE 谱系。
-> - **≠ B7 投机通史**：不写 Leviathan / Chen / Medusa / Lookahead 证明与引擎选型全文；「自投机 draft–verify、同分布」只当无损接口一句。
-> **禁止编造**：倍率、AR/CAR、λ、TopN、基准分一律锚定官方 PDF（2026-09-22 CST）。
+> - **≠ [[推理引擎生态]] 投机通史**：不写 Leviathan / Chen / Medusa / Lookahead 证明与引擎选型全文；「自投机 draft–verify、同分布」只当无损接口一句。
 
 ---
 
@@ -39,8 +38,8 @@ archived: 2026-09-22
 
 | 材料 | 作者 / 机构（摘要页） | 代码（文内明示） |
 |---|---|---|
-| AdaMTP | Cui et al.（CityU / Huawei / MBZUAI / McGill / PKU） | 正文摘要区 **未给出** GitHub → 本卡不编造仓址 |
-| MTP-D | Zhao, Xie\* 等（Tencent LLM Dept.） | 正文 **未给出** GitHub → 不编造 |
+| AdaMTP | Cui et al.（CityU / Huawei / MBZUAI / McGill / PKU） | 正文摘要区 **未给出** GitHub |
+| MTP-D | Zhao, Xie\* 等（Tencent LLM Dept.） | 正文 **未给出** GitHub |
 | OCC | Wang, Chai 等（UCAS / CASIA / Meituan） | https://github.com/MarkXCloud/RL-MTP |
 | FastMTP | Cai 等（Tencent） | https://github.com/Tencent-BAC/FastMTP ；HF `TencentBAC/FastMTP` |
 
@@ -56,7 +55,7 @@ archived: 2026-09-22
 |---|---|---|
 | **[[EntMTP熵引导投机解码]]** | 「自投机 + 草稿树」是推理接口；熵可作可预测性信号 | TopologyBank、path-value 选树、Hydra/Medusa 默认树 tok/s 主表 |
 | **[[EAGLE3投机解码]]** | FastMTP「EAGLE-style 递归草稿」兼容句 | training-time test、多层特征融合、SGLang Table 3–4 |
-| **B7 投机通史** | draft–verify、边际同分布 → 无损加速 | Leviathan/Chen 证明、引擎选型全文 |
+| **[[推理引擎生态]] 投机通史** | draft–verify、边际同分布 → 无损加速 | Leviathan/Chen 证明、引擎选型全文 |
 
 ### 2.2 本卡三条主轴 vs 补链（训练阶段对照）
 
@@ -112,7 +111,7 @@ $$
 
 默认：$n=4$，$\lambda=0.1$；warm-up 1 epoch $10^{-3}$，joint 3 epochs $10^{-5}$；四卡 H800，全局 batch 256。语料：Math + Evol-Instruct-Code + Alpaca-GPT4；二阶段再抽 **10k**（数:码:通 ≈ 4:4:2）。
 
-### 3.4 推理双模式（§3.3，勿升格为 EntMTP）
+### 3.4 推理双模式（§3.3，≠ EntMTP）
 
 | 模式 | 行为 | 文内用途 |
 |---|---|---|
@@ -257,7 +256,7 @@ $$
 
 ## 八、跟读清单（可复述）
 
-1. **划界** ← 本卡 = MTP **训练**；EntMTP = **推理选树**；EAGLE-3 / B7 不重写。
+1. **划界** ← 本卡 = MTP **训练**；EntMTP = **推理选树**；EAGLE-3 / [[推理引擎生态]] 不重写。
 2. **AdaMTP** ← $\Delta E>\tau$ 切组 → $d_t$ → $\mathbf{1}(j{+}1\le d_t)$ 掩码；Avg 三骨干皆高于 NTP/MTP；GSM8K 上 Llama **2.12×**、Gemma **2.75×**。
 3. **MTP-D** ← $\mathrm{sg}$ + TopN=10k KL；4 头 **+7.5%** AR ≈ **+22.9%** 速；loop 可扩 8–16，摘要相对 1-head **+220.4%**。
 4. **OCC** ← $\Delta_{\mathrm{MTP}}=$ 相关 − 惩罚；CE 崩、Policy 先升后降；OCC Avg **61.7**（MiMo+DAPO）压过 Detach **58.9**，步时≈Detach。
@@ -265,12 +264,12 @@ $$
 
 ---
 
-## 九、待核实 / 不写
+## 九、局限与待核实
 
-- **不写**：EntMTP TopologyBank 主表；EAGLE-3 SGLang 表；B7 通史；Medusa/Hydra 方法课。
-- 正式引用以官方 PDF / arXiv HTTPS 为准；勿提交权重、数据集镜像、视频。
+- **不写**：EntMTP TopologyBank 主表；EAGLE-3 SGLang 表；[[推理引擎生态]] 通史；Medusa/Hydra 方法课。
+- 正式引用以官方 PDF / arXiv HTTPS 为准。
 - **AdaMTP / MTP-D**：文内无 GitHub → 不强行补仓。
-- **MTP-D「+220.4%」**：摘要宣称；细粒度任务分解以 Fig.5 / Table 8 为准，跨表勿自行换算成未出现的 tok/s。
+- **MTP-D「+220.4%」**：摘要宣称；细粒度任务分解以 Fig.5 / Table 8 为准，跨表不宜换算成未出现的 tok/s。
 - **OCC**：GSPO 行 CE Avg 文表为 50.0，与各点分手算均值若有排版歧义，以 PDF Table 1 印刷为准。
 - **FastMTP**：仅补链；中英词表压缩细节、完整七基准 tok/s 表不升主文。
 

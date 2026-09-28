@@ -1,5 +1,5 @@
 ---
-title: "低资源区域专报：SEA-LION-v4.8（≠ B9 通史）"
+title: "低资源区域专报：SEA-LION-v4.8（≠ 多语通史）"
 topic: SEA-LION低资源区域模型
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -18,15 +18,15 @@ retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# 低资源区域专报：SEA-LION-v4.8（≠ B9 通史）
+# 低资源区域专报：SEA-LION-v4.8（≠ [[多语言与跨语种]] 通史）
 
-> **定位**：SEA-LION低资源区域模型 **P1 低资源区域专报**——立 **东南亚（SEA）区域适配栈**：在 NVIDIA Nemotron 3 开源基座上做 **继续预训练（CPT）+ SFT / 在线 on-policy 蒸馏（OPD）后训练**，并以更新版 **SEA-HELM** 做区域评测。主文：AI Singapore *SEA-LION-v4.8: A Technical Report*（arXiv:**2609.18310**v3，**18 Sep 2026**）。
+> **定位**：**低资源区域专报**——立 **东南亚（SEA）区域适配栈**：在 NVIDIA Nemotron 3 开源基座上做 **继续预训练（CPT）+ SFT / 在线 on-policy 蒸馏（OPD）后训练**，并以更新版 **SEA-HELM** 做区域评测。主文：AI Singapore *SEA-LION-v4.8: A Technical Report*（arXiv:**2609.18310**v3，**18 Sep 2026**）。
 > **攻坚线**：**架构思想（区域 CPT / 蒸馏接口，主）** + **评测字段（SEA-HELM 语种分 / 能力分，辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ B9**：禁止重写 XLM-R / BLOOM / 旗舰「语种覆盖 × 配比」通史；本卡只写 **SEA 区域落地配方与 SEA-HELM 数字**，多语通史仅作动机一句。
-> - **≠ [[NemotronCC数据策展]]**：禁止重写 **Nemotron-CC 语料清洗篇**；本卡 CPT 混合只列文内 Table 2 组件与权重，不展开通用网页过滤管线。
-> - **≠ [[Nemotron3Ultra技术报告深读]]**：禁止把本卡写成 **Nemotron 3 Ultra 基座旗舰全文**；基座 **Mamba2–Transformer / LatentMoE 混合 MoE** 只交叉 **一句**，主轴停在 **区域 CPT + OPD + SEA-HELM**。
-> **禁止编造**：主张、token 量、表数字一律锚定官方 PDF（2026-09-22 CST）；辅站 / HF 仅作入口索引，**禁下权重**。
+> **范围与相邻笔记**：
+> - **≠ [[多语言与跨语种]]**：不重写 XLM-R / BLOOM / 旗舰「语种覆盖 × 配比」通史；本卡只写 **SEA 区域落地配方与 SEA-HELM 数字**，多语通史仅作动机一句。
+> - **≠ [[NemotronCC数据策展]]**：不重写 **Nemotron-CC 语料清洗篇**；本卡 CPT 混合只列文内 Table 2 组件与权重，不展开通用网页过滤管线。
+> - **≠ [[Nemotron3Ultra技术报告深读]]**：本卡不写成 **Nemotron 3 Ultra 基座旗舰全文**；基座 **Mamba2–Transformer / LatentMoE 混合 MoE** 只交叉 **一句**，主轴停在 **区域 CPT + OPD + SEA-HELM**。
+> 辅站 / HF 仅作入口索引。
 
 ---
 
@@ -41,7 +41,7 @@ timezone: Asia/Shanghai (CST)
 
 **一手 PDF：** **有**（arXiv）；Title=`SEA-LION-v4.8: A Technical Report`。
 
-### 1.1 Hugging Face 索引（禁下权重）
+### 1.1 Hugging Face 索引
 
 Collection：`aisingapore/sea-lion-v48-6aaa084b80451baa08e73db0` → https://huggingface.co/collections/aisingapore/sea-lion-v48-6aaa084b80451baa08e73db0
 
@@ -66,21 +66,21 @@ API 索引（`author=aisingapore&search=Nemotron-SEA-LION-v4.8`，2026-09-22；*
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 / 同波 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
-| **B9** | 「多语覆盖不均、低资源脚本吃亏」动机一句；XLM-R curse / BLOOM ROOTS **不重写** | 编码器多语 MLM、ROOTS 语种表、旗舰配比旋钮通史 |
+| **[[多语言与跨语种]]** | 「多语覆盖不均、低资源脚本吃亏」动机一句；XLM-R curse / BLOOM ROOTS **不重写** | 编码器多语 MLM、ROOTS 语种表、旗舰配比旋钮通史 |
 | **[[NemotronCC数据策展]]** | CPT 用到的 Nemotron 系 SFT/推理子集名可索引；清洗哲学不展开 | Nemotron-CC 过滤 / 去重 / 质量分类全文 |
 | **[[Nemotron3Ultra技术报告深读]]** | 初始化自 Nemotron 3 Nano / Super；教师 Ultra 550B **作 OPD 信号源一句**；混合 MoE 架构名一句 | Ultra 训练配方、agentic 旗舰评测、LatentMoE 消融全文 |
 
-### 2.2 本卡主轴 vs 禁区
+### 2.2 本卡主轴 vs 范围外
 
 | 写 | 不写 |
 |---|---|
 | 四卡发布：30B/120B × Base/Instruct；CPT 混合 Table 2；OPD+SFT 异步管线 Figure 5 / Table 4 | 从零预训练配方；Nemotron 3 Ultra 模型 TR |
 | Tokenizer **保留原 Nemotron** 的效率瓶颈（Khmer/Lao/Tamil≈5×）；Filipino **未入 CPT** 的失败模式分化 | 词表扩张 / 新 tokenizer 训练实现细节（文内留作未来工作） |
-| SEA-HELM 7 语 + 8 能力维；Table 5–7 点估计 | 把 SEA-Guard 产品线写成第二主轴；编造 live 榜未核分数 |
+| SEA-HELM 7 语 + 8 能力维；Table 5–7 点估计 | 把 SEA-Guard 产品线写成第二主轴；live 榜未核分数 |
 
-跟读口诀：**B9 问「多语权衡通史」；[[NemotronCC数据策展]] 问「通用语料怎么洗」；[[Nemotron3Ultra技术报告深读]] 问「Nemotron 3 旗舰怎么训」；本卡问「已有强基座如何 CPT+OPD 成 SEA 区域模型，并用 SEA-HELM 量出来」。**
+跟读口诀：**[[多语言与跨语种]] 问「多语权衡通史」；[[NemotronCC数据策展]] 问「通用语料怎么洗」；[[Nemotron3Ultra技术报告深读]] 问「Nemotron 3 旗舰怎么训」；本卡问「已有强基座如何 CPT+OPD 成 SEA 区域模型，并用 SEA-HELM 量出来」。**
 
 ---
 
@@ -187,7 +187,7 @@ SEA 覆盖语种叙述（§3.1）：Balinese, Burmese, Indonesian, Javanese, Khm
 | Nemotron 3 Super | 120 | 49.30 | 4.98 | 66.92 | 70.78 | 68.66 | 21.83 | 56.61 | 55.31 |
 | **SEA-LION v4.8 120B** | 120 | **63.44** | **31.35** | **71.01** | **73.10** | **73.25** | **56.35** | **68.66** | **70.36** |
 
-**读表注意（禁混比）：**
+**读表注意（不可混比）：**
 - Abstract / Figure 1a 叙述 30B 总体 **46.06→51.57**（对 **Lightning**）；§6.1 正文写 **46.89→51.57**（对 **Nano**）。两基线同表均给出，跟读时标明对照对象。
 - 120B：**49.30→63.44**（对 Super）无歧义。
 - 最大相对跃升（120B）：**MY 4.98→31.35**；**TA 21.83→56.35**（与博文 6.3× / 2.6× 叙述一致）。
@@ -212,17 +212,7 @@ SEA 覆盖语种叙述（§3.1）：Balinese, Burmese, Indonesian, Javanese, Khm
 
 ---
 
-## 七、跟读清单与验收锚点
+## 七、主数字锚
 
-1. 开篇划界句可回链 Agenda [[SEA-LION低资源区域模型]]：「≠ B9；≠ [[NemotronCC数据策展]]；≠ [[Nemotron3Ultra技术报告深读]]——只写区域适配与评测，基座架构交叉一句」。
-2. 主数字锚：CPT **150B / 33.5B**；SEA **51.57 / 63.44**；MY/TA 120B 分；教师 Ultra 仅作 OPD 交叉。
-3. HF：十个 `Nemotron-SEA-LION-v4.8-*` ID **仅索引**；确认未 `huggingface-cli download` 权重。
-4. 禁止把本卡扩写成 B9 多语通史、[[NemotronCC数据策展]] 语料篇或 [[Nemotron3Ultra技术报告深读]] Ultra 旗舰正文。
-
----
-
-## 八、缺口回填（对照 Agenda）
-
-Agenda [[SEA-LION低资源区域模型]]：「B9 写 XLM-R/BLOOM/旗舰语种配比通史。近窗 **SEA-LION-v4.8** 提供东南亚多语（含缅甸/泰米尔等）继续预训练 + SEA-HELM 评测的一手专报，可补『区域低资源落地栈』。划界 ≠B9；≠[[NemotronCC数据策展]]；≠[[Nemotron3Ultra技术报告深读]]。」
-
-本卡交付：开篇硬划界；CPT/OPD 区域接口 + SEA-HELM Table 5–7；HF/官网索引；基座仅一句交叉。
+1. 主数字锚：CPT **150B / 33.5B**；SEA **51.57 / 63.44**；MY/TA 120B 分；教师 Ultra 仅作 OPD 交叉。
+2. HF：十个 `Nemotron-SEA-LION-v4.8-*` ID **仅索引**。

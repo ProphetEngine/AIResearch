@@ -12,21 +12,21 @@ aux:
  - https://blog.datologyai.com/technical-deep-dive-curating-our-way-to-a-state-of-the-art-text-dataset/
  - https://www.arcee.ai/blog/announcing-the-official-launch-of-afm-4.5b
 arxiv: ["2508.10975"]
-related: ["NemotronCC数据策展", "B8", "B3", "合成对齐数据Magpie", "规模定律与预训练范式"]
+related: ["NemotronCC数据策展", "合成数据与教科书式数据", "分词器与数据配比", "合成对齐数据Magpie", "规模定律与预训练范式"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
 # 合成预训练新轴：BeyondWeb（≠ Nemotron-CC）
 
-> **定位**：BeyondWeb合成预训练 **P1 数据侧横切**——DatologyAI *BeyondWeb: Lessons from Scaling Synthetic Data for Trillion-scale Pretraining*（arXiv:**2508.10975**v2，页眉 **19 Aug 2025**）。立「**预训练侧 source-rephrasing 合成新轴 + 系统消融**」：在 web 文档上做多样式/格式改写，把合成语料推到 **万亿 token 预算仍可持续受益**，并给出相对 Cosmopedia / WRAP / **Nemotron-Synth** / RedPajama 的 Pareto。
+> **定位**：**数据侧横切**——DatologyAI *BeyondWeb: Lessons from Scaling Synthetic Data for Trillion-scale Pretraining*（arXiv:**2508.10975**v2，页眉 **19 Aug 2025**）。立「**预训练侧 source-rephrasing 合成新轴 + 系统消融**」：在 web 文档上做多样式/格式改写，把合成语料推到 **万亿 token 预算仍可持续受益**，并给出相对 Cosmopedia / WRAP / **Nemotron-Synth** / RedPajama 的 Pareto。
 > **攻坚线**：**架构思想（主）**——generator-driven vs source-rephrasing；质量种子 / 风格对齐 / 多样性三原则；改写器族与规模饱和；**评测字段（辅）**——Table 1 与 Fig.1（1B×1T、3B/8B×180B；14 基准 0+5-shot 均值）。
-> **硬划界（开篇钉死）**：
-> - **≠ [[NemotronCC数据策展]]**：禁止写成 **Nemotron-CC** 全管线（Justext→分类器集成→全局去重→HQ 合成改写→6.3T）复述。本卡只把 **Nemotron-Synth**（Nemotron-CC 的 **HQ 合成子集**）当 **合成预训练对照基线**；CC 策展增量见 [[NemotronCC数据策展]]。
-> - **≠ B8**：禁止写成 phi / *Textbooks Are All You Need* / Cosmopedia 式 **教科书 / de novo 生成器驱动** 通史。本卡主轴是 **对已有网页 source rephrasing**；§4.2 把 Cosmopedia 当「可被简单摘要逼近」的对照，不升教科书主文。
-> - **≠ B3**：禁止重写 **FineWeb / DCLM / Dolma** 抽取—启发式—模型过滤通史。文中 BeyondWeb 作用于「DCLM 高质量子集（DatologyAI 策展方法）」仅作 **种子来源一句**；过滤通史留 B3。
+> **范围与相邻笔记**：
+> - **≠ [[NemotronCC数据策展]]**：不写成 **Nemotron-CC** 全管线（Justext→分类器集成→全局去重→HQ 合成改写→6.3T）复述。本卡只把 **Nemotron-Synth**（Nemotron-CC 的 **HQ 合成子集**）当 **合成预训练对照基线**；CC 策展增量见 [[NemotronCC数据策展]]。
+> - **≠ [[合成数据与教科书式数据]]**：不写成 phi / *Textbooks Are All You Need* / Cosmopedia 式 **教科书 / de novo 生成器驱动** 通史。本卡主轴是 **对已有网页 source rephrasing**；§4.2 把 Cosmopedia 当「可被简单摘要逼近」的对照，不升教科书主文。
+> - **≠ [[分词器与数据配比]]**：不重写 **FineWeb / DCLM / Dolma** 抽取—启发式—模型过滤通史。文中 BeyondWeb 作用于「DCLM 高质量子集（DatologyAI 策展方法）」仅作 **种子来源一句**；过滤通史留 [[分词器与数据配比]]。
 > - **≠ [[合成对齐数据Magpie]]**：Magpie / ActiveUltraFeedback 是 **对齐侧**指令/偏好合成；本卡是 **预训练侧** 改写合成 + 长程 scaling 消融。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。文内未公开的完整 prompt 配方 / BeyondWeb 专有生成策略细节 → **不得外推**。
+> 文内未公开完整 prompt 配方与 BeyondWeb 专有生成策略细节。
 
 ---
 
@@ -63,24 +63,24 @@ timezone: Asia/Shanghai (CST)
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
 | **Nemotron-CC 全管线** | CC→过滤/去重/分类器→real+synth 6.3T | **[[NemotronCC数据策展]]** | **否**（仅 Nemotron-Synth 作基线） |
-| **FineWeb / DCLM 过滤通史** | 抽取—启发式—模型过滤骨架 | **B3** | **否**（禁通史） |
-| **教科书 / de novo 合成** | phi / Self-Instruct / Cosmopedia 生成器驱动 | **B8** | **否**（Cosmopedia 仅对照） |
+| **FineWeb / DCLM 过滤通史** | 抽取—启发式—模型过滤骨架 | **[[分词器与数据配比]]** | **否**（不写通史） |
+| **教科书 / de novo 合成** | phi / Self-Instruct / Cosmopedia 生成器驱动 | **[[合成数据与教科书式数据]]** | **否**（Cosmopedia 仅对照） |
 | **对齐侧指令/偏好合成** | Magpie / ActiveUF | **[[合成对齐数据Magpie]]** | **否** |
 | **BeyondWeb 合成预训练轴** | source rephrasing 原则 + 万亿预算消融 + 文内 Pareto | **本篇** | **是** |
 
-跟读直觉：[[NemotronCC数据策展]] 问「**如何把 CC 做成长程仍可用的策展语料**」；B3 问「**网页过滤通史**」；B8 问「**从知识库/模型造教科书式内容**」；[[合成对齐数据Magpie]] 问「**对齐数据从哪来**」；本卡问「**预训练合成改写的哪些因素真正决定质量，以及如何在万亿预算下持续受益**」。共享「合成 / Nemotron / Cosmopedia」词汇，但 **阶段（预训练 vs 对齐）与范式（rephrase vs de novo vs CC 全管线）不同**——禁止写成「又一篇 Nemotron-CC」或「FineWeb 过滤续篇」。
+跟读直觉：[[NemotronCC数据策展]] 问「**如何把 CC 做成长程仍可用的策展语料**」；[[分词器与数据配比]] 问「**网页过滤通史**」；[[合成数据与教科书式数据]] 问「**从知识库/模型造教科书式内容**」；[[合成对齐数据Magpie]] 问「**对齐数据从哪来**」；本卡问「**预训练合成改写的哪些因素真正决定质量，以及如何在万亿预算下持续受益**」。共享「合成 / Nemotron / Cosmopedia」词汇，但 **阶段（预训练 vs 对齐）与范式（rephrase vs de novo vs CC 全管线）不同**——不写成「又一篇 Nemotron-CC」或「FineWeb 过滤续篇」。
 
 `
  数据侧「合成 / 策展」近窗
  │
  ┌─────────┼─────────┬──────────────┐
  │ │ │ │
- [[NemotronCC数据策展]] B3 B8 [[合成对齐数据Magpie]]
+ [[NemotronCC数据策展]] [[分词器与数据配比]] [[合成数据与教科书式数据]] [[合成对齐数据Magpie]]
  Nemotron- FineWeb/ 教科书/ Magpie/
  CC 管线 DCLM 通史 Cosmopedia ActiveUF
  │ │ │ │
  └─────────┴────┬────┴──────────────┘
- │ 禁止复述 / 禁过滤通史
+ │ 不复述过滤通史
  ▼
  ★ BeyondWeb BeyondWeb
  source-rephrasing 合成预训练
@@ -102,13 +102,13 @@ timezone: Asia/Shanghai (CST)
 
 ### 3.1 主张（压缩）
 
-BeyondWeb：**以 grounding（锚定真实网页）+ diversity（多样生成策略）** 做合成预训练数据。策略族包括（文内列举，**无完整 prompt 公开**——笔记不编造配方）：
+BeyondWeb：**以 grounding（锚定真实网页）+ diversity（多样生成策略）** 做合成预训练数据。策略族包括（文内列举，**无完整 prompt 公开**）：
 
 - **格式变换**（如网页 → QA）
 - **风格修改**（如增强教学语气）
 - **内容重组**（抬信息密度与可学性）
 
-作用于：**DCLM 的高质量子集**（选取方法见 DatologyAI et al. 2024；**不在此复述 B3/DCLM 过滤通史**）。
+作用于：**DCLM 的高质量子集**（选取方法见 DatologyAI et al. 2024；**不在此复述 [[分词器与数据配比]]/DCLM 过滤通史**）。
 
 ### 3.2 对照数据集（混合策展）
 
@@ -117,7 +117,7 @@ BeyondWeb：**以 grounding（锚定真实网页）+ diversity（多样生成策
 | 数据集 | 角色（据 §3） | 笔记边界 |
 |---|---|---|
 | **RedPajama (RPJ)** | 最少策展 open web；真实基线 | 本卡真实对照 |
-| **Cosmopedia-v2** | 生成器驱动；≈**27B** token；不够则 **重复**（作者承认是生成器范式局限） | ≠B8 通史；仅数字对照 |
+| **Cosmopedia-v2** | 生成器驱动；≈**27B** token；不够则 **重复**（作者承认是生成器范式局限） | ≠[[合成数据与教科书式数据]] 通史；仅数字对照 |
 | **QA WRAP** | WRAP 式；源=RPJ；改写器=**Llama-3.1-8B-Instruct**；主风格 QA | WRAP 方法点名 |
 | **Nemotron-Synth** | Nemotron-CC **HQ 输入**上多样式改写的 **HQ 合成子集**；文称含 **1.5T** token，实验随机子采样保比例 | **≠[[NemotronCC数据策展]] 全管线**；仅此子集作最强合成基线 |
 | **BeyondWeb** | 本方法；种子=DatologyAI 选的 DCLM HQ | 本卡主对象 |
@@ -283,11 +283,11 @@ Llama-3 系 1B / 3B / 8B 做改写器：
 
 ## 七、与仓库他卡的接口（只钉钉子）
 
-| 卡 | 接口一句 | 禁止 |
+| 卡 | 接口一句 | 不写 |
 |---|---|---|
 | **[[NemotronCC数据策展]]** | Nemotron-Synth = 其 HQ 合成子集；作本卡最强公开合成基线 | 复述 CC→6.3T 管线 |
-| **B3** | BeyondWeb 种子 ⊂ DCLM HQ（DatologyAI 选） | FineWeb/DCLM 过滤通史 |
-| **B8** | Cosmopedia / Phi 为 generator-driven 对照；§4.2 用摘要逼近 | 教科书合成通史 |
+| **[[分词器与数据配比]]** | BeyondWeb 种子 ⊂ DCLM HQ（DatologyAI 选） | FineWeb/DCLM 过滤通史 |
+| **[[合成数据与教科书式数据]]** | Cosmopedia / Phi 为 generator-driven 对照；§4.2 用摘要逼近 | 教科书合成通史 |
 | **[[合成对齐数据Magpie]]** | 同属「合成数据」词，但阶段=对齐 | Magpie/ActiveUF 流水线 |
 | **[[规模定律与预训练范式]]** | 本卡动的是 **数据质量/形态轴**，非 $N$–$D$ 公式 | 重写 Kaplan/Chinchilla |
 
@@ -295,8 +295,8 @@ Llama-3 系 1B / 3B / 8B 做改写器：
 
 ## 八、局限与笔记诚实边界
 
-1. **BeyondWeb 具体 prompt/策略配方未在 PDF 公开** → 可复述原则与消融，**不可编造**「官方模板」。
-2. 主对照混合为 **60/40** RPJ:synth；消融为 **50/50** HQ:synth——读表时勿混口径。
+1. **BeyondWeb 具体 prompt/策略配方未在 PDF 公开** → 可复述原则与消融，**无**「官方模板」可引。
+2. 主对照混合为 **60/40** RPJ:synth；消融为 **50/50** HQ:synth——读表时注意口径不同。
 3. Cosmopedia 不足 token **靠重复**；作者自承生成器范式局限。
 4. Continuation 实验存在混淆：续写模型见过远超 20B 的语料，可能注入参数知识（文内自陈）。
 5. AFM4.5B / 7T 为 **生产叙事引用**，完整配比不在本 PDF → 不写细账。

@@ -9,7 +9,7 @@ sources:
  - https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html
  - https://developer.nvidia.com/blog/announcing-nemotron-cc-a-trillion-token-english-language-dataset-for-llm-pretraining/
 arxiv: ["2412.02595"]
-related: ["B3", "B8", "合成对齐数据Magpie", "AXK2技术报告深读"]
+related: ["分词器与数据配比", "合成数据与教科书式数据", "合成对齐数据Magpie", "AXK2技术报告深读"]
 project:
  - https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html
  - https://github.com/NVIDIA/NeMo-Curator
@@ -20,14 +20,14 @@ archived: 2026-09-22
 
 # 数据策展流水线增量：Nemotron-CC
 
-> **定位**：数据策展主题 **P1 数据侧横切**——相对 **B3**（FineWeb / DCLM / Dolma 网页策展通史）的 **下一站管线**：NVIDIA *Nemotron-CC* 如何把英文 Common Crawl 做成 **长程预训练**（~15T token 预算）仍可用的高质量语料。
+> **定位**：**数据侧横切**——相对 **[[分词器与数据配比]]**（FineWeb / DCLM / Dolma 网页策展通史）的 **下一站管线**：NVIDIA *Nemotron-CC* 如何把英文 Common Crawl 做成 **长程预训练**（~15T token 预算）仍可用的高质量语料。
 > **攻坚线**：**架构思想 / 管线字段（主）** + **文内下游评测字段（辅）**（8B×1T 对开源 CC 数据集；8B×15T 对 Llama 3.1 8B）。
-> **硬划界（禁止重写）**：
-> - **≠ B3**：不写 FineWeb / DCLM / Dolma **全文通史**（抽取—启发式—模型过滤骨架只作一句对照；本篇只记 Nemotron-CC **增量**）。
-> - **≠ B8**：不写 phi / Textbooks Are All You Need 式 **教科书/代码合成预训练** 主文；本文合成是 **对已有网页的改写/蒸馏/QA**，不是从知识库造新教材。
+> **范围与相邻笔记**：
+> - **≠ [[分词器与数据配比]]**：不写 FineWeb / DCLM / Dolma **全文通史**（抽取—启发式—模型过滤骨架只作一句对照；本篇只记 Nemotron-CC **增量**）。
+> - **≠ [[合成数据与教科书式数据]]**：不写 phi / Textbooks Are All You Need 式 **教科书/代码合成预训练** 主文；本文合成是 **对已有网页的改写/蒸馏/QA**，不是从知识库造新教材。
 > - **≠ 数据源引用**：Ax-K2 等只把 Nemotron-CC **当数据源点名**；本篇才是管线主锚。
 > - **≠ [[合成对齐数据Magpie]]**：Magpie / ActiveUF 是 **对齐侧**指令/偏好合成；本篇是 **预训练侧** CC 策展 + 合成改写。
-> **禁止编造**：数字、表号、快照区间一律取自官方 PDF（2026-09-22 CST）、CC 索引页与 NVIDIA 博文（辅）；不外推未核对比。
+> **主要来源**：官方 PDF、[CC 索引页](https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html) 与 [NVIDIA 博文](https://developer.nvidia.com/blog/announcing-nemotron-cc-a-trillion-token-english-language-dataset-for-llm-pretraining/)（辅），2026-09-22 CST。
 
 ---
 
@@ -41,13 +41,13 @@ archived: 2026-09-22
 
 **开源（论文自报）：** 数据集 CC Terms of Use；参考实现并入 **NeMo Curator**（Apache 2.0）；质量分类器 HF：`nemocurator-fineweb-nemotron-4-edu-classifier`、`nemocurator-fineweb-mixtral-edu-classifier`。
 
-**一句话增量（相对 B3 已读 FineWeb-Edu / DCLM）：**
+**一句话增量（相对 [[分词器与数据配比]] 已读 FineWeb-Edu / DCLM）：**
 
-| 轴 | B3 已立（仅对照） | 本篇增量 |
+| 轴 | [[分词器与数据配比]] 已立（仅对照） | 本篇增量 |
 |---|---|---|
 | **过滤哲学** | 强模型打分 → 大幅砍量、抬短程精度 | **分类器集成抬 HQ 召回** + **HQ 上关启发式** → 量质双保 |
 | **重复与长程** | DCLM / FineWeb-Edu 文内约 **80%** near-dup；长程会反复见同一样本 | **全局模糊去重** → **4.4T unique real**；合成再补 **1.9T** |
-| **合成角色** | （B8 轴：教科书造内容） | **改写/蒸馏/抽知识/QA**——模型当「风格/结构变换器」，非知识库造新教材 |
+| **合成角色** | （[[合成数据与教科书式数据]] 轴：教科书造内容） | **改写/蒸馏/抽知识/QA**——模型当「风格/结构变换器」，非知识库造新教材 |
 
 `
 Common Crawl (99 snaps)
@@ -77,7 +77,7 @@ Nemotron-CC 6.3T（4.4T real unique + 1.9T synthetic）
 2. **重复陷阱**：文称 FineWeb-Edu / DCLM 约含 **80%** near-duplicates（unique 约 **0.2T / 1T**）；多万亿训练等于反复见同一样本；Muennighoff et al. (2024) 指约 **4 epoch** 后相对更多 unique token 收益递减。
 3. **本文主张**：用 **分类器集成 + 合成改写 + 减少对启发式依赖**，在 **准确率 ↔ 数据量（以 unique real token 计）** 上取得更好折中；指导原则是从「静态非学习启发式管线」转向 **learned flywheel**（更好数据 → 更好 LLM → 更好合成与分类）。
 
-本篇只立这条 **预训练网页策展增量**；tokenizer/配比通史见 B3，教科书合成见 B8，对齐合成见 [[合成对齐数据Magpie]]。
+本篇只立这条 **预训练网页策展增量**；tokenizer/配比通史见 [[分词器与数据配比]]，教科书合成见 [[合成数据与教科书式数据]]，对齐合成见 [[合成对齐数据Magpie]]。
 
 ---
 
@@ -133,7 +133,7 @@ Nemotron-CC 6.3T（4.4T real unique + 1.9T synthetic）
 
 **重叠与集成下游（Table 8 / 9，13 快照子集）：** FineWeb-Edu-only HQ **35.4%**、DCLM-only **54.4%**、交集仅 **10.1%** → 集成抬多样性。集成后 HQ 文档占比 **25%**（单分类器约 8–14%），平均任务分 **59.4**（不低于 FineWeb-Edu 的 59.0 / DCLM 的 58.4）。
 
-### 3.3 合成数据：低质改写 vs 高质多样化（§2.3，Table 3）——≠ B8
+### 3.3 合成数据：低质改写 vs 高质多样化（§2.3，Table 3）——≠ [[合成数据与教科书式数据]]
 
 文明确对照：不像 Wang/Eldan/Gunasekar 等 **造新内容**（教科书、短故事），而是 **把给定文本改成另一风格**；可用更轻模型（Maini et al. 2024 Wikipedia-style）。**中档未做合成**（时间/资源）。
 
@@ -213,7 +213,7 @@ HQ 子集 = 最高分 **真实** + **Diverse QA** 合成（短程公平对照用
 
 ## 六、限制与跟读注意（§6）
 
-文内自报（勿扩写为已解决）：
+文内自报（未解决）：
 
 1. 集成/分桶只试了一种策略；高质端灵敏度可再调。
 2. **改写未做事实忠实度校验**；幻觉 / 多样性损失风险未系统消解；中档未改写。
@@ -229,8 +229,8 @@ HQ 子集 = 最高分 **真实** + **Diverse QA** 合成（短程公平对照用
 
 | 笔记 | 接口一句 |
 |---|---|
-| **B3** | FineWeb / DCLM / Dolma / SentencePiece **通史**已入库；本篇只记 Nemotron-CC 对「砍量换分」的 **长程修正** |
-| **B8** | Textbooks / Self-Instruct 是 **造教材/指令**；本篇合成是 **网页改写与结构变换** |
+| **[[分词器与数据配比]]** | FineWeb / DCLM / Dolma / SentencePiece **通史**已入库；本篇只记 Nemotron-CC 对「砍量换分」的 **长程修正** |
+| **[[合成数据与教科书式数据]]** | Textbooks / Self-Instruct 是 **造教材/指令**；本篇合成是 **网页改写与结构变换** |
 | **[[合成对齐数据Magpie]]** | Magpie / ActiveUF = 对齐数据；并行数据侧，非本篇 |
 | **数据源引用** | 若点名 Nemotron-CC 为训练源，回指本卡管线 |
 | **污染检测** | 污染检测横切；本数据集作者 **未** decontaminate |
@@ -242,9 +242,8 @@ HQ 子集 = 最高分 **真实** + **Diverse QA** 合成（短程公平对照用
 1. **先立矛盾**：短程要狠滤，长程要 unique——Nemotron-CC 用「集成抬召回 + HQ 关启发式 + 改写补新鲜 token」同时打两头。
 2. **跟 Table 1→7**：Justext 多产 HQ；**只对 HQ 关启发式** 不伤分还抬 MMLU。
 3. **跟 Table 8→9→2**：分类器偏好几乎不重叠 → max 集成；再用退火把 20 桶收成 5 档训练课表。
-4. **跟 Table 3→10**：Low=去噪 Wiki 改写；High=QA/蒸馏/抽知识——**不是** B8 教科书造内容。
+4. **跟 Table 3→10**：Low=去噪 Wiki 改写；High=QA/蒸馏/抽知识——**不是** [[合成数据与教科书式数据]] 教科书造内容。
 5. **跟 Table 4→5→6**：全量 6.3T（4.4+1.9）对标 DCLM 短程持平、长程靠量；HQ 1.1T 专打短程 +5.6 MMLU；15T 课表里本集 ~7.2T 胜过 Llama 3.1 8B（同自报 harness）。
-6. **划界自检**：写到 FineWeb/DCLM 方法细节就停，回 B3；写到 phi 教科书就停，回 B8。
 
 ---
 

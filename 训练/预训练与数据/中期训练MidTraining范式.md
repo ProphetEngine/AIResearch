@@ -193,5 +193,3 @@ archived: 2026-09-24
 | --- | --- | --- | --- | --- |
 | 主文献 | *Mid-Training of Large Language Models: A Survey* | Mo, Shi, Weng, Zhou, Liu, Zhang, Zeng（Shopee）；2025 | https://arxiv.org/abs/2510.06826 | 约 20 页；三域 taxonomy + 基准与增益汇整 |
 | 范式相关（综述主体所引，按需深读） | MiniCPM（WSD）、OLMo 2（Dolmino）、Llama 3、SmolLM2、Qwen3、DeepSeek-V3、Phi-4、YaRN / LongRoPE 等 | 各原作者；年份见综述参考文献 | 各篇 arXiv / 技术报告首页（HTTPS） | 本文不单列厂商配比表 |
-
-PDF 深读副本仅存于仓外工作区，**不**入库。
