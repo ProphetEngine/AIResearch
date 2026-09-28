@@ -197,7 +197,7 @@ SWE-agent 把「编码 agent」从 **提示词 + 裸 shell** 提升为 **可消�
 
 **能力保持（Table 4，SWE-Bench Verified）：** Claude Sonnet 4：V0=V1 **68.0%**（架构换皮不伤基线）；Sonnet 4.5：V0 **64.6%** → V1 **72.8%**（+8.2；作者归因 V1 更易接 extended thinking）。
 
-**多模型五类任务（Table 5，14 模型）：** Best SDK 示例——SWE-Bench Verified **76.6%**（Opus 4.5）、Commit0 **56.2%**（GPT-5.4）、SWE-Bench MM **44.1%**（Gemini 3.1 Pro）、SWT-Bench V. **78.8%**（Opus 4.6）、GAIA test **80.0%**（Opus 4.6）。文称 5 项中 3 项超当时 published SOTA；完整分模型见 Index（持续更新，笔记只钉 PDF 表内数字）。
+**多模型五类任务（Table 5，14 模型）：** Best SDK 示例——SWE-Bench Verified **76.6%**（Opus 4.5）、Commit0 **56.2%**（GPT-5.4）、SWE-Bench MM **44.1%**（Gemini 3.1 Pro）、SWT-Bench V. **78.8%**（Opus 4.6）、GAIA test **80.0%**（Opus 4.6）。文称 5 项中 3 项超当时 published SOTA；完整分模型见 Index（持续更新；本篇数字均取自 PDF 表内）。
 
 ### 4.6 站 2 收束
 

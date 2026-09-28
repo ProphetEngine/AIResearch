@@ -32,7 +32,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[MemoryR1强化学习记忆维护]]**：不重写 Memory-R1 在 `{ADD, UPDATE, DELETE, NOOP}` 上的 **outcome RL / 双 agent 蒸馏**。CHIME **冻结骨干参数**，只更新外置银行；信用门是 **结构化自省**，不是策略梯度。
 > - **≠ [[智能体工具与长程任务]]**：不重写工具环 / MCP / 旗舰 agent 产品通史；四榜只作「长程工具任务床」接口。
 > - **≠ [[推理时树搜索ABMCTS]]**：不重写 AB-MCTS **推理期答案树搜索**（宽 vs 深）；CHIME 文内把 test-time search（WebAnchor 等）标为对照范式，本卡不写树搜索内核。
-> **补链不升主**：**MEM1**（常量内部状态 RL）与 **ReSum**（长程搜索上下文摘要 / ReSum-GRPO）仅作「长程记忆–上下文效率」对照索引，不展开成第二主轴。
+> **补链**：**MEM1**（常量内部状态 RL）与 **ReSum**（长程搜索上下文摘要 / ReSum-GRPO）仅作「长程记忆–上下文效率」对照索引。
 > 文末代码「will be released」→ 记为 **承诺仓**。
 
 ---
@@ -210,7 +210,7 @@ Train 侧 CHIME 亦最高：Qwen **35.02**、DeepSeek **38.00**（相对最强�
 
 ---
 
-## 八、补链对照（不升主）
+## 八、补链对照
 
 ### 8.1 MEM1（2506.15841）— 常量内部状态 RL
 
@@ -222,7 +222,7 @@ Train 侧 CHIME 亦最高：Qwen **35.02**、DeepSeek **38.00**（相对最强�
 
 - **问题**：Web agent 要广探索 vs 上下文窗硬顶；改架构（内部 memory token）破坏兼容且需重训。
 - **方法**：周期性调用**外部摘要工具**压缩史 → 从压缩态续探（训练免费即可用）；**ReSum-GRPO** 用 advantage broadcasting 把终奖传到分段轨迹。文称相对 ReAct 训练免费 **+4.5%**，再 GRPO **+8.2%**（Abstract；细节不展开）。
-- **与 CHIME 正交点**：ReSum 是 **搜索轨迹上下文管理**；CHIME 是 **计划/执行经验归因入库**。本卡 **不升主**。
+- **与 CHIME 正交点**：ReSum 是 **搜索轨迹上下文管理**；CHIME 是 **计划/执行经验归因入库**。
 
 ---
 

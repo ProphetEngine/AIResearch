@@ -28,7 +28,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**隐私/遗忘方法切片**——在 **[[隐私与机器遗忘]]** 已立「遗忘综述 + OpenUnlearning 元评测框架」之后，本卡只写 **2026 近窗两条正交方法增量**：
 > - **Cascade**（*Hierarchical Recoverability Control*，arXiv:**2609.16890**v1，页眉 **15 Sep 2026**）：把遗忘写成 **内部可辨识性（internal identifiability）最小化**，用 **路径 / 双曲表征 / 解码** 三级压低可恢复性。
 > - **SAUL**（*Sharpness-Aware Augmented-Lagrangian Unlearning*，arXiv:**2608.16249**v1，页眉 **17 Aug 2026**）：把遗忘写成 **显式约束**「忘够即可」，用 **增广拉格朗日控制器** 在满足阈值后 **关掉 forget 侧更新**，并配 **非对称锐度感知 + 双优化器状态**。
-> **补链（不升主）**：**GRAPHSU**（*Graph-Guided Selective Unlearning*，arXiv:**2608.26743**v1，页眉 **27 Aug 2026**）——用多视图支持路径图扩展删除范围，超出 forget seed；**仅补链/后置**。
+> **补链**：**GRAPHSU**（*Graph-Guided Selective Unlearning*，arXiv:**2608.26743**v1，页眉 **27 Aug 2026**）——用多视图支持路径图扩展删除范围，超出 forget seed；**仅补链/后置**。
 > **研究线**：**方法接口 / 遗忘—效用权衡（主）** + **文内 TOFU / MUSE / WMDP（及 GRAPHSU 的 PISTOL）字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[隐私与机器遗忘]]**：不重做 **180+ 篇通史**、流水线阶段地图、OpenUnlearning **13×16 元评测全文**。本卡 **不复读** OpenUnlearning 指标 Faithfulness/Robustness 元评测；仅在需要时把 TOFU/MUSE/WMDP 当 **评测协议入口**。
@@ -232,7 +232,7 @@ SAUL Bio **0.268±0.012**、Cyber **0.251±0.010**、MMLU **0.542±0.003**（≈
 
 ---
 
-## 五、补链 GRAPHSU：支持路径图扩展删除范围（不升主）
+## 五、补链 GRAPHSU：支持路径图扩展删除范围
 
 > **GRAPHSU / BLADE 仅作补链或后置**。此处只立 **scope 控制** 接口，不把 GRAPHSU 写成第三条主方法全文。
 
@@ -286,10 +286,5 @@ SAUL Bio **0.268±0.012**、Cyber **0.251±0.010**、MMLU **0.542±0.003**（≈
 
 ---
 
-| 项 | 建议 |
-|---|---|
-| 与 [[隐私与机器遗忘]] | 双链交叉即可；**不要**把本卡合并进 [[隐私与机器遗忘]] 通史 |
-| 升主下一项 | 若遗忘轴继续加密，优先 **BLADE** 或 Cascade×SAUL **联合协议**（均未做，仅备忘） |
-
-**摘要（≤6 句）：**
+**摘要：**
 [[Cascade与SAUL遗忘方法]] 在 [[隐私与机器遗忘]] 通史/OpenUnlearning 之外，深读 2026 近窗两篇遗忘方法：Cascade（2609.16890）以路径—双曲—解码三级代理最小化内部可辨识性，TOFU Forget10 上 Llama-3.2-3B 达 CFI 0.7165 / BUS 0.6616，并保持改写下低 ASR；SAUL（2608.16249）以 forget-loss 约束 + ALM 在满足 $\alpha$ 后关闭 forget 更新，配合非对称 SAM 与双优化器，TOFU 1% 匹配遗忘下 GPT-HM 72.79。补链 GRAPHSU（2608.26743）用支持路径图扩展删除 scope，PISTOL Complete 上 soft leakage 相对 Seed-Only 降约 49.5 pp（PPL 仍 ≤10）。本卡不写成 OpenUnlearning 复读。

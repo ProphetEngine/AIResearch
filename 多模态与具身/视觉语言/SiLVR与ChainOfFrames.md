@@ -33,7 +33,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[视频生成正式报告]]**：不重写文生视频 / Sora 正式报告缺口备忘；本卡是 **理解 / 推理**，不是生成。
 > - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」通史阶梯；经典多模态祖先仅作 related-work 接口。
 > - **≠ [[QwenOmni音视频原生]] Qwen-Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、36/215 基准产品表；本卡不写 Omni 产品栈。
-> **补链不升主**：**STORM/TORM**（arXiv **2605.26014**；PDF 题名 **TORM**，GitHub `aiming-lab/storm`）——把时空推理**内化到有界连续 latent**，方法面异于「语言管道 / 帧锚定文本 CoT」→ **仅附录一句**，不升第二主轴。
+> **补链**：**STORM/TORM**（arXiv **2605.26014**；PDF 题名 **TORM**，GitHub `aiming-lab/storm`）——把时空推理**内化到有界连续 latent**，方法面异于「语言管道 / 帧锚定文本 CoT」→ **仅附录一句**，不升第二主轴。
 > SiLVR Table 1 与 Table 2 在 CGBench/CinePile 列出现互换迹象 → **主结果以 Table 1 + 正文叙述为准**。
 
 ---
@@ -77,7 +77,7 @@ timezone: Asia/Shanghai (CST)
  │
  ┌────┼────────────────┐
  ▼ ▼ ▼
- SiLVR Chain-of-Frames STORM/TORM（不升主）
+ SiLVR Chain-of-Frames STORM/TORM（补链）
  训练免费语言管道 帧锚定单阶段 CoT 内化时空 latent
  NVILA+Whisper CoF-DATA SFT thought-video→latent
  → DeepSeek-R1 InternVL / Phi 推理无再生视频
@@ -208,9 +208,9 @@ return answer(Z, Q, F)
 
 ---
 
-## 六、可选补链：STORM / TORM（不升主）
+## 六、可选补链：STORM / TORM
 
-PDF 题名为 **TORM**（*Spatial-Temporal reasOning via inteRnalized Modeling*）；GitHub 写作 **STORM**（`aiming-lab/storm`）。**本卡不升主**，只记方法面差异：
+PDF 题名为 **TORM**（*Spatial-Temporal reasOning via inteRnalized Modeling*）；GitHub 写作 **STORM**（`aiming-lab/storm`）。本篇只记方法面差异：
 
 - **动机**：文本 CoT / 关键帧重插 / 工具链把时空证据**外化**，延迟与工程复杂。
 - **做法**：Stage I 用生成 **thought-video** 对齐有界 **latent tokens**（答损 + λ·latent 对齐）；Stage II 仅答损（Coconut 式），逼 latent 内化。**推理期不再生视频、不重插帧、不调外部视觉工具**。
@@ -236,4 +236,4 @@ PDF 题名为 **TORM**（*Spatial-Temporal reasOning via inteRnalized Modeling*�
 
 ## 八、摘要
 
-本卡立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。范围 **≠[[音视频联合Flamingo]] / ≠[[视频生成正式报告]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅补链不升主。三 PDF **以官方 HTTPS 外链为准**。
+本卡立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。范围 **≠[[音视频联合Flamingo]] / ≠[[视频生成正式报告]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅作补链。三 PDF **以官方 HTTPS 外链为准**。

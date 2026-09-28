@@ -30,10 +30,10 @@ timezone: Asia/Shanghai (CST)
 > **范围与相邻笔记**：
 > - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 InstructGPT 三阶段、DPO 闭式最优策略证明、CAI 通史。本卡只在对照句点名 DPO 外壳。
 > - **≠ [[GRPO与DAPO算法族]]**：不写 GRPO→DAPO、Clip-Higher、可验证奖励 RL 配方与组相对基线谱系。RePO 实验虽含数学 verifier 偏好对，贡献是 **遗憾解释**，不是 GRPO 管线。
-> - **≠ [[SimPO与ORPO偏好优化]]**：不重写 SimPO 平均 log-prob + $\gamma$、ORPO odds ratio、KTO HALO 推导。本卡不把 AMaPO 升主。
+> - **≠ [[SimPO与ORPO偏好优化]]**：不重写 SimPO 平均 log-prob + $\gamma$、ORPO odds ratio、KTO HALO 推导。AMaPO 仅在 §八作索引。
 > - **≠ [[合成对齐数据Magpie]]**：不写 Magpie / ActiveUltraFeedback **合成偏好数据流水线**；本卡消费静态偏好+标签，不造数据。
 > - **≠ [[宪法分类器防御]] / [[审慎对齐与断路器]]**：不写 Constitutional Classifiers、deliberative circuit breakers 等 **安全产品/护栏机制**；本卡是 **离线偏好目标函数** 变体。
-> **补链不升主**：**AMaPO**（自适应 margin，与 SimPO/固定 margin 族过近）→ §八仅索引。
+> **补链**：**AMaPO**（自适应 margin，与 SimPO/固定 margin 族过近）→ §八仅索引。
 > SafeDPO / RePO 文内**未见**作者自发布官方训练仓 URL → 记为 **无承诺仓**（仅数据集 / 基线仓索引）。
 
 ---
@@ -71,7 +71,7 @@ timezone: Asia/Shanghai (CST)
 | Constitutional Classifiers / circuit breakers | 推理期护栏 / 产品安全机制 | **[[宪法分类器防御]] / [[审慎对齐与断路器]]** | **否** |
 | **SafeDPO** | 偏好对 + **安全指示** → 硬约束等价目标 | **本篇主文 A** | **是** |
 | **RePO** | 偏好 = **遗憾/反事实次优性**（非即时效用） | **本篇主文 B** | **是** |
-| AMaPO | 实例自适应 margin 改排序梯度 | 补链 §八 | **否（不升主）** |
+| AMaPO | 实例自适应 margin 改排序梯度 | 补链 §八 | **否** |
 
 跟读直觉：[[对齐脉络RLHF与偏好优化]]/[[SimPO与ORPO偏好优化]] 问「**helpful 偏好损失怎么写**」；[[GRPO与DAPO算法族]] 问「**有 verifier 时怎么做在线组相对 RL**」；SafeDPO 问「**已有安全标签时，如何把硬约束塞进离线 DPO 外壳**」；RePO 问「**人类偏好是否应从遗憾而非奖励最大化来建模**」。四者外壳可同为「成对 log-ratio + $\sigma$」，但**贡献旋钮不同**。
 
@@ -313,10 +313,10 @@ $$
 
 ---
 
-## 八、补链：AMaPO（2511.09385）— 仅索引，不升主
+## 八、补链：AMaPO（2511.09385）— 仅索引
 
 - **一句话：** 统一 margin 框架诊断 DPO 族 **过拟合（已排对仍大梯度）/ 欠拟合（排错梯度不足）**；提出实例自适应 margin（Z-norm + 指数缩放；已排对则 margin→0）。
-- **为何不升主：** 与 **[[SimPO与ORPO偏好优化]] SimPO**（固定/目标间隔 $\gamma$）同属「改 margin 提排序准确率」轴；**过近 SimPO → 仅补链**。
+- **为何仅作索引：** 与 **[[SimPO与ORPO偏好优化]] SimPO**（固定/目标间隔 $\gamma$）同属「改 margin 提排序准确率」轴；**过近 SimPO → 仅补链**。
 - **文内指针：** 代码 `https://github.com/Shiroha-Offical/AMaPO`；Table 2 四设定 AE2/MT；相对 SimPO 的排序准确率/OOD 表（Table 4）——细节不展开。
 - **与本卡双主的关系：** AMaPO 不引入安全约束，也不改「奖励 vs 遗憾」语义；若后续单独立项，应挂 [[SimPO与ORPO偏好优化]] 延伸而非本卡续篇。
 

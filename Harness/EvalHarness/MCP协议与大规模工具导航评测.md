@@ -142,7 +142,7 @@ LiveMCPBench 相对 MCPBench / MCP-RADAR / MCPEval 等：服务器与工具规�
 
 ---
 
-## 五、MCP-Universe 对照（一句到一段，不升主）
+## 五、MCP-Universe 对照
 
 MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）强调 **执行式评判**（format / static / dynamic），明确批评 LLM-as-a-Judge 在实时知识任务上的局限，并把 LiveMCPBench 列在「真实集成 + 时序动态、但非执行式评判」一侧。
 

@@ -54,7 +54,7 @@ archived: 2026-09-22
 3. **ORPO 观察**：纯 SFT 只抬 chosen 的 NLL 时，**rejected 的 log-prob 也会跟着升**（ORPO Figure 3，OPT-350M / HH-RLHF）——缺对「不想要风格」的惩罚，故主张在 SFT 上挂一个 **odds ratio 弱惩罚**，省掉独立偏好相位。
 4. **KTO 观察**（索引）：真实世界更常见的是「这条回复好不好」的二元信号，而非成对偏好；若损失有合适归纳偏置，**非成对**也可到 DPO 量级（KTO 摘要 / §1 要点）。
 
-本篇只钉 **无 ref 成对线（ORPO / SimPO）** + **非成对索引（KTO）**；IPO 等仅在 SimPO 对照表里被点名，不单独立节。
+本篇只讲 **无 ref 成对线（ORPO / SimPO）** + **非成对索引（KTO）**；IPO 等仅在 SimPO 对照表里被点名，不单独立节。
 
 ---
 

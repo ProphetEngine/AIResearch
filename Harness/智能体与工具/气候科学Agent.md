@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 > **范围与相邻笔记**：
 > - **≠ [[天气气候基础模型]]**：不重写 Aurora / Earth-system FM 的 3D latent、预训练→多域微调、预报 rollout；本卡对象是 **LLM 多代理工作流**，不是格点地球场基础模型。
 > - **≠ [[科研智能体]]**：不重写 The AI Scientist / ChemCrow 通史；ChemCrow 若出现仅作 ClimateAgent related work 一句邻接，不复述化学工具表。
-> - **≠ ClimateGPT（2401.09646）**：专科气候 LLM 若点到，**仅作前置对照一句**，不升主、不拆架构。
+> - **≠ ClimateGPT（2401.09646）**：专科气候 LLM 若点到，**仅作前置对照一句**，本篇不展开其架构。
 > - **≠ [[智能体工具与长程任务]] / [[代码智能体Harness史线]]**：不写 MCP / SWE-bench harness 通史；AutoGen / Copilot 仅作文内对照槽。
 > ClimateAgents 自称 GitHub 但**未给完整 URL**。
 
@@ -59,7 +59,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|
 | **[[天气气候基础模型]]** | 「气候/地球数据很大、异构」是动机邻接；ClimateAgent 用 ERA5/CDS 等**数据 API**，不是 Aurora 式场预报骨干 | 3D Perceiver/Swin、预训练小时数、多域微调表、Aurora 1.5 |
 | **[[科研智能体]]** | ClimateAgent related work 点名 ChemCrow 作「科学协议自动化」邻接一句 | AI Scientist 三阶段 / ChemCrow 18 工具与双用途细节 |
-| **ClimateGPT** | 若需交代「专科气候 LLM ≠ 编排 Agent」 | 任何 ClimateGPT 架构/训练/榜单升主 |
+| **ClimateGPT** | 若需交代「专科气候 LLM ≠ 编排 Agent」 | ClimateGPT 架构/训练/榜单 |
 | **[[智能体工具与长程任务]] / [[代码智能体Harness史线]]** | 「LLM + 工具多步」抽象；ClimateAgents 文内点 OpenHands/SWE-Agent 作通用 agent 先例 | MCP 协议史、SWE-bench resolve 表 |
 
 ### 2.2 本卡主轴 vs 范围外
@@ -256,7 +256,7 @@ Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
 
 ---
 
-## 六、附录索引：ClimAgent（不升主）
+## 六、附录索引：ClimAgent
 
 > 附录：开放式气候科学分析 Agent + ClimaBench；不与双主文对等展开。
 
@@ -290,4 +290,4 @@ Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
 - 40.21% 仅摘要出现；未在原文中还原为 Table 1 的显式算术——引用时标「摘要主张」。
 - ClimateAgents §4.2 误写「ClimateAgent」——标笔误风险，不合并系统。
 - 不把 [[天气气候基础模型]] Aurora 参数量/技巧写进本卡，也不把 [[科研智能体]] 成本 <$15/篇 等数字挪来。
-- ClimateGPT 仅作前置对照、不升主。
+- ClimateGPT 仅作前置对照。

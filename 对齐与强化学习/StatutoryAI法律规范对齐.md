@@ -14,7 +14,7 @@ related: ["宪法分类器防御", "对齐脉络RLHF与偏好优化", "法律专
 
 # Constitutional 新变体：Statutory AI（法律规范对齐）
 
-> **定位**：在经典 **Constitutional AI（CAI，2212.08073）** 的「原则清单 → 批判/修订」谱系上，立近窗 **Statutory AI（2608.28593）**：**规范来源从手写/公司宪法原则 → 成文法律语料（本稿为法国刑法条文英译）**；本卡只做 **推理期 critique–revision 对齐范式** 与文内汇总安全指标，**不**升经典 CAI 为第二主文深读。
+> **定位**：在经典 **Constitutional AI（CAI，2212.08073）** 的「原则清单 → 批判/修订」谱系上，立近窗 **Statutory AI（2608.28593）**：**规范来源从手写/公司宪法原则 → 成文法律语料（本稿为法国刑法条文英译）**；本卡只做 **推理期 critique–revision 对齐范式** 与文内汇总安全指标，经典 CAI 仅作对照。
 > **研究线**：**架构思想 / 对齐范式（主）** + **评测字段（辅）**（初始/终态 vulnerability、Comparison Score、单 prompt 耗时；法官为 GPT-5 / Gemini 2.5 Flash）。
 > **范围与相邻笔记**：
 > - **≠ [[宪法分类器防御]] Constitutional Classifiers**：不写 constitution → 合成数据 → **部署侧** input / output / exchange **分类器护栏** 工程与生产级探针级联。
@@ -65,7 +65,7 @@ related: ["宪法分类器防御", "对齐脉络RLHF与偏好优化", "法律专
 
 ## 三、补链速写：Constitutional AI（2212.08073）只要骨架
 
-> **不升主深读。** 只钉与 Statutory 对照所需的两阶段骨架与公开叙事；**不**转载附录原则全文、有害对话样例或可复用攻击材料。
+> 本节只写与 Statutory 对照所需的两阶段骨架与公开叙事；**不**转载附录原则全文、有害对话样例或可复用攻击材料。
 
 `
 Helpful 初模

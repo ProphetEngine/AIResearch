@@ -21,7 +21,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[ToRL工具集成强化学习]] ToRL**：不重写「代码解释器 ⊂ RL env、从 base 探索工具策略」。ToRL = **训练期交互 RL**（Sandbox Fusion + GRPO）；本篇 = **离线合成 function-calling 数据 → SFT**，评测是 BFCL/ACEBench **静态 schema 命中**，不是 AIME 解释器环。
 > - **≠ [[智能体工具与长程任务]]**：不重写旗舰 System Card / MCP / Extended thinking with tools / 长程产品叙事；本篇只谈 **训练数据怎么造**。
 > - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 生产沙箱 harness；本篇沙箱感止于「AST/规则查 JSON 合法性」，不是编码智能体命令面。
-> **补链不升主**：**HEART**（arXiv:2609.01736）= Tool Primitives + ToolFace + Planner/Router/Verifier **推理期 harness**，与 ToolLoop「合成训练数据」正交 → **仅索引**，不展开成第二主轴。
+> **补链**：**HEART**（arXiv:2609.01736）= Tool Primitives + ToolFace + Planner/Router/Verifier **推理期 harness**，与 ToolLoop「合成训练数据」正交 → **仅索引**。
 > **谱系口径（笔记编辑位，非文内自号）**：文 Related Work 主对照 Self-Instruct / APIGen / APIGen-MT / ToolMind 等「合成→过滤」线；本卡用「**Toolformer 谱系**」指仓库横切的 **工具调用合成监督数据** 桶（学何时/调何工具），**不**声称正文自称 Toolformer 后继。
 
 ---

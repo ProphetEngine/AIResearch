@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：**横切**——仓库安全轴已有 **攻击/红队/越狱/分类器护栏/表征熔断/隐瞒评测**，缺的是「**即使底层模型可被注入，系统层仍可约束控制流与数据外泄**」的 **by-design 防御主文**。对照两条正交架构路线：
 > - **CaMeL**（*Defeating Prompt Injections by Design*，arXiv:**2503.18813**v2，页眉 **24 Jun 2025**）：能力标记 + 控制/数据流提取 + 自定义解释器策略强制——**系统层脚手架**，不改底层 LLM。
 > - **StruQ**（*StruQ: Defending Against Prompt Injection with Structured Queries*，arXiv:**2402.06363**v2，页眉 **25 Sep 2024**；USENIX Security 2025）：prompt/data **双通道结构化查询** + 安全前端 + **结构化指令微调**——**模型 API / 训练接口**改造。
-> **补链（不升主）**：**Adaptive Attacks…**（arXiv:**2503.00061**v2，页眉 **4 Mar 2025**）——说明检测/提示/微调类防御在自适应评测下脆弱；**只作动机补链**，不立主轴。
+> **补链**：**Adaptive Attacks…**（arXiv:**2503.00061**v2，页眉 **4 Mar 2025**）——说明检测/提示/微调类防御在自适应评测下脆弱；**只作动机补链**，不立主轴。
 > **研究线**：**架构思想 / 系统接口（主）** + **文内 AgentDojo / AlpacaEval 等安全—效用汇总字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[安全红队与对抗评测]]**：不重写红队通史、众包协议、ASR 闭环与攻击面地图。
@@ -45,7 +45,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|---|
 | **主文 A · CaMeL** | Debenedetti, Shumailov, Fan, Hayes, Carlini, Fabian, Kern, Shi, Terzis & Tramèr (Google / DeepMind / ETH Zurich), *Defeating Prompt Injections by Design* | arXiv:**2503.18813v2** \[cs.CR\] **24 Jun 2025**；XMP MetadataDate 2025-06-25T00:35:04Z（→ **2025-06-25 08:35 CST**）；CC-BY-4.0；官方 PDF：https://arxiv.org/pdf/2503.18813（**125** 页 A4） | 主锚：系统层控制/数据流 + capability 策略 |
 | **主文 B · StruQ** | Chen, Piet, Sitawarin & Wagner (UC Berkeley), *StruQ: Defending Against Prompt Injection with Structured Queries* | arXiv:**2402.06363v2** \[cs.CR\] **25 Sep 2024**；CreationDate **2024-09-27 08:08 CST**；`https://arxiv.org/abs/2402.06363`（**20** 页 letter）；USENIX Security 2025 | 主锚：结构化查询 API + 结构化指令微调 |
-| **补链 · Adaptive Attacks** | Zhan, Fang, Panchal & Kang, *Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents* | arXiv:**2503.00061v2** \[cs.CR\] **4 Mar 2025**；CreationDate **2025-03-05 09:28 CST**；官方 PDF：https://arxiv.org/pdf/2503.00061（**17** 页 A4） | 补链：启发式/检测类防御脆弱性；**不升主** |
+| **补链 · Adaptive Attacks** | Zhan, Fang, Panchal & Kang, *Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents* | arXiv:**2503.00061v2** \[cs.CR\] **4 Mar 2025**；CreationDate **2025-03-05 09:28 CST**；官方 PDF：https://arxiv.org/pdf/2503.00061（**17** 页 A4） | 补链：启发式/检测类防御脆弱性 |
 
 **代码入口（文内 / USENIX 明示，2026-09-22 未做线上可用性核验）：**
 - CaMeL：`https://github.com/google-research/camel-prompt-injection`
@@ -86,7 +86,7 @@ timezone: Asia/Shanghai (CST)
  ▼
  ★ [[Prompt注入架构防御]] 架构防御（CaMeL ⊕ StruQ）
  ▲
- │ 补链动机（不升主）
+ │ 补链动机
  Adaptive Attacks（2503.00061）
 `
 
@@ -102,7 +102,7 @@ timezone: Asia/Shanghai (CST)
 | **成功判据（评测接口）** | 模型/agent **服从 data 中隐藏指令**或执行 **策略外工具调用 / 外泄**（各文用各自基准的聚合指标；本篇不展开判据细则） |
 | **与 jailbreak 的划界（StruQ §2）** | jailbreak：用户 vs 提供商安全规范；**prompt injection**：应用开发者意图 vs 不可信数据源——安全对齐过滤 **不能**直接当注入防御 |
 
-**补链一句（Adaptive，不升主）：** 针对 **检测器 / 提示隔离 / sandwich / 对抗微调** 等八类防御，文称在自适应评测下 **ASR-adaptive 均可 >50%**（InjecAgent 子集；Vicuna-7B prompted agent 与 Llama3-8B finetuned agent）。结论接口：仅靠启发式与检测 **不足以** 充当唯一防线 → 抬升本卡「架构 by design」动机。**本篇不转述其攻击优化步骤。**
+**补链一句（Adaptive）：** 针对 **检测器 / 提示隔离 / sandwich / 对抗微调** 等八类防御，文称在自适应评测下 **ASR-adaptive 均可 >50%**（InjecAgent 子集；Vicuna-7B prompted agent 与 Llama3-8B finetuned agent）。结论接口：仅靠启发式与检测 **不足以** 充当唯一防线 → 抬升本卡「架构 by design」动机。**本篇不转述其攻击优化步骤。**
 
 ---
 

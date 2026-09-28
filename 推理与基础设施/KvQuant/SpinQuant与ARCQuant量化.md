@@ -13,7 +13,7 @@ related:
  - "ZeroQAT量化感知训练"
  - "端侧小模型"
  - "推理引擎生态"
-note_bitnet: "BitNet v2（arXiv:2504.18415）属从零低比特训练，与本轴相邻但不升主；维护期补链"
+note_bitnet: "BitNet v2（arXiv:2504.18415）属从零低比特训练，与本轴相邻，仅作补链"
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
@@ -29,7 +29,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[ZeroQAT量化感知训练]]**：不写 ZeroQAT 的 **零阶前向梯度 / STE 绕开 / 端侧 QAT 内存**；本卡是 **冻结权重的 PTQ**（旋转学习或残差增广），不是训练期 QAT。
 > - **≠ [[端侧小模型]]**：不写 MobileLLM / Phi-4 / 端侧 SLM 产品谱系；只取「部署侧低比特压力」接口一句。
 > - **≠ [[推理引擎生态]]**：不写 vLLM / SGLang / TRT-LLM 引擎选型、PagedAttention、投机解码族；ARCQuant 文内 vLLM 吞吐表仅作 **部署字段索引**。
-> - **≠ BitNet v2**：原生低比特 **从零训练** → **不升主**，仅补链。
+> - **≠ BitNet v2**：原生低比特 **从零训练** → 仅补链。
 > ARCQuant **官方 PDF 首页未印会议标识** → 本笔记以 **arXiv:2601.07475v2 \[cs.LG\] 4 Jul 2026** 为准。
 
 ---
@@ -61,7 +61,7 @@ timezone: Asia/Shanghai (CST)
 | **[[ZeroQAT量化感知训练]] ZeroQAT** | 前向 ZO 估梯度，联训量化参数 | **训练 / 微调** | [[ZeroQAT量化感知训练]] | **否** |
 | **[[端侧小模型]] on-device SLM** | 深薄架构 / 合成数据 / 端侧产品 | 模型族 | [[端侧小模型]] | **否** |
 | **[[推理引擎生态]] 推理引擎** | vLLM / SGLang / TRT-LLM 选型 | 引擎生态 | [[推理引擎生态]] | **否**（名作吞吐对照） |
-| **BitNet v2** | 原生低比特 **从零训练** | 预训练范式 | 维护期补链 | **不升主** |
+| **BitNet v2** | 原生低比特 **从零训练** | 预训练范式 | 仅补链 | **否** |
 | **SpinQuant** | **旋转参数化 + Cayley 学旋转** 后 PTQ | **部署前标定** | **本篇 A** | **是** |
 | **ARCQuant** | **NVFP4 残差通道增广** + 融合量化核 | **部署前标定 + 在线残差** | **本篇 B** | **是** |
 

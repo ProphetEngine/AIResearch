@@ -39,7 +39,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|---|---|---|
 | **主 A** | Yin et al., *Scalable Circuit Learning for Interpreting Large Language Models*（CircuitLasso） | arXiv:**2606.16939v1** \[cs.LG\] **Submitted 15 Jun 2026**；MI Workshop @ ICML 2026 | `https://arxiv.org/abs/2606.16939` | **19** 页 letter | **官方 HTTPS 外链** |
 | **主 B** | Ameisen, Lindsey, Pearce, Gurnee, Turner, Chen, Citro et al., *Circuit Tracing: Revealing Computational Graphs in Language Models* | **官方 HTML**（**无 arXiv PDF**）；Published **March 27, 2025** | https://transformer-circuits.pub/2025/attribution-graphs/methods.html | HTML 方法页 | **正式外链**；**无 arXiv 号** |
-| **补链 C** | Lindsey, Gurnee, Ameisen et al., *On the Biology of a Large Language Model* | **官方 HTML**；Published **March 27, 2025**（methods 同伴） | https://transformer-circuits.pub/2025/attribution-graphs/biology.html | Claude 3.5 Haiku 案 | **补链**；不升主写全案 |
+| **补链 C** | Lindsey, Gurnee, Ameisen et al., *On the Biology of a Large Language Model* | **官方 HTML**；Published **March 27, 2025**（methods 同伴） | https://transformer-circuits.pub/2025/attribution-graphs/biology.html | Claude 3.5 Haiku 案 | **补链**；本篇不展开全案 |
 
 **一手 URL（2026-09-22 CST 核对）：**
 - CircuitLasso：https://arxiv.org/abs/2606.16939 · PDF https://arxiv.org/pdf/2606.16939
@@ -206,7 +206,7 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 
 ## 五、补链 C · Biology（Claude 3.5 Haiku 案索引）
 
-> **角色：** methods 的 **应用同伴**（同日 **2025-03-27**；methods 自述 *nine behavioral case studies*）；本卡 **不** 重写九案全文，只钉索引与和 faithfulness 相关的方法消费点。
+> **角色：** methods 的 **应用同伴**（同日 **2025-03-27**；methods 自述 *nine behavioral case studies*）；本篇不展开九案全文，只列索引与和 faithfulness 相关的方法消费点。
 
 **文首主张：** 用同一套 circuit tracing 考察 Claude 3.5 Haiku 多情境内部机制。
 
@@ -242,7 +242,7 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 1. 本卡 §二划界表（确认不是 [[机制可解释性入门]]/[[激活操控与表征工程]]/[[审慎对齐与断路器]]）。
 2. CircuitLasso：摘要 + §3 框架 + Figure 2 / Table 1–2。
 3. Circuit Tracing methods：Introduction → Building Replacement Model → Attribution Graphs → Validating… → Limitations（官方 HTML）。
-4. Biology：只读 Contents + 与自身问题相关的一案；勿把九案抄进通史。
+4. Biology：只读 Contents + 与自身问题相关的一案。
 5. 需要概念阶梯时跳转 **[[机制可解释性入门]]**。
 
 ---
@@ -252,4 +252,4 @@ $\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解�
 - CircuitLasso 附录 Table 3–7 逐特征标签与 $\lambda$ 消融曲线点：未全表抄录。
 - Anthropic HTML 内嵌交互图 / 曲线的精确像素读数：以官方页为准，本卡只用正文明确写出的聚合数。
 - CLT / SAE 训练算力美元级估计：methods 提及「open-weights cost estimates」链出，本卡不二次估算。
-- Biology 九案机制细节：升主需另开专题卡；目前仅补链。
+- Biology 九案机制细节：本篇未展开，仅作补链。

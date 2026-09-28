@@ -221,7 +221,7 @@ Qwen3-Next base（架构细部 → [[Qwen38Next架构深读]] / 官方博文，�
 [[Qwen38Next架构深读]] = 通用 Next 怎么省怎么稳 → [[Qwen3CoderNext技术报告深读]] = 3B 激活上如何用可执行反馈练成编码 agent → [[SWEBenchPro代码修复评测]]/[[代码智能体Harness史线]] = 测什么 / 沙箱怎么转（本卡只借分数与名字）。
 
 1. **交叉链**：`related` → [[Qwen38Next架构深读]] / [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]] / [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]] / [[Qwen3技术报告深读]] / [[ToolLoop工具数据合成]]；正文不展开其主课。
-2. **待核实 / 不外推**：中训精确总 token（仅「trillions」）；Figure 1 柱高；80A3 的层/专家/隐宽细表（**本 PDF 未给**）；勿把「基于 Qwen3-Next」误写成「Qwen3.8-Next 架构附录」。
+2. **待核实 / 不外推**：中训精确总 token（仅「trillions」）；Figure 1 柱高；80A3 的层/专家/隐宽细表（**本 PDF 未给**）；「基于 Qwen3-Next」不等于「Qwen3.8-Next 架构附录」。
 3. **勿混并**：SWE-Bench Pro **分数**（本卡）≠ Pro **基准设计**（[[SWEBenchPro代码修复评测]]）；Table 10 与 Table 11 任务量 **分表引用**。
 
 ---
@@ -231,4 +231,4 @@ Qwen3-Next base（架构细部 → [[Qwen38Next架构深读]] / 官方博文，�
 1. 跨 scaffold 迁移弱（Fig.3）——统一模型蒸馏后，部署期换 IDE 模板的泛化上限如何量化？（Table 2 是格式跟随，不是完整 SE 迁移。）
 2. Reward-hacking blocker 为启发式；网络合法需求（装包/文档）与泄漏通道的长期对抗是否需要可学习判别器？文内未给。
 3. 「代码 RL → 数学大涨」（Table 9）的机制：共享推理还是数据泄漏/难度耦合？本 PDF 未做因果消融。
-4. 与 [[ToolLoop工具数据合成]] ToolLoop 等工具环方法卡的接口：本卡是 **模型侧多模板+RL**，不是工具环算法通史——后续若立「格式不变式工具调用」可单开，避免叠床。
+4. 与 [[ToolLoop工具数据合成]] ToolLoop 等工具环方法卡的接口：本卡是 **模型侧多模板+RL**，不是工具环算法通史。

@@ -52,7 +52,7 @@ archived: 2026-09-24
 
 史前对照（DistServe，Zhong 等，arXiv:2401.09670）：明确指出 colocated 批处理带来 **prefill–decode 干涉** 与 **资源 / 并行计划耦合**，主张分 GPU、按 TTFT/TPOT 分别做资源与并行优化，并给出带宽感知放置；评测称相对 SOTA 可达约 **7.4×** 更多请求或 **12.6×** 更紧 SLO（>90% 合规）。TaiChi 把 DistServe 放在「解聚一端」的对照轴上，不再重复其放置算法正文。
 
-同谱系的 KV 中心化解聚还有 Mooncake（Qin 等，*A KVCache-centric Disaggregated Architecture for LLM Serving*）；本篇不展开第二主文。[[Kimik15技术报告深读]] 部署叙事中亦出现 Mooncake 传输路径，用途不同，仅作交叉指针。
+同谱系的 KV 中心化解聚还有 Mooncake（Qin 等，*A KVCache-centric Disaggregated Architecture for LLM Serving*）；本篇不展开其架构。[[Kimik15技术报告深读]] 部署叙事中亦出现 Mooncake 传输路径，用途不同，仅作交叉指针。
 
 ### 2.3 两极都不够：平衡 SLO 下的困境
 
@@ -165,5 +165,5 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 |---|---|---|
 | **主** | Wang, Zuo, Chen, Liang, Yu, Yang. *Prefill-Decode Aggregation or Disaggregation? Unifying Both for Goodput-Optimized LLM Serving*（TaiChi） | https://arxiv.org/abs/2508.01989 （v1，2025-08-04；17 pages） |
 | **史前对照** | Zhong, Liu, Chen, Hu, Zhu, Liu, Jin, Zhang. *DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving* | https://arxiv.org/abs/2401.09670 |
-| **一句交叉** | Qin et al. *Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving* | 见主文 References；不升第二主文 |
+| **一句交叉** | Qin et al. *Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving* | 见主文 References |
 | **聚合侧基线（文内）** | Orca（OSDI 2022）；Sarathi-Serve（OSDI 2024，chunked prefill） | 详见 [[连续批处理与Orca]]；Sarathi 不另开题 |

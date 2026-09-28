@@ -10,7 +10,7 @@ arxiv: ["2412.06769"]
 related: ["推理时扩展TestTimeScaling", "推理时树搜索ABMCTS", "机制可解释性入门"]
 github: "https://github.com/facebookresearch/coconut"
 openreview_pdf: "https://openreview.net/pdf?id=KrWSrrYGpT"
-补链索引: ["AGCLR 2606.07720（概念瓶颈；不升主项）"]
+补链索引: ["AGCLR 2606.07720（概念瓶颈）"]
 archived: 2026-09-22
 ---
 
@@ -215,7 +215,7 @@ Coconut 变体：**w/o curriculum**（直接末阶段）；**w/o thought**（同
 
 - **不写**：完整 iCoT / pause-token / ToT / RAP 复述；ProsQA 构图 Alg.1 逐步伪代码；训练并行优化实现；把 probe 写成 MI 方法论文。
 - **开放**：无语言链监督的 latent 学习；训练多次前向的效率；$c$ 更大时的细粒度课程；语言骨架 + 潜空间填槽的混合推理；扩展到预训练尺度。
-- **补链（不升主项）**：**AGCLR（2606.07720）** 作概念瓶颈相关索引；文末引用的 Zhu et al. 2025a/b（叠加态理论与训练动态）可作后续理论跟读，本卡不展开公式。
+- **补链**：**AGCLR（2606.07720）** 作概念瓶颈相关索引；文末引用的 Zhu et al. 2025a/b（叠加态理论与训练动态）可作后续理论跟读，本卡不展开公式。
 
 ---
 

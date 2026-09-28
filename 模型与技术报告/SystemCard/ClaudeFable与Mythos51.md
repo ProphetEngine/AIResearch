@@ -285,7 +285,7 @@ Exec 总括：发布以来 **最强 overall cyber**；内部套件 **≥ Mythos 
 2. 公告「生物 −85% / cyber −60% interventions」与 System Card 图示的一一对齐关系。
 3. CVP 实际开放 Mythos 5.1 的日期与地域（卡写 near future；公告称目前 Mythos 主要对一组美国组织）。
 4. 参数量、预训练 token、具体 RL 超参：**卡未给**。
-5. 勿把本卡未出现的 **ASL-3** 标签从 Opus 5 笔记迁入。
+5. 本卡未出现 **ASL-3** 标签；Opus 5 笔记中的 ASL-3 不适用于本卡。
 
 ### 7.2 推荐引用
 

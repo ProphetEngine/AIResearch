@@ -26,7 +26,7 @@ timezone: Asia/Shanghai (CST)
 > **定位**：交互生成式世界模型增量——在 **[[世界模型与VJEPA]]** 已立「非生成式 JEPA 表征预测」之后，本卡只写 **交互 / 流式生成式世界模型** 增量切片：
 > - **Matrix-Game 3.0**（Skywork AI）：**实时流式交互 WM** + **相机感知长程记忆** + 工业数据引擎 + few-step 蒸馏部署（720p / 至约 40 FPS）。
 > - **Cosmos World Foundation Model Platform**（NVIDIA）：**Physical AI 世界基础模型平台**——视频策展 / 连续·离散 tokenizer / 扩散与自回归预训练 WFM / 后训练样例 / guardrail。
-> **对照（不升主）**：**Genie 3** 仅有 DeepMind 博文（2025-08-05）、**无正式 PDF TR** → 不作主锚，仅作产品对照一句。
+> **对照**：**Genie 3** 仅有 DeepMind 博文（2025-08-05）、**无正式 PDF TR** → 不作主锚，仅作产品对照一句。
 > **研究线**：**架构思想 / 平台接口（主）** + **文内交互一致性 / 吞吐字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[世界模型与VJEPA]]**：不重写 JEPA **mask-denoising 表征预测**入门、V-JEPA 2 probe / VidQA / AC 后训练长文。本卡预测落在 **像素 / 潜视频生成**（动作条件交互或 Video2World），与表征空间 JEPA **正交**。
@@ -43,7 +43,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|---|
 | **主文 A** | Wang, Liu, Li, Huang, Xu et al.（Skywork AI）, *Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory* | arXiv:**2604.08995**v2 \[cs.CV\] **13 Apr 2026**（abs：Submitted **10 Apr 2026**）；PDF https://arxiv.org/pdf/2604.08995；**20** 页 letter | **实时流式交互 WM**：error-aware 基座 + 相机感知记忆 + multi-segment DMD 蒸馏 + INT8/VAE 剪枝 → **720p@~40FPS（5B）**；scale-up **MoE-28B / 2×14B** |
 | **主文 B** | NVIDIA（Agarwal, Ali, Bala, … Liu et al.）, *Cosmos World Foundation Model Platform for Physical AI* | arXiv:**2501.03575**v3 \[cs.CV\] **9 Jul 2025**（abs：Submitted **7 Jan 2025**）；PDF https://arxiv.org/pdf/2501.03575；**75** 页 A4 | **Physical AI WFM 平台**：策展→tokenizer→扩散/AR 预训练→后训练样例→guardrail；开源/开权重入口 **NVIDIA Cosmos-Predict1** |
-| **对照（不升主）** | Parker-Holder & Fruchter（DeepMind）, *Genie 3: A new frontier for world models* | 博文 **2025-08-05**；https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ | **产品对照**：文生交互世界 **24 FPS / 720p / 数分钟一致性**；**无正式 PDF TR** → 不升主 |
+| **对照** | Parker-Holder & Fruchter（DeepMind）, *Genie 3: A new frontier for world models* | 博文 **2025-08-05**；https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ | **产品对照**：文生交互世界 **24 FPS / 720p / 数分钟一致性**；**无正式 PDF TR**，仅作对照 |
 
 **一句话抓手：**
 - **Matrix-Game 3.0**：把「交互视频世界模型」做成 **可部署系统**——UE/AAA/真实四元组数据 + **自校正双向 DiT** + **相机感知记忆检索** + **多段 DMD 蒸馏**，在 5B 上冲 **720p 实时流式**。
@@ -72,7 +72,7 @@ timezone: Asia/Shanghai (CST)
 
 - **Matrix §1 / Related**：点名 Genie 3「约 24 FPS·720p·分钟级」但 **未开源、细节不清**；Matrix-Game 2.0 / HY-Gamecraft-2 有实时流式但 **缺分钟级记忆**；Lingbot-World 靠扩上下文但难同时实时；本工作主打 **记忆一致性 × 高分辨率 × 真实时** 同框。Related 中 Diffusion Forcing / Self-Forcing / Causal Forcing / SVI 仅作 **长视频误差累积** 谱系，**不写 forcing 族通史**（→ [[DiffusionForcing族]]）。
 - **Cosmos §1–2**：明确定义 $ \hat{x}_{t+1}=\mathcal{W}(x_{0:t},c_t) $ 的 **视觉 WFM**；用途列表含策略评估 / 初始化 / RL / MPC / 合成数据，但 **§2.1 明示本文不含将这些用途的实证结果**——本卡亦不外推。后训练机器人 / 驾驶 → **平台样例**，控制部署 → [[视觉语言动作谱系]]。
-- **Genie 3 博文**：强调实时交互、数分钟一致性、promptable world events、与 SIMA 联调；**Limitation** 含有限动作空间、多 agent、真实地理精度、交互时长「数分钟而非数小时」——本卡只录对照，不升主。
+- **Genie 3 博文**：强调实时交互、数分钟一致性、promptable world events、与 SIMA 联调；**Limitation** 含有限动作空间、多 agent、真实地理精度、交互时长「数分钟而非数小时」——本篇仅作对照。
 
 `
  「world model」外壳（接口可取自 [[世界模型与VJEPA]] 定义句，正文不写 JEPA）
@@ -231,7 +231,7 @@ pre-Guard 拦有害输入、post-Guard 拦有害输出——本卡不展开分�
 
 ---
 
-## 五、Genie 3 对照（不升主）
+## 五、Genie 3 对照
 
 来源：DeepMind 博文 *Genie 3: A new frontier for world models*（**2025-08-05**，Parker-Holder & Fruchter）。
 
@@ -242,7 +242,7 @@ pre-Guard 拦有害输入、post-Guard 拦有害输出——本卡不展开分�
 | Promptable world events；与 SIMA agent 联调 | 产品能力索引 |
 | 限制：动作空间有限、多 agent、真实地点精度、时长「数分钟非数小时」等 | 跟读时勿夸大 |
 
-无正式 PDF TR（截至 2026-09-22）→ **不升主**；仅对照一句。
+无正式 PDF TR（截至 2026-09-22），本篇仅作对照一句。
 
 ---
 

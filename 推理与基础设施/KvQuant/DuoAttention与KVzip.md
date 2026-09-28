@@ -56,7 +56,7 @@ archived: 2026-09-22
 3. **头功能不匀（DuoAttention）**：少数 **Retrieval Heads** 会跨距对准相关 token；多数 **Streaming Heads** 主要看初始 sink + 近邻——剪后者中间段对 passkey 几乎无伤，剪前者则崩（Fig.1 右）。
 4. **多 query 场景下 query-aware 驱逐失效（KVzip）**：SnapKV / PyramidKV 用「当前 query 尾窗」打分——单 query 好看；**复用**第一次压缩后的 cache 答后续 query 则大掉（Fig.2：SQuAD 上 SnapKV-reuse vs KVzip）。企业「文档预计算 KV / 个性化对话历史」需要 **一次压缩、多次查询**。
 
-本篇只钉上述两条近窗方法；量化见 **[[KV缓存量化与压缩]]**，检索近似见 **[[检索式注意力]]**，位置外推与分页调度见 **[[长上下文位置编码与系统侧]]**。
+本篇只讲上述两条近窗方法；量化见 **[[KV缓存量化与压缩]]**，检索近似见 **[[检索式注意力]]**，位置外推与分页调度见 **[[长上下文位置编码与系统侧]]**。
 
 ---
 

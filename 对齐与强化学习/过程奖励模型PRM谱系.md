@@ -186,7 +186,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 ## 五、枢纽：PRM 如何接入 TTS 与过程 RL
 
-> 本节只钉 **接口角色**；TTS 通史 → [[推理时扩展TestTimeScaling]]；GRPO/DAPO 配方 → [[GRPO与DAPO算法族]]；R1 多阶段 → [[DeepSeekR1推理训练深读]]。下列不展开为算法清单。
+> 本节只讲 **接口角色**；TTS 通史 → [[推理时扩展TestTimeScaling]]；GRPO/DAPO 配方 → [[GRPO与DAPO算法族]]；R1 多阶段 → [[DeepSeekR1推理训练深读]]。下列不展开为算法清单。
 
 ### 5.1 Test-time scaling / 验证（对 [[推理时扩展TestTimeScaling]] 的补丁）
 

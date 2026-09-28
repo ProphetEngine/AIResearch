@@ -26,7 +26,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[QwenOmni音视频原生]] Qwen Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、Qwen3/3.5-Omni 产品栈与 36/215 基准表；本卡仅在「同题相邻的闭源/开权 omni 对照」处点名，**不**展开 Qwen Omni 配方。
 > - **≠ [[SpeechLLM语音语言模型]] Speech-LLM**：不重写 Qwen2-Audio / Whisper→LLM 音频→文本对话栈；本卡是 **音视频联合理解 + 可选流式 TTS**，不是 Voice Chat / Audio Analysis 接口史。
 > - **≠ [[SeamlessM4T语音翻译]] SeamlessM4T**：不重写 UnitY / EMMA 语音翻译与同传；本卡 **不做** S2ST/S2TT 翻译 FM。
-> - **≠ [[多模态架构脉络]] 多模态通史**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」阶梯；经典 Flamingo（Alayrac 2022）仅作 related-work 一句祖先，**不**升主。
+> - **≠ [[多模态架构脉络]] 多模态通史**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」阶梯；经典 Flamingo（Alayrac 2022）仅作 related-work 一句祖先。
 > - **≠ [[视频生成正式报告]] 视频生成正式报告备忘**：本卡是 **理解 / 推理 AV-LLM**，不是文生视频 / Sora 缺口备忘。
 > 页眉 Code / Model / Project Page / Dataset / Demo **按钮在 PDF 中未见可核 URI**（仅见 `arxiv.org/abs/2607.16107v1`），故不列 GitHub / HF 链接；文内写「fully open」与 Broader Impacts「non-commercial research use only」**并列表出**。
 
