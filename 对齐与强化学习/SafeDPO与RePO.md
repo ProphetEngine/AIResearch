@@ -23,18 +23,18 @@ timezone: Asia/Shanghai (CST)
 
 # 偏好优化新变体：SafeDPO + RePO（≠ DPO / GRPO / SimPO 主轴）
 
-> **定位**：[[SafeDPO与RePO]] **P1 偏好优化横切**——仓库已有 RLHF/DPO 通史（**[[对齐脉络RLHF与偏好优化]]**）、可验证奖励组相对优势族（**[[GRPO与DAPO算法族]]**）、无参考/单阶段/非成对变体族（**[[SimPO与ORPO偏好优化]]**）。本卡立两条**可划界新刀**，禁止写成「又一篇 DPO / SimPO / GRPO」：
+> **定位**：**偏好优化横切**——仓库已有 RLHF/DPO 通史（**[[对齐脉络RLHF与偏好优化]]**）、可验证奖励组相对优势族（**[[GRPO与DAPO算法族]]**）、无参考/单阶段/非成对变体族（**[[SimPO与ORPO偏好优化]]**）。本卡立两条**可划界新刀**，不写成「又一篇 DPO / SimPO / GRPO」：
 > - **SafeDPO**（*Safe Direct Preference Optimization*）：把 **硬安全约束**（不安全响应概率为零）经 cost-augmented reward 与 **安全感知偏好变换 $T$** 收成 DPO 形目标；仅需偏好对 + 二元安全指示，**无需 reward / cost RM、无需在线采样**；额外超参仅安全间隔 $\Delta$。
 > - **RePO**（*Regret-based Preference Optimization*）：把人类偏好解释为 **遗憾最小化**（相对最优策略的相对次优性 + 行为策略未来序列前向 KL），而非即时/累积效用最大化；闭式更新兼容直接偏好优化，并给出无行为策略时的 **RePO_det**。
 > **攻坚线**：**架构思想 / 目标函数接口（主）**——约束安全变换 vs 反事实遗憾分解；**文内安全—有用性 / 偏好—推理字段（辅）**——PKU-SafeRLHF / XSTest、AlpacaEval2 / Arena-Hard / 数学推理表。
-> **硬划界（开篇钉死）**：
-> - **≠ [[对齐脉络RLHF与偏好优化]]**：禁止重写 InstructGPT 三阶段、DPO 闭式最优策略证明、CAI 通史。本卡只在对照句点名 DPO 外壳。
-> - **≠ [[GRPO与DAPO算法族]]**：禁止写 GRPO→DAPO、Clip-Higher、可验证奖励 RL 配方与组相对基线谱系。RePO 实验虽含数学 verifier 偏好对，贡献是 **遗憾解释**，不是 GRPO 管线。
-> - **≠ [[SimPO与ORPO偏好优化]]**：禁止重写 SimPO 平均 log-prob + $\gamma$、ORPO odds ratio、KTO HALO 推导。本卡不把 AMaPO 升主。
-> - **≠ [[合成对齐数据Magpie]]**：禁止写 Magpie / ActiveUltraFeedback **合成偏好数据流水线**；本卡消费静态偏好+标签，不造数据。
-> - **≠ [[宪法分类器防御]] / [[审慎对齐与断路器]]**：禁止写 Constitutional Classifiers、deliberative circuit breakers 等 **安全产品/护栏机制**；本卡是 **离线偏好目标函数** 变体。
+> **范围与相邻笔记**：
+> - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 InstructGPT 三阶段、DPO 闭式最优策略证明、CAI 通史。本卡只在对照句点名 DPO 外壳。
+> - **≠ [[GRPO与DAPO算法族]]**：不写 GRPO→DAPO、Clip-Higher、可验证奖励 RL 配方与组相对基线谱系。RePO 实验虽含数学 verifier 偏好对，贡献是 **遗憾解释**，不是 GRPO 管线。
+> - **≠ [[SimPO与ORPO偏好优化]]**：不重写 SimPO 平均 log-prob + $\gamma$、ORPO odds ratio、KTO HALO 推导。本卡不把 AMaPO 升主。
+> - **≠ [[合成对齐数据Magpie]]**：不写 Magpie / ActiveUltraFeedback **合成偏好数据流水线**；本卡消费静态偏好+标签，不造数据。
+> - **≠ [[宪法分类器防御]] / [[审慎对齐与断路器]]**：不写 Constitutional Classifiers、deliberative circuit breakers 等 **安全产品/护栏机制**；本卡是 **离线偏好目标函数** 变体。
 > **补链不升主**：**AMaPO**（自适应 margin，与 SimPO/固定 margin 族过近）→ §八仅索引。
-> **禁止编造**：机制、命题编号、表数字一律锚定官方 PDF（2026-09-22 CST）。图内未列表格的精确曲线点标 **待核实读图**。SafeDPO / RePO 文内**未见**作者自发布官方训练仓 URL → 记为 **无承诺仓**（仅数据集 / 基线仓索引）。
+> SafeDPO / RePO 文内**未见**作者自发布官方训练仓 URL → 记为 **无承诺仓**（仅数据集 / 基线仓索引）。
 
 ---
 
@@ -163,7 +163,7 @@ $$
 | **命题 4.3** | $T(\mathcal{D})$ 无偏恢复式 (10) |
 | **命题 4.4** | $\Delta$ 不改变全局最优集合 |
 
-### 3.4 实验字段（§5；禁外推未测场景）
+### 3.4 实验字段（§5；不外推未测场景）
 
 **床：** PKU-SafeRLHF-30K（~27k train / 3k test）；共享 SFT 起点（Alpaca-7B reproduced on 同数据）。
 **基线：** DPO-HELPFUL / DPO-HARMLESS / **DPO-SAFEBETTER**（仅滤掉 preferred 不安全的对——用于证明「只过滤不够」）/ SafeRLHF (PPO-λ) / SACPO / P-SACPO。
@@ -196,7 +196,7 @@ $$
 | SACPO | 2.4 | 86 |
 | **SafeDPO** | **12.4** | **100** |
 
-文内自陈：硬约束换来 **完全压制不安全**，但边界良性提示（词面像有害）上更保守——这是目标函数结构 trade-off，不是表外编造。
+文内自陈：硬约束换来 **完全压制不安全**，但边界良性提示（词面像有害）上更保守——这是目标函数结构 trade-off。
 
 ---
 
@@ -280,9 +280,9 @@ $$
 
 ---
 
-## 六、与相邻笔记的禁止清单（验收用）
+## 六、相邻笔记与范围外
 
-| 笔记 | 本卡禁止写入的内容 |
+| 笔记 | 本卡不写 |
 |---|---|
 | **[[对齐脉络RLHF与偏好优化]]** | InstructGPT 三阶段精读、DPO 最优策略推导全文、CAI |
 | **[[GRPO与DAPO算法族]]** | GRPO/DAPO/Clip-Higher、组相对优势公式、RLVR 训练菜谱 |
@@ -298,7 +298,7 @@ $$
 **建议跟读顺序：**
 1. SafeDPO Figure 1 + §3 $T$/式 (11)(12) + Table 17/18/3；
 2. RePO Figure 1–3 + 遗憾分解 + §6 估计器 + Table 1–4；
-3. 本卡 §五对照表；AMaPO 只扫 Abstract + 议程「不升主」句。
+3. 本卡 §五对照表；AMaPO 只扫 Abstract。
 
 **常见误区：**
 1. 把 SafeDPO 写成「DPO + 安全 RM」——文明确 **无** reward/cost model。
@@ -306,23 +306,22 @@ $$
 3. 把 RePO 写成 GRPO/RLVR——RePO 是 **离线偏好目标语义**；数学实验只用 verifier **造偏好对**。
 4. 把 RePO 写成 KTO「又一个非 BT」——KTO 是二元标签+前景理论（[[SimPO与ORPO偏好优化]]）；RePO 仍用成对 BT 外壳，改的是 **score=负遗憾**。
 5. 只报 RePO 赢的榜、抹掉 Arena-Hard / AMC23 上 KTO 更高的行。
-6. 把 AMaPO 当第三主文——与 SimPO margin 轴过近，议程指定补链。
-7. 编造 SafeDPO/RePO 官方 GitHub——官方 PDF **未见**；仅 AMaPO 有文首仓。
+6. 把 AMaPO 当第三主文——与 SimPO margin 轴过近，仅作补链。
+7. 误以为 SafeDPO/RePO 有官方 GitHub——官方 PDF **未见**；仅 AMaPO 有文首仓。
 
-**开放问题（文内已暗示，本卡不编造答案）：** SafeDPO 数据集单一、≤13B；过拒–安全帕累托如何调 $\Delta$ 以外的机制；RePO 的 $\bar D_{\mathrm{KL}}$ 截断偏差与跨域 tokenizer；遗憾偏置在非 verifier 域是否仍成立。
+**开放问题（文内已暗示）：** SafeDPO 数据集单一、≤13B；过拒–安全帕累托如何调 $\Delta$ 以外的机制；RePO 的 $\bar D_{\mathrm{KL}}$ 截断偏差与跨域 tokenizer；遗憾偏置在非 verifier 域是否仍成立。
 
 ---
 
 ## 八、补链：AMaPO（2511.09385）— 仅索引，不升主
 
 - **一句话：** 统一 margin 框架诊断 DPO 族 **过拟合（已排对仍大梯度）/ 欠拟合（排错梯度不足）**；提出实例自适应 margin（Z-norm + 指数缩放；已排对则 margin→0）。
-- **为何不升主：** 与 **[[SimPO与ORPO偏好优化]] SimPO**（固定/目标间隔 $\gamma$）同属「改 margin 提排序准确率」轴；议程明确 **过近 SimPO → 仅补链**。
+- **为何不升主：** 与 **[[SimPO与ORPO偏好优化]] SimPO**（固定/目标间隔 $\gamma$）同属「改 margin 提排序准确率」轴；**过近 SimPO → 仅补链**。
 - **文内指针：** 代码 `https://github.com/Shiroha-Offical/AMaPO`；Table 2 四设定 AE2/MT；相对 SimPO 的排序准确率/OOD 表（Table 4）——细节不展开。
 - **与本卡双主的关系：** AMaPO 不引入安全约束，也不改「奖励 vs 遗憾」语义；若后续单独立项，应挂 [[SimPO与ORPO偏好优化]] 延伸而非本卡续篇。
 
 ---
 
-**本卡主张锚点（抽查用）：**
+**本卡主张锚点：**
 - SafeDPO $T$ 三分支与式 (11)(12)；命题 4.3/4.4；Table 17 harmless ratio **96.87%**；XSTest 过拒 **12.4%** / 无害 **100%**。
 - RePO 遗憾 = 局部 log-ratio + 序列 $\bar D_{\mathrm{KL}}$；RePO_det；Table 1 Qwen3-1.7B AE2 LC **36.61**；Table 4 mask 增广对 DPO vs RePO 的不对称增益。
-- AMaPO 仅 §八；划界五条开篇钉死。

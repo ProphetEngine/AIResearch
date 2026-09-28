@@ -20,7 +20,7 @@ archived: 2026-09-28
 
 > **定位**：对齐与强化学习横切入口——把近一年「Agentic RL」收成**能力模块地图**：规划 / 工具 / 记忆 / 推理 / 自改进。主锚 Zhang 等综述 *The Landscape of Agentic Reinforcement Learning for LLMs: A Survey*（arXiv **2509.02547v5**；TMLR **01/2026**）。
 > **一句话**：Agentic RL = 把 agent 的各项能力当成**可学习策略**，在长程、部分可观测环境里用 RL **联合优化**，而不是只对单轮文本打分。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[GRPO与DAPO算法族]]**：不写组相对优势、Clip-Higher、去偏目标等**单步/可验证奖励算法细节**；算法族在此只是「优化器槽位」。
 > - **≠ [[ToRL工具集成强化学习]]**：不写解释器进 env、观测 mask、$C$ 次调用闸门等**工具 RL 专线**；本篇只在「工具」格点名 ToRL 所在方向。
 > - **≠ [[MiMoV26智能体强化学习短报]]**：不写 batch / grader / multi-harness 的**产品扩算力轴**。

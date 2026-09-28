@@ -15,13 +15,13 @@ archived: 2026-09-22
 
 # Preference optimization 新变体族：SimPO + ORPO（KTO 索引）
 
-> **定位**：[[SimPO与ORPO偏好优化]] P0 横切——补齐 [[对齐脉络RLHF与偏好优化]] 明确**不覆盖**的偏好变体短史：仓库缺 **无参考模型 / 单阶段 / 非成对标签** 三条轴上的可核条目。本篇主写 **SimPO**（长度归一平均 log 概率作隐式奖励 + 目标奖励间隔）与 **ORPO**（SFT NLL + odds ratio 单阶段 monolithic）；**KTO** 仅作谱系索引（二元 desirable/undesirable、HALO 族）。
+> **定位**：横切——补齐 [[对齐脉络RLHF与偏好优化]] 明确**不覆盖**的偏好变体短史：仓库缺 **无参考模型 / 单阶段 / 非成对标签** 三条轴上的可核条目。本篇主写 **SimPO**（长度归一平均 log 概率作隐式奖励 + 目标奖励间隔）与 **ORPO**（SFT NLL + odds ratio 单阶段 monolithic）；**KTO** 仅作谱系索引（二元 desirable/undesirable、HALO 族）。
 > **攻坚线**：**架构思想（主）**——目标函数假设与数据形态；**评测字段（辅）**——AlpacaEval / Arena-Hard / MT-Bench 等文内表。
-> **硬划界（禁止重写）**：
+> **范围与相邻笔记**：
 > - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 InstructGPT 三阶段 / DPO 闭式推导 / CAI；[[对齐脉络RLHF与偏好优化]] 已声明 IPO/KTO/ORPO 等不在精读范围。
 > - **≠ [[GRPO与DAPO算法族]]**：不写 GRPO→DAPO / 可验证奖励 RL / Clip-Higher 等。
 > - **≠ [[过程奖励模型PRM谱系]]**：不写 PRM 逐步监督 / Best-of-N 过程分。
-> **禁止编造**：公式、超参区间、榜上数字一律取自官方 PDF（2026-09-22 CST）；KTO 只索引主张与损失骨架，不展开实验全表。
+> KTO 只索引主张与损失骨架，不展开实验全表。
 
 ---
 
@@ -287,7 +287,7 @@ $$
 | ORPO 式 (3)–(7)；SFT 抬高 rejected log-prob | 2403.07691 §3 Figure 3；§4 |
 | Mistral-ORPO-α/β：AE2 11.33 / 12.20；MT 7.23 / 7.32；IFEval 至 66.19% | 摘要；Table 1；§6.2 |
 | KTO 二元信号；$\mathcal{L}_{\mathrm{KTO}}$ 式 (8)；HALO；ICML 2024 | 2402.01306 摘要 / §1 / §4.1；页眉 PMLR 235 |
-| [[对齐脉络RLHF与偏好优化]] 不覆盖 IPO/KTO/ORPO | 对齐与强化学习/对齐脉络RLHF与偏好优化.md 文末范围句 |
+| [[对齐脉络RLHF与偏好优化]] 不覆盖 IPO/KTO/ORPO | [[对齐脉络RLHF与偏好优化]] 文末范围句 |
 
 ---
 

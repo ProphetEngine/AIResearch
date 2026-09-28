@@ -8,7 +8,7 @@ sources:
  - https://arxiv.org/abs/2406.08464
  - https://arxiv.org/abs/2603.09692
 arxiv: ["2406.08464", "2603.09692"]
-related: ["B8", "SimPO与ORPO偏好优化", "对齐脉络RLHF与偏好优化", "B3", "NemotronCC数据策展"]
+related: ["合成数据与教科书式数据", "SimPO与ORPO偏好优化", "对齐脉络RLHF与偏好优化", "分词器与数据配比", "NemotronCC数据策展"]
 project:
  - https://magpie-align.github.io/
  - https://hf.co/magpie-align
@@ -20,14 +20,13 @@ archived: 2026-09-22
 
 # 合成对齐数据：Magpie + ActiveUltraFeedback
 
-> **定位**：[[合成对齐数据Magpie]] **P1 数据侧横切**——对照两篇对齐数据流水线主文：**无种子提示的自合成指令数据**（Magpie）vs **不确定度驱动的主动偏好对选取**（ActiveUltraFeedback）。
+> **定位**：**数据侧横切**——对照两篇对齐数据流水线主文：**无种子提示的自合成指令数据**（Magpie）vs **不确定度驱动的主动偏好对选取**（ActiveUltraFeedback）。
 > **攻坚线**：**架构思想 / 数据流水线（主）** + **文内下游评测字段（辅）**（AlpacaEval / Arena-Hard / WildBench；GSM8K / IFEval / TruthfulQA / AlpacaEval 2 / RewardBench 2）。
-> **硬划界（禁止重写）**：
-> - **≠ B8**：不写 phi / Textbooks Are All You Need 式 **教科书/代码合成预训练** 通史。
+> **范围与相邻笔记**：
+> - **≠ [[合成数据与教科书式数据]]**：不写 phi / Textbooks Are All You Need 式 **教科书/代码合成预训练** 通史。
 > - **≠ [[SimPO与ORPO偏好优化]]**：不写 SimPO / ORPO / IPO **偏好损失函数** 推导与族谱（ActiveUF §5.5 仅把 IPO/SimPO 当**下游消费算法**点名）。
 > - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 RLHF / DPO / CAI 三阶段通史与损失精读（只作「偏好数据从哪来」对照一句）。
-> - **≠ B3**：不写 FineWeb / DCLM / Dolma 式 **网页过滤策展**；预训练网页管线见 **[[NemotronCC数据策展]] Nemotron-CC**。
-> **禁止编造**：数字、表号、版本一律取自官方 PDF（2026-09-22 CST）与 arXiv API。
+> - **≠ [[分词器与数据配比]]**：不写 FineWeb / DCLM / Dolma 式 **网页过滤策展**；预训练网页管线见 **[[NemotronCC数据策展]] Nemotron-CC**。
 
 ---
 
@@ -264,7 +263,7 @@ Base 绝对分：GSM8K **0.758** / IFEval **0.713** / TruthfulQA **0.468** / Alp
 | **是否需要多模型池** | 单对齐模型即可闭环；DPO 扩展用 RM 打分 | **30 模型池** 是多样性前提 |
 | **相对 UltraFeedback** | 可替代「从哪来指令」；Magpie-DPO 是另一条造偏好路径 | **升级「怎么选对」**：静态启发式 → 主动/delta |
 | **本仓库下游消费** | SFT 数据质量故事 | 偏好数据 **标注预算** 故事 |
-| **明确不写** | 不写成预训练教科书合成（B8） | 不写成 SimPO/ORPO 损失精读（[[SimPO与ORPO偏好优化]]） |
+| **明确不写** | 不写成预训练教科书合成（[[合成数据与教科书式数据]]） | 不写成 SimPO/ORPO 损失精读（[[SimPO与ORPO偏好优化]]） |
 
 **跟读口诀：** Magpie =「对着 chat 模板空手变出用户题」；ActiveUF =「题已有、答案很多，用不确定度+质量差挑最值得标的一对」。
 
@@ -274,10 +273,10 @@ Base 绝对分：GSM8K **0.758** / IFEval **0.713** / TruthfulQA **0.468** / Alp
 
 | 笔记 | 本篇不进入 |
 |---|---|
-| **B8** | phi / textbook / 代码合成 **预训练向** 数据 |
+| **[[合成数据与教科书式数据]]** | phi / textbook / 代码合成 **预训练向** 数据 |
 | **[[SimPO与ORPO偏好优化]]** | SimPO / ORPO / IPO **目标函数** 推导；此处 IPO/SimPO 只作 ActiveUF 消融消费者 |
 | **[[对齐脉络RLHF与偏好优化]]** | RLHF–DPO–CAI 通史与损失精读 |
-| **B3** | 网页过滤 / FineWeb–DCLM 策展 |
+| **[[分词器与数据配比]]** | 网页过滤 / FineWeb–DCLM 策展 |
 | **[[NemotronCC数据策展]]** | Nemotron-CC 长程预训练数据管线（并行数据侧，非本篇） |
 
 ---

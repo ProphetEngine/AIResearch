@@ -15,15 +15,15 @@ archived: 2026-09-22
 
 # Process Reward Models（PRM）谱系
 
-> **定位**：[[过程奖励模型PRM谱系]] P0 横切——仓库缺「逐步奖励模型」独立笔记。本篇只立 **PRM 作为逐步奖励枢纽**：连接 **验证（rerank / Best-of-N）**、**test-time scaling**、**过程 RL（dense step reward）**。
+> **定位**：横切——仓库缺「逐步奖励模型」独立笔记。本篇只立 **PRM 作为逐步奖励枢纽**：连接 **验证（rerank / Best-of-N）**、**test-time scaling**、**过程 RL（dense step reward）**。
 > **攻坚线**：**数学原理（主）** + **架构思想（辅）**。
 > **谱系三站**：人类过程监督（Lightman et al.）→ 自动过程标注（Math-Shepherd）→ 用法闭环（TTS / process RL；综述作地图）。
-> **硬划界（禁止重写）**：
-> - **禁止重写** DeepSeek-R1 **阶段表** / 规则奖励通史（→ [[DeepSeekR1推理训练深读]]）。
-> - **禁止重写** [[GRPO与DAPO算法族]] **GRPO→DAPO 技巧清单** / 裁剪、动态采样等算法族配方（→ `[[GRPO与DAPO算法族]]-grpo-dapo-algorithm-family`）。
-> - **禁止重写** [[推理时扩展TestTimeScaling]] TTS 通史与 o1/R1 产品叙事（→ `[[推理时扩展TestTimeScaling]]-test-time-scaling`）；本篇只补 **PRM 在 TTS 中的打分器角色**。
-> - **禁止重写** [[对齐脉络RLHF与偏好优化]] 偏好优化 / ORM 作 preference RM 全文。
-> **禁止编造**：数字、损失式、聚合规则一律锚定官方 PDF（2026-09-22 CST）；综述后延工作仅作索引，不外推未核数字。
+> **范围与相邻笔记**：
+> - **不重写** DeepSeek-R1 **阶段表** / 规则奖励通史（→ [[DeepSeekR1推理训练深读]]）。
+> - **不重写** [[GRPO与DAPO算法族]] **GRPO→DAPO 技巧清单** / 裁剪、动态采样等算法族配方（→ `[[GRPO与DAPO算法族]]-grpo-dapo-algorithm-family`）。
+> - **不重写** [[推理时扩展TestTimeScaling]] TTS 通史与 o1/R1 产品叙事（→ `[[推理时扩展TestTimeScaling]]-test-time-scaling`）；本篇只补 **PRM 在 TTS 中的打分器角色**。
+> - **不重写** [[对齐脉络RLHF与偏好优化]] 偏好优化 / ORM 作 preference RM 全文。
+> 综述后延工作仅作索引。
 
 ---
 
@@ -186,7 +186,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 ## 五、枢纽：PRM 如何接入 TTS 与过程 RL
 
-> 本节只钉 **接口角色**；TTS 通史 → [[推理时扩展TestTimeScaling]]；GRPO/DAPO 配方 → [[GRPO与DAPO算法族]]；R1 多阶段 → [[DeepSeekR1推理训练深读]]。**禁止把下列写成算法清单重写。**
+> 本节只钉 **接口角色**；TTS 通史 → [[推理时扩展TestTimeScaling]]；GRPO/DAPO 配方 → [[GRPO与DAPO算法族]]；R1 多阶段 → [[DeepSeekR1推理训练深读]]。下列不展开为算法清单。
 
 ### 5.1 Test-time scaling / 验证（对 [[推理时扩展TestTimeScaling]] 的补丁）
 
@@ -235,7 +235,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 ---
 
-## 八、未覆盖 / 待核实
+## 八、局限与待核实
 
 | 项 | 状态 |
 |---|---|

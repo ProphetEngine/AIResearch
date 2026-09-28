@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 7　对齐脉络：RLHF / 偏好优化 / 宪法式方法
+# 对齐脉络：RLHF / 偏好优化 / 宪法式方法
 
 > 攻坚线：**架构思想（主）+ 数学原理（辅）**。入口论文：
 > - InstructGPT / RLHF：Ouyang et al., *Training language models to follow instructions with human feedback* (arXiv:2203.02155)
@@ -274,7 +274,7 @@ $$
 
 ---
 
-## 待核实 / 未读范围（跟读清单）
+## 局限与待核实
 
 - InstructGPT **Appendix B/C**：标注者筛选与人口统计细节、175B RM 不稳的具体现象、PPO / PPO-ptx 超参表。
 - InstructGPT 各公开基准精确分与 Figure 1 误差条：笔记只用了摘要级叙述，复述百分比前应对照正文表图。

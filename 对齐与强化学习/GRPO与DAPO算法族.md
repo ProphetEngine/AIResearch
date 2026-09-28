@@ -15,10 +15,10 @@ archived: 2026-09-22
 
 # GRPO → DAPO / Dr.GRPO 后训练算法族专线
 
-> **定位**：[[GRPO与DAPO算法族]] P0 横切——立 **后训练 RL 算法谱系**（目标函数 / 组相对优势 / 变体），**不**重写 R1 多阶段管线表（见 [[DeepSeekR1推理训练深读]]）。
+> **定位**：横切——立 **后训练 RL 算法谱系**（目标函数 / 组相对优势 / 变体），**不**重写 R1 多阶段管线表（见 [[DeepSeekR1推理训练深读]]）。
 > **攻坚线**：**数学原理（主）** + **架构思想（辅）**。
 > **刻意不写**：R1-Zero→R1 冷启动 / 拒绝采样 / 二次 RL 阶段表；[[对齐脉络RLHF与偏好优化]] RLHF·DPO·CAI 通史；[[推理时扩展TestTimeScaling]] test-time scaling「势」叙事。本篇只串 **GRPO 目标 → DAPO 四技 → Dr.GRPO 去偏**。
-> **禁止编造**：公式、超参、消融数字一律取自官方 PDF（2026-09-22 CST）；议程所列 `2503.06639` **不是** Dr.GRPO——Dr.GRPO 出自 `2503.20783`（已补入）；`2503.06639` 作可选 RLVR 动力学对照。
+> `2503.06639` **不是** Dr.GRPO——Dr.GRPO 出自 `2503.20783`；`2503.06639` 作可选 RLVR 动力学对照。
 
 ---
 
@@ -170,7 +170,7 @@ r_{i,t}(\theta)\,\hat A_{i,t},\;
 \end{aligned}
 $$
 
-（式 8–9：比率 $r_{i,t}$ 与组标准化 $\hat A$ 同 GRPO；**无** $\beta D_{\mathrm{KL}}$；分母为 **组内总 token 数**——对应 §3.3 的 token-level 归约。版式抽取中分子分母排版嘈杂，以上以 §3.3 散文「按 token 等权、长序列影响更大」与式 (12) 叙述为准。）
+（式 8–9：比率 $r_{i,t}$ 与组标准化 $\hat A$ 同 GRPO；**无** $\beta D_{\mathrm{KL}}$；分母为 **组内总 token 数**——对应 §3.3 的 token-level 归约。PDF 版式中分子分母排版嘈杂，以上以 §3.3 散文「按 token 等权、长序列影响更大」与式 (12) 叙述为准。）
 
 Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** → buffer 满 $N$ 后算 $\hat A$ → $\mu$ 次最大化 DAPO 目标。
 
@@ -222,7 +222,7 @@ Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** →
 
 ## 四、Dr. GRPO（Liu et al., 2503.20783）— 去偏形式
 
-> **命名澄清：** 议程可选链 `2503.06639` 为 Mroueh 的 RLVR 动力学分析；**「Dr. GRPO / GRPO Done Right」** 出自 Sea AI Lab 等 *Understanding R1-Zero-Like Training*（**2503.20783**）。二者均讨论 GRPO，但贡献轴不同。
+> **命名澄清：** 可选链 `2503.06639` 为 Mroueh 的 RLVR 动力学分析；**「Dr. GRPO / GRPO Done Right」** 出自 Sea AI Lab 等 *Understanding R1-Zero-Like Training*（**2503.20783**）。二者均讨论 GRPO，但贡献轴不同。
 
 ### 4.1 GRPO 目标中的两项偏置（§3.1）
 
@@ -291,13 +291,13 @@ Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** →
 
 | 已有 | 本篇关系 |
 |---|---|
-| [[DeepSeekR1推理训练深读]] §三 GRPO 公式与 Zero/R1 超参 | **交叉引用即可**；**禁止**重画 R1 阶段表 / 奖励式 (4)(8–10) 管线 |
+| [[DeepSeekR1推理训练深读]] §三 GRPO 公式与 Zero/R1 超参 | **交叉引用即可**；不重画 R1 阶段表 / 奖励式 (4)(8–10) 管线 |
 | `[[对齐脉络RLHF与偏好优化]]` RLHF / DPO / CAI | 上游对齐通史；本篇不重写偏好优化 |
 | `[[推理时扩展TestTimeScaling]]` test-time scaling | 只交叉「R1 用 GRPO」一句；算法族细节以本篇为准 |
 
 ---
 
-## 八、待核实 / 非本 PDF 范围
+## 八、局限与待核实
 
 - DAPO 式 (8) 与式 (12) 在 中排版重叠严重；token-level 归约形式已按 §3.3 散文与「分母为总 token」理解书写——若需印刷级符号，建议对照 PDF 矢量公式再校一次。
 - Dr. GRPO 摘要 43.3% AIME 与 Table/Fig 全表数字的逐格核对未在本篇展开。
@@ -312,7 +312,7 @@ Algorithm 1：采样 → 算奖励 → **Dynamic Sampling 过滤进 buffer** →
 2. Yu et al., 2025. *DAPO* — arXiv:**2503.14476**；`https://arxiv.org/abs/2503.14476`；https://dapo-sia.github.io/ 。
 3. Liu et al., 2025. *Understanding R1-Zero-Like Training*（**Dr. GRPO**）— arXiv:**2503.20783**；`https://arxiv.org/abs/2503.20783`。
 4. Mroueh, 2025. *RL with Verifiable Rewards: GRPO’s Effective Loss…* — arXiv:**2503.06639**；`https://arxiv.org/abs/2503.06639`（可选动力学）。
-5. 交叉：模型与技术报告/厂商报告/DeepSeekR1推理训练深读.md（阶段表权威源，本篇不复制）。
+5. 交叉：[[DeepSeekR1推理训练深读]]（阶段表权威源，本篇不复制）。
 
 ## 相关笔记
 
