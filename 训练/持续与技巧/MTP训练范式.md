@@ -5,10 +5,10 @@ date: 2026-09-22
 lines: [架构思想, 训练目标/系数]
 status: archived
 sources:
- - https://arxiv.org/abs/2608.00434 # 882K
- - https://arxiv.org/abs/2603.23911 # 7.9M
- - https://arxiv.org/abs/2605.28184 # 786K
- - https://arxiv.org/abs/2509.18362 # 540K（补链）
+ - https://arxiv.org/abs/2608.00434
+ - https://arxiv.org/abs/2603.23911
+ - https://arxiv.org/abs/2605.28184
+ - https://arxiv.org/abs/2509.18362
 arxiv: ["2608.00434", "2603.23911", "2605.28184", "2509.18362"]
 related: ["EntMTP熵引导投机解码", "EAGLE3投机解码", "推理引擎生态"]
 github_occ: "https://github.com/MarkXCloud/RL-MTP"
@@ -25,18 +25,17 @@ archived: 2026-09-22
 > - **≠ [[EAGLE3投机解码]] EAGLE-3**：不重写 training-time test、低/中/高特征融合、SGLang 大 batch 表；FastMTP 文内只「兼容 EAGLE-style 递归草稿」时点到接口，不展开 EAGLE 谱系。
 > - **≠ B7 投机通史**：不写 Leviathan / Chen / Medusa / Lookahead 证明与引擎选型全文；「自投机 draft–verify、同分布」只当无损接口一句。
 > **禁止编造**：倍率、AR/CAR、λ、TopN、基准分一律锚定官方 PDF（2026-09-22 CST）。
-> **入库体积**（`ls -lh`，均 **<20MB** → 二进制可入库）：AdaMTP **882K**；MTP-D **7.9M**；OCC **786K**；FastMTP **540K**。禁止权重 / 数据集 / 视频。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题（PDF） | arXiv | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主①** | *AdaMTP: An Adaptive Training Paradigm for Multi-Token Prediction* | **2608.00434v1** \[cs.CL\]（**1 Aug 2026**） | `https://arxiv.org/abs/2608.00434` | **882K**（902,242 B） | 12 A4 | （77K） |
-| **主②** | *Self-Distillation for Multi-Token Prediction*（方法名 **MTP-D**） | **2603.23911v1** \[cs.CL\]（**25 Mar 2026**） | `https://arxiv.org/abs/2603.23911` | **7.9M**（8,241,991 B） | 18 A4 | （187K） |
-| **主③** | *Joint Training of Multi-Token Prediction in Reinforcement Learning via Optimal Coefficient Calibration*（**OCC**） | **2605.28184v1** \[cs.LG\]（**27 May 2026**） | `https://arxiv.org/abs/2605.28184` | **786K**（804,594 B） | 13 A4 | （93K） |
-| **补链** | *FastMTP: Accelerating LLM Inference with Enhanced Multi-Token Prediction* | **2509.18362v1** \[cs.LG\]（**16 Sep 2025**） | `https://arxiv.org/abs/2509.18362` | **540K**（552,504 B） | 14 A4 | （69K） |
+| 角色 | 标题（PDF） | arXiv | 链接 | 页数 |
+|---|---|---|---|---|
+| **主①** | *AdaMTP: An Adaptive Training Paradigm for Multi-Token Prediction* | **2608.00434v1** \[cs.CL\]（**1 Aug 2026**） | `https://arxiv.org/abs/2608.00434` | 12 A4 |
+| **主②** | *Self-Distillation for Multi-Token Prediction*（方法名 **MTP-D**） | **2603.23911v1** \[cs.CL\]（**25 Mar 2026**） | `https://arxiv.org/abs/2603.23911` | 18 A4 |
+| **主③** | *Joint Training of Multi-Token Prediction in Reinforcement Learning via Optimal Coefficient Calibration*（**OCC**） | **2605.28184v1** \[cs.LG\]（**27 May 2026**） | `https://arxiv.org/abs/2605.28184` | 13 A4 |
+| **补链** | *FastMTP: Accelerating LLM Inference with Enhanced Multi-Token Prediction* | **2509.18362v1** \[cs.LG\]（**16 Sep 2025**） | `https://arxiv.org/abs/2509.18362` | 14 A4 |
 
 | 材料 | 作者 / 机构（摘要页） | 代码（文内明示） |
 |---|---|---|
@@ -44,8 +43,6 @@ archived: 2026-09-22
 | MTP-D | Zhao, Xie\* 等（Tencent LLM Dept.） | 正文 **未给出** GitHub → 不编造 |
 | OCC | Wang, Chai 等（UCAS / CASIA / Meituan） | https://github.com/MarkXCloud/RL-MTP |
 | FastMTP | Cai 等（Tencent） | https://github.com/Tencent-BAC/FastMTP ；HF `TencentBAC/FastMTP` |
-
-**体积判定**：四份 PDF 均 **<20MB**，按验收规矩 ****；MTP-D 最大（**7.9M**），仍远低于「正式外链」阈值。同步抽取另存 、、、 的 `full.txt`。
 
 **一句话抓手：** 固定 horizon / 头间分布隙 / RL 联合时的 λ 漂移，是 MTP **训练侧**三大痛点；AdaMTP 用 **熵边界掩码** 清噪声梯度，MTP-D 用 **stop-grad TopN KL** 抬接受率并可 **loop 扩头**，OCC 用 **log-prob 代理** 在线追最优 λ，使 MTP 可安全回流进 RL 主模型。
 
@@ -279,7 +276,7 @@ $$
 
 ---
 
-*2026-09-22 CST。体积：`ls -lh` 同日核对。*
+*2026-09-22 CST。*
 
 ## 相关笔记
 

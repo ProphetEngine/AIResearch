@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2508.10975 # 1.56MiB / 29p；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2508.10975
 aux:
  - https://arxiv.org/abs/2508.10975
  - https://arxiv.org/pdf/2508.10975
@@ -30,14 +30,14 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
 | 项 | 报告原文 / 元数据 | 出处 |
 |---|---|---|
-| 标题 | BeyondWeb: Lessons from Scaling Synthetic Data for Trillion-scale Pretraining | 封面； Title |
+| 标题 | BeyondWeb: Lessons from Scaling Synthetic Data for Trillion-scale Pretraining | 封面；PDF 元数据 Title |
 | 作者 | DatologyAI Team（XMP `dc:creator` 列 Pratyush Maini 等；§7 贡献表） | 封面；XMP；§7 |
 | arXiv | **arXiv:2508.10975v2** \[cs.LG\]（兼 cs.CL）**19 Aug 2025** | PDF 页眉 |
-| XMP identifier | `https://arxiv.org/abs/2508.10975v2` | ` -meta` |
+| XMP identifier | `https://arxiv.org/abs/2508.10975v2` | PDF 元数据 |
 | XMP MetadataDate | 2025-08-21T00:04:36+00:00（→ 用户时区 **2025-08-21 08:04 CST**） | XMP |
 | 权利 | `http://arxiv.org/licenses/nonexclusive-distrib/1.0/` | XMP |
 | 产品字段（摘要） | 相对 Cosmopedia **+5.1pp**、相对 Nemotron-Synth **+2.6pp**（14 基准均值）；相对 open web **7.7×**、相对 Nemotron-Synth **2.7×** 训练加速；**3B@180B** BeyondWeb **>** **8B@180B** Cosmopedia | Abstract；Fig.1 |
@@ -45,12 +45,11 @@ timezone: Asia/Shanghai (CST)
 | PDF 页数 / 尺寸 | **29** 页 letter | |
 | Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:) | XMP |
 
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| **主 PDF（arXiv）** | `https://arxiv.org/abs/2508.10975` | **1.56MiB**（1,637,868 B） | **29** | **官方 HTTPS 外链**（≪10MB；页数适中） |
-| **抽取** | | 113K（115,599 B） | — | 全文检索 |
-| **辅：策展平台博文** | DatologyAI Technical Deep-Dive（文内引用 2024-11） | — | — | HQ 子集选取方法入口；**不替代**本 PDF 数字源 |
-| **辅：AFM4.5B 公告** | arcee.ai blog（文内 Atkins 2025） | — | — | 生产落地叙事；**不替代**本 PDF 对照表 |
+| 文件 | 链接 | 页数 | 备注 |
+|---|---|---|---|
+| **主 PDF（arXiv）** | `https://arxiv.org/abs/2508.10975` | **29** | **官方 HTTPS 外链** |
+| **辅：策展平台博文** | DatologyAI Technical Deep-Dive（文内引用 2024-11） | — | HQ 子集选取方法入口；**不替代**本 PDF 数字源 |
+| **辅：AFM4.5B 公告** | arcee.ai blog（文内 Atkins 2025） | — | 生产落地叙事；**不替代**本 PDF 对照表 |
 
 **一句话抓手：**
 相对「堆更多网页」与「用大模型从零写教材」，BeyondWeb 把杠杆放在 **对 HQ 网页做多样式 source rephrasing**：在固定真实知识预算下抬 per-token 信息密度与部署风格对齐，并用 **多样性** 撑住 **1T 级**长训；系统消融证明 **没有银弹**——质量种子、风格、多样性、改写器选择须联合优化。
@@ -315,8 +314,8 @@ Llama-3 系 1B / 3B / 8B 做改写器：
 
 ---
 
-## 十、来源与抽取
+## 十、来源
 
-- 主 PDF：`https://arxiv.org/abs/2508.10975`（2026-09-22 CST 自 arXiv 拉取）
-- 元数据：` -meta`；页眉 v2 **19 Aug 2025**；XMP MetadataDate → **2025-08-21 08:04 CST**
+- 主 PDF：`https://arxiv.org/abs/2508.10975`（2026-09-22 CST 核对）
+- 元数据：页眉 v2 **19 Aug 2025**；XMP MetadataDate → **2025-08-21 08:04 CST**
 - 辅链仅作入口，数字以本 PDF 为准。

@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2609.18310 # 2.2M / 19p；≪10MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2609.18310
 aux:
  - https://sea-lion.ai/
  - https://sea-lion.ai/blog/uplifting-ai-in-southeast-asia-sea-announcing-nemotron-sea-lion-v4-8-in-collaboration-with-nvidia/
@@ -30,18 +30,16 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主文** | *SEA-LION-v4.8: A Technical Report*（AI Products Pillar, AI Singapore） | arXiv:**2609.18310**v3 \[cs.CL\] **18 Sep 2026** | `https://arxiv.org/abs/2609.18310` | **2.2M**（2,270,331 B ≈ **2.17MiB**） | **19** letter | |
-| **辅·产品站** | SEA-LION 官网（系列定位 / SEA-HELM / SEA-Guard 入口） | https://sea-lion.ai/ | — | — | — | WebFetch 2026-09-22 |
-| **辅·发布博文** | *Uplifting AI in Southeast Asia… Nemotron-SEA-LION-v4.8*（AISG，**2026-09-18**） | https://sea-lion.ai/blog/uplifting-ai-in-southeast-asia-sea-announcing-nemotron-sea-lion-v4-8-in-collaboration-with-nvidia/ | — | — | — | 与 TR 数字交叉核验 |
-| **辅·榜单** | SEA-HELM Leaderboard | https://leaderboard.sea-lion.ai/ | — | — | — | 文内 §6.1；Table 5 注明分数采集于 **2026-09-15**，live 可能变更 |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主文** | *SEA-LION-v4.8: A Technical Report*（AI Products Pillar, AI Singapore） | arXiv:**2609.18310**v3 \[cs.CL\] **18 Sep 2026** | `https://arxiv.org/abs/2609.18310` | **19** letter |
+| **辅·产品站** | SEA-LION 官网（系列定位 / SEA-HELM / SEA-Guard 入口） | https://sea-lion.ai/；2026-09-22 核对 | — | — |
+| **辅·发布博文** | *Uplifting AI in Southeast Asia… Nemotron-SEA-LION-v4.8*（AISG，**2026-09-18**） | https://sea-lion.ai/blog/uplifting-ai-in-southeast-asia-sea-announcing-nemotron-sea-lion-v4-8-in-collaboration-with-nvidia/；与 TR 数字交叉核验 | — | — |
+| **辅·榜单** | SEA-HELM Leaderboard | https://leaderboard.sea-lion.ai/；文内 §6.1；Table 5 注明分数采集于 **2026-09-15**，live 可能变更 | — | — |
 
-**体积判定（2026-09-22 CST，`ls -lh` / `stat` ）：** **2,270,331 B（2.17MiB）/ 19 页**，**远低于收紧后的 10MB 阈值** → **官方 HTTPS 外链**。**禁**入库模型权重 / 量化包 / 数据集。
-
-**一手 PDF：** **有** — `curl` → 200； Title=`SEA-LION-v4.8: A Technical Report`。
+**一手 PDF：** **有**（arXiv）；Title=`SEA-LION-v4.8: A Technical Report`。
 
 ### 1.1 Hugging Face 索引（禁下权重）
 
@@ -216,11 +214,10 @@ SEA 覆盖语种叙述（§3.1）：Balinese, Burmese, Indonesian, Javanese, Khm
 
 ## 七、跟读清单与验收锚点
 
-1. 本地体积：`ls -lh https://arxiv.org/abs/2609.18310` → **2.2M**（2,270,331 B）； → **19** 页；**≪10MB → 官方 HTTPS 外链**。
-2. 开篇划界句可回链 Agenda [[SEA-LION低资源区域模型]]：「≠ B9；≠ [[NemotronCC数据策展]]；≠ [[Nemotron3Ultra技术报告深读]]——只写区域适配与评测，基座架构交叉一句」。
-3. 主数字锚：CPT **150B / 33.5B**；SEA **51.57 / 63.44**；MY/TA 120B 分；教师 Ultra 仅作 OPD 交叉。
-4. HF：十个 `Nemotron-SEA-LION-v4.8-*` ID **仅索引**；确认未 `huggingface-cli download` 权重。
-5. 禁止把本卡扩写成 B9 多语通史、[[NemotronCC数据策展]] 语料篇或 [[Nemotron3Ultra技术报告深读]] Ultra 旗舰正文。
+1. 开篇划界句可回链 Agenda [[SEA-LION低资源区域模型]]：「≠ B9；≠ [[NemotronCC数据策展]]；≠ [[Nemotron3Ultra技术报告深读]]——只写区域适配与评测，基座架构交叉一句」。
+2. 主数字锚：CPT **150B / 33.5B**；SEA **51.57 / 63.44**；MY/TA 120B 分；教师 Ultra 仅作 OPD 交叉。
+3. HF：十个 `Nemotron-SEA-LION-v4.8-*` ID **仅索引**；确认未 `huggingface-cli download` 权重。
+4. 禁止把本卡扩写成 B9 多语通史、[[NemotronCC数据策展]] 语料篇或 [[Nemotron3Ultra技术报告深读]] Ultra 旗舰正文。
 
 ---
 
@@ -228,4 +225,4 @@ SEA 覆盖语种叙述（§3.1）：Balinese, Burmese, Indonesian, Javanese, Khm
 
 Agenda [[SEA-LION低资源区域模型]]：「B9 写 XLM-R/BLOOM/旗舰语种配比通史。近窗 **SEA-LION-v4.8** 提供东南亚多语（含缅甸/泰米尔等）继续预训练 + SEA-HELM 评测的一手专报，可补『区域低资源落地栈』。划界 ≠B9；≠[[NemotronCC数据策展]]；≠[[Nemotron3Ultra技术报告深读]]。」
 
-本卡交付：主 PDF 入库 + 抽取（体积 **2.17MiB ≪10MB**，建议二进制）；开篇硬划界；CPT/OPD 区域接口 + SEA-HELM Table 5–7；HF/官网索引；基座仅一句交叉。
+本卡交付：开篇硬划界；CPT/OPD 区域接口 + SEA-HELM Table 5–7；HF/官网索引；基座仅一句交叉。

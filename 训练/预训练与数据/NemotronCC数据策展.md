@@ -33,9 +33,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 页数 / 版本 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 页数 / 版本 | 角色 |
 |---|---|---|---|---|
-| **主文** | Su, Kong, Lin, Jennings, Norick, Kliegl, Patwary, Shoeybi, Catanzaro (NVIDIA), *Nemotron-CC: Transforming Common Crawl into a Refined Long-Horizon Pretraining Dataset* | arXiv:**2412.02595v2** \[cs.CL\]；published **2024-12-03**，updated **2025-05-30**；comment **ACL 2025**；`https://arxiv.org/abs/2412.02595` | **17** 页（，2026-09-22 CST） | 长程 CC 策展方法 + 8B 实验主锚 |
+| **主文** | Su, Kong, Lin, Jennings, Norick, Kliegl, Patwary, Shoeybi, Catanzaro (NVIDIA), *Nemotron-CC: Transforming Common Crawl into a Refined Long-Horizon Pretraining Dataset* | arXiv:**2412.02595v2** \[cs.CL\]；published **2024-12-03**，updated **2025-05-30**；comment **ACL 2025**；`https://arxiv.org/abs/2412.02595` | **17** 页（2026-09-22 CST） | 长程 CC 策展方法 + 8B 实验主锚 |
 | **发布索引** | Common Crawl contrib | https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html | — | 分区、路径、Hive key、jsonl 字段 |
 | **叙事辅** | NVIDIA Developer Blog, *Announcing Nemotron-CC…*（2025-01-09） | 上表 URL | — | 与摘要一致的对外叙事；不另立主张 |
 
@@ -259,10 +259,10 @@ HQ 子集 = 最高分 **真实** + **Diverse QA** 合成（短程公平对照用
 | 三分类器 + max 桶 + 5 档；HQ 关启发式 | §2.1–2.2；Table 2/7/9 |
 | 合成 prompt 五类与 token 统计 | §2.3；Table 3；App.H Prompt 1–5 |
 | 未用 FineWeb-Edu 分类器入最终集成（许可） | §2.2 脚注 18；App.G |
-| CC 分区 kind2 / 10.4 TiB | CC contrib 索引页（2026-09-22 抓取） |
+| CC 分区 kind2 / 10.4 TiB | CC contrib 索引页（2026-09-22 核对） |
 | NeMo Curator / 分类器 HF / 博文叙事 | 论文脚注 3–4；NVIDIA Blog 2025-01-09 |
 
-**本地核验：** `https://arxiv.org/abs/2412.02595`（ 17 页）；arXiv API `2412.02595v2`（ACL 2025）。
+**核验：** `https://arxiv.org/abs/2412.02595`（17 页）；arXiv API `2412.02595v2`（ACL 2025）。
 
 ## 相关笔记
 
