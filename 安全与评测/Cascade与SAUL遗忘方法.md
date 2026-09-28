@@ -287,4 +287,4 @@ SAUL Bio **0.268±0.012**、Cyber **0.251±0.010**、MMLU **0.542±0.003**（≈
 ---
 
 **摘要：**
-[[Cascade与SAUL遗忘方法]] 在 [[隐私与机器遗忘]] 通史/OpenUnlearning 之外，深读 2026 近窗两篇遗忘方法：Cascade（2609.16890）以路径—双曲—解码三级代理最小化内部可辨识性，TOFU Forget10 上 Llama-3.2-3B 达 CFI 0.7165 / BUS 0.6616，并保持改写下低 ASR；SAUL（2608.16249）以 forget-loss 约束 + ALM 在满足 $\alpha$ 后关闭 forget 更新，配合非对称 SAM 与双优化器，TOFU 1% 匹配遗忘下 GPT-HM 72.79。补链 GRAPHSU（2608.26743）用支持路径图扩展删除 scope，PISTOL Complete 上 soft leakage 相对 Seed-Only 降约 49.5 pp（PPL 仍 ≤10）。本卡不写成 OpenUnlearning 复读。
+[[Cascade与SAUL遗忘方法]] 在 [[隐私与机器遗忘]] 通史/OpenUnlearning 之外，深读 2026 近窗两篇遗忘方法：Cascade（2609.16890）以路径—双曲—解码三级代理最小化内部可辨识性，TOFU Forget10 上 Llama-3.2-3B 达 CFI 0.7165 / BUS 0.6616，并保持改写下低 ASR；SAUL（2608.16249）以 forget-loss 约束 + ALM 在满足 $\alpha$ 后关闭 forget 更新，配合非对称 SAM 与双优化器，TOFU 1% 匹配遗忘下 GPT-HM 72.79。补链 GRAPHSU（2608.26743）用支持路径图扩展删除 scope，PISTOL Complete 上 soft leakage 相对 Seed-Only 降约 49.5 pp（PPL 仍 ≤10）。
