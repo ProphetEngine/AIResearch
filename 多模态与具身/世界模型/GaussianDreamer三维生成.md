@@ -6,8 +6,8 @@ lines: [架构思想, 评测字段]
 status: archived
 priority: P2
 sources:
- - `https://arxiv.org/pdf/2310.08529`；
- - `https://arxiv.org/pdf/2406.18462`；
+ - https://arxiv.org/pdf/2310.08529
+ - https://arxiv.org/pdf/2406.18462
 arxiv: ["2310.08529", "2406.18462"]
 related: ["B10", "视频生成正式报告"]
 project:
@@ -31,10 +31,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主锚 A** | Yi, Fang, Wang, Wu, Xie, Zhang, Liu, Tian, Wang, *GaussianDreamer: Fast Generation from Text to 3D Gaussians by Bridging 2D and 3D Diffusion Models* | arXiv:**2310.08529v3** \[cs.CV\] **13 May 2024**；**CVPR 2024**；`https://arxiv.org/pdf/2310.08529`；（**15** 页 letter；47,772,454 bytes；CreationDate **2024-05-14** CST） | 文本→3D-GS：Shap-E/MDM 初始化 + Grow&Pertb. + SDS；~15 min / 单卡；T3 Bench |
-| **主锚 B** | Yi, Fang, Zhou, Wang, Wu, Xie, Zhang, Liu, Wang, Tian, *GaussianDreamerPro: Text to Manipulable 3D Gaussians with Highly Enhanced Quality* | arXiv:**2406.18462v1** \[cs.CV\] **26 Jun 2024**；Preprint；`https://arxiv.org/pdf/2406.18462`；（**15** 页 letter；33,231,341 bytes；CreationDate **2024-06-27** CST） | 几何绑定：2D-GS 基础资产 → mesh 绑定 3D-GS 提质；可操纵；用户研究 |
+| **主锚 A** | Yi, Fang, Wang, Wu, Xie, Zhang, Liu, Tian, Wang, *GaussianDreamer: Fast Generation from Text to 3D Gaussians by Bridging 2D and 3D Diffusion Models* | arXiv:**2310.08529v3** \[cs.CV\] **13 May 2024**；**CVPR 2024**；`https://arxiv.org/pdf/2310.08529`；（**15** 页 letter；CreationDate **2024-05-14** CST） | 文本→3D-GS：Shap-E/MDM 初始化 + Grow&Pertb. + SDS；~15 min / 单卡；T3 Bench |
+| **主锚 B** | Yi, Fang, Zhou, Wang, Wu, Xie, Zhang, Liu, Wang, Tian, *GaussianDreamerPro: Text to Manipulable 3D Gaussians with Highly Enhanced Quality* | arXiv:**2406.18462v1** \[cs.CV\] **26 Jun 2024**；Preprint；`https://arxiv.org/pdf/2406.18462`；（**15** 页 letter；CreationDate **2024-06-27** CST） | 几何绑定：2D-GS 基础资产 → mesh 绑定 3D-GS 提质；可操纵；用户研究 |
 | **辅·项目页 A** | https://taoranyi.com/gaussiandreamer/ | | CVPR 2024 标注；框架 GIF；Unity 导入一句 |
 | **辅·项目页 B** | https://taoranyi.com/gaussiandreamerpro/ | | 动画 / 仿真 demo；与 LucidDreamer / DreamCraft3D 对照入口 |
 

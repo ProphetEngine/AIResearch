@@ -30,13 +30,13 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文（arXiv TR）** | Seamless Communication et al., *SeamlessM4T…* | arXiv:**2308.11596v3** \[cs.CL\] **25 Oct 2023**；https://arxiv.org/pdf/2308.11596 → `https://arxiv.org/abs/2308.11596`（**111** 页 letter；3,522,067 bytes；CreationDate **2023-10-26 CST**） | UnitY v1 全栈：数据采矿、三阶段微调、评测、RAI |
-| **定稿（Nature）** | *Joint speech and text machine translation for up to 100 languages* | DOI **10.1038/s41586-024-08359-z**；Published online **15 Jan 2025**；Vol **637** \| **16 January 2025**；页：`https://www.nature.com/articles/s41586-024-08359-z`；PDF 本环境 **HTTP 200** → `https://doi.org/10.1038/s41586-024-08359-z`（**14** 页；1,870,577 bytes） | 刊发口径：覆盖表（101–96 等）、主结果浓缩、Methods |
-| **流式族姊妹文** | *Seamless: Multilingual Expressive and Streaming…* | arXiv:**2312.05187v1** \[cs.CL\] **8 Dec 2023**（文内 Date **November 30, 2023**）；→ `https://arxiv.org/abs/2312.05187`（**145** 页；3,836,795 bytes） | SeamlessM4T **v2 / UnitY2**、Expressive、**Streaming（EMMA）**、统一 Seamless |
-| **Meta 研究页** | *Seamless: Multilingual Expressive and Streaming Speech Translation* | https://ai.meta.com/research/publications/seamless-multilingual-expressive-and-streaming-speech-translation/ → （页面 Abstract 可核；**禁跟不稳定 fbcdn 直链哈希**） | 产品族叙事与摘要对齐 2312.05187 |
-| **代码** | facebookresearch/seamless_communication | https://github.com/facebookresearch/seamless_communication → [外部仓库 README](https://github.com/facebookresearch/seamless_communication) | 任务列表、v1/v2 权重入口、Streaming 覆盖（本篇不跟 commit） |
+| **主文（arXiv TR）** | Seamless Communication et al., *SeamlessM4T…* | arXiv:**2308.11596v3** \[cs.CL\] **25 Oct 2023**；https://arxiv.org/pdf/2308.11596 · `https://arxiv.org/abs/2308.11596`（**111** 页 letter；CreationDate **2023-10-26 CST**） | UnitY v1 全栈：数据采矿、三阶段微调、评测、RAI |
+| **定稿（Nature）** | *Joint speech and text machine translation for up to 100 languages* | DOI **10.1038/s41586-024-08359-z**；Published online **15 Jan 2025**；Vol **637** \| **16 January 2025**；页：`https://www.nature.com/articles/s41586-024-08359-z`；DOI `https://doi.org/10.1038/s41586-024-08359-z`（PDF **14** 页） | 刊发口径：覆盖表（101–96 等）、主结果浓缩、Methods |
+| **流式族姊妹文** | *Seamless: Multilingual Expressive and Streaming…* | arXiv:**2312.05187v1** \[cs.CL\] **8 Dec 2023**（文内 Date **November 30, 2023**）；`https://arxiv.org/abs/2312.05187`（**145** 页） | SeamlessM4T **v2 / UnitY2**、Expressive、**Streaming（EMMA）**、统一 Seamless |
+| **Meta 研究页** | *Seamless: Multilingual Expressive and Streaming Speech Translation* | https://ai.meta.com/research/publications/seamless-multilingual-expressive-and-streaming-speech-translation/（页面 Abstract 可核；**禁跟不稳定 fbcdn 直链哈希**） | 产品族叙事与摘要对齐 2312.05187 |
+| **代码** | facebookresearch/seamless_communication | https://github.com/facebookresearch/seamless_communication | 任务列表、v1/v2 权重入口、Streaming 覆盖（本篇不跟 commit） |
 
 **一句话抓手：** 用 **1M 小时** 开源语音预训练 **w2v-BERT 2.0**，再用 **SeamlessAlign** 自动对齐语料 + 人工/伪标数据训出 **单一 UnitY 多任务模型**，同时做 **S2ST / S2TT / T2ST / T2TT / ASR**（约百语级）；后续 **UnitY2 + EMMA** 把「离线高质量」接到「低延迟同传」。
 
@@ -248,7 +248,7 @@ EMMA：单调多头注意力同传策略 → AL / LAAL / Ending Offset
 2. **单元表示与韵律**：离散单元难完整保音调；Expressive 另开声码/韵律支路，本篇只索引。
 3. **评测依赖 ASR-BLEU**：语音质量被 ASR 误差缠绕；Blaser / XSTS 是互补而非万能。
 4. **未展开**：EMMA 独立短文全文、SONAR 论文公式细读、fairseq2 实现细节、商业产品延迟 SLA。
-5. **Meta 页 PDF 直链**：页面曾露出 fbcdn URL——**本环境不采不可复现 CDN 哈希作引用**；流式细节以 arXiv **2312.05187** 落盘为准。
+5. **Meta 页 PDF 直链**：页面曾露出 fbcdn URL——**本环境不采不可复现 CDN 哈希作引用**；流式细节以 arXiv **2312.05187** 为准。
 
 ---
 
@@ -263,10 +263,6 @@ EMMA：单调多头注意力同传策略 → AL / LAAL / Ending Offset
 
 ## 十、核对清单（2026-09-22 CST）
 
-- [x] arXiv 2308.11596 PDF 落盘 +
-- [x] Nature DOI 页与 PDF 均 **HTTP 200** 落盘（非 429；已核 标题与 DOI）
-- [x] 流式姊妹文 2312.05187 落盘（议程辅源兑现）
-- [x] Meta 研究页 Abstract 抽取；GitHub README / streaming README 抽取
 - [x] 划界句写入：≠ [[SpeechLLM语音语言模型]] / ≠ B9 / ≠ [[QwenOmni音视频原生]]
 - [x] 未编造 CDN；Nature vs arXiv 覆盖数字并列表出
 

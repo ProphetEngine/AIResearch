@@ -5,8 +5,8 @@ date: 2026-09-22
 lines: [架构思想, 数学原理]
 status: archived
 sources:
- - `https://arxiv.org/pdf/2112.10752`；
- - `https://arxiv.org/pdf/2212.09748`；
+ - https://arxiv.org/pdf/2112.10752
+ - https://arxiv.org/pdf/2212.09748
 boundary: 与 [[多模态架构脉络]]（理解/对话多模态）划界——本卡补生成线（潜扩散 / DiT / 文本条件合成）；不重写 CLIP→Flamingo→LLaVA 理解史线
 archived: 2026-09-22
 ---
@@ -261,10 +261,10 @@ LDM 与 DiT 均依赖 Ho & Salimans 的 CFG：训练丢条件、采样时外推�
 
 ## 六、引用
 
-### 6.1 本卡强制入口（已下载）
+### 6.1 本卡强制入口
 
-- Rombach, Blattmann, Lorenz, Esser, Ommer. *High-Resolution Image Synthesis with Latent Diffusion Models*. arXiv:2112.10752. URL：`https://arxiv.org/pdf/2112.10752`；
-- Peebles & Xie. *Scalable Diffusion Models with Transformers*. arXiv:2212.09748. URL：`https://arxiv.org/pdf/2212.09748`；
+- Rombach, Blattmann, Lorenz, Esser, Ommer. *High-Resolution Image Synthesis with Latent Diffusion Models*. arXiv:2112.10752. URL：`https://arxiv.org/pdf/2112.10752`
+- Peebles & Xie. *Scalable Diffusion Models with Transformers*. arXiv:2212.09748. URL：`https://arxiv.org/pdf/2212.09748`
 
 ### 6.2 文中依赖、本卡未强制深读的经典（仅作指针）
 

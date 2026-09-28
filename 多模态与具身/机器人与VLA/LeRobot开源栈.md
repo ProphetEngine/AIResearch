@@ -26,7 +26,7 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主锚** | Cadene et al., *LeRobot: An Open-Source Library for End-to-End Robot Learning* | arXiv:**2602.22818v1** \[cs.RO\] **26 Feb 2026**（ICLR 2026）；`https://arxiv.org/abs/2602.22818`（**20** 页） | 开源端到端栈：硬件 middleware、数据集、SOTA 算法参考实现、异步推理 |
 | **对照锚** | Open X-Embodiment Collaboration, *Open X-Embodiment: Robotic Learning Datasets and RT-X Models* | arXiv:**2310.08864v9** \[cs.RO\] **14 May 2025**；`https://arxiv.org/abs/2310.08864`（**12** 页）；项目页 https://robotics-transformer-x.github.io/ | **数据集标准 / 跨具身仓**：22 embodiments、RLDS；RT-X 仅作「仓上模型」存在性，**不**展开策略 |
@@ -185,12 +185,10 @@ Figure 2 侧写：Franka 场景多样性高；xArm 与 Google Robot 因若干大
 - Cadene, R., Aliberts, S., Capuano, F., et al. *LeRobot: An Open-Source Library for End-to-End Robot Learning*. arXiv:2602.22818, ICLR 2026.
  - abs: https://arxiv.org/abs/2602.22818
  - pdf: https://arxiv.org/pdf/2602.22818
- - 本地: `https://arxiv.org/abs/2602.22818`
 - Open X-Embodiment Collaboration. *Open X-Embodiment: Robotic Learning Datasets and RT-X Models*. arXiv:2310.08864, 2023–2025.
  - abs: https://arxiv.org/abs/2310.08864
  - pdf: https://arxiv.org/pdf/2310.08864
  - 项目页: https://robotics-transformer-x.github.io/
- - 本地: `https://arxiv.org/abs/2310.08864`
 - （指针，不展开）[[视觉语言动作谱系]]：多模态与具身/机器人与VLA/视觉语言动作谱系.md — RT-2 / OpenVLA / π₀ 策略正文。
 - （划界）[[代码智能体Harness史线]]：Harness/智能体与工具/代码智能体Harness史线.md — OpenHands 等软件工程 agent，**本项不混入**。
 

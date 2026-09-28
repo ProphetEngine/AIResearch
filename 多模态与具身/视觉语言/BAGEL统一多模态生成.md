@@ -37,21 +37,21 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[SiLVR与ChainOfFrames]]**：禁止写成 **SiLVR / Chain-of-Frames 视频理解推理框架**；本卡是 **生成侧统一模型 + 编辑/世界建模**，不是纯语言管道 VideoQA。
 > - **≠ [[QwenOmni音视频原生]]**：禁止写成 **Qwen Omni Thinker–Talker 音视频产品卡**；BAGEL 主轴是 **视觉理解+图像生成/编辑**，非流式语音合成 Omni。
 > - **谱系一句、不升主**：**Chameleon**（早期融合）过旧 → 仅 Table 4/5 对照与设计空间一句。**Foley-Omni**（音轨统一生成）→ **后置**（议程明示）。
-> **禁止编造**：主张与表数字一律锚定本地抽取（2026-09-22 CST）与 GitHub README 明示句。文内未给出的精确 GPU 小时 / 完整层宽公式 / 未表格化图点 → **不得外推**。
+> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）与 GitHub README 明示句。文内未给出的精确 GPU 小时 / 完整层宽公式 / 未表格化图点 → **不得外推**。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
 | 项 | 报告原文 / 元数据 | 出处 |
 |---|---|---|
-| 标题 | *Emerging Properties in Unified Multimodal Pretraining* | 封面； Title |
+| 标题 | *Emerging Properties in Unified Multimodal Pretraining* | 封面；PDF 元数据 Title |
 | 产品名 | **BAGEL**（正文亦称 *Scalable Generative Cognitive Model*） | §1；摘要 |
 | 作者 | Chaorui Deng\*, Deyao Zhu\*, Kunchang Li\*, Chenhui Gou\*, Feng Li\*；Zeyu Wang；Shu Zhong；Weihao Yu；Xiaonan Nie；Ziang Song；Guang Shi§；Haoqi Fan\*†（\*共一；§通讯；†项目负责人） | 封面 |
 | 机构 | ByteDance Seed 等 | 封面 |
 | arXiv | **arXiv:2505.14683v3** \[cs.CV\] **27 Jul 2025** | PDF 页眉；XMP `…/2505.14683v3` |
 | 正文 Date | July 29, 2025 | 摘要区 Date |
-| XMP MetadataDate | 2025-07-29T01:03:11+00:00（→ **2025-07-29 09:03 CST**） | ` -meta` |
+| XMP MetadataDate | 2025-07-29T01:03:11+00:00（→ **2025-07-29 09:03 CST**） | PDF 元数据 |
 | 权利 | `http://creativecommons.org/licenses/by/4.0/` | XMP |
 | 产品字段（摘要） | 统一 decoder-only；交错 text/image/video/web；**trillions of tokens**；涌现复杂多模态推理 | Abstract |
 | 规模（正文） | **7B active / 14B total** MoT | §1；README |
@@ -60,12 +60,6 @@ timezone: Asia/Shanghai (CST)
 | 代码 | https://github.com/ByteDance-Seed/Bagel（Apache-2.0；2026-09-22 API：★6180 / forks 546） | README / GitHub API |
 | PDF 页数 / 纸型 | **37** 页 letter | |
 | Producer | pikepdf 8.15.1；arXiv GenPDF | XMP |
-
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| **主 PDF（arXiv）** | https://arxiv.org/pdf/2505.14683 | **29.76MiB**（31,205,015 B） | **37** | 官方 HTTPS 外链（≈29.8MB） |
-| **抽取** | | ≈256K（262,247 B / 3039 行） | — | 全文检索 |
-| **辅：仓库 README** | | ≈12K | — | 权重/推理超参/发布日志；**不替代** TR 数字源 |
 
 **一句话抓手：**
 用 **无瓶颈的 Integrated Transformer（MoT）** 把理解专家与生成专家放在同一共享自注意力序列上，在 **≈5T+ 级**（PT 2.5T + CT 2.6T，另加 Alignment/SFT）交错多模态数据上缩放，使能力按「理解/高保真生成 → 经典编辑 → 智能编辑/世界建模」顺序涌现；开源 **7B 激活 / 14B 总参** 权重与代码。
@@ -308,7 +302,6 @@ README（2025-06-15）称已修正 KRIS/RISE 评测结果，并称在这些推�
 - 把视频交错/多帧定性展示写成「BAGEL = 开源 Sora」。
 - 把 [[QwenOmni音视频原生]] Omni 语音栈或 [[SiLVR与ChainOfFrames]] VideoQA 框架配方塞进正文。
 - 外推未给的总 GPU 时、层配置细节、或把 Fig 柱未对齐读数当表。
-- **建议把 29.76MiB PDF 入库二进制**（违反本波 >20MB 规矩）。
 
 ---
 
@@ -316,13 +309,6 @@ README（2025-06-15）称已修正 KRIS/RISE 评测结果，并称在这些推�
 
 | 来源 | 用途 |
 |---|---|
-| arXiv PDF 2505.14683v3（临时下载 + ） | 架构、Table 1–10、涌现定义与主结果 |
-| | 入库检索文本 |
-| GitHub README → | 权重入口、许可、推理超参、发布日志 |
+| arXiv PDF 2505.14683v3 | 架构、Table 1–10、涌现定义与主结果 |
+| GitHub README | 权重入口、许可、推理超参、发布日志 |
 | [[MOC_多模态与具身]] | 划界对齐 |
-
-**体积与入库结论（回报用）：**
-- PDF：https://arxiv.org/pdf/2505.13427（**29.76MiB / 37p**）。
-
-- （≈256K）+ [外部仓库 README](https://github.com/ByteDance-Seed/Bagel)。
-- 笔记：多模态与具身/视觉语言/BAGEL统一多模态生成.md。

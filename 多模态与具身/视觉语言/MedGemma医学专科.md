@@ -33,7 +33,7 @@ archived: 2026-09-22
 | 机构 | Google Research and Google DeepMind |
 | 通信作者邮箱（页脚） | `{chufang, dangolden, asellerg}@google.com` |
 | arXiv | **2604.05081v2** \[cs.AI\]（页眉：**1 May 2026**；官方 PDF 页眉日期 **2026-5-5**） |
-| 官方 PDF | `https://arxiv.org/abs/2604.05081`（**23** 页 A4；约 **3.75 MB**） |
+| 官方 PDF | `https://arxiv.org/abs/2604.05081`（**23** 页 A4） |
 | 辅·产品概述 | [MedGemma \| Health AI Developer Foundations](https://developers.google.com/health-ai-developer-foundations/medgemma)（Last updated **2026-01-13** UTC） |
 | 辅·Model Card | [MedGemma 1.5 model card](https://developers.google.com/health-ai-developer-foundations/medgemma/model-card)（Last updated **2026-04-21** UTC；**4B multimodal IT = 1.5.0**，**Model created: Jan 13, 2026**） |
 | 资源入口 | TR：`https://goo.gle/medgemma`；HAI-DEF：`https://goo.gle/hai-def` |
@@ -269,7 +269,7 @@ docs 允许的适应类型（须同等验证）：**prompt / ICL**、**fine-tuni
 | 27B 的 1.5 更新 | **无**；集合仍指向 MedGemma 1 27B |
 | 监管批准 / 临床试验终点 | **无**；明确非直接临床使用 |
 | Legal specialty 对照模型 | **不做**（划界） |
-| Model Card 与 TR 个别数字微差（如部分 MedXpert / CT-RATE 四舍五入） | **以本地下载 PDF Table 为准**，卡作产品字段 |
+| Model Card 与 TR 个别数字微差（如部分 MedXpert / CT-RATE 四舍五入） | **以官方 PDF Table 为准**，卡作产品字段 |
 
 ---
 

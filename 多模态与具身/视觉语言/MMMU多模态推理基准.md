@@ -5,7 +5,6 @@ date: 2026-09-22
 lines: [评测字段, 架构思想]
 status: archived
 sources:
- # slim: url+extract — MMMU / MMMU-Pro arXiv+ACL PDFs removed (>15MB; near-dup pair both dropped)
  - https://arxiv.org/abs/2311.16502
  - https://arxiv.org/abs/2409.02813
  - https://aclanthology.org/2025.acl-long.736/
@@ -30,7 +29,7 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主文 A（一手）** | Yue et al., *MMMU: A Massive Multi-discipline Multimodal Understanding and Reasoning Benchmark for Expert AGI* | arXiv:**2311.16502v4** \[cs.CL\] **13 Jun 2024**；[abs](https://arxiv.org/abs/2311.16502) · [pdf](https://arxiv.org/pdf/2311.16502)；（**119** 页 letter） | 11.5K 题构造、六学科/30 科、异构图、交错图文；Table 2 文本-only / LMM / 人类专家 |
 | **主文 B（一手 · arXiv）** | Yue et al., *MMMU-Pro: A More Robust Multi-discipline Multimodal Understanding Benchmark* | arXiv:**2409.02813v3** \[cs.CL\] **22 May 2025**；[abs](https://arxiv.org/abs/2409.02813) · [pdf](https://arxiv.org/pdf/2409.02813)；（**53** 页 A4） | 三步构造、与 MMMU Val 对照的 ∆、CoT/OCR 消融 |
@@ -258,16 +257,7 @@ MMMU-Pro 显式对抗文本捷径
 
 ---
 
-## 附录 A：本地文件
-
-| 文件 | 说明 |
-|---|---|
-| https://arxiv.org/abs/2311.16502 | MMMU v4 |
-| https://arxiv.org/abs/2409.02813 | MMMU-Pro arXiv v3 |
-| https://aclanthology.org/2025.acl-long.736/ | ACL 2025 Long 相机就绪 |
-| `*.txt` | |
-
-## 附录 B：与议程承诺对照
+## 附录 A：与议程承诺对照
 
 | 议程要求 | 本篇处置 |
 |---|---|

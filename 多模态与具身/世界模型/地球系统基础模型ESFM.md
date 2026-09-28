@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 数据接口, 文内预报字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2605.00850 # PDF ~11.43MiB / 48p → **仅 HTTPS 外链（不入库）**
+ - https://arxiv.org/abs/2605.00850
 aux:
  - https://arxiv.org/abs/2605.00850
  - https://arxiv.org/pdf/2605.00850
@@ -30,23 +30,16 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[气候科学Agent]]**：禁止写成 ClimateAgent / ClimateAgents / ClimAgent 多代理编排、报告流水线、政策仿真。ESFM 是 **格点/站点场预报 FM**，不是 LLM Agent。
 > - **≠ [[SkySense遥感基础模型]]**：禁止写成 SkySense / SkySense++ / V2 遥感 **影像解译** EO FM。ESFM 吃的是大气/地表物理变量场与站点序列，不是高分光学+SAR 语义分割主轴。
 > - **≠ [[表格与时序基础模型]]**：禁止写成 TabPFN / TimesFM / Chronos 表格·通用时序 foundation。站点实验只是 ESFM 统一骨干下的 **点数据接口**，不是独立 tabular/TS FM 谱系。
-> **禁止编造**：参数量、MAE/CRPS、掩码概率、页数/体积一律锚定本地 （，2026-09-22 CST）与 `ls`；图柱未抽出标「待核实读图」。
+> **禁止编造**：参数量、MAE/CRPS、掩码概率、页数一律锚定官方 PDF（2026-09-22 CST）；图柱未抽出标「待核实读图」。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Ozdemir, Cheng, Mohebi, Lehmann, Adamov, Zhang, Trentini, Grund, Fuhrer, Hoefler, Mishra, Schemm, Soja & Salzmann, *Earth System Foundation Model (ESFM): A unified framework for heterogeneous data integration and forecasting* | arXiv:**2605.00850v1** \[physics.ao-ph\]（兼 cs.AI / cs.LG / eess.IV）；页眉 **20 Apr 2026**；Submitted **20 Apr 2026**；XMP MetadataDate **2026-05-05T00:03:16Z**（→ **2026-05-05 08:03 CST**）；License **CC BY-NC-SA 4.0**；PDF 链接 https://arxiv.org/pdf/2605.00850（**未入库二进制**；见 `https://arxiv.org/abs/2605.00850`） | 主锚：异构数据统一框架 |
-| **抽取** | 同上 | （**180,704 B ≈ 177 KiB**） | 全文检索 |
+| **主文** | Ozdemir, Cheng, Mohebi, Lehmann, Adamov, Zhang, Trentini, Grund, Fuhrer, Hoefler, Mishra, Schemm, Soja & Salzmann, *Earth System Foundation Model (ESFM): A unified framework for heterogeneous data integration and forecasting* | arXiv:**2605.00850v1** \[physics.ao-ph\]（兼 cs.AI / cs.LG / eess.IV）；页眉 **20 Apr 2026**；Submitted **20 Apr 2026**；XMP MetadataDate **2026-05-05T00:03:16Z**（→ **2026-05-05 08:03 CST**）；License **CC BY-NC-SA 4.0**；PDF 链接 https://arxiv.org/pdf/2605.00850（**48** 页 letter；abs `https://arxiv.org/abs/2605.00850`） | 主锚：异构数据统一框架 |
 | **代码（辅）** | swiss-ai/ESFM | https://github.com/swiss-ai/ESFM（README 自称基于 Aurora stack 扩展；权重 HF `huggingface.co/ESFM`；Pages `swiss-ai.github.io/ESFM/`；预处理 `SwissClim_data_processing_scripts`；格点评测 `SwissClim_Evaluations` v0.2.0） | 开源训练/推理入口 |
-
-| 文件 | 路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| ESFM PDF | https://arxiv.org/pdf/2605.00850（本盘仅 `/tmp` 校验，**未**写入 `*.pdf`） | **11,983,606 B ≈ 11.43 MiB** | **48** letter | **建议正式外链**（>10MB；议程亦标页数偏长→抽取优先） |
-| ESFM 抽取 | | **177 KiB** | — | 瘦身主资产 |
-| PDF 说明 | `https://arxiv.org/abs/2605.00850` | 短 stub | — | 记录体积决策 |
 
 **一句话抓手：** Aurora 解决「稠密再分析上可缩放的 Earth-system FM 骨干」；ESFM 在同一 **3D Swin UNet** 上加 **逐变量 tokenization + 可学习 NaN + 六档多分辨率 tokenizer（含站点 1×1）+ 变量维 axial attention + AdaLN-Zero 集合**，把 foundation 从「通道齐全的格点张量」推到 **卫星稀疏 / 站点不规则 / 任意缺失维** 仍可预报——而不是再开一条 Agent 编排或遥感解译轴。
 
@@ -260,7 +253,6 @@ Decoder：气压层 perceiver 可query **与观测不同的目标层** → 再 A
 4. 写成 **TabPFN/TimesFM** 通史（→ [[表格与时序基础模型]]）。
 5. 把「可扩到 Aurora large」当已完成缩放实验。
 6. 把 MODIS 更贴合当成「更接近真值大气」。
-7. 入库 **>10MB PDF 二进制**（本卡已按规矩拒绝）。
 
 ---
 
@@ -275,7 +267,6 @@ Decoder：气压层 perceiver 可query **与观测不同的目标层** → 再 A
 
 ## 九、来源与核验
 
-- PDF：`curl` https://arxiv.org/pdf/2605.00850 → HTTP 200； **48** pages / **11,983,606** bytes；（2026-09-22 CST）。
+- PDF：https://arxiv.org/pdf/2605.00850（**48** 页；2026-09-22 CST 核对）。
 - Abs/HTML 元数据交叉：Submitted **20 Apr 2026**；v1 only。
-- GitHub README：`raw.githubusercontent.com/swiss-ai/ESFM/main/README.md`（API 限流时改 raw；2026-09-22）。
-- **未**将 PDF 二进制写入 ；仅 README stub + 抽取。
+- GitHub README：https://github.com/swiss-ai/ESFM（2026-09-22）。

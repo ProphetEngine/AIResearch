@@ -21,9 +21,9 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文** | Chu et al., *Qwen2-Audio Technical Report* | arXiv:**2407.10759v1** \[eess.AS\] **15 Jul 2024**；PDF：https://arxiv.org/pdf/2407.10759 → `https://arxiv.org/abs/2407.10759`（**16** 页，） | 一手 TR：编码器接入、三阶段训练、评测表 |
+| **主文** | Chu et al., *Qwen2-Audio Technical Report* | arXiv:**2407.10759v1** \[eess.AS\] **15 Jul 2024**；PDF：https://arxiv.org/pdf/2407.10759 · `https://arxiv.org/abs/2407.10759`（**16** 页） | 一手 TR：编码器接入、三阶段训练、评测表 |
 | **代码 / Demo / Models** | QwenLM/Qwen2-Audio | https://github.com/QwenLM/Qwen2-Audio（论文页眉） | 复现入口（本篇不跟 commit） |
 
 **一句话抓手：** 用 **Whisper-large-v3 初始化的音频编码器** 把波形压成约 **40ms/帧** 的连续表示，条件在 **Qwen-7B** 上做 **下一文本 token 预测**；预训练改用 **自然语言提示**（替代 Qwen-Audio 的层次化 tag），再经 **联合 SFT（分析+语音聊）+ DPO**；**输入音/文、输出文本**——不是「ASR 管道外挂 LLM」，也不是端到端 TTS。
@@ -204,7 +204,6 @@ Figure 2 举例：
 - Chu, Y., Xu, J., Yang, Q., et al. *Qwen2-Audio Technical Report*. arXiv:2407.10759, 2024.
  - abs: https://arxiv.org/abs/2407.10759
  - pdf: https://arxiv.org/pdf/2407.10759
- - 本地: `https://arxiv.org/abs/2407.10759`
 - Qwen Team. *Qwen2-Audio: Chat with Your Voice!* Blog, 2024-08-09.
  - https://qwenlm.github.io/blog/qwen2-audio/
 - Code: https://github.com/QwenLM/Qwen2-Audio

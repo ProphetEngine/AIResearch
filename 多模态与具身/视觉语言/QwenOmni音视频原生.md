@@ -27,10 +27,10 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文 A** | Qwen Team, *Qwen3-Omni Technical Report* | arXiv:**2509.17765v1** \[cs.CL\] **22 Sep 2025**（页眉日期 **2025-09-23**）；PDF：https://arxiv.org/pdf/2509.17765 → `https://arxiv.org/abs/2509.17765`（**25** 页 A4；4,036,466 bytes） | Thinker–Talker MoE + AuT（20M h）+ 多码本流式；30B-A3B 开源 |
-| **主文 B** | Qwen Team, *Qwen3.5-Omni Technical Report* | arXiv:**2604.15804v2** \[cs.CL\] **21 Apr 2026**（页眉 **2026-04-22**）；PDF：https://arxiv.org/pdf/2604.15804 → `https://arxiv.org/abs/2604.15804`（**28** 页 A4；3,669,136 bytes） | Hybrid MoE + AuT（40M h / 6.25 Hz）+ **ARIA** + 256k；Plus/Flash API |
+| **主文 A** | Qwen Team, *Qwen3-Omni Technical Report* | arXiv:**2509.17765v1** \[cs.CL\] **22 Sep 2025**（页眉日期 **2025-09-23**）；PDF：https://arxiv.org/pdf/2509.17765 · `https://arxiv.org/abs/2509.17765`（**25** 页 A4） | Thinker–Talker MoE + AuT（20M h）+ 多码本流式；30B-A3B 开源 |
+| **主文 B** | Qwen Team, *Qwen3.5-Omni Technical Report* | arXiv:**2604.15804v2** \[cs.CL\] **21 Apr 2026**（页眉 **2026-04-22**）；PDF：https://arxiv.org/pdf/2604.15804 · `https://arxiv.org/abs/2604.15804`（**28** 页 A4） | Hybrid MoE + AuT（40M h / 6.25 Hz）+ **ARIA** + 256k；Plus/Flash API |
 
 **一句话抓手：**
 - **Qwen3-Omni**：在 Qwen2.5-Omni 的 Thinker–Talker 上把 **双方升级为 MoE**，用从零训练的 **AuT（~0.6B，20M 小时监督音频，12.5 Hz）** 替换 Whisper 系编码器，Talker 以 **多码本 RVQ + MTP + 因果 ConvNet Code2Wav** 做首帧即可播的流式语音；宣称冷启理论端到端首包 **234 ms**，单实例 ASR/口语理解可达 **40 分钟**级音频。
@@ -47,7 +47,7 @@ archived: 2026-09-22
 | **[[SpeechLLM语音语言模型]] Qwen2-Audio** | 「音频编码器连续特征条件 LLM → **文本**」；无原生波形输出 | Whisper 初始化、40 ms/帧公式、三阶段训练全文、评测表逐格 |
 | **[[多模态架构脉络]] / 视觉 LMM** | 「视觉编码器 + LLM」并列轴存在 | LLaVA/Flamingo 接法通史 |
 | **[[Qwen3技术报告深读]]** | 骨干初始化、Strong-to-Weak Distillation、GSPO 槽位 | Qwen3 文本训练全文 |
-| **Qwen2.5-Omni（文内引用）** | Thinker–Talker 祖先；3-Omni 列出的 5 项升级对照 | 未下载的 2.5-Omni TR 细节 |
+| **Qwen2.5-Omni（文内引用）** | Thinker–Talker 祖先；3-Omni 列出的 5 项升级对照 | 未读的 2.5-Omni TR 细节 |
 
 ### 2.2 能力面跃迁（跟读）
 
@@ -223,9 +223,9 @@ Omni 锚点： 文本·图像·音频·视频入 → 文本出 + 流式语音出
 
 ---
 
-## 九、来源与抽取指纹
+## 九、来源
 
-| 文件 | 用途 |
+| 链接 | 用途 |
 |---|---|
 | `https://arxiv.org/abs/2509.17765` | 一手 TR A |
 | `https://arxiv.org/abs/2604.15804` | 一手 TR B |

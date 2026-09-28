@@ -5,7 +5,6 @@ date: 2026-09-22
 lines: [架构思想]
 status: archived
 sources:
- # slim: url+extract — V-JEPA2 PDF removed (>15MB)
  - https://arxiv.org/abs/2506.09985
 arxiv: ["2506.09985"]
 archived: 2026-09-22
@@ -22,7 +21,7 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主文** | Assran et al., *V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning* | arXiv:**2506.09985v1** \[cs.AI\] **11 Jun 2025**；文内 Date: **June 13, 2025**；[abs](https://arxiv.org/abs/2506.09985) · [pdf](https://arxiv.org/pdf/2506.09985)；（48 页） | 一手 TR：JEPA 预训练、理解/预测/VidQA、AC 后训练 |
 | **代码** | facebookresearch/vjepa2 | https://github.com/facebookresearch/vjepa2（论文页眉） | 复现入口（本篇不跟 commit） |
@@ -266,9 +265,9 @@ $$
 
 ## 十三、来源清单
 
-1. Assran et al., 2025. *V-JEPA 2* — arXiv:**2506.09985**（https://arxiv.org/abs/2506.09985）；抽取 ；Code: https://github.com/facebookresearch/vjepa2 。
+1. Assran et al., 2025. *V-JEPA 2* — arXiv:**2506.09985**（https://arxiv.org/abs/2506.09985）；Code: https://github.com/facebookresearch/vjepa2 。
 4. 谱系锚点（未深读 PDF）：LeCun, 2022 (JEPA 纲领)；Bardes et al., 2024 *V-JEPA* (arXiv:2404.08471)；Assran et al., 2023 *I-JEPA*。
-5. 划界：`notes/` 未来 **[[视觉语言动作谱系]]**（VLA / 控制）；交叉 [[多模态架构脉络]]、`B10` 勿重写。
+5. 划界：**[[视觉语言动作谱系]]**（VLA / 控制）；交叉 [[多模态架构脉络]]、`B10` 勿重写。
 
 ## 相关笔记
 

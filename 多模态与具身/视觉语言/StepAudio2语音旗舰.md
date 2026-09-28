@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 训练数据接口, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2507.16632 # 872,404 B ≈ 0.83MiB / 21p；≪20MB → 官方 HTTPS 外链
+ - https://arxiv.org/abs/2507.16632
 aux:
  - https://arxiv.org/abs/2507.16632
  - https://arxiv.org/pdf/2507.16632
@@ -30,17 +30,12 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文** | StepFun Audio Team, *Step-Audio 2 Technical Report* | arXiv:**2507.16632v3** \[cs.CL\] **27 Aug 2025**；XMP MetadataDate 2025-08-28T01:06:32Z（→ **2025-08-28 09:06 CST**）；许可证 arXiv nonexclusive-distrib/1.0；`https://arxiv.org/abs/2507.16632`（**872,404 B ≈ 0.83MiB** / **21** 页 letter） | 主锚：架构 + 预训练/SFT/RL + 评测 + mini 附录 |
+| **主文** | StepFun Audio Team, *Step-Audio 2 Technical Report* | arXiv:**2507.16632v3** \[cs.CL\] **27 Aug 2025**；XMP MetadataDate 2025-08-28T01:06:32Z（→ **2025-08-28 09:06 CST**）；许可证 arXiv nonexclusive-distrib/1.0；`https://arxiv.org/abs/2507.16632`（**21** 页 letter） | 主锚：架构 + 预训练/SFT/RL + 评测 + mini 附录 |
 | **代码入口（文内明示）** | stepfun-ai/Step-Audio2 | https://github.com/stepfun-ai/Step-Audio2 | 开源入口；含 StepEval 基准与 mini 权重叙事（本篇不跟 commit） |
-
-| 文件 | 本地路径 | 体积 | 页数 | 备注 |
-|---|---|---|---|---|
-| 主 PDF | `https://arxiv.org/abs/2507.16632` | **0.83MiB** | **21** | **官方 HTTPS 外链**（远低于 20MB；页数适中） |
-| 全文抽取 | | ~1117 行 | — | 全文检索 |
 
 **谱系一句（不升主）：** 同系前作 **Step-Audio**（Huang et al., arXiv:2502.11946）与 **Step-Audio-AQAA**（arXiv:2506.08967）被文内称为「以离散音频 token 统一理解与生成、约 **130B**」的先例；Step-Audio 2 **参数更少**，并把 **音频 token 生成进一步并入语言建模**。细节以本 TR 为准，不另开卡。
 
@@ -237,7 +232,6 @@ ASR 中介（Whisper）+ GPT-4o-mini 评判。
 
 ## 九、来源与检索截止
 
-- 主 PDF：`https://arxiv.org/abs/2507.16632`（2026-09-22 自 https://arxiv.org/pdf/2507.16632 拉取； **21** 页 / **872404** bytes）。
-- 。
+- 主 PDF：`https://arxiv.org/abs/2507.16632`（PDF https://arxiv.org/pdf/2507.16632；**21** 页）。
 - 检索截止：**2026-09-22 CST**。
 - 相邻划界：多模态与具身/视觉语言/SpeechLLM语音语言模型.md · 多模态与具身/视觉语言/QwenOmni音视频原生.md · 多模态与具身/视觉语言/SeamlessM4T语音翻译.md · 多模态与具身/视觉语言/多模态架构脉络.md。

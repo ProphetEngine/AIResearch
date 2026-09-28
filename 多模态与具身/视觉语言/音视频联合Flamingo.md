@@ -6,7 +6,7 @@ lines: [架构思想, 评测字段]
 status: archived
 archived: 2026-09-22
 sources:
- - https://arxiv.org/abs/2607.16107 # 9.7M / 47p；<20MB
+ - https://arxiv.org/abs/2607.16107
 arxiv: ["2607.16107"]
 related:
  - "QwenOmni音视频原生"
@@ -32,11 +32,11 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 页数 | 抽取 |
-|---|---|---|---|---|
-| **主文** | *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos* | arXiv:**2607.16107v1** \[eess.AS\] **17 Jul 2026**（页眉日期 **2026-7-20**）；https://arxiv.org/pdf/2607.16107 → `https://arxiv.org/abs/2607.16107` | **47** letter（抽取时有 PDF 结构警告，正文可抽） | （1628 行） |
+| 角色 | 标题 / 版本 | 标识 | 页数 |
+|---|---|---|---|
+| **主文** | *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos* | arXiv:**2607.16107v1** \[eess.AS\] **17 Jul 2026**（页眉日期 **2026-7-20**）；https://arxiv.org/pdf/2607.16107 · `https://arxiv.org/abs/2607.16107` | **47** letter |
 
 | 字段 | 文内可核 |
 |---|---|
@@ -45,9 +45,7 @@ timezone: Asia/Shanghai (CST)
 | 版权行 | 「© 2026 NVIDIA. All rights reserved.」 |
 | 开源主张（摘要 / 贡献 3） | 开源 **model、training、inference code** 及相关技术 |
 | 许可边界（Appendix I Broader Impacts） | 释放 **AV-Flamingo 与 AV-Skills** 供 **non-commercial research use only**，并写明禁止有害用途；另有 **AV-Safety QA**（§A，92K QA / 536 hrs）在 long-context SFT 中保留拒绝行为 |
-| 页眉按钮 | Code · Model · Project Page · Dataset · Demo —— **本环境对 PDF 做 URI/字符串扫描仅得 arXiv abs/DOI，无额外可核仓链** |
-
-**体积判定**：`ls -lh` → **9.7M < 20MB** → 按验收规矩 ****。权重 / 数据集本体 **禁止**入库。
+| 页眉按钮 | Code · Model · Project Page · Dataset · Demo —— **PDF 内仅见 arXiv abs/DOI 链接，无额外可核仓链** |
 
 **一句话抓手：** 从 **OmniVinci** 检查点出发，用自建 **AV-Skills（≈7M caption+QA，含 ≈4.8M QA）** 做短→长三阶段课程，再用 **TAVIT（Temporal Audio-Visual Interleaved Chain-of-Thought）/ AV-Think（≈24K，推理链均长 635.7 词）** 做 SFT+**GRPO**，得到面向 **长、复杂真实音视频** 的开源 AV-LLM（骨干 **Qwen2.5-7B**）。
 
@@ -82,7 +80,7 @@ timezone: Asia/Shanghai (CST)
 | AV-Skills 技能分类与 Short/Long 规模 | 合成标注 prompt 逐字复刻成「可复现假数据配方」操作手册（附录图仅点名存在） |
 | 三阶段课程与 Table 4/5 超参 | 把 512×H100 外推成未给出的总 FLOPs / 美元成本 |
 | TAVIT 时间戳接地 + GRPO 奖励类型（format / accuracy / structured） | 侧写可复现越狱或有害 AV 请求绕过 |
-| Table 1 / Table 6 文内分数 | 未列表的 Figure 1 雷达图读点、未下载的 OmniVinci 原文细节 |
+| Table 1 / Table 6 文内分数 | 未列表的 Figure 1 雷达图读点、未读的 OmniVinci 原文细节 |
 | 「fully open」主张 **与** non-commercial 许可 **并列** | 断言 Apache/商用可任意部署 |
 
 ---
@@ -213,10 +211,8 @@ Broader Impacts：正向（无障碍音频描述、讲座/纪录片理解、内�
 
 | 项 | 值 |
 |---|---|
-| 主 PDF | `https://arxiv.org/abs/2607.16107`（**10,120,887 B / 9.7M**；**47** 页） |
-| 抽取 | |
+| 主 PDF | `https://arxiv.org/abs/2607.16107`（**47** 页） |
 | arXiv | https://arxiv.org/abs/2607.16107 · https://arxiv.org/pdf/2607.16107 |
-| 核验日 | 2026-09-22 CST；`curl` PDF → 200； Pages=47；`ls -lh` 9.7M |
-| 笔记路径 | [[音视频联合Flamingo]] |
+| 核验日 | 2026-09-22 CST |
 
-**交付状态：** draft。数字与机制均跟读本地抽取；开源仓链与商业许可以作者后续正式页为准，**禁止**用二手博客补 URI。
+**交付状态：** draft。数字与机制均跟读官方 PDF；开源仓链与商业许可以作者后续正式页为准，**禁止**用二手博客补 URI。

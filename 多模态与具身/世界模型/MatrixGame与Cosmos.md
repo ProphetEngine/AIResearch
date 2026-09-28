@@ -33,23 +33,17 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[视频生成正式报告]]**：禁止写成 **文生视频旗舰正式报告缺口备忘**（Sora 等）。本卡对象是 **交互/流式 WM + Physical AI WFM 平台**，非「无可核长 TR」产品备忘。
 > - **≠ [[DiffusionForcing族]]**：禁止重写 Diffusion Forcing → Self Forcing → Causal Forcing **训推对齐 forcing 族通史**。Matrix 文内引用 Self-Forcing / DMD / Causal Forcing 仅作 **蒸馏接口一句**，不展开族谱。
 > - **≠ [[视觉语言动作谱系]]**：禁止写成 **Robotics VLA 控制部署通史**（RT-2 / OpenVLA / π0）。Cosmos 后训练含机器人 manipulation **样例**，本卡只录「预训练 WFM → 域内后训练」平台接口，不写闭环 VLA 策略谱系。
-> **禁止编造**：主张与表数字一律锚定本地抽取（ + 博文 HTML 抽纯文本，2026-09-22 CST）。文内未给出的算力明细 / 未披露配方 → **不得外推**。
+> **禁止编造**：主张与表数字一律锚定官方 PDF 与博文（2026-09-22 CST）。文内未给出的算力明细 / 未披露配方 → **不得外推**。
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 体积 / 页数 | 角色 |
+| 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
-| **主文 A** | Wang, Liu, Li, Huang, Xu et al.（Skywork AI）, *Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory* | arXiv:**2604.08995**v2 \[cs.CV\] **13 Apr 2026**（abs：Submitted **10 Apr 2026**）；PDF **23,717,745** B ≈ **22.6MB**；**20** 页 letter | **实时流式交互 WM**：error-aware 基座 + 相机感知记忆 + multi-segment DMD 蒸馏 + INT8/VAE 剪枝 → **720p@~40FPS（5B）**；scale-up **MoE-28B / 2×14B** |
-| **主文 B** | NVIDIA（Agarwal, Ali, Bala, … Liu et al.）, *Cosmos World Foundation Model Platform for Physical AI* | arXiv:**2501.03575**v3 \[cs.CV\] **9 Jul 2025**（abs：Submitted **7 Jan 2025**）；PDF **43,473,963** B ≈ **41.5MB**；**75** 页 A4 | **Physical AI WFM 平台**：策展→tokenizer→扩散/AR 预训练→后训练样例→guardrail；开源/开权重入口 **NVIDIA Cosmos-Predict1** |
-| **对照（不升主）** | Parker-Holder & Fruchter（DeepMind）, *Genie 3: A new frontier for world models* | 博文 **2025-08-05**；https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ → | **产品对照**：文生交互世界 **24 FPS / 720p / 数分钟一致性**；**无正式 PDF TR** → 不升主 |
-
-| 文件 | 体积 | 页数 | 备注 |
-|---|---|---|---|
-| `2604.08995` Matrix-Game 3.0 PDF | **22.6MB**（23,717,745 B） | 20 | **建议正式外链**（>20MB） |
-| `2501.03575` Cosmos PDF | **41.5MB**（43,473,963 B） | 75 | **建议正式外链**（>20MB；页数亦偏长） |
-| Genie 3 博文 | HTML→txt **~27K** | — | **链接+抽取**；**不升主**（无 PDF TR） |
+| **主文 A** | Wang, Liu, Li, Huang, Xu et al.（Skywork AI）, *Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory* | arXiv:**2604.08995**v2 \[cs.CV\] **13 Apr 2026**（abs：Submitted **10 Apr 2026**）；PDF https://arxiv.org/pdf/2604.08995；**20** 页 letter | **实时流式交互 WM**：error-aware 基座 + 相机感知记忆 + multi-segment DMD 蒸馏 + INT8/VAE 剪枝 → **720p@~40FPS（5B）**；scale-up **MoE-28B / 2×14B** |
+| **主文 B** | NVIDIA（Agarwal, Ali, Bala, … Liu et al.）, *Cosmos World Foundation Model Platform for Physical AI* | arXiv:**2501.03575**v3 \[cs.CV\] **9 Jul 2025**（abs：Submitted **7 Jan 2025**）；PDF https://arxiv.org/pdf/2501.03575；**75** 页 A4 | **Physical AI WFM 平台**：策展→tokenizer→扩散/AR 预训练→后训练样例→guardrail；开源/开权重入口 **NVIDIA Cosmos-Predict1** |
+| **对照（不升主）** | Parker-Holder & Fruchter（DeepMind）, *Genie 3: A new frontier for world models* | 博文 **2025-08-05**；https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ | **产品对照**：文生交互世界 **24 FPS / 720p / 数分钟一致性**；**无正式 PDF TR** → 不升主 |
 
 **一句话抓手：**
 - **Matrix-Game 3.0**：把「交互视频世界模型」做成 **可部署系统**——UE/AAA/真实四元组数据 + **自校正双向 DiT** + **相机感知记忆检索** + **多段 DMD 蒸馏**，在 5B 上冲 **720p 实时流式**。
@@ -264,7 +258,6 @@ pre-Guard 拦有害输入、post-Guard 拦有害输出——本卡不展开分�
 
 - 把 Cosmos 写成「又一个文生视频模型评测」或把 Matrix 写成「又一个离线 DiT 视频」。
 - 把 Genie 3 博文数字当作已 peer-review 的可复现配方。
-- 建议把 **>20MB** 的两篇 PDF **入库二进制**（本卡明确 **正式外链**）。
 - 编造未在抽取中出现的 FLOPs 明细、未公开的 Genie 训练预算、或「已验证 MPC/RL 收益」。
 
 ---
@@ -273,9 +266,7 @@ pre-Guard 拦有害输入、post-Guard 拦有害输出——本卡不展开分�
 
 | 项 | 值 |
 |---|---|
-| Matrix PDF | https://arxiv.org/pdf/2604.08995 （v2；20p；**22.6MB**） |
-| Cosmos PDF | https://arxiv.org/pdf/2501.03575 （v3；75p；**41.5MB**） |
+| Matrix PDF | https://arxiv.org/pdf/2604.08995 （v2；20p） |
+| Cosmos PDF | https://arxiv.org/pdf/2501.03575 （v3；75p） |
 | Genie 3 博文 | https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ |
-| 抽取 | |
-| 核验时刻 | **2026-09-22 CST**（ / 博文 HTML→txt） |
-| 二进制策略 | **两篇主 PDF >20MB → 建议正式外链**； |
+| 核验时刻 | **2026-09-22 CST** |

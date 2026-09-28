@@ -5,7 +5,6 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- # slim: url+extract — Diffusion Forcing PDF removed (>15MB)
  - https://arxiv.org/abs/2407.01392
  - https://arxiv.org/abs/2506.08009
  - https://arxiv.org/abs/2602.02214
@@ -33,11 +32,11 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / 元数据 | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
 | **主文 A** | Chen, Martí Monsó, Du, Simchowitz, Tedrake & Sitzmann（MIT CSAIL / TUM）, *Diffusion Forcing: Next-token Prediction Meets Full-Sequence Diffusion* | arXiv:**2407.01392v4** \[cs.LG\] **10 Dec 2024**；NeurIPS 2024；[abs](https://arxiv.org/abs/2407.01392) · [pdf](https://arxiv.org/pdf/2407.01392)；（**35** 页 letter） | **族原点**：独立 per-token 噪声；因果 CDF；ELBO；视频/规划/时序/机器人 |
-| **主文 B** | Huang, Li, He, Zhou & Shechtman（Adobe Research / UT Austin）, *Self Forcing: Bridging the Train-Test Gap in Autoregressive Video Diffusion* | arXiv:**2506.08009v2** \[cs.CV\] **10 Nov 2025**；NeurIPS 2025；`https://arxiv.org/abs/2506.08009`（**19** 页；3,902,279 bytes） | **暴露偏差主修**：训练期自 rollout + KV cache；DMD/SiD/GAN 视频级损失；rolling KV |
-| **附录 / 续篇** | Zhu*, Zhao*, He, Su, Li & Zhu（清华 / 生数 / UT Austin / 人大等）, *Causal Forcing: Autoregressive Diffusion Distillation Done Right…* | arXiv:**2602.02214v5** \[cs.CV\] **1 Jun 2026**；ICML 2026（PMLR 306）；`https://arxiv.org/abs/2602.02214`（**20** 页；9,482,524 bytes） | **蒸馏理论附录**：帧级 injectivity；AR 教师因果 ODE → 同 SF 的 DMD |
+| **主文 B** | Huang, Li, He, Zhou & Shechtman（Adobe Research / UT Austin）, *Self Forcing: Bridging the Train-Test Gap in Autoregressive Video Diffusion* | arXiv:**2506.08009v2** \[cs.CV\] **10 Nov 2025**；NeurIPS 2025；`https://arxiv.org/abs/2506.08009`（**19** 页） | **暴露偏差主修**：训练期自 rollout + KV cache；DMD/SiD/GAN 视频级损失；rolling KV |
+| **附录 / 续篇** | Zhu*, Zhao*, He, Su, Li & Zhu（清华 / 生数 / UT Austin / 人大等）, *Causal Forcing: Autoregressive Diffusion Distillation Done Right…* | arXiv:**2602.02214v5** \[cs.CV\] **1 Jun 2026**；ICML 2026（PMLR 306）；`https://arxiv.org/abs/2602.02214`（**20** 页） | **蒸馏理论附录**：帧级 injectivity；AR 教师因果 ODE → 同 SF 的 DMD |
 
 **项目页 / 代码（文内明示）：**
 - DF：https://boyuan.space/diffusion-forcing
@@ -234,18 +233,6 @@ $$
 1. **DF**：连续高维超长 rollout 的稳定性机理与噪声日程设计空间仍大；时序任务非主战场。
 2. **SF**：自 rollout 训练效率依赖少步 + 截断；rolling KV 对「首帧 latent」分布需特训；与双向多步模型的语义分项仍有消长。
 3. **CF**：Causal CD 仍是「vanilla LCM」级实例，文称弱于 score distillation，留待更强 CD；长视频需正交适配；与 APT2 等 **GAN 系 AR 蒸馏** 的边界文 §5 有讨论但不替代本卡主线。
-
----
-
-## 八、本地路径速查
-
-| 类型 | 路径 |
-|---|---|
-| 笔记 | 多模态与具身/世界模型/DiffusionForcing族.md |
-| PDF / URL | DF → https://arxiv.org/abs/2407.01392 · `https://arxiv.org/abs/2506.08009` · `https://arxiv.org/abs/2602.02214` |
-| 抽取 | `*.txt`（及 ） |
-
-**抽取命令备忘：** ` <pdf> <txt>`（2026-09-22 CST）。
 
 ## 相关笔记
 

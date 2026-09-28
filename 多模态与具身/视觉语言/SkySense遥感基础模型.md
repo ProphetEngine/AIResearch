@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - `https://arxiv.org/pdf/2312.10115`；
+ - https://arxiv.org/pdf/2312.10115
  - https://arxiv.org/abs/2507.13812
 arxiv: ["2312.10115", "2507.13812"]
 doi: ["10.1038/s42256-025-01078-8"]
@@ -32,11 +32,11 @@ archived: 2026-09-22
 
 ## 一、材料元信息
 
-| 材料 | 标识 | 本地 / URL | 角色 |
+| 材料 | 标识 | 链接 / 元数据 | 角色 |
 |---|---|---|---|
-| **主文（原点）** | Guo, Lao, Dang, Zhang, Yu, Ru, Zhong, Huang, Wu, Hu, He, Wang, Chen, Yang, Zhang, Li, *SkySense: A Multi-Modal Remote Sensing Foundation Model Towards Universal Interpretation for Earth Observation Imagery* | arXiv:**2312.10115v2** \[cs.CV\] **22 Mar 2024**；`https://arxiv.org/pdf/2312.10115`；（**29** 页；27,544,899 bytes；CreationDate **2024-03-25 CST**）；单位 **Ant Group / Wuhan University / MYBank**；Nature ++ 引用为 **CVPR 2024** | 因子化 MM-RSFM；**2.06B** 参；**21.5M** 时序样本 |
-| **后继 A（语义增强）** | Wu, Zhang, Ru, et al., *A semantic-enhanced multi-modal remote sensing foundation model for Earth observation*（**SkySense++**） | DOI **10.1038/s42256-025-01078-8**；*Nat Mach Intell* **7**, **1235–1249**（2025）；Published **04 Aug 2025**；HTML → ；PDF：**idp.nature.com 登录墙，未落盘**（见 ） | 因子化骨架 + **二阶段**预训练；**27M** 图；**12** 任务 × **7** 域；few-shot |
-| **后继 B（统一骨干）** | Zhang, Ru, Wu, Yu, Liang, Li, Chen, *SkySense V2: A Unified Foundation Model for Multi-modal Remote Sensing* | arXiv:**2507.13812v1** \[cs.CV\] **18 Jul 2025**；`https://arxiv.org/abs/2507.13812`（**20** 页；6,579,366 bytes）；**Ant Group / Wuhan University** | 统一骨干 **665M**；APM + modality prompt + MoE；平均超 SkySense **1.8** |
+| **主文（原点）** | Guo, Lao, Dang, Zhang, Yu, Ru, Zhong, Huang, Wu, Hu, He, Wang, Chen, Yang, Zhang, Li, *SkySense: A Multi-Modal Remote Sensing Foundation Model Towards Universal Interpretation for Earth Observation Imagery* | arXiv:**2312.10115v2** \[cs.CV\] **22 Mar 2024**；`https://arxiv.org/pdf/2312.10115`；（**29** 页；CreationDate **2024-03-25 CST**）；单位 **Ant Group / Wuhan University / MYBank**；Nature ++ 引用为 **CVPR 2024** | 因子化 MM-RSFM；**2.06B** 参；**21.5M** 时序样本 |
+| **后继 A（语义增强）** | Wu, Zhang, Ru, et al., *A semantic-enhanced multi-modal remote sensing foundation model for Earth observation*（**SkySense++**） | DOI **10.1038/s42256-025-01078-8**；*Nat Mach Intell* **7**, **1235–1249**（2025）；Published **04 Aug 2025**；Nature 全文 PDF 需登录（idp.nature.com），未读；HTML 摘要已核（见 §八） | 因子化骨架 + **二阶段**预训练；**27M** 图；**12** 任务 × **7** 域；few-shot |
+| **后继 B（统一骨干）** | Zhang, Ru, Wu, Yu, Liang, Li, Chen, *SkySense V2: A Unified Foundation Model for Multi-modal Remote Sensing* | arXiv:**2507.13812v1** \[cs.CV\] **18 Jul 2025**；`https://arxiv.org/abs/2507.13812`（**20** 页）；**Ant Group / Wuhan University** | 统一骨干 **665M**；APM + modality prompt + MoE；平均超 SkySense **1.8** |
 | **代码（++）** | kang-wu/SkySensePlusPlus（Nature Code availability）；议程亦列 LotusWhu/SkySensePlusPlus | 两仓 README **同文** → [kang-wu/SkySensePlusPlus README](https://github.com/kang-wu/SkySensePlusPlus) · [LotusWhu/SkySensePlusPlus README](https://github.com/LotusWhu/SkySensePlusPlus) | 自 SkySense ckpt 续训；RS-Semantic / EO Benchmark 表；Zenodo 数据入口 |
 
 **一句话抓手：** 地理对齐的 **高分光学 + Sentinel-2 时序多光谱 + Sentinel-1 时序 SAR** → 可拆装的 **十亿级因子化** SkySense；后继分两支——**++** 加语义掩码第二阶段换 few-shot，**V2** 把三骨干收成 **统一 665M** 并改对比学习以适配「一幅 RS 图多主题」。
@@ -236,9 +236,9 @@ SkySense V2：统一骨干 + Adaptive Patch Merging + modality prompt + MoE
 
 | 项 | 状态 |
 |---|---|
-| `https://arxiv.org/pdf/2312.10115`； | **已下载**，全文可核 |
-| `https://arxiv.org/abs/2507.13812` | **已下载**，全文可核 |
-| Nature PDF `s42256-025-01078-8` | **未取得**（idp 登录墙）；HTML 摘要/作者/DOI/数据代码链 **已核** |
+| `https://arxiv.org/pdf/2312.10115` | 全文已核 |
+| `https://arxiv.org/abs/2507.13812` | 全文已核 |
+| Nature PDF `s42256-025-01078-8` | **未读**（idp 登录墙）；HTML 摘要/作者/DOI/数据代码链 **已核** |
 | GitHub ++ | kang-wu 与 LotusWhu README **一致**；不跟踪 commit/哈希 |
 | SkySense 权重 | 文承诺 release；++ README 给 Notion 入口——可用性随时间变 |
 

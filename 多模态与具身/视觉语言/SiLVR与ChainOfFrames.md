@@ -5,9 +5,9 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
- - https://arxiv.org/abs/2505.24869 # 1.5M / 25p（主 A）
- - https://arxiv.org/abs/2506.00318 # 5.0M / 22p（主 B）
- - https://arxiv.org/abs/2605.26014 # 4.9M / 18p（可选补链，不升主）
+ - https://arxiv.org/abs/2505.24869
+ - https://arxiv.org/abs/2506.00318
+ - https://arxiv.org/abs/2605.26014
 arxiv: ["2505.24869", "2506.00318", "2605.26014"]
 related:
  - "音视频联合Flamingo"
@@ -38,21 +38,19 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 一、材料元信息与 PDF 体积
+## 一、材料元信息
 
-| 角色 | 标题 / 版本 | 标识 | 本地路径 | 体积 | 页数 | 抽取 |
-|---|---|---|---|---|---|---|
-| **主 A** | *SiLVR: A Simple Language-based Video Reasoning Framework* | arXiv:**2505.24869v3** \[cs.CV\]（**15 Apr 2026**）；*TMLR*（01/2026）；UNC Chapel Hill（Zhang, Lin, Wang, Bansal, Bertasius）；OpenReview `mQZbh9Zlbw` | `https://arxiv.org/abs/2505.24869` | **1.5M**（1,521,117 B） | **25** letter | |
-| **主 B** | *Chain-of-Frames: Advancing Video Understanding in Multimodal LLMs via Frame-Aware Reasoning* | arXiv:**2506.00318v2** \[cs.CV\]（**4 Apr 2026**）；Ghazanfari et al.（NYU / EPFL） | `https://arxiv.org/abs/2506.00318` | **5.0M**（5,146,783 B） | **22** letter | |
-| **可选补链** | *TORM: Internalized Modeling for Spatial-Temporal Reasoning in Video-Language Models*（议程称 STORM；GitHub `storm`） | arXiv:**2605.26014v1** \[cs.CV\]（**25 May 2026**）；Liang*, Chen* et al.（Purdue / Harvard / UNC / UCF / NVIDIA / Physion） | `https://arxiv.org/abs/2605.26014` | **4.9M**（5,069,900 B） | **18** letter | |
+| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
+|---|---|---|---|---|
+| **主 A** | *SiLVR: A Simple Language-based Video Reasoning Framework* | arXiv:**2505.24869v3** \[cs.CV\]（**15 Apr 2026**）；*TMLR*（01/2026）；UNC Chapel Hill（Zhang, Lin, Wang, Bansal, Bertasius）；OpenReview `mQZbh9Zlbw` | `https://arxiv.org/abs/2505.24869` | **25** letter |
+| **主 B** | *Chain-of-Frames: Advancing Video Understanding in Multimodal LLMs via Frame-Aware Reasoning* | arXiv:**2506.00318v2** \[cs.CV\]（**4 Apr 2026**）；Ghazanfari et al.（NYU / EPFL） | `https://arxiv.org/abs/2506.00318` | **22** letter |
+| **可选补链** | *TORM: Internalized Modeling for Spatial-Temporal Reasoning in Video-Language Models*（议程称 STORM；GitHub `storm`） | arXiv:**2605.26014v1** \[cs.CV\]（**25 May 2026**）；Liang*, Chen* et al.（Purdue / Harvard / UNC / UCF / NVIDIA / Physion） | `https://arxiv.org/abs/2605.26014` | **18** letter |
 
 | 材料 | 代码 / 主页（文内可核） |
 |---|---|
 | SiLVR | https://sites.google.com/cs.unc.edu/silvr（摘要）；OpenReview 论坛上列 |
 | CoF | PDF 注解 URI：https://github.com/SaraGhazanfari/CoF（摘要写「Code available at GitHub」） |
 | STORM/TORM | https://github.com/aiming-lab/storm（摘要；仅补链） |
-
-**体积判定（2026-09-22 CST）**：SiLVR **1.5M**、CoF **5.0M**、STORM **4.9M**，均 **<10MB** → 按「>10MB 正式外链」规矩 **三份均**（无需降级）。权重 / CoF-DATA 本体 / 视频 **禁止**入库。
 
 **一句话抓手：**
 - **SiLVR**：别再为视频专门训 RL/CoT——把多感官视频**压成语言**，交给已会推理的 LLM；用 **ACR** 按上下文上限自适应加粗 clip。
@@ -228,18 +226,7 @@ return answer(Z, Q, F)
 2. CoF Abstract + §3.2–3.3 + Table 1/2/3 + Fig. 6。
 3. （可选）STORM/TORM Abstract + Fig. 1/3 + Table 1/2 —— 只记「latent 内化」对照句。
 
-### 7.2 备注
-
-| 路径 | 体积 | 页数 | 建议 |
-|---|---|---|---|
-| `https://arxiv.org/abs/2505.24869` | **1.5M** | 25 | **官方 HTTPS 外链** + 已抽 |
-| `https://arxiv.org/abs/2506.00318` | **5.0M** | 22 | **官方 HTTPS 外链** + 已抽 |
-| `https://arxiv.org/abs/2605.26014` | **4.9M** | 18 | **（补链）**；**不升主议题**；已抽 |
-| 多模态与具身/视觉语言/SiLVR与ChainOfFrames.md | （本笔记） | — | **draft**；日期 **2026-09-22** |
-
-均 **远低于 10MB / 20MB 阈值**，禁止入库：模型权重、CoF-DATA、视频语料。
-
-### 7.3 开放核对点（不编造）
+### 7.2 开放核对点（不编造）
 
 - SiLVR Table 1↔Table 2 的 CGBench/CinePile 列不一致 → 跟读以 Table 1 + 正文「CGBench 51.8%」为准。
 - CoF 摘要「Code available at GitHub」具体仓由 PDF 注解确认为 `SaraGhazanfari/CoF`；本篇不跟 commit。
@@ -249,4 +236,4 @@ return answer(Z, Q, F)
 
 ## 八、摘要（给议程回报表）
 
-**[[SiLVR与ChainOfFrames]]** 立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。硬划界 **≠[[音视频联合Flamingo]] / ≠[[视频生成正式报告]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅补链不升主。三 PDF 均 <10MB，**以官方 HTTPS 外链为准**。
+**[[SiLVR与ChainOfFrames]]** 立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。硬划界 **≠[[音视频联合Flamingo]] / ≠[[视频生成正式报告]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅补链不升主。三 PDF **以官方 HTTPS 外链为准**。
