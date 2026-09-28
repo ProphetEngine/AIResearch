@@ -1,5 +1,5 @@
 ---
-title: "Graph RAG 增量：GraphRAG 经典 + EraRAG（相对 B6）"
+title: "Graph RAG 增量：GraphRAG 经典 + EraRAG（相对检索增强通史）"
 topic: 图谱检索GraphRAG
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -8,19 +8,18 @@ sources:
  - https://arxiv.org/abs/2404.16130
  - https://arxiv.org/abs/2506.20963
 arxiv: ["2404.16130", "2506.20963"]
-related: ["B6", "智能体长程记忆", "MemoryR1强化学习记忆维护", "长上下文位置编码与系统侧"]
+related: ["检索增强与知识外挂", "智能体长程记忆", "MemoryR1强化学习记忆维护", "长上下文位置编码与系统侧"]
 archived: 2026-09-22
 ---
 
-# Graph RAG 增量：GraphRAG 经典 + EraRAG（相对 B6）
+# Graph RAG 增量：GraphRAG 经典 + EraRAG（相对检索增强通史）
 
-> **定位**：[[图谱检索GraphRAG]] P1——相对 `B6` 的 **图谱社区摘要查询 + 语料增长时的增量索引** 专篇。B6 已立 Lewis 式「检索–生成 / 稠密向量索引 / 热换整库」主轴；本篇只补两块缺口：**(1) Microsoft GraphRAG**——实体图谱 → Leiden 社区 → 社区摘要 → map-reduce 全局问答（面向 *global sensemaking*）；**(2) EraRAG**——超平面 LSH 多层图 + **选择性重分段/重摘要**，避免每次增量全量重建。
+> **定位**：相对 [[检索增强与知识外挂]] 的 **图谱社区摘要查询 + 语料增长时的增量索引** 专篇。[[检索增强与知识外挂]] 已立 Lewis 式「检索–生成 / 稠密向量索引 / 热换整库」主轴；本篇只补两块缺口：**(1) Microsoft GraphRAG**——实体图谱 → Leiden 社区 → 社区摘要 → map-reduce 全局问答（面向 *global sensemaking*）；**(2) EraRAG**——超平面 LSH 多层图 + **选择性重分段/重摘要**，避免每次增量全量重建。
 > **攻坚线**：**架构思想（主）**——社区层次摘要与全局 map-reduce；**AI Infra（辅）**——增长语料下的局部更新复杂度与 token/时间开销。
-> **硬划界（禁止重写）**：
-> - **禁止重写** `B6` 的稠密检索 / DPR 双塔 / MIPS / 重排通史、RAG-Token vs RAG-Sequence、向量库产品对照。本篇只用「**向量 RAG 对全局主题问句失败**」这一对照槽位。
-> - **禁止重写** [[长上下文位置编码与系统侧]] 长上下文窗口外推；本篇是 **库外图索引**，不是把整库塞进上下文。
-> - **禁止重写** [[智能体长程记忆]] MemGPT / A-Mem 分层记忆全文；与 [[MemoryR1强化学习记忆维护]] Memory-R1 并列互补（结构图索引 vs RL 维护记忆银行），本篇不写 ADD/UPDATE/DELETE 策略。
-> **禁止编造**：机制、表数字、win rate、复杂度一律锚定官方 PDF（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。
+> **范围与相邻笔记**：
+> - **不重写** [[检索增强与知识外挂]] 的稠密检索 / DPR 双塔 / MIPS / 重排通史、RAG-Token vs RAG-Sequence、向量库产品对照。本篇只用「**向量 RAG 对全局主题问句失败**」这一对照槽位。
+> - **不重写** [[长上下文位置编码与系统侧]] 长上下文窗口外推；本篇是 **库外图索引**，不是把整库塞进上下文。
+> - **不重写** [[智能体长程记忆]] MemGPT / A-Mem 分层记忆全文；与 [[MemoryR1强化学习记忆维护]] Memory-R1 并列互补（结构图索引 vs RL 维护记忆银行），本篇不写 ADD/UPDATE/DELETE 策略。
 
 ---
 
@@ -38,21 +37,21 @@ archived: 2026-09-22
 
 ---
 
-## 二、议题边界：相对 B6 只取接口
+## 二、议题边界：相对 [[检索增强与知识外挂]] 只取接口
 
 ### 2.1 相对已入库只取接口
 
 | 已入库 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **B6 Lewis RAG** | 「库外非参数记忆 + 条件生成」；向量 RAG 擅长 **局部可定位** 事实问 | DPR/MIPS 细节、RAG-Token/Sequence、稠密–稀疏混合、rerank 级联通史 |
-| **B6「Graph RAG 名录待核实」** | 本篇用两篇一手 PDF **填上**该待核实槽 | 不另编造产品清单或未核论文 |
+| **[[检索增强与知识外挂]] Lewis RAG** | 「库外非参数记忆 + 条件生成」；向量 RAG 擅长 **局部可定位** 事实问 | DPR/MIPS 细节、RAG-Token/Sequence、稠密–稀疏混合、rerank 级联通史 |
+| **[[检索增强与知识外挂]]「Graph RAG 名录待核实」** | 本篇用两篇一手 PDF **填上**该待核实槽 | 不另列产品清单或未核论文 |
 | **[[长上下文位置编码与系统侧]] 长上下文** | 窗口装不下整库 → 需要外挂 | YaRN / 稀疏注意力 / lost-in-middle |
 | **[[智能体长程记忆]] / [[MemoryR1强化学习记忆维护]]** | 「结构记忆要可维护」的工程直觉 | MemGPT 分页、Memory-R1 动作空间 |
 
 ### 2.2 问题立轴（跟读）
 
 `
-B6 向量 RAG：query → top-k 相似块 → 生成
+[[检索增强与知识外挂]] 向量 RAG：query → top-k 相似块 → 生成
  ✗ 对「整库主旨 / 趋势 / 主题」类问句：没有「该检索哪几块」的局部锚点
 
 GraphRAG： 文档 → 实体/关系图 → Leiden 社区层次 → 预生成社区摘要
@@ -117,7 +116,7 @@ Source Documents
 
 ### 3.4 评测设计：自适应全局问句 + LLM-as-judge（§3.2–3.3）
 
-- **问句生成（Algorithm 1）**：由语料用途描述 → $K$ 用户画像 → 每用户 $N$ 任务 → 每 (用户,任务) $M$ 条 **需整库理解、勿依赖低层事实检索** 的问句。评测取 $K=M=N=5$ → **每库 125** 题。
+- **问句生成（Algorithm 1）**：由语料用途描述 → $K$ 用户画像 → 每用户 $N$ 任务 → 每 (用户,任务) $M$ 条 **需整库理解、不依赖低层事实检索** 的问句。评测取 $K=M=N=5$ → **每库 125** 题。
 - **判据**：Comprehensiveness（覆盖面细节）、Diversity（视角丰富）、Empowerment（助读者知情判断）；另加对照 **Directness**（向量 RAG 理应更「直给」）。
 - **数据**：约 **百万 token** 量级——Podcast（Behind the Tech，~1M tokens）、News（2013-09 起新闻，~1.7M tokens）。
 - **配置**：社区摘要/社区答/全局答上下文 **8k**；索引抽取窗 **600** token；Podcast 索引约 **281 min**（16GB VM + gpt-4-turbo 公网端点）。图谱规模：Podcast **8,564** 节点 / **20,691** 边；News **15,754** / **19,520**。
@@ -143,7 +142,7 @@ Source Documents
 ### 3.6 对 Infra 的直接含义（不写向量库通史）
 
 - **预计算贵、查询可分层选成本**：索引一次性 LLM 抽取 + 全社区摘要；查询可走 C0「极省」或 C3「更细」。
-- **与 B6「热换整库」不同**：GraphRAG 论文主线是 **静态语料上的全局 QFS**；语料持续增长时，实体图与社区摘要如何增量维护——**正是 EraRAG 切口**（见下节）。文内未给出与 EraRAG 同设定的增量协议，勿把 GraphRAG 写成已解决动态重建。
+- **与 [[检索增强与知识外挂]]「热换整库」不同**：GraphRAG 论文主线是 **静态语料上的全局 QFS**；语料持续增长时，实体图与社区摘要如何增量维护——**正是 EraRAG 切口**（见下节）。文内未给出与 EraRAG 同设定的增量协议，GraphRAG 并未解决动态重建。
 
 ---
 
@@ -219,7 +218,7 @@ $T_{\mathrm{build}}=O\big(|C|(nd+S_{\mathrm{LLM}})\big)$（几何级数层衰减
 
 **初始覆盖（Table IV，MultihopQA）**：初始 0%→100% 再建完增量后——Accuracy 约 **41.3 → 62.9**，Recall **13.9 → 42.9**；文建议 **50–70%** 初始覆盖作性能与灵活性折中（Accuracy 在约 50% 后趋于饱和）。
 
-**抽象问句（Table III，LLM win rate）**：相对 GraphRAG / RAPTOR，在 UltraDomain（Mix/CS/Legal）与 MultihopSum 上综合 Overall 多在 **46–55%** 区间互有胜负；文称多数设定综合更优——按表逐格读，勿夸成全面碾压（例如 vs GraphRAG 的 Legal Overall **42%**）。
+**抽象问句（Table III，LLM win rate）**：相对 GraphRAG / RAPTOR，在 UltraDomain（Mix/CS/Legal）与 MultihopSum 上综合 Overall 多在 **46–55%** 区间互有胜负；文称多数设定综合更优——按表逐格看并非全面碾压（例如 vs GraphRAG 的 Legal Overall **42%**）。
 
 ---
 
@@ -232,36 +231,24 @@ $T_{\mathrm{build}}=O\big(|C|(nd+S_{\mathrm{LLM}})\big)$（几何级数层衰减
 | 查询形态 | **社区摘要 map-reduce**（可按 C0–C3 选粒度） | **Collapsed** 扁平 top-$k$（叶块+各层摘要） |
 | 擅长问题 | **全局 sensemaking / QFS**（百万 token 库主题） | 多跳/开放域 QA + **语料持续增长** |
 | 更新模型 | 论文主线 **静态索引**；增长场景重建成本留给后续 | **Algorithm 3** 局部 split/merge + 向上重摘要；$T_{\mathrm{update}}=O(\Delta(nd+S_{\mathrm{LLM}}))$ |
-| 与 B6 关系 | 打补丁：「向量 top-k 不够用时的全局层」 | 打补丁：「图索引运维不能每次全量重建」 |
+| 与 [[检索增强与知识外挂]] 关系 | 打补丁：「向量 top-k 不够用时的全局层」 | 打补丁：「图索引运维不能每次全量重建」 |
 
 **跟读口诀：**
-B6 解决「事实在库外、可热换向量索引」；
+[[检索增强与知识外挂]] 解决「事实在库外、可热换向量索引」；
 GraphRAG 解决「问题指向整库主题时，用社区摘要做全局 QFS」；
 EraRAG 解决「图索引要跟着语料长，更新必须局部化」。
 
 ---
 
-## 六、开放问题 / 待核实
+## 六、局限与待核实
 
 1. GraphRAG 开源仓库相对论文 v2 的默认管线（实体类型、claim 开关、社区层级默认）——以 GitHub 当前 README 为准，**本笔记不跟踪 commit**。
 2. Fig.2 / Fig.4 / Fig.5 / Fig.6 曲线上的精确坐标：正文已给数量级与百分比处已录入；其余标 **待核实读图**。
 3. EraRAG「95%」来自 Abstract/Fig.1 宣传句；与正文「order of magnitude / 57.6% token / 77.5% time / 两数量级 vs GraphRAG」并存——引用时区分 **摘要口号 vs 具体表/节数字**。
-4. LightRAG 等「可动态加文档」声明与 EraRAG 高频更新消耗批评的边界——未展开第三方复现，不编造排名。
+4. LightRAG 等「可动态加文档」声明与 EraRAG 高频更新消耗批评的边界——未展开第三方复现。
 5. 与 [[MemoryR1强化学习记忆维护]] Memory-R1：图索引选择性更新 vs RL 维护记忆条目——交叉实验 **待后续专篇**，本篇不合并。
 
 ---
-
-## 七、可跟读检查清单
-
-- [ ] 能用自己的话区分：**向量 RAG（SS）** vs **社区摘要 map-reduce（C0–C3）** vs **无图源文本 map-reduce（TS）**
-- [ ] 能说出 Leiden 社区摘要的叶层 / 高层填窗策略（度排序 vs 子摘要替换）
-- [ ] 能默写 EraRAG 增量三件套：**固定超平面**、**$S_{\min}/S_{\max}$**、**受影响段向上重摘要**
-- [ ] 能解释为何 Theorem 4 是 $O(\Delta(\cdot))$ 而不是 $O(|C|)$ 全量
-- [ ] 不把本篇写成 B6 稠密检索/重排复习课
-
----
-
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22 16:58 CST（Asia/Shanghai）· status: draft · 据官方 PDF；禁止重写 B6 向量 RAG 通史；禁止编造未核数字*
 
 ## 相关笔记
 

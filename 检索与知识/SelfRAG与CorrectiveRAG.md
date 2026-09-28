@@ -1,5 +1,5 @@
 ---
-title: "RAG 2.0 变体：Self-RAG + Corrective RAG（相对 B6 / ≠ 8）"
+title: "RAG 2.0 变体：Self-RAG + Corrective RAG（相对检索增强通史）"
 topic: SelfRAG与CorrectiveRAG
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -8,22 +8,21 @@ sources:
  - https://arxiv.org/abs/2310.11511
  - https://arxiv.org/abs/2401.15884
 arxiv: ["2310.11511", "2401.15884"]
-related: ["B6", "图谱检索GraphRAG", "智能体工具与长程任务", "长上下文位置编码与系统侧"]
+related: ["检索增强与知识外挂", "图谱检索GraphRAG", "智能体工具与长程任务", "长上下文位置编码与系统侧"]
 code:
  - https://github.com/AkariAsai/self-rag
  - https://github.com/HuskyInSalt/CRAG
 archived: 2026-09-22
 ---
 
-# RAG 2.0 变体：Self-RAG + Corrective RAG（相对 B6 / ≠ 8）
+# RAG 2.0 变体：Self-RAG + Corrective RAG（相对检索增强通史）
 
-> **定位**：[[SelfRAG与CorrectiveRAG]] **P1**——相对 `B6`（Lewis 检索–生成通史）与 [[图谱检索GraphRAG]]（GraphRAG 社区摘要 + EraRAG 增量索引）的 **两条 agentic RAG 机制线**：**检索必要性自省（Self-RAG）** 与 **检索结果纠错 / 回退 Web（CRAG）**。
+> **定位**：相对 [[检索增强与知识外挂]]（Lewis 检索–生成通史）与 [[图谱检索GraphRAG]]（GraphRAG 社区摘要 + EraRAG 增量索引）的 **两条 agentic RAG 机制线**：**检索必要性自省（Self-RAG）** 与 **检索结果纠错 / 回退 Web（CRAG）**。
 > **攻坚线**：**架构思想（主）**——reflection tokens / 三动作触发；**评测字段（辅）**——幻觉/接地（FactScore、citation prec/rec、短答 accuracy）。
-> **硬划界（禁止重写）**：
-> - **禁止重写** `B6` 的稠密检索 / DPR 双塔 / MIPS / RAG-Token vs RAG-Sequence / 向量库产品对照。本篇只用「**固定 top-K 无差别塞入**」这一对照槽。
-> - **禁止重写** [[图谱检索GraphRAG]] 的实体图谱 → Leiden 社区摘要 → map-reduce，或 EraRAG 增量重建。本篇 **不是** 图索引。
-> - **禁止重写** [[长上下文位置编码与系统侧]] 长上下文窗口外推；本篇仍是 **库外检索环**，只改「何时取 / 取到坏结果怎么办」。
-> **禁止编造**：机制、表数字一律锚定官方 PDF（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。
+> **范围与相邻笔记**：
+> - **不重写** [[检索增强与知识外挂]] 的稠密检索 / DPR 双塔 / MIPS / RAG-Token vs RAG-Sequence / 向量库产品对照。本篇只用「**固定 top-K 无差别塞入**」这一对照槽。
+> - **不重写** [[图谱检索GraphRAG]] 的实体图谱 → Leiden 社区摘要 → map-reduce，或 EraRAG 增量重建。本篇 **不是** 图索引。
+> - **不重写** [[长上下文位置编码与系统侧]] 长上下文窗口外推；本篇仍是 **库外检索环**，只改「何时取 / 取到坏结果怎么办」。
 
 ---
 
@@ -41,14 +40,14 @@ archived: 2026-09-22
 
 ---
 
-## 二、议题边界：相对 B6 / [[图谱检索GraphRAG]] 只取接口
+## 二、议题边界：相对 [[检索增强与知识外挂]] / [[图谱检索GraphRAG]] 只取接口
 
 ### 2.1 相对已入库只取接口
 
 | 已入库 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **B6 Lewis RAG** | 「库外非参数记忆 + 条件生成」；固定 top-K 可能塞入无关段落 | DPR/MIPS 细节、RAG-Token/Sequence、稠密–稀疏混合、向量库选型通史 |
-| **B6「Agentic RAG 名录待核实」** | 本篇用两篇一手 PDF **填上**「自省检索」与「纠错回退」两槽 | 不另编造产品清单或未核论文 |
+| **[[检索增强与知识外挂]] Lewis RAG** | 「库外非参数记忆 + 条件生成」；固定 top-K 可能塞入无关段落 | DPR/MIPS 细节、RAG-Token/Sequence、稠密–稀疏混合、向量库选型通史 |
+| **[[检索增强与知识外挂]]「Agentic RAG 名录待核实」** | 本篇用两篇一手 PDF **填上**「自省检索」与「纠错回退」两槽 | 不另列产品清单或未核论文 |
 | **[[图谱检索GraphRAG]] GraphRAG / EraRAG** | 「检索失败模式可换路线」的相邻直觉一句 | 社区摘要、Leiden、LSH 增量重建 |
 | **[[长上下文位置编码与系统侧]] 长上下文** | 窗口装不下整库 → 需要外挂环 | YaRN / 稀疏注意力 / lost-in-middle |
 | **[[智能体工具与长程任务]] 工具环** | 「何时调用外部知识源」可对照 | MCP / 长程 harness 全文 |
@@ -56,7 +55,7 @@ archived: 2026-09-22
 ### 2.2 问题立轴（跟读）
 
 `
-B6 向量 RAG： 永远 retrieve top-K → 整段塞进生成器
+[[检索增强与知识外挂]] 向量 RAG： 永远 retrieve top-K → 整段塞进生成器
  ✗ 检索未必需要；✗ top-K 可能全错 / 噪声大；✗ 模型未训「跟证据走」
 
 Self-RAG： 每段先预测 Retrieve ∈ {yes,no,continue}
@@ -232,7 +231,7 @@ CRAG 文内自述：相关工作多在问「要不要检索 / 怎么当工具用
 | Self-RAG*（作者复现） | 29.0 | 32.2 | 0.7 | 23.9 |
 | Self-CRAG | 49.0 | 69.1 | 0.6 | 27.9 |
 
-文内解释：Self-RAG **依赖** reflection-token 指令微调；换到普通 hf-7b 时能力坍塌，而 CRAG **不要求**该能力，换生成器更灵活。\* 行为作者复现，与官方 Self-RAG-7B 表数字不同——跟读时 **分栏，勿混用**。
+文内解释：Self-RAG **依赖** reflection-token 指令微调；换到普通 hf-7b 时能力坍塌，而 CRAG **不要求**该能力，换生成器更灵活。\* 行为作者复现，与官方 Self-RAG-7B 表数字不同——对照时 **分栏，不混用**。
 
 ### 4.7 消融（Table 2 / 3，PopQA acc）
 
@@ -271,11 +270,11 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 | 库内 miss / 过时 | 实验侧可加 Web top-5，但不是纠错机 | **Incorrect → Web** 显式纠错 |
 | 换底座 LM | 需再训 / 蒸馏 reflection | 评估器独立，生成器可换 |
 
-**与 B6 / [[图谱检索GraphRAG]] 的最终划界一句：** B6 回答「为何外挂索引」；[[图谱检索GraphRAG]] 回答「全局主题问句与增长语料怎么建图索引」；本篇回答「**环上的控制流**——何时取、取坏了怎么纠」。
+**与 [[检索增强与知识外挂]] / [[图谱检索GraphRAG]] 的最终划界一句：** [[检索增强与知识外挂]] 回答「为何外挂索引」；[[图谱检索GraphRAG]] 回答「全局主题问句与增长语料怎么建图索引」；本篇回答「**环上的控制流**——何时取、取坏了怎么纠」。
 
 ---
 
-## 六、误区（跟读时主动避开）
+## 六、误区
 
 1. **「Self-RAG = 普通 RAG + 多检几篇」**
  关键是 **同一 LM 学会发 Retrieve/Critique 特殊 token**，并能在推理期改权重/硬过滤。
@@ -287,10 +286,10 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
  两文都仍依赖检索器质量、评估器阈值与 Web 噪声；CRAG 明确警告大规模 Web 可引入偏置。
 
 4. **「Incorrect 就是再 embedding 一次同一库」**
- 文内 Incorrect 是 **丢弃当前检索** 并 **改写后搜 Web**，不是同库重排通史（重排通史归 B6，本篇不写）。
+ 文内 Incorrect 是 **丢弃当前检索** 并 **改写后搜 Web**，不是同库重排通史（重排通史归 [[检索增强与知识外挂]]，本篇不写）。
 
 5. **「本篇该写 FAISS / 向量库选型 / 社区摘要」**
- **禁止**——分别归 B6 / [[图谱检索GraphRAG]]。
+ 不写——分别归 [[检索增强与知识外挂]] / [[图谱检索GraphRAG]]。
 
 6. **「把 CRAG Table 1 的 Self-RAG*（hf-7b 复现）当成官方 Self-RAG-7B」**
  分栏：官方 54.9/81.2/72.4/67.3；\* 复现 29.0/32.2/0.7/23.9。
@@ -300,13 +299,13 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 
 ---
 
-## 七、待核实
+## 七、局限与待核实
 
 1. Self-RAG 后续正式发表版本（若有 ICLR 相机稿）与 **v1 Preprint** 数字差异——本笔记锚定 `2310.11511v1` PDF。
 2. Self-RAG 消融图（检索频率–准确率、权重–citation/MAUVE）的精确点值：未可靠读图。
 3. CRAG 评估器上下阈值的具体数值、Google API 调用限额：正文 Algorithm 只给逻辑，细参见 Appendix（本卡未逐条抄附录超参表）。
 4. CRAG §5.5 ChatGPT-as-evaluator 的完整数字表。
-5. 与当代商业「agentic RAG」编排产品的一一对应——禁止编造；仅保留机制接口。
+5. 与当代商业「agentic RAG」编排产品的一一对应——本卡仅保留机制接口。
 
 ---
 
@@ -324,15 +323,15 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 
 ### 8.2 划界与交叉（已有笔记）
 
-- 经典 RAG / 知识外挂：检索与知识/检索增强与知识外挂.md
-- GraphRAG + 增量索引：检索与知识/图谱检索GraphRAG.md
-- 长上下文：架构/注意力与长上下文/长上下文位置编码与系统侧.md
-- 智能体工具环：Harness/智能体与工具/智能体工具与长程任务.md
+- 经典 RAG / 知识外挂：[[检索增强与知识外挂]]
+- GraphRAG + 增量索引：[[图谱检索GraphRAG]]
+- 长上下文：[[长上下文位置编码与系统侧]]
+- 智能体工具环：[[智能体工具与长程任务]]
 - [[MOC_检索与知识]]
 
 ### 8.3 文中点到、未全文深读
 
-- Lewis et al., RAG，arXiv:2005.11401（→ B6）
+- Lewis et al., RAG，arXiv:2005.11401（→ [[检索增强与知识外挂]]）
 - Contriever / Izacard et al.；FactScore（Min et al.）；ALCE-ASQA（Gao et al.）
 - SAIL、Toolformer、Active RAG（Jiang et al.）——仅作相关工作坐标
 
@@ -340,11 +339,9 @@ w/o refinement 54.2；w/o rewriting 56.2；w/o selection 58.6 → 精炼与改�
 
 ## 九、一句话收束
 
-**Self-RAG** 把「要不要检索、证据是否相关/是否支持、回答是否有用」收成可推理期调控的 **reflection tokens**；**CRAG** 在检索已发生后用轻量评估器触发 **精炼 / Web 纠错 / 双源混合**，并可插到标准 RAG 或 Self-RAG 上。二者相对 B6 补的是 **控制流与鲁棒性**，相对 [[图谱检索GraphRAG]] 补的是 **非图索引的 agentic 环**——不是向量库通史，也不是社区摘要。
+**Self-RAG** 把「要不要检索、证据是否相关/是否支持、回答是否有用」收成可推理期调控的 **reflection tokens**；**CRAG** 在检索已发生后用轻量评估器触发 **精炼 / Web 纠错 / 双源混合**，并可插到标准 RAG 或 Self-RAG 上。二者相对 [[检索增强与知识外挂]] 补的是 **控制流与鲁棒性**，相对 [[图谱检索GraphRAG]] 补的是 **非图索引的 agentic 环**——不是向量库通史，也不是社区摘要。
 
 ---
-
-*起草：AI研究会·攻坚研究员执行助手 · 2026-09-22 17:15 CST（Asia/Shanghai）· status: draft · 据官方 PDF；禁止编造；≠ B6 向量通史 / ≠ [[图谱检索GraphRAG]] 图谱社区摘要*
 
 ## 相关笔记
 

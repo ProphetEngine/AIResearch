@@ -16,14 +16,14 @@ archived: 2026-09-24
 
 # Agentic RAG：分层检索接口（A-RAG）
 
-> **定位**：Agentic RAG / A-RAG——在 [[检索增强与知识外挂]]（B6）稠密检索通史、[[SelfRAG与CorrectiveRAG]] 自省与纠错、[[HippoRAG2与CatRAG]] 记忆式图检索之后，补近窗一刀：**把多粒度检索暴露成 agent 工具**，并考察 **test-time 扩展**。
+> **定位**：Agentic RAG / A-RAG——在 [[检索增强与知识外挂]]稠密检索通史、[[SelfRAG与CorrectiveRAG]] 自省与纠错、[[HippoRAG2与CatRAG]] 记忆式图检索之后，补近窗一刀：**把多粒度检索暴露成 agent 工具**，并考察 **test-time 扩展**。
 > **攻坚线**：**架构思想（主）**——`keyword_search` / `semantic_search` / `chunk_read` 分层接口 + 最简 ReAct 环；**评测字段（辅）**——LLM-Acc / Contain-Acc、检索 token 数、max-step 与 reasoning effort 扩展。
-> **硬划界**：
+> **范围与相邻笔记**：
 > - **≠ [[SelfRAG与CorrectiveRAG]]**：不写 reflection tokens、Correct/Incorrect/Ambiguous 三动作、Web 回退；本文是 **工具接口自主编排**，不是「要不要检索 / 检索坏了怎么办」的固定策略机。
 > - **≠ [[HippoRAG2与CatRAG]]**：不写 OpenIE+PPR、查询自适应边权；本文 **不做图索引算法**，关键词层甚至不做离线倒排。
 > - **≠ [[图谱检索GraphRAG]]**：不写 Leiden 社区摘要与 map-reduce QFS。
 > - **≠ Harness 工具环通史**：不写 MCP / 长程 harness / 生产 Memory API；对象是 **语料库上的检索工具面**。
-> **禁止编造**：机制与表数字一律锚定 arXiv:2602.03442v1（跟读 2026-09-24 CST）。图内未抽出的精确曲线点标 **待核实读图**。
+> **主要来源**：[arXiv:2602.03442v1](https://arxiv.org/abs/2602.03442)（2026-09-24 CST）。
 
 ---
 

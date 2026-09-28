@@ -13,7 +13,7 @@ sources:
 
 # B · MiMo-V2.6：Scaling RL Towards Self-Improvement（Agentic RL）
 
-> **跟读定位**：一页卡，只锁 **RL batch / agentic grader / multi-harness / 开源环境清单**。数字与机制均出自官博与技术报告；**禁编造**。
+> **跟读定位**：一页卡，只锁 **RL batch / agentic grader / multi-harness / 开源环境清单**。数字与机制均出自官博与技术报告。
 
 ## 一句话
 
@@ -76,7 +76,7 @@ MiMo-V2.6 把 Agentic RL 写成「算力三维放大」：**更大 batch + 更�
 2. **Multi-harness 作为一等公民**：用可控 mini-harness 换跨框架泛化，held-out 生产 harness 同步涨——比「只在自家脚手架上刷分」更接近真实部署。
 3. **开源包可复现小规模闭环**：7k 环境 + Distill-9B + RL 代码，让社区验证「同一配方是否在小模型上也涨」，而不必复刻万卡主 run。
 
-## 关键结果锚点（勿外推为全面 SOTA）
+## 关键结果锚点（不宜外推为全面 SOTA）
 
 - DeepSWE v1.1 avg@3：Pro **58.4→72.6**，Flash **48.7→65.7**（§4.1；官博 Flash 起分写 48.8，以报告为准并注明偏差）。
 - 主 run 分数上涨常伴随 **total tokens 上升**（Fig.9）；GAR 消融显示的是「相对无 grader」更克制，不是全局一定更短。

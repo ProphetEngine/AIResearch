@@ -15,15 +15,15 @@ archived: 2026-09-22
 
 # Formal verification for LLM：VeriCoT + AlphaProof
 
-> **定位**：[[形式化验证与LLM]] P0——相对 `[[过程奖励模型PRM谱系]]`（PRM 过程奖励）与 `[[GRPO与DAPO算法族]]` / R1（可验证奖励 RL），本篇只补 **符号 / 证明器接地的正确性保证** 枢纽：
+> **定位**：相对 `[[过程奖励模型PRM谱系]]`（PRM 过程奖励）与 `[[GRPO与DAPO算法族]]` / R1（可验证奖励 RL），本篇只补 **符号 / 证明器接地的正确性保证** 枢纽：
 > - **VeriCoT**：非数学域 NL CoT → FOL（SMT-LIB）+ Z3 逐步蕴涵/矛盾检查；
 > - **AlphaProof**：Lean 交互证明环境上的 AlphaZero 式 RL + 测试时 RL（TTRL）。
 > **攻坚线**：**架构思想（主）**——谁在仿什么、校验器接在哪；**数学原理（辅）**——FOL 蕴涵判定与 Lean 证明搜索里的状态/回报。
-> **硬划界（禁止重写）**：
-> - **禁止重写** `[[过程奖励模型PRM谱系]]` 的 PRM 标注流水线 / ORM vs PRM 谱系 / Math-Shepherd 自动逐步标签（本篇不写「逐步奖励模型怎么训」）。
-> - **禁止重写** `[[GRPO与DAPO算法族]]` 的 GRPO→DAPO 技巧清单，以及 [[DeepSeekR1推理训练深读]] 的 **R1 阶段表** / 规则奖励通史。
-> - **禁止重写** `[[推理时扩展TestTimeScaling]]` TTS 通史；AlphaProof 的 tree-search / TTRL 只作 **形式证明侧** 的 inference scaling，不串 o1/R1 产品叙事。
-> **禁止编造**：公式、表数字、算力预算一律锚定官方 PDF（2026-09-22 CST）。VeriCoT 备链作者页 PDF 未另采；Nature 文以 `https://doi.org/10.1038/s41586-025-09833-y` 为准。
+> **范围与相邻笔记**：
+> - **不重写** `[[过程奖励模型PRM谱系]]` 的 PRM 标注流水线 / ORM vs PRM 谱系 / Math-Shepherd 自动逐步标签（本篇不写「逐步奖励模型怎么训」）。
+> - **不重写** `[[GRPO与DAPO算法族]]` 的 GRPO→DAPO 技巧清单，以及 [[DeepSeekR1推理训练深读]] 的 **R1 阶段表** / 规则奖励通史。
+> - **不重写** `[[推理时扩展TestTimeScaling]]` TTS 通史；AlphaProof 的 tree-search / TTRL 只作 **形式证明侧** 的 inference scaling，不串 o1/R1 产品叙事。
+> **主要来源**：官方 PDF 与 Nature 文 [doi:10.1038/s41586-025-09833-y](https://doi.org/10.1038/s41586-025-09833-y)（2026-09-22 CST）；VeriCoT 作者页 PDF 未另采。
 
 ---
 
@@ -34,7 +34,7 @@ archived: 2026-09-22
 | **主文 A** | Feng, Weir, Bostrom et al., *VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks* | arXiv:**2511.04662v1** \[cs.AI\] **6 Nov 2025**；`https://arxiv.org/abs/2511.04662`（**37** 页 letter；UPenn + AWS） | NL CoT → FOL/SMT-LIB；Z3 校验；自反思 / SFT / DPO |
 | **主文 B** | Hubert, Mehta, Sartran et al. (Google DeepMind), *Olympiad-level formal mathematical reasoning with reinforcement learning* | Nature **Vol 651** \| **19 March 2026** pp.607–…；doi:**10.1038/s41586-025-09833-y**；Received 3 Jun 2025 / Accepted 30 Oct 2025 / Published online **12 Nov 2025**；`https://doi.org/10.1038/s41586-025-09833-y`（**25** 页；CreationDate **2026-03-17** CST） | Lean 环境 RL；auto-formalization 课程；TTRL；IMO 2024 |
 
-**备链（议程）：** VeriCoT 作者页 https://benjaminkiesl.github.io/publications/vericot_feng_et_al.pdf（本笔记主采 arXiv PDF，未另核镜像字节差）。
+**备链：** VeriCoT 作者页 https://benjaminkiesl.github.io/publications/vericot_feng_et_al.pdf（本笔记主采 arXiv PDF，未另核镜像字节差）。
 
 **一句话抓手：** 两文都用 **外部形式系统** 给 LLM 推理「落地」——VeriCoT 把开放域 CoT 钉到 **Z3 可判定的 FOL 片段** 并显式列出 NL 前提；AlphaProof 把证明过程钉到 **Lean 内核可验证的 tactic 轨迹**，用 RL 在百万级形式题上自学。相对 PRM（学一个打分器）与 outcome RLVR（终答 checker），这里的信号来自 **证明器/求解器**，不是另一套神经判别。
 
@@ -255,7 +255,7 @@ TTRL 后 formal-imo 分科（主文）：数论 **75.7%**、代数 **72.6%**、�
 
 ---
 
-## 六、可复查锚点（防编造）
+## 六、可复查锚点
 
 | 主张 | 锚 |
 |---|---|

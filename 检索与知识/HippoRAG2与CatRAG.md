@@ -19,15 +19,14 @@ timezone: Asia/Shanghai (CST)
 
 # RAG→记忆新范式：HippoRAG 2 + CatRAG（≠ GraphRAG / Self-RAG）
 
-> **定位**：[[HippoRAG2与CatRAG]] **P0 RAG / 记忆检索**——在 B6 稠密检索通史、[[图谱检索GraphRAG]] 社区摘要 GraphRAG、[[SelfRAG与CorrectiveRAG]] Self-RAG/CRAG 自适应检索之后，补近窗两刀：**HippoRAG 2**（把 RAG 推向**非参数长期记忆**的事实 / 联想 / 通感三维评测）与 **CatRAG**（在 HippoRAG 2 图上解决「静态图谬误 / hub 漂移」，做**查询自适应遍历**）。
-> **攻坚线**：**架构思想（主）**——OpenIE+PPR 记忆索引、dense-sparse、recognition memory、查询条件边权；**评测字段（辅）**——三轴记忆表 / FCR·JSR 完整性，禁外推未测场景。
-> **硬划界（开篇钉死）**：
-> - **≠ B6**：禁止重写稠密双塔 / DPR / MIPS / 向量库产品通史；本卡只用「标准向量 RAG 缺联想与通感」对照槽。
-> - **≠ [[图谱检索GraphRAG]]**：禁止把 HippoRAG 写成 **GraphRAG 重写**。GraphRAG = 实体图 → Leiden 社区 → **预计算摘要扩库** → map-reduce 全局 QFS；HippoRAG 2 文内自述：KG **辅助检索过程**，**不**用摘要去膨胀检索语料（§2.2）。
-> - **≠ [[SelfRAG与CorrectiveRAG]]**：禁止重写 Self-RAG reflection tokens / CRAG 三动作 Web 回退；CatRAG 文内把 Self-RAG 等标为**多轮迭代检索**，自称 **one-shot** 改权再单次 PPR（§2.3）。
-> - **≠ [[检索式注意力]]**：禁止重写 RetrievalAttention 式「模型内注意力检索」；本卡是**库外开放 KG + PPR**。
-> - **≠ [[Mem0与Zep生产级记忆]]**：禁止重写 Mem0 / Zep **生产对话记忆层** API；本卡是**文档语料上的检索图算法**，不是会话事实抽取–更新服务。
-> **禁止编造**：机制、表数字、消融一律锚定官方 PDF（2026-09-22 CST）。图内未抽出的精确曲线点标 **待核实读图**。
+> **定位**：**RAG / 记忆检索**——在 [[检索增强与知识外挂]] 稠密检索通史、[[图谱检索GraphRAG]] 社区摘要 GraphRAG、[[SelfRAG与CorrectiveRAG]] Self-RAG/CRAG 自适应检索之后，补近窗两刀：**HippoRAG 2**（把 RAG 推向**非参数长期记忆**的事实 / 联想 / 通感三维评测）与 **CatRAG**（在 HippoRAG 2 图上解决「静态图谬误 / hub 漂移」，做**查询自适应遍历**）。
+> **攻坚线**：**架构思想（主）**——OpenIE+PPR 记忆索引、dense-sparse、recognition memory、查询条件边权；**评测字段（辅）**——三轴记忆表 / FCR·JSR 完整性，不外推未测场景。
+> **范围与相邻笔记**：
+> - **≠ [[检索增强与知识外挂]]**：不重写稠密双塔 / DPR / MIPS / 向量库产品通史；本卡只用「标准向量 RAG 缺联想与通感」对照槽。
+> - **≠ [[图谱检索GraphRAG]]**：不把 HippoRAG 写成 **GraphRAG 重写**。GraphRAG = 实体图 → Leiden 社区 → **预计算摘要扩库** → map-reduce 全局 QFS；HippoRAG 2 文内自述：KG **辅助检索过程**，**不**用摘要去膨胀检索语料（§2.2）。
+> - **≠ [[SelfRAG与CorrectiveRAG]]**：不重写 Self-RAG reflection tokens / CRAG 三动作 Web 回退；CatRAG 文内把 Self-RAG 等标为**多轮迭代检索**，自称 **one-shot** 改权再单次 PPR（§2.3）。
+> - **≠ [[检索式注意力]]**：不重写 RetrievalAttention 式「模型内注意力检索」；本卡是**库外开放 KG + PPR**。
+> - **≠ [[Mem0与Zep生产级记忆]]**：不重写 Mem0 / Zep **生产对话记忆层** API；本卡是**文档语料上的检索图算法**，不是会话事实抽取–更新服务。
 
 ---
 
@@ -56,13 +55,13 @@ timezone: Asia/Shanghai (CST)
 
 | 已入库 | 本卡只取 | 本卡不写 |
 |---|---|---|
-| **B6** | 「向量 top-k 缺多跳联想」是两文共同对照槽 | 稠密双塔 / 向量库选型通史 |
+| **[[检索增强与知识外挂]]** | 「向量 top-k 缺多跳联想」是两文共同对照槽 | 稠密双塔 / 向量库选型通史 |
 | **[[图谱检索GraphRAG]]** | GraphRAG / RAPTOR / LightRAG 作为 HippoRAG 2 Table 2–3、CatRAG Table 2–3 **结构增强基线**；HippoRAG 2 §2.2 一句点明与 GraphRAG「摘要扩库」之别 | Leiden 社区摘要 + map-reduce 全局 QFS 全文；EraRAG 增量 LSH |
 | **[[SelfRAG与CorrectiveRAG]]** | CatRAG §2.3 把 Self-RAG / IRCoT 标为多轮迭代对照 | reflection tokens / Corrective 三动作 / Web 回退全文 |
 | **[[检索式注意力]]** | （无直接依赖）仅防混淆：都叫「检索」 | 注意力内核内检索 |
 | **[[Mem0与Zep生产级记忆]] / [[智能体长程记忆]]** | 「长期记忆」隐喻相邻；对象不同 | Mem0 四操作 tool-call、Zep Graphiti 时序 episode、MemGPT 分页 |
 
-### 2.2 本卡主轴 vs 禁区（防「GraphRAG 重写」）
+### 2.2 本卡主轴 vs 范围外（不写成 GraphRAG 重写）
 
 | 写 | 不写 |
 |---|---|
@@ -74,7 +73,7 @@ timezone: Asia/Shanghai (CST)
 跟读口诀：
 
 `
-B6 = 向量 RAG 通史
+[[检索增强与知识外挂]] = 向量 RAG 通史
 [[图谱检索GraphRAG]] = 文档 GraphRAG：摘要扩库 + 全局 QFS
 [[SelfRAG与CorrectiveRAG]] = 何时取 / 取坏了怎么办（自省·纠错）
 [[HippoRAG2与CatRAG]] = 记忆式开放 KG + PPR；再升级查询自适应遍历
@@ -174,7 +173,7 @@ B6 = 向量 RAG 通史
 
 数据：MuSiQue / 2Wiki / Hotpot 各 1,000（与 HippoRAG 子集协议）；**HoVer** 1,000 条 3–4 hop 声明（Table 1）。
 
-### 4.4 主结果（Table 2–4；数字取 arXiv 抽取）
+### 4.4 主结果（Table 2–4）
 
 **Table 2 · Recall@5：**
 
@@ -205,7 +204,7 @@ Hub 量化（100 条 MuSiQue 抽样）：Mean PPR-Weighted Strength **837.0→76
 
 - 动态边权需运行时 LLM → 延迟/费用高于纯静态 PPR。
 - 实验刻意用较小 embedding，**绝对上限**可能被更大 encoder 抬高（非本卡可外推）。
-- **完整源码因专有政策未公开**；公开 GitHub 为后续**复现实现**（README 2026-08-20）——笔记索引代码时两者并存、勿混称为「论文官方全量开源」。
+- **完整源码因专有政策未公开**；公开 GitHub 为后续**复现实现**（README 2026-08-20）——笔记索引代码时两者并存、不宜混称为「论文官方全量开源」。
 
 ---
 
@@ -225,22 +224,10 @@ Hub 量化（100 条 MuSiQue 抽样）：Mean PPR-Weighted Strength **837.0→76
 
 ---
 
-## 六、可复核清单与已知缺口
+## 六、局限与待核实
 
-**可复核：**
-1. 页数：**19 / 13 / 15**；ACL 页码 **5849–5863**。
-2. HippoRAG 2 Table 2/3/4、CatRAG Table 2/3/4/5 与官方 PDF 一致。
-3. 划界句可回链：HippoRAG 2 §2.2「aid in the retrieval process rather than to expand the retrieval corpus」；CatRAG §2.3 one-shot vs Self-RAG 迭代。
-
-**缺口 / 勿编造：**
-- HippoRAG 2 Fig.3 折线具体点坐标未从文本抽出 → 只保留文内定性。
-- 两文主表 **embedding 栈不同**（NV-Embed-v2 vs text-embedding-3-small），**禁止**把 CatRAG 表内 HippoRAG 2 分数与 HippoRAG 2 原文 Table 3 直接纵向比绝对召回。
-- CatRAG 论文「源码未全公开」与 GitHub「复现实现」并存；本卡不臆测二者 diff。
-- 禁止把 Mem0/Zep 的 LOCOMO/LongMemEval、Memory-R1 的 RL 增益写进本卡能力。
-- 禁止把 HippoRAG 2 叙事改写成 GraphRAG 社区摘要变体。
-
----
-
-## 七、与 Wave10 agenda 的对齐句
-
-Agenda [[HippoRAG2与CatRAG]]：「B6 立稠密检索；[[图谱检索GraphRAG]] 立社区摘要 GraphRAG；[[SelfRAG与CorrectiveRAG]] 立 Self-RAG/CRAG。近窗 **HippoRAG 2** 推向非参数长期记忆（事实/联想/通感）；**CatRAG** 针对静态图 hub 漂移做查询自适应边权与锚定。划界 ≠B6/[[图谱检索GraphRAG]]/[[SelfRAG与CorrectiveRAG]]/[[检索式注意力]]/[[Mem0与Zep生产级记忆]]；禁止写成 GraphRAG 重写。」本卡交付即该缺口：ACL Findings 近重复仅留 URL，开篇划界钉死，评测字段锚定 PDF。
+- HippoRAG 2 Fig.3 折线具体点坐标未从正文读出 → 只保留文内定性。
+- 两文主表 **embedding 栈不同**（NV-Embed-v2 vs text-embedding-3-small），**不宜**把 CatRAG 表内 HippoRAG 2 分数与 HippoRAG 2 原文 Table 3 直接纵向比绝对召回。
+- CatRAG 论文「源码未全公开」与 GitHub「复现实现」并存；本卡不比较二者 diff。
+- 不把 Mem0/Zep 的 LOCOMO/LongMemEval、Memory-R1 的 RL 增益写进本卡能力。
+- 不把 HippoRAG 2 叙事改写成 GraphRAG 社区摘要变体。

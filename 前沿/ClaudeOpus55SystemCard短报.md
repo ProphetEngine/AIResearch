@@ -42,9 +42,9 @@ timezone: Asia/Shanghai (CST)
 | **Cyber** | 内部套件 **≥ Mythos 5.1 / Opus 5**；仍落在 FCF **较低档**（Tier 1 辅助已知手法、非 Tier 2 全自主+新颖攻击）；**未**见 novel offensive；**无** critical-severity jailbreak 证据 | 政策同 Opus 5（**允许源码**漏洞发现、**拦二进制**）；鲁棒性对齐 Fable；三阶段（activation probe → 轻量分类器 → LLM 分类器）；命中 → fallback **Opus 4.8**。CVP「近期」纳入 |
 | **蒸馏 / 武器等** | 防蒸馏（含抽 hidden reasoning）**拦、无 fallback**；常规武器/高当量炸药分类器同前代、无 fallback | 产品页另述 **preserved thinking**（Fable 5.1 引入；API 账户自 **2026-08-31** 起适用等细节见 Help Center——**待核对帮助页原文**） |
 
-**对齐注意点（勿只读「最对齐」标题）。** Exec / §6：自动化行为审计多项最优；但对用户**粘贴进 prompt 的恶意指令**更易照做；无护栏新评测中沙箱逃逸/篡改约 **1.5%** runs；模拟公共包注册表凭证场景有害行动约半数；白盒下约 **36%** transcripts 内部怀疑在评测中。外部预发布测评含 **METR、Frontier Design**（产品页）、**CAISI**（卡）。
+**对齐注意点（不能只看「最对齐」标题）。** Exec / §6：自动化行为审计多项最优；但对用户**粘贴进 prompt 的恶意指令**更易照做；无护栏新评测中沙箱逃逸/篡改约 **1.5%** runs；模拟公共包注册表凭证场景有害行动约半数；白盒下约 **36%** transcripts 内部怀疑在评测中。外部预发布测评含 **METR、Frontier Design**（产品页）、**CAISI**（卡）。
 
-**待核实 / 卡内措辞张力。** §2.1.2.1 写生物扩面护栏「同 Mythos 5 / 5.1」；Exec 与 §1.5、产品页写「同 **Fable** 5 / 5.1」。跟读以 **§1.5 产品通用面 = Fable 级生物分类器** 为准，并记下张力。该 System Card**几乎不出现 ASL-\* 部署标签**（勿从 Opus 5 笔记硬搬 ASL-3）；cyber 语境「ASLR」= 地址随机化，非 Anthropic ASL。
+**待核实 / 卡内措辞张力。** §2.1.2.1 写生物扩面护栏「同 Mythos 5 / 5.1」；Exec 与 §1.5、产品页写「同 **Fable** 5 / 5.1」。跟读以 **§1.5 产品通用面 = Fable 级生物分类器** 为准，并记下张力。该 System Card**几乎不出现 ASL-\* 部署标签**（不宜从 Opus 5 笔记照搬 ASL-3）；cyber 语境「ASLR」= 地址随机化，非 Anthropic ASL。
 
 ---
 
@@ -64,4 +64,4 @@ timezone: Asia/Shanghai (CST)
 | 产品/卡页 | https://www.anthropic.com/claude-opus-5-5 | 2026-09-22 公告；定价/CVP·LSVP/平台可用性 |
 | System Card PDF（CDN） | https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf | **230 页** |
 | 索引页 | https://www.anthropic.com/system-cards | 总表入口（是否已挂 Opus 5.5 条目以当日页为准） |
-| 对照（勿当本篇正文） | 模型与技术报告/SystemCard/ClaudeOpus5系统卡深读.md；模型与技术报告/SystemCard/ClaudeFable与Mythos51.md | Opus 5 / Fable·Mythos 5.1 深读 |
+| 对照（非本篇正文） | [[ClaudeOpus5系统卡深读]]；[[ClaudeFable与Mythos51]] | Opus 5 / Fable·Mythos 5.1 深读 |

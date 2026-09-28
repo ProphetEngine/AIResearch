@@ -21,17 +21,17 @@ timezone: Asia/Shanghai (CST)
 
 # 过程可验证 RL（Lean）：Process-Verified RL + Leanabell-Prover-V2（≠ AlphaProof / ≠ VPS）
 
-> **定位**：[[过程可验证RL与Lean]] **P1 形式化 / 可验证 RL 增量切片**——在 **[[形式化验证与LLM]]** 已立「VeriCoT（Z3）+ AlphaProof（Lean 树搜索 RL / TTRL）」、**[[可验证过程监督]]** 已立「可验证过程监督（VPS / VPRM）」之后，本卡只写 **Lean 细粒度过程反馈直接打进 RL** 的近窗两条：
+> **定位**：**形式化 / 可验证 RL 增量切片**——在 **[[形式化验证与LLM]]** 已立「VeriCoT（Z3）+ AlphaProof（Lean 树搜索 RL / TTRL）」、**[[可验证过程监督]]** 已立「可验证过程监督（VPS / VPRM）」之后，本卡只写 **Lean 细粒度过程反馈直接打进 RL** 的近窗两条：
 > - **Process-Verified RL**（*Process-Verified Reinforcement Learning for Theorem Proving via Lean*，arXiv:**2606.20068**v1，页眉 **ICLR 2026** / arXiv 行 **18 Jun 2026**）：把 Lean 阐述 / AST / 错误日志压成 **tactic 级稠密可验证奖励**，注入 GRPO 式目标（first-error propagation + first-token credit）。
 > - **Leanabell-Prover-V2**（*Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning*，arXiv:**2507.08649**v1，页眉 **11 Jul 2025**）：在 long CoT 里 **多轮调用 Lean 4 verifier**，用反馈做反思改写 + DAPO；feedback token masking。
 > **攻坚线**：**架构思想 / 奖励接口（主）** + **文内 MiniF2F / ProofNet（及 Leanabell 的 ProverBench）字段（辅）**。
-> **硬划界（开篇钉死）**：
-> - **≠ [[形式化验证与LLM]]**：禁止复述 **AlphaProof IMO / TTRL / 树搜索通史**，禁止重写 VeriCoT→Z3 FOL 校验主文。本卡 **不**写 AlphaZero 式证明搜索、auto-formalization 课程或 IMO 2024 叙事；Lean 只作 **训练期过程奖励宿主**。
-> - **≠ [[可验证过程监督]]**：禁止重写 **VPS 结构先验 + 确定性声明核验** 或 **VPRM 医学 RoB 规则逐步分**。本卡信号来自 **Lean 内核/阐述**，不是棋类引擎或 Cochrane 指南决策树。
-> - **≠ [[过程奖励模型PRM谱系]]**：禁止重写 Lightman / Math-Shepherd / 学习式 PRM 谱系。两文均 **不训神经逐步 RM**；Process-Verified 明确对照「无外部 PRM」。
-> - **≠ [[推理时扩展TestTimeScaling]]**：禁止写成 TTS / o1 / R1 产品通史；pass@k 仅作文内采样预算字段，不串推理时缩放通史。
-> - **禁止复述 AlphaProof IMO/TTRL 长文**（议程硬禁）。
-> **禁止编造**：主张与表数字一律锚定官方 PDF（2026-09-22 CST）。文内未给的超参网格 / 未发表联合实验 → **不得外推**。
+> **范围与相邻笔记**：
+> - **≠ [[形式化验证与LLM]]**：不复述 **AlphaProof IMO / TTRL / 树搜索通史**，不重写 VeriCoT→Z3 FOL 校验主文。本卡 **不**写 AlphaZero 式证明搜索、auto-formalization 课程或 IMO 2024 叙事；Lean 只作 **训练期过程奖励宿主**。
+> - **≠ [[可验证过程监督]]**：不重写 **VPS 结构先验 + 确定性声明核验** 或 **VPRM 医学 RoB 规则逐步分**。本卡信号来自 **Lean 内核/阐述**，不是棋类引擎或 Cochrane 指南决策树。
+> - **≠ [[过程奖励模型PRM谱系]]**：不重写 Lightman / Math-Shepherd / 学习式 PRM 谱系。两文均 **不训神经逐步 RM**；Process-Verified 明确对照「无外部 PRM」。
+> - **≠ [[推理时扩展TestTimeScaling]]**：不写成 TTS / o1 / R1 产品通史；pass@k 仅作文内采样预算字段，不串推理时缩放通史。
+> - **不复述 AlphaProof IMO/TTRL 长文**。
+> 文内未给超参网格与联合实验。
 
 ---
 
@@ -44,10 +44,10 @@ timezone: Asia/Shanghai (CST)
 
 **代码入口（文内明示，2026-09-22 未做线上可用性核验）：**
 - Leanabell-Prover-V2：`https://github.com/Leanabell-LM/Leanabell-Prover-V2`（源码 / 数据 / 模型）
-- Process-Verified RL：正文未给独立公开仓链接（以 PDF / 作者页为准；**不编造 URL**）。
+- Process-Verified RL：正文未给独立公开仓链接（以 PDF / 作者页为准）。
 
 **一句话抓手：**
-[[形式化验证与LLM]] 回答「形式系统怎么给 LLM 接地」；[[可验证过程监督]] 回答「过程标签怎么从确定性域规则来」；本卡回答「**Lean 的细粒度反馈怎么变成 RL 信用分配**」——Process-Verified 把 **阐述成功 / 首错传播** 压成 tactic 标量打进 GRPO；Leanabell-V2 把 **编译成败日志** 嵌进 long CoT 多轮反思。与「终局二进制 RLVR」和「PRM 神经打分」可硬划界。
+[[形式化验证与LLM]] 回答「形式系统怎么给 LLM 接地」；[[可验证过程监督]] 回答「过程标签怎么从确定性域规则来」；本卡回答「**Lean 的细粒度反馈怎么变成 RL 信用分配**」——Process-Verified 把 **阐述成功 / 首错传播** 压成 tactic 标量打进 GRPO；Leanabell-V2 把 **编译成败日志** 嵌进 long CoT 多轮反思。与「终局二进制 RLVR」和「PRM 神经打分」可明确划界。
 
 ---
 
@@ -57,9 +57,9 @@ timezone: Asia/Shanghai (CST)
 
 | 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|
-| **VeriCoT + AlphaProof** | Z3 FOL 校验；Lean 树搜索 RL / TTRL / IMO | **[[形式化验证与LLM]]** | **否**（禁 AlphaProof 长文；禁 VeriCoT 主文） |
-| **VPS + VPRM** | 结构先验 + 确定性声明/规则逐步核验 | **[[可验证过程监督]]** | **否**（禁棋类/GSM8K VPS；禁医学 RoB） |
-| **学习式 PRM** | 人类/自动逐步标签 → 神经逐步 RM | **[[过程奖励模型PRM谱系]]** | **否**（禁 PRM800K / Math-Shepherd 通史） |
+| **VeriCoT + AlphaProof** | Z3 FOL 校验；Lean 树搜索 RL / TTRL / IMO | **[[形式化验证与LLM]]** | **否**（不写 AlphaProof 长文与 VeriCoT 主文） |
+| **VPS + VPRM** | 结构先验 + 确定性声明/规则逐步核验 | **[[可验证过程监督]]** | **否**（不写棋类/GSM8K VPS 与医学 RoB） |
+| **学习式 PRM** | 人类/自动逐步标签 → 神经逐步 RM | **[[过程奖励模型PRM谱系]]** | **否**（不写 PRM800K / Math-Shepherd 通史） |
 | **TTS / 长 CoT 产品叙事** | o1 / R1 推理时缩放 | **[[推理时扩展TestTimeScaling]]** | **否**（pass@k 仅作文内字段） |
 | **Process-Verified + Leanabell-V2** | Lean tactic/编译反馈 → RL 信用 / 多轮反思 | **本篇** | **是** |
 
@@ -75,7 +75,7 @@ timezone: Asia/Shanghai (CST)
  +VeriCoT 域规则核验 逐步打分器 o1/R1
  │ │ │ │
  └─────────┴────┬─────┴────────────┘
- │ 禁止复读
+ │ 不复读
  ▼
  ★ [[过程可验证RL与Lean]] Process-Verified ‖ Leanabell-V2
  tactic 稠密可验证奖励 ‖ 多轮 verifier-integrated CoT
@@ -227,6 +227,4 @@ $$
 | 项 | 值 |
 |---|---|
 | 主 PDF | `https://arxiv.org/abs/2606.20068`（28p）；`https://arxiv.org/abs/2507.08649`（23p） |
-| 未核 / 禁写 | AlphaProof IMO/TTRL 通史；VPS/VPRM 主文；PRM 谱系；未公开的 Process-Verified 代码仓；AST 细奖励「应能工作」的外推 |
-
-**变更记录：** 2026-09-22 CST — 初稿 draft：双主锚深读 + 四向划界；表数字锚定官方 PDF。
+| 未核 / 不写 | AlphaProof IMO/TTRL 通史；VPS/VPRM 主文；PRM 谱系；未公开的 Process-Verified 代码仓；AST 细奖励「应能工作」的外推 |
