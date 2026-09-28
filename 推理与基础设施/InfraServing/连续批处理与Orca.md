@@ -16,7 +16,7 @@ archived: 2026-09-22
 
 > **定位**：Infra 子题——钉死 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
 > **研究线**：**AI Infra（主）**。
-> **相对已入库**：[[推理引擎生态]] / [[AI基础设施总览]] 以 vLLM·SGLang·TRT-LLM **选型地图**与 PagedAttention 为主；Orca 在彼处仅为次级交叉。本篇 **只做理论边界 / Orca 专线**，不重写引擎选型表、PagedAttention 分页算法正文、投机解码通史。
+> **与相邻笔记的分工**：[[推理引擎生态]] / [[AI基础设施总览]] 以 vLLM·SGLang·TRT-LLM **选型地图**与 PagedAttention 为主；Orca 在彼处仅为次级交叉。本篇 **只做理论边界 / Orca 专线**，不重写引擎选型表、PagedAttention 分页算法正文、投机解码通史。
 > **交叉基线**：vLLM（Kwon et al., arXiv:2309.06180）**仅作对照**——其 Discussion 明确 iteration-level scheduling 与 PagedAttention **互补**，不替代。
 > 业界口语「continuous batching」在 Orca 正文中对应 **iteration-level scheduling**（文中未以 continuous batching 作正式章节名）。
 
@@ -162,7 +162,7 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
  Orca 定义的是 **已跑 iteration 数** 上的 FCFS，不是「后到者不得先返回」；输出更短的后到请求仍可更早结束回包（§4.2）。
 
 7. **「`max_tokens` 预留已解决 KV 显存」**
- 预留避免死锁，但把 **未知输出长度** 转成 **保守占坑**；vLLM 用 Oracle/Pow2/Max 三种复现暴露该边界。真正的块级共享 / 近零碎片是下一篇（已入库）问题，不是 Orca 调度定理的推论。
+ 预留避免死锁，但把 **未知输出长度** 转成 **保守占坑**；vLLM 用 Oracle/Pow2/Max 三种复现暴露该边界。真正的块级共享 / 近零碎片是 PagedAttention 要解决的问题（见 [[AI基础设施总览]] §4），不是 Orca 调度定理的推论。
 
 8. **「Orca 论文写了 continuous batching 专章 / PD disaggregation API」**
  正文关键词是 **iteration-level scheduling** 与 **selective batching**；PD 产品语汇与 continuous batching 营销语汇属后续生态，交叉时必须降级为对照而非伪引 Orca。
@@ -176,7 +176,7 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 | Yu et al., *Orca* | OSDI 2022 | https://www.usenix.org/system/files/osdi22-yu.pdf ；会议页 https://www.usenix.org/conference/osdi22/presentation/yu |
 | Kwon et al., *PagedAttention / vLLM*（对照基线） | arXiv:2309.06180 | `https://arxiv.org/abs/2309.06180`；交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] §1.3 |
 
-**次级交叉（点到为止，不入库为本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；[[推理引擎生态]] 投机解码四篇一手 PDF。
+**次级交叉（点到为止，不作本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；[[推理引擎生态]] 投机解码四篇一手 PDF。
 
 ---
 

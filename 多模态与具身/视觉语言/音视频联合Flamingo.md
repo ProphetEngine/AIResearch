@@ -65,7 +65,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[QwenOmni音视频原生]]** Qwen3/3.5-Omni | 文内把 Qwen-Omni / Qwen3.5-Omni 列为短片或开权 omni 对照；表内 Qwen2.5-O 等数字 | Thinker–Talker、AuT 小时数、ARIA、256k 产品叙事全文 |
 | **[[SpeechLLM语音语言模型]]** Speech-LLM | 「音频可进 LLM」的相邻意识；基线表出现 Qwen2-Audio 等 | Whisper-large-v3 前端、三阶段 Voice Chat 配方 |

@@ -53,7 +53,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|
 | MathTutorBench | `https://github.com/eth-lre/mathtutorbench`；数据 CC-BY-4.0（Limitations 段） |
 | TutorBench | 样本子集 `https://huggingface.co/datasets/tutorbench/tutorbench`（文内：30 样本预览；**全文「将很快发布」**，截至 2026-09-22 口径） |
-| TeachArena | 脚注 2：「All code and data are available on Hugging Face」；Appendix E 钉 commit **`cbd99fcca76b`**；子集名 `stage1_pedagogical_judgment` / `stage0_situated_tutoring` / `stage2_teaching_workflows`。**完整 HF repo slug 文内未印出** → 入库时以 commit 钉为准，slug **待补** |
+| TeachArena | 脚注 2：「All code and data are available on Hugging Face」；Appendix E 钉 commit **`cbd99fcca76b`**；子集名 `stage1_pedagogical_judgment` / `stage0_situated_tutoring` / `stage2_teaching_workflows`。**完整 HF repo slug 文内未印出** → 以 commit 钉为准，slug **待补** |
 
 **一句话抓手：** 「会做题」≠「会辅导」≠「会在 LMS 里把教学决策做完」——MathTutorBench 用轻量 RM 量开放脚手架；TutorBench 用样本专属量尺打多模态辅导；TeachArena 把教师判断、多轮政策与制度动作拆成可审计三面，并暴露 **knowing–teaching–acting** 排名重排。
 
@@ -306,7 +306,7 @@ Table 1 定位：τ-bench / TheAgentCompany / Toolathlon 有工具与状态，�
 
 1. **RM / LLM-judge 漂移**：MathTutorBench 已证通用 RM 失效；TutorBench 钉 Claude Sonnet 4——换 judge 家族是否重排？文内未做跨 judge 全表 → 复现时需固定版本。
 2. **TutorBench 全文数据**：截至 2026-09-22 仍为「soon」；榜数字以论文 Table 1 为准，勿用 30 样本子集外推。
-3. **TeachArena HF slug**：仅有 commit `cbd99fcca76b`；入库脚本需补全 repo 路径后再 `git checkout` 钉死。
+3. **TeachArena HF slug**：仅有 commit `cbd99fcca76b`，完整 repo 路径文内未印出。
 4. **学习收益外环**：三文均声明不替代真人学习实验；与 [[LearnLM教育辅导]] 早期报告的课堂/Study Hall 线正交，本卡不并写。
 5. **Agent 产品叙事**：不滑入 [[智能体工具与长程任务]] MCP/长程 System Card；TeachArena 工具面是 **教学状态契约**，不是通用工具环通史。
 

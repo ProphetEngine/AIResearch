@@ -45,9 +45,9 @@ archived: 2026-09-22
 
 ## 二、议题边界：测试时「异构聚合 / 工具混合」，不是又一部 TTS 通史
 
-### 2.1 相对已入库只取接口
+### 2.1 与相邻笔记的分工
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[推理时扩展TestTimeScaling]]** | 「test-time 多花算力可涨分」坐标；多数票 / BoN 作成本对照 | o1/R1 训练、ToT 树搜通史 |
 | **[[多智能体辩论]] MAD** | 「多样性 / 共识失败」直觉可交叉一句 | 鞅定理、FREE-MAD 打分权重、语气分歧仪器 |
@@ -260,7 +260,7 @@ $\oplus$ = Table 1 的 **Aggregate-and-Synthesize** 提示：要求批判性综�
 
 - MoA Fig.1/3/5 各点精确坐标；引言 65.8% vs Table 2 的版本差来源。
 - TUMIX Appendix Table 10–15（基线配置、单 agent 首轮分、消融全表、LLM-generated agent 名单）；Fig.5–10/13 细格。
-- Self-MoA / Symbolic-MoE / DEI / SciMaster / GSA / CodeSteer **原文未入库**——仅经 TUMIX 二手对照。
+- Self-MoA / Symbolic-MoE / DEI / SciMaster / GSA / CodeSteer **原文未读**——仅经 TUMIX 二手对照。
 - Google 页与 arXiv 题名微差（*Dynamic Tool-Use Mixture* vs *Multi-Agent Test-Time Scaling with Tool-Use Mixture*）不影响主张核对。
 - Together Inference 与 API 定价（MoA §3.4，截至 2024-05-22）随时间变，**不作当前报价依据**。
 

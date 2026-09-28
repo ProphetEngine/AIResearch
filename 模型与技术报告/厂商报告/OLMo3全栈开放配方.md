@@ -30,7 +30,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra技术报告深读]] 对照一句即可。
 > - **≠ [[GPToss模型卡深读]]**：不重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
 > - **≠ [[Gemma4技术报告深读]]**：不重写 **Gemma 4** TR（Google Apache 开源权重族 / PLE / QAT）；本卡是 AI2 dense 7B/32B + Dolma/Dolci 全栈。
-> - **≠ 已入库 Qwen / DeepSeek / Llama pending**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），不把其架构/训练配方抄入本卡当 Olmo 主张。
+> - **≠ Qwen / DeepSeek / Llama 相邻笔记**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），不把其架构/训练配方抄入本卡当 Olmo 主张。
 > 正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
 
 ---
@@ -54,7 +54,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 / 同主题 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[Nemotron3Ultra技术报告深读]]** Nemotron 3 Ultra | 「工业开源性能旗舰」对照位一句 | Hybrid Mamba–Transformer MoE、Nemotron agent 表、CC 语料清洗 |
 | **[[GPToss模型卡深读]]** gpt-oss | 「另一路开源权重推理卡」对照 | harmony / MXFP4 / effort 旋钮 / OpenAI Preparedness 开源剖面 |
@@ -270,7 +270,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 | 不写 | 原因 |
 |---|---|
 | Nemotron 3 Ultra / gpt-oss / Gemma 4 架构与表 | 划界 ≠ [[Nemotron3Ultra技术报告深读]] / [[GPToss模型卡深读]] / [[Gemma4技术报告深读]] |
-| Qwen3 / DeepSeek / Llama4 配方回填 | ≠ 已入库 TR；仅基线名 |
+| Qwen3 / DeepSeek / Llama4 配方回填 | ≠ 相邻 TR 笔记；仅基线名 |
 | 未抽出的 Figure 精确点、附录全表逐格 | 页数极长；需要时回原文 PDF |
 | 「已超越 Qwen 3」类外推 | 文写 *narrowing the gap* / *close to*；照录 |
 

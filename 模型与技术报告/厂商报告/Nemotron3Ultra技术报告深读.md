@@ -55,7 +55,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 / 同主题 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[NemotronCC数据策展]]** | Ultra 预训练「网页 / Crawl++」作配比分量名一句；新增 Legal / Specialized 等 **发布集索引** | Nemotron-CC Justext→分类器→合成改写 **全文** |
 | **[[SEA-LION低资源区域模型]]** | SEA-LION 以 Ultra 为 OPD 教师 → 本卡提供教师侧配方与 agent 评测 | SEA CPT token 量、SEA-HELM 语种表 |

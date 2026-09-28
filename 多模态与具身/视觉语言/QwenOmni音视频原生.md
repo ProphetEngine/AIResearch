@@ -14,7 +14,7 @@ archived: 2026-09-22
 
 # Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni
 
-> **定位**：原生 Omni 模态横切增量——相对 **[[SpeechLLM语音语言模型]]**（以 Qwen2-Audio 为锚的 Speech-LLM / Audio→Text）已入库的「编码器连续特征 ⊕ LLM 下一文本 token」栈，本篇只收 **原生 Omni**：同一 Thinker–Talker 端到端统一 **文本·图像·音频·视频**，并 **流式合成语音**。
+> **定位**：原生 Omni 模态横切增量——相对 **[[SpeechLLM语音语言模型]]**（以 Qwen2-Audio 为锚的 Speech-LLM / Audio→Text）的「编码器连续特征 ⊕ LLM 下一文本 token」栈，本篇只收 **原生 Omni**：同一 Thinker–Talker 端到端统一 **文本·图像·音频·视频**，并 **流式合成语音**。
 > **研究线**：**架构思想（主）**——AuT 替换 Whisper、Thinker/Talker MoE、多码本 RVQ + MTP + Code2Wav、TM-RoPE / 显式时间戳、ARIA；**评测字段（辅）**——36 / 215 音视频基准、VoiceBench、首包延迟、非降级对照同尺 Qwen。
 > **范围与相邻笔记**：
 > - **不重抄** [[SpeechLLM语音语言模型]] 的 Qwen2-Audio 章节：Whisper-large-v3 前端、40 ms/帧、三阶段（多任务预训练 / 联合 SFT / DPO）、Voice Chat vs Audio Analysis 接口表、ASR/S2TT 表内逐格数字。本篇仅在对照句点名「[[SpeechLLM语音语言模型]] = 音频理解→文本输出」前置。
@@ -40,9 +40,9 @@ archived: 2026-09-22
 
 ## 二、议题边界：从「Audio→Text Speech-LLM」到「原生 Omni」
 
-### 2.1 相对已入库只取接口
+### 2.1 与相邻笔记的分工
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[SpeechLLM语音语言模型]] Qwen2-Audio** | 「音频编码器连续特征条件 LLM → **文本**」；无原生波形输出 | Whisper 初始化、40 ms/帧公式、三阶段训练全文、评测表逐格 |
 | **[[多模态架构脉络]] / 视觉 LMM** | 「视觉编码器 + LLM」并列轴存在 | LLaVA/Flamingo 接法通史 |

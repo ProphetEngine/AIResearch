@@ -55,7 +55,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[天气气候基础模型]]** | 「气候/地球数据很大、异构」是动机邻接；ClimateAgent 用 ERA5/CDS 等**数据 API**，不是 Aurora 式场预报骨干 | 3D Perceiver/Swin、预训练小时数、多域微调表、Aurora 1.5 |
 | **[[科研智能体]]** | ClimateAgent related work 点名 ChemCrow 作「科学协议自动化」邻接一句 | AI Scientist 三阶段 / ChemCrow 18 工具与双用途细节 |

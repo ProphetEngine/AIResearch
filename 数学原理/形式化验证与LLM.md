@@ -44,7 +44,7 @@ archived: 2026-09-22
 
 ### 2.1 相对 [[过程奖励模型PRM谱系]] / [[GRPO与DAPO算法族]] / R1 只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[过程奖励模型PRM谱系]] PRM** | 「过程对不对」是信任问题；验证器可喂 TTS / RL | 人类逐步标注、Math-Shepherd 续写金标、PRM800K、逐步 CE / 聚合规则 |
 | **[[GRPO与DAPO算法族]] GRPO/DAPO** | 「有可验证奖励就能做组相对 RL」的抽象槽位 | Clip-Higher、动态采样、token-level loss、Dr.GRPO 去偏公式 |

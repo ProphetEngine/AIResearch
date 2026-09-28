@@ -36,9 +36,9 @@ archived: 2026-09-22
 
 ## 二、议题边界：工具进 RL 环，不是又一部 DAPO / ACI 专线
 
-### 2.1 相对已入库只取接口
+### 2.1 与相邻笔记的分工
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[GRPO与DAPO算法族]] GRPO/DAPO** | 「有可验证终答就能做组相对 RL」；实验用 GRPO | Clip-Higher、动态采样、token-level loss、Dr.GRPO 去偏公式 |
 | **[[代码智能体Harness史线]] ACI/harness** | 「隔离执行环境很重要」这一工程直觉 | SWE-agent 命令面 / OpenHands 四包 SDK / 生产失败率 |

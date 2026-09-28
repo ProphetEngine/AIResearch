@@ -57,7 +57,7 @@ archived: 2026-09-22
 | 条目 | 说明 |
 |------|------|
 | arXiv:**2601.11659**（*The Llama 4 Herd: … Notes*） | **第三方汇编**；arXiv 管理员已撤稿（虚假作者名单）；**非** Meta 正式 TR |
-| Zenodo / HF Papers 同名合成稿 | 同上族第三方整理，**不入库** |
+| Zenodo / HF Papers 同名合成稿 | 同上族第三方整理，**不采用** |
 | GitHub/HF `MODEL_CARD.md` | 官方，但是 **MD/网页卡**，**不是** PDF technical report |
 
 ---

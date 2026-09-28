@@ -14,7 +14,7 @@ archived: 2026-09-22
 
 # Qwen3.8-Next / Flash-Next 架构 TR 深读
 
-> **定位**：相对已入库 [[Qwen3技术报告深读]] 的**架构世代增量**深读卡。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30320`（2026-09-22；28 页）。
+> **定位**：相对 [[Qwen3技术报告深读]] 的**架构世代增量**深读卡。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30320`（2026-09-22；28 页）。
 > **研究线**：**架构思想（主）** + **数学原理（线性注意力 / 稀疏索引，辅）** + **AI Infra（FlashQLA / Muon / 稳定性，辅）**。
 > **刻意不写**：Qwen3 的 Dense/MoE 全家桶表、think/no_think、thinking budget、Strong-to-Weak Distillation、四阶段后训练（见 [[Qwen3技术报告深读]]）；Adam→AdamW→Muon 通史（见 [[优化器与训练稳定性]]）。
 > 本 PDF **未给出** Flash-Next 总层数 / hidden / 专家数 / 预训练总 token 精确账本。
@@ -42,9 +42,9 @@ Flash-Next 把「损失 / 下游榜 / 训推成本 / 训练稳定性」当成**�
 
 ## 二、相对 Qwen3 TR / 文中前代的增量对照
 
-> 左列锚已入库 Qwen3 TR（arXiv:2505.09388）；中间列为**本 PDF 明文**对照的近期 Qwen 基线（3.5 结构 / 3.7-Plus）；右列为本报告。勿把 Qwen3 的 think 协议或 36T 预训练账本写进本卡。
+> 左列锚 [[Qwen3技术报告深读]]（arXiv:2505.09388）；中间列为**本 PDF 明文**对照的近期 Qwen 基线（3.5 结构 / 3.7-Plus）；右列为本报告。勿把 Qwen3 的 think 协议或 36T 预训练账本写进本卡。
 
-| 维度 | Qwen3 TR（已入库，本卡不重写） | 本 PDF 中的前代锚点 | **Qwen3.8-Flash-Next（本 PDF）** |
+| 维度 | Qwen3 TR（[[Qwen3技术报告深读]]，本卡不重写） | 本 PDF 中的前代锚点 | **Qwen3.8-Flash-Next（本 PDF）** |
 |---|---|---|---|
 | 报告入口 | 2505.09388 · 2025-05 | Qwen3.5 结构消融；**Qwen3.7-Plus-Base = 397B / 17B 激活**（Tab. 11） | **2608.30320v1** · 2026-08-31 · 28 页 |
 | 总参 / 激活 | Dense 0.6–32B；MoE 30B-A3B / 235B-A22B | 397B-A17B（Plus）；消融常用 25B-A3B / 156B-A7B 等 | **125B** 总参 · **6B** 激活/token · 另 **51B** n-gram 表（离加速器） |

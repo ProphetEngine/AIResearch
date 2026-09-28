@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 
 # 视频—语言推理：SiLVR + Chain-of-Frames（≠ AV-Flamingo）
 
-> **定位**：多模态推理横切——在已入库 **[[音视频联合Flamingo]] AV-Flamingo（开源音视频联合基础模型卡）**、**[[视频生成正式报告]] 视频生成正式报告备忘**、**[[多模态架构脉络]] 多模态通史**、**[[QwenOmni音视频原生]] Qwen-Omni 产品卡**之外，补「**理解侧视频—语言推理框架**」空位。双主锚：
+> **定位**：多模态推理横切——在 **[[音视频联合Flamingo]] AV-Flamingo（开源音视频联合基础模型卡）**、**[[视频生成正式报告]] 视频生成正式报告备忘**、**[[多模态架构脉络]] 多模态通史**、**[[QwenOmni音视频原生]] Qwen-Omni 产品卡**之外，补「**理解侧视频—语言推理框架**」空位。双主锚：
 > - **SiLVR**（*Simple Language-based Video Reasoning*）：**训练免费**；短 clip 视觉描述 + ASR 字幕 → **Adaptive Context Reduction** → 强推理 LLM（默认 DeepSeek-R1）在**纯语言空间**做复杂 VideoQA。
 > - **Chain-of-Frames（CoF）**：视频 LLM **单阶段**推理迹中显式引用帧 ID（Frame-k）；用 **CoF-DATA**（真实 VideoEspresso + 合成 CLEVRER，164,186 条）微调 InternVL 等，强化时序锚定。
 > **研究线**：**架构思想（主）**——语言管道 vs 帧锚定 CoT；**评测字段（辅）**——文内 VideoMME / Video-MMLU / CGBench / VSI-Bench 等表，不外推未测榜。
@@ -63,7 +63,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[音视频联合Flamingo]] AV-Flamingo** | 「长复杂真实音视频理解」是共同任务床 | OmniVinci/SigLip/CRTE/AV-Skills/TAVIT/GRPO 配方全文 |
 | **[[视频生成正式报告]]** | 「视频」一词相邻 | 文生视频正式 TR 缺口 / Sora System Card |

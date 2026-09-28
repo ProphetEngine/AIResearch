@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 
 # 长程规划记忆：CHIME（信用感知分层演化；≠ Mem0 / HippoRAG）
 
-> **定位**：长程规划记忆主题轴——在已入库记忆轴（[[智能体长程记忆]] OS 分页、[[MemoryR1强化学习记忆维护]] RL 四操作、[[Mem0与Zep生产级记忆]] 生产记忆层、[[HippoRAG2与CatRAG]] 检索式非参记忆）之外，补「**长程 agentic planning × 自演化记忆的信用分配**」空位。主锚 **CHIME**（*Credit-Aware HIerarchical Memory Evolution*）：把终局成败拆成「计划质量 / 执行误差 / 环境噪声」，分设 **planning bank** 与 **execution bank**，先归因再写入（attribute-before-memorize）。
+> **定位**：长程规划记忆主题轴——在记忆轴（[[智能体长程记忆]] OS 分页、[[MemoryR1强化学习记忆维护]] RL 四操作、[[Mem0与Zep生产级记忆]] 生产记忆层、[[HippoRAG2与CatRAG]] 检索式非参记忆）之外，补「**长程 agentic planning × 自演化记忆的信用分配**」空位。主锚 **CHIME**（*Credit-Aware HIerarchical Memory Evolution*）：把终局成败拆成「计划质量 / 执行误差 / 环境噪声」，分设 **planning bank** 与 **execution bank**，先归因再写入（attribute-before-memorize）。
 > **研究线**：**架构思想（主）**——分层银行 + Credit Attribution Gate + 信用感知演化；**评测字段（辅）**——四榜 train/eval Avg@3 与消融 / RQ 表，不外推未测场景。
 > **范围与相邻笔记**：
 > - **≠ [[Mem0与Zep生产级记忆]]**：不重写 Mem0 / Zep **生产对话记忆层** API、Graphiti 时序 episode、ADD/UPDATE tool-call 产品面。本卡对象是 **冻结策略上的自演化规划经验库**，不是会话事实抽取–更新服务。
@@ -62,7 +62,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[Mem0与Zep生产级记忆]] Mem0/Zep** | 「外置可检索记忆」是共同隐喻；对象不同 | 生产 API、Graphiti 双时间轴、LOCOMO 产品对照全文 |
 | **[[HippoRAG2与CatRAG]] HippoRAG2/CatRAG** | 「记忆要结构化」一句对照 | OpenIE+PPR、FCR/JSR、文档 hub 漂移 |

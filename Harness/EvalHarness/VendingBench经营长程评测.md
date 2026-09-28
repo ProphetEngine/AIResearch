@@ -43,9 +43,9 @@ archived: 2026-09-22
 
 ## 二、议题边界：单代理经营连贯，不是 GUI、不是市场、不是破坏
 
-### 2.1 相对已入库只取接口
+### 2.1 与相邻笔记的分工
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[计算机使用智能体]]** computer-use / OSWorld | 「长程工具环会失真」的相邻压力面 | Verified / 2.0 binary、Operator System Card、StateAct |
 | **[[AgentBazaar经济对齐]]** Agent Bazaar | **索引一句**：多代理市场里「个体理性加总可搞垮系统」是**另一轴**（EAS / Crash·Lemon）；本篇是**单代理**对供应商与顾客仿真 | POSG、`dlc`、REINFORCE++、EAS 四分量 |

@@ -17,7 +17,7 @@ archived: 2026-09-22
 > **定位**：System Card 安全字段主题轴（[[ClaudeOpus5系统卡深读]] 附录仅作索引）；主锚点 Anthropic *System Card: Claude Fable 5.1 & Claude Mythos 5.1*（封面 **September 1, 2026**）。主写 **该卡预部署安全评测字段地图** 与 **Fable vs Mythos 访问/护栏边界**；能力榜（§8）与福利访谈（§7）只作索引，不扩写。
 > **研究线**：**评测字段（主）**——RSP（CB / Autonomy / Alignment risk）· Cyber（能力梯 + 护栏覆盖 + 鲁棒）· Safeguards/Agentic/Alignment 的可核对指标名；**架构思想（辅）**——同权重双配置 + 受信访问程序 + fallback。
 > **范围与相邻笔记**：
-> - **≠ [[ClaudeOpus5系统卡深读]] Opus 5 全文**：Opus 5 的 RSP/cyber/对齐深读已入库；本篇**不**复述 Opus 5 表与叙事，只在对照点一句。
+> - **≠ [[ClaudeOpus5系统卡深读]] Opus 5 全文**：Opus 5 的 RSP/cyber/对齐深读见该笔记；本篇**不**复述 Opus 5 表与叙事，只在对照点一句。
 > - **≠ [[宪法分类器防御]] Classifiers 通史**：本卡 cyber 护栏「probe → LLM classifier」只记**本部署形态与覆盖字段**；不写 Constitutional Classifiers / Classifiers++ 论文架构通史。
 > - **≠ [[安全论证SafetyCases]] safety cases 通史**：本篇是 **system card 字段清单 + 访问边界**，不写 CAE 树 / scheming inability / Assurance 2.0。
 > - 不复述可操作攻击 / 利用步骤。
@@ -41,9 +41,9 @@ archived: 2026-09-22
 
 ## 二、议题边界：本卡字段与访问轨，不是 Opus5 / CC 通史 / safety case 通史
 
-### 2.1 相对已入库只取接口
+### 2.1 与相邻笔记的分工
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[ClaudeOpus5系统卡深读]]** Opus 5 System Card | 「同窗旗舰对照」「源码发现放开先例」接口；5.1 附录索引的兑现 | Opus 5 全文 RSP/cyber/对齐表、相对 4.5 增量 |
 | **[[宪法分类器防御]]** Constitutional Classifiers | 本卡 §3.2 一句「modeled on constitutional classifiers」→ **本部署** probe→LLM | CC / CC++ 论文架构、拒答率开销通史 |

@@ -51,7 +51,7 @@ archived: 2026-09-22
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[EntMTP熵引导投机解码]]** | 「自投机 + 草稿树」是推理接口；熵可作可预测性信号 | TopologyBank、path-value 选树、Hydra/Medusa 默认树 tok/s 主表 |
 | **[[EAGLE3投机解码]]** | FastMTP「EAGLE-style 递归草稿」兼容句 | training-time test、多层特征融合、SGLang Table 3–4 |

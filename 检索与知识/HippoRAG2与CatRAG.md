@@ -53,7 +53,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[检索增强与知识外挂]]** | 「向量 top-k 缺多跳联想」是两文共同对照槽 | 稠密双塔 / 向量库选型通史 |
 | **[[图谱检索GraphRAG]]** | GraphRAG / RAPTOR / LightRAG 作为 HippoRAG 2 Table 2–3、CatRAG Table 2–3 **结构增强基线**；HippoRAG 2 §2.2 一句点明与 GraphRAG「摘要扩库」之别 | Leiden 社区摘要 + map-reduce 全局 QFS 全文；EraRAG 增量 LSH |

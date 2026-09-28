@@ -36,7 +36,7 @@ archived: 2026-09-22
 
 **相对 GPT-5.6 Sol 的叙事增量（仅原文对比）：**
 
-| 维度 | GPT-5.6 Sol（已入库 TR） | GPT-6 Astra（本卡） |
+| 维度 | GPT-5.6 Sol（[[GPT56系统卡深读]]） | GPT-6 Astra（本卡） |
 |---|---|---|
 | Cyber Preparedness | **High**（非 Critical） | **Critical（首次）** |
 | Bio/Chem | High | **仍 High**（Critical 新套件均未超阈） |

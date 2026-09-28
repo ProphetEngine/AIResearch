@@ -11,7 +11,7 @@ archived: 2026-09-22
 
 # DeepSeek-V4.1-Flash Technical Report 深读卡
 
-> **定位**：DeepSeek-V4.1 Flash 增量技术报告主题轴（相对已入库 V3 / V3.2）。数字一律取自官方 PDF `https://arxiv.org/abs/2609.19969`（2026-09-22 CST）。
+> **定位**：DeepSeek-V4.1 Flash 增量技术报告主题轴（相对 [[DeepSeekV3训练与MoE基建]] / [[DeepSeekV32技术报告深读]]）。数字一律取自官方 PDF `https://arxiv.org/abs/2609.19969`（2026-09-22 CST）。
 > **研究线**：**架构思想（主）** + **AI Infra / KV·部署（辅）**。
 > **刻意不写**：Switch→Mixtral→V3 MoE 史线与 671B/37B/14.8T/DualPipe/FP8 分块配方（见 [[混合专家架构]]、[[DeepSeekV3训练与MoE基建]]）；DSA 两阶段继续训与 GRPO 四稳定化全文（见 [[DeepSeekV32技术报告深读]]）；KV 量化通史（留给 [[KV缓存量化与压缩]]）。本卡只补「相对 V3/V3.2 **本 PDF 新公开** 的 CED / CSA2 / FP4 KV / SWA Bounded Replay」。
 > 本 PDF **对照锚点是 DeepSeek-V4 / V4-Flash / V4-Pro**，**未重开** V3 的 671B/37B 表，V3 数字不外推为 V4.1-Flash 主张；V4 本体无本仓库独立 TR → V4 侧数字仅录本 PDF 转述。
@@ -47,9 +47,9 @@ V4.1-Flash 把「长程 agent + 输入重」瓶颈从算力进一步压到 **HBM
 
 ## 二、相对 V3 / V3.2（及本 PDF 内 V4）增量对照
 
-> 左列以本 PDF 明文为准。V3 / V3.2 列仅作「已入库笔记锚点」，细节见对应 TR；**本报告几乎不讨论 DSA/MLA 挂接**，主叙事在 CED/CSA2/部署。
+> 左列以本 PDF 明文为准。V3 / V3.2 列仅作相邻笔记锚点，细节见对应 TR；**本报告几乎不讨论 DSA/MLA 挂接**，主叙事在 CED/CSA2/部署。
 
-| 维度 | DeepSeek-V3（已入库 TR） | DeepSeek-V3.2（已入库 TR） | **DeepSeek-V4.1-Flash（本 PDF）** |
+| 维度 | DeepSeek-V3（[[DeepSeekV3训练与MoE基建]]） | DeepSeek-V3.2（[[DeepSeekV32技术报告深读]]） | **DeepSeek-V4.1-Flash（本 PDF）** |
 |---|---|---|---|
 | 报告入口 | arXiv:2412.19437 | arXiv:2512.02556 · 23 页 | arXiv:**2609.19969v1** · **51** 页 · 2026-09-17 |
 | 问题设定 | 训 MoE+MLA 基座；部署侧重并行/FP8 | 长文算力 → **DSA**；后训练加码 RL/agent 合成 | **KV 存储与迁移**成为主瓶颈（HBM 上 global KV；SSD/主机上 persistent KV）|
@@ -250,7 +250,7 @@ $$
 
 ---
 
-## 六、相对已入库笔记的增量边界
+## 六、与相邻笔记的增量边界
 
 | 已有笔记 | 已覆盖（本卡不复述） | **本卡新增 / 加深** |
 |---|---|---|

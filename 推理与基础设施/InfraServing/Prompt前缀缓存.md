@@ -53,7 +53,7 @@ official_docs_fetched: "2026-09-22 Asia/Shanghai (CST)"
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[推理引擎生态]]** | 「跨请求共享前缀 KV」是 serving 缺口；SGLang RadixAttention = 自动前缀树 | vLLM / SGLang / TRT 选型表、PD 分离、投机通史、6.4× 引擎对照全文 |
 | **[[KV缓存量化与压缩]]** | KV 张量可被缓存 / 复用 | KIVI / KVQuant 非对称量化与误差轴 |

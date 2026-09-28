@@ -53,7 +53,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[UIVenus2GUI智能体]]** UI-Venus-2 | Venus 卡可能引用 Online-Mind2Web 作**产品分一行**；本卡供「基准是什么」定义 | mid-train / 离线 RL / MOPD / SGV 全文 |
 | **[[计算机使用智能体]]** CUA | Operator 在 Illusion Table 2 的 **61.3% 人工 SR**；WebArena/WebVoyager 作「旧榜偏乐观」对照名 | Operator System Card、OSWorld 2.0、StateAct |

@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）
 > 对照笔记：[[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]；[[Gemini37Flash模型卡深读]]
-> **划界（只写开源权重增量）：** 相对已入库 Gemini 2.5 / 3 Pro **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**不重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
+> **划界（只写开源权重增量）：** 相对 [[Gemini25技术报告深读]] / [[Gemini3Pro模型卡深读]] **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**不重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
 > 专家数/路由算法、层宽表、训练 token 总量、视频管线细节 TR 未写者标「未公开 / 仅 docs」。
 
 ---
@@ -29,7 +29,7 @@ archived: 2026-09-22
 | PDF 链接 | `https://arxiv.org/abs/2607.02770` |
 | 许可 | 正文：**Apache 2.0**（Introduction 末句） |
 | 分发（docs） | Kaggle / Hugging Face；官方 QAT 集合见 docs |
-| 对照闭源线 | Gemini 2.5 TR / 3 Pro Model Card / 3.7 Flash Model Card **已入库** → 本卡不复述其能力表与 FSF 域结论 |
+| 对照闭源线 | [[Gemini25技术报告深读]] / [[Gemini3Pro模型卡深读]] / [[Gemini37Flash模型卡深读]] → 本卡不复述其能力表与 FSF 域结论 |
 
 **型号族（Table 1 + §2 Dense and MoE）：**
 
@@ -49,9 +49,9 @@ archived: 2026-09-22
 
 ## 2. 相对 Gemini 2.5 / 3 Pro / 3.7 Flash 的「开源增量」对照
 
-> 左列锚本 PDF；右列仅作「已入库闭源卡已覆盖面」提示；Gemini 未公开数字不外推到 Gemma，Gemma 数字也不回填为 Gemini 架构主张。
+> 左列锚本 PDF；右列仅作「相邻闭源卡已覆盖面」提示；Gemini 未公开数字不外推到 Gemma，Gemma 数字也不回填为 Gemini 架构主张。
 
-| 维度 | Gemini 2.5 / 3 Pro / 3.7 Flash（已入库闭源卡） | **Gemma 4（本 PDF + docs）** | 开源增量读法 |
+| 维度 | Gemini 2.5 / 3 Pro / 3.7 Flash（相邻闭源卡） | **Gemma 4（本 PDF + docs）** | 开源增量读法 |
 |---|---|---|---|
 | 文档形态 | 2.5：**73** 页 TR；3 Pro：**10** 页 Model Card；3.7 Flash：**9** 页 Flash 增量卡（大量 defer 3.6） | **17** 页开源 TR + 开发者 docs | 技术可核对深度介于「短卡」与「2.5 长 TR」之间；**有** Table 1 参数分项 |
 | 权重 | API / 产品；**无**可下载权重 | **Apache 2.0** 权重；Kaggle / HF（docs） | **本议题核心增量** |
@@ -282,7 +282,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 
 ## 10. 可跟读摘要（中文）
 
-Gemma 4 把 Google 近月的「多模态 + 推理」能力，落成一套 **可下载的 Apache 2.0 权重族**：小模型靠 **PLE + 缩小的视听编码器 + mobile QAT** 打端侧；12B 试 **无独立编码器** 的统一投影；中上尺寸给 **31B dense** 与 **26B-A4B MoE**，并用 **local/global 注意力、p-RoPE、KV 复用、MTP 投机头** 换长文与解码效率。相对已入库的 Gemini **闭源**卡，值得记进仓库的是这些 **公开配方与对 Gemma 3 的跃迁表**，而不是再写一遍 Gemini TR。端侧产品化细节留给 **[[端侧小模型]]**。
+Gemma 4 把 Google 近月的「多模态 + 推理」能力，落成一套 **可下载的 Apache 2.0 权重族**：小模型靠 **PLE + 缩小的视听编码器 + mobile QAT** 打端侧；12B 试 **无独立编码器** 的统一投影；中上尺寸给 **31B dense** 与 **26B-A4B MoE**，并用 **local/global 注意力、p-RoPE、KV 复用、MTP 投机头** 换长文与解码效率。相对 Gemini **闭源**卡（[[Gemini25技术报告深读]]、[[Gemini3Pro模型卡深读]]），值得记的是这些 **公开配方与对 Gemma 3 的跃迁表**，而不是再写一遍 Gemini TR。端侧产品化细节留给 **[[端侧小模型]]**。
 
 ---
 

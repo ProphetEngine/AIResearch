@@ -59,9 +59,9 @@ EMMA：单调多头注意力同传策略 → AL / LAAL / Ending Offset
 
 ## 二、议题边界：翻译 FM ≠ Speech-LLM ≠ Omni
 
-### 2.1 相对已入库只取接口
+### 2.1 与相邻笔记的分工
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[SpeechLLM语音语言模型]]** Speech-LLM | 「音频可进大模型」的相邻意识 | Whisper→Qwen、Voice Chat / Audio Analysis、DPO 对话配方 |
 | **[[多语言与跨语种]]** 多语言文本 | NLLB 作 **T2TT 初始化 / 语种覆盖对标** | XLM-R curse、BLOOM/ROOTS、当代旗舰语种配比通史 |

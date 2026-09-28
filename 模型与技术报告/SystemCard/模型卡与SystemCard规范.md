@@ -18,7 +18,7 @@ archived: 2026-09-22
 > 2. Hugging Face Hub，《Model Cards》：https://huggingface.co/docs/hub/en/model-cards
 > - Annotated Template：https://huggingface.co/docs/hub/en/model-card-annotated
 > - Guidebook（引用 Mitchell；模板演进）：https://huggingface.co/docs/hub/en/model-card-guidebook
-> 3. **对照（增量，不重写各卡正文）**：已入库深读卡
+> 3. **对照（增量，不重写各卡正文）**：相邻深读卡
 > - System Card 系：[[GPT5系统卡深读]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]
 > - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]
 > - [[MOC_模型与技术报告]]
@@ -52,7 +52,7 @@ Mitchell et al.（§1）指出：当时没有标准化流程，用来沟通**已
 因此本笔记只做三件事：
 
 1. 固定 Mitchell / HF 的**经典字段谱系**；
-2. 对照已入库卡实践，标出 System Card 相对 Model Card 的**体裁差异**（不重写正文）；
+2. 对照相邻卡笔记的实践，标出 System Card 相对 Model Card 的**体裁差异**（不重写正文）；
 3. 给出研究会**归档最小字段建议**（可与 [[评测与排行榜可靠性]] / [[安全红队与对抗评测]] 交叉，不替代各 TR 卡）。
 
 ---
@@ -111,11 +111,11 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-## 三、System Card 实践差异（对照已入库卡，不重写正文）
+## 三、System Card 实践差异（对照相邻卡笔记，不重写正文）
 
 ### 3.1 命名与体量：同一词根，不同产品形态
 
-| 维度 | 经典 Model Card（Mitchell / 短 HF README） | 已入库「厂商卡」实践（据各 TR 元信息 / PDF TOC） |
+| 维度 | 经典 Model Card（Mitchell / 短 HF README） | 相邻笔记中的「厂商卡」实践（据各 TR 元信息 / PDF TOC） |
 |------|--------------------------------------------|-----------------------------------------------------|
 | 典型页数 | Mitchell 倡「一至两页」短记录；示例为插图卡 | GPT-5 SC **60** 页；Claude 4 SC **124** 页；Claude Opus 4.5 SC **153** 页；Gemini 3 Pro MC **10** 页；Grok 4 MC **8** 页（各 TR 笔记） |
 | 标题习惯 | Model Card | OpenAI / Anthropic 多用 **System Card**；Google DeepMind Gemini 3 Pro 仍称 **Model Card**；xAI Grok 4/4.1 称 Model Card，**Grok 4.20 改称 System Card**（见 [[Grok4模型卡深读]] §3.4） |
@@ -153,11 +153,11 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ## 四、归档字段建议（服务归档，不替代 TR 正文）
 
-下列为**入库登记 / 深读卡元信息**建议最小集。设计原则：能回答「这是哪份官方工件、评了什么面、能否与别家横比」，且覆盖归档规范要求的「官方 URL + 日期 + thinking/工具」。取值一律来自 PDF/官网或标「未公开 / 待核实」。
+下列为**深读卡元信息**建议最小集。设计原则：能回答「这是哪份官方工件、评了什么面、能否与别家横比」，且覆盖归档规范要求的「官方 URL + 日期 + thinking/工具」。取值一律来自 PDF/官网或标「未公开 / 待核实」。
 
 ### 4.1 工件身份（每张卡必填）
 
-| 字段 | 说明 | 取值提示（据已入库卡实践） |
+| 字段 | 说明 | 取值提示（据相邻卡笔记实践） |
 |------|------|------------------------|
 | `doc_title` | 封面/元数据标题 | 如 “GPT-5 System Card”；注意元数据 Title 可能误标 Preview（见 GPT-5.6 TR） |
 | `doc_genre` | 体裁枚举 | `model_card` \| `system_card` \| `system_card_addendum` \| `system_card_update` \| `tech_report` \| `hf_readme` |
@@ -235,7 +235,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
  TOXICITY v1→v5 示例与 Claude/OpenAI Changelog 均表明：**差分本身是证据**。应保留版本链（`relation_to_prior` / `superseded_by`），而不是只留最新 PDF。
 
 6. **「训练数据一节越详越好，可从 SC 反推完整配比」**
- Mitchell §4.6 已承认专有数据可只给分布级信息；已入库多张 SC/MC 对数据仅有高层句。缺细节标「未公开」，不用二手博客补全当官方字段。
+ Mitchell §4.6 已承认专有数据可只给分布级信息；相邻笔记中多张 SC/MC 对数据仅有高层句。缺细节标「未公开」，不用二手博客补全当官方字段。
 
 7. **「重写一遍卡正文当作规范笔记」**
  本笔记服务字段统一；能力/红队/Preparedness 数字已在对应技术报告深读卡与 [[安全红队与对抗评测]]。重复粘贴会造成双源漂移。
@@ -258,7 +258,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 3. Hugging Face. *Annotated Model Card Template*（Ozoani, Gerchick, Mitchell；Guidebook 体系）. https://huggingface.co/docs/hub/en/model-card-annotated
 4. Hugging Face. *Model Card Guidebook*. https://huggingface.co/docs/hub/en/model-card-guidebook
 
-### 实践对照（已入库笔记 / PDF，勿当本笔记数字源）
+### 实践对照（相邻笔记 / PDF，勿当本笔记数字源）
 
 | 笔记 | 官方 PDF（示例） |
 |------|------------------|
@@ -285,7 +285,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-*主要来源：Mitchell 字段与主张据 https://arxiv.org/abs/1810.03993 ；HF 结构据 Hub 文档与 Annotated Template 页；厂商差异仅用已入库 TR 笔记的元信息与目录级描述。*
+*主要来源：Mitchell 字段与主张据 https://arxiv.org/abs/1810.03993 ；HF 结构据 Hub 文档与 Annotated Template 页；厂商差异仅用相邻 TR 笔记的元信息与目录级描述。*
 
 ## 相关笔记
 

@@ -48,7 +48,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 四向对照（跟读）
 
-| 已入库 | 本篇只取 | 本篇不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[SpeechLLM语音语言模型]] Qwen2-Audio** | 「音频连续特征条件 LLM → **文本**」是前置轴 | Whisper 初始化、40 ms/帧公式、三阶段与 Voice Chat 接口全文 |
 | **[[QwenOmni音视频原生]] Qwen Omni** | 表内 **Qwen-Omni / Qwen2.5-Omni** 作竞品基线 | Thinker–Talker、AuT、RVQ+MTP、ARIA、首包延迟产品叙事 |

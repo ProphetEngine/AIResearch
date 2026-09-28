@@ -14,7 +14,7 @@ archived: 2026-09-22
 > 卡页：https://deepmind.google/models/model-cards/gemini-3-7-flash/
 > PDF URL：https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-7-Flash-Model-Card.pdf
 > 对照笔记：[[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]
-> **只写增量**：相对 2.5 TR / 3 Pro Model Card 已入库面；本卡大量字段「see Gemini 3.6 Flash model card」——**本仓库未入库 3.6 Flash 卡**，3 Pro / 2.5 数字不外推为 3.7 架构主张。
+> **只写增量**：相对 [[Gemini25技术报告深读]] / [[Gemini3Pro模型卡深读]] 已覆盖面；本卡大量字段「see Gemini 3.6 Flash model card」——**本仓库无 3.6 Flash 卡笔记**，3 Pro / 2.5 数字不外推为 3.7 架构主张。
 > 参数量、专家数、层图与训练规模卡内未写明，标「未公开 / defer 至 3.6」。
 
 ---
@@ -50,7 +50,7 @@ archived: 2026-09-22
 
 ## 2. 相对 Gemini 2.5 TR / 3 Pro Model Card 的增量对照
 
-> 对照源：本卡原文 + [[Gemini25技术报告深读]]、[[Gemini3Pro模型卡深读]]。只写两侧可锚定或本卡显式相对前代的句子。本卡对照列主轴是 **3.6 Flash**（未入库），故下表「相对 2.5 / 3 Pro」= 产品字段与安全框架差分，**不是**把 3.7 能力表硬并到 3 Pro 第 5 页同名榜。
+> 对照源：本卡原文 + [[Gemini25技术报告深读]]、[[Gemini3Pro模型卡深读]]。只写两侧可锚定或本卡显式相对前代的句子。本卡对照列主轴是 **3.6 Flash**（本仓库无笔记），故下表「相对 2.5 / 3 Pro」= 产品字段与安全框架差分，**不是**把 3.7 能力表硬并到 3 Pro 第 5 页同名榜。
 
 ### 2.1 产品 / 文档形态
 
@@ -133,9 +133,9 @@ archived: 2026-09-22
 
 **能力总判（非分数，据 Δ 形态）：** 相对 3.6 Flash，增量集中在 **长程软件工程 / 终端 agent / 企业自动化 / PDF 理解 / 计算机使用 / 长上下文 MRCR**；**CharXiv** 两条相对 3.6 **略降**（表内如实）。相对表内友商：编码/agent 多项仍被 GPT-5.6 Terra 压一头（DeepSWE、Terminal-bench、OSWorld）；综合价效与若干文档/法律/视频项本卡列最优。
 
-### 3.3 与已入库 3 Pro / 2.5 能力叙事的「可交叉、不可硬并」点
+### 3.3 与 3 Pro / 2.5 能力叙事的「可交叉、不可硬并」点
 
-| 主题 | 已入库锚 | 本卡可交叉句 | 不合并项 |
+| 主题 | 相邻笔记锚 | 本卡可交叉句 | 不合并项 |
 |---|---|---|---|
 | 长上下文 | 3 Pro MRCR v2 8-needle 128k **77.0%**（vs 2.5 Pro 58.0%） | 本卡 **GDM-MRCR v2** 128k **97.0%**（vs 3.6 91.8%） | 名称/脚手架/「GDM-」前缀不同 → **不可**直接当 3.7>3 Pro |
 | 视频 | 2.5 / 3 Pro：Video-MMMU 等 | 本卡强调 **agentic video** + **LVBench 85.4%** | 榜不同；帧数设定见方法页 |
@@ -231,7 +231,7 @@ archived: 2026-09-22
 
 ## 6. 摘要
 
-Gemini 3.7 Flash Model Card（**2026-08-13** 发布，**9** 页）把该型号定位为基于 **3.6 Flash** 的 Gemini 3 族下一迭代：口号为 **核心推理算法改进 + agentic video + 可配置 thinking（质量/成本/延迟）**；上下文 **1M** / 输出 **64K**；knowledge cutoff 名义 **2026-03**（部分域仍可能 **2025-01**）。架构/数据/硬件/软件/安全政策正文 **全部 defer 至 3.6 Flash 卡**（本仓库未入库）——相对 2.5 TR / 3 Pro 卡**无新 MoE/Infra 数字**。能力表（vs 3.6）显示 DeepSWE **+16.7 pp**、AutomationBench **+13.4 pp**、OSWorld-2.0 **+14.1 pp**、GDP.pdf **+12.0 pp**、MRCR 128k **+5.2 pp** 等；CharXiv 相对 3.6 **略降 ~0.7 pp**。引入价 **$0.75 / $3.75**（至 2026-12-31）。安全相对 3.6 近似持平（±1 pp）；FSF **April-2026** 下 CBRN/Cyber **达 alert、未达 CCL**，并报告 **TCL not reached**；出货加强 CBRN/cyber offense 防护。技术深度仍依赖外链方法页与 FSF 报告。
+Gemini 3.7 Flash Model Card（**2026-08-13** 发布，**9** 页）把该型号定位为基于 **3.6 Flash** 的 Gemini 3 族下一迭代：口号为 **核心推理算法改进 + agentic video + 可配置 thinking（质量/成本/延迟）**；上下文 **1M** / 输出 **64K**；knowledge cutoff 名义 **2026-03**（部分域仍可能 **2025-01**）。架构/数据/硬件/软件/安全政策正文 **全部 defer 至 3.6 Flash 卡**（本仓库无笔记）——相对 2.5 TR / 3 Pro 卡**无新 MoE/Infra 数字**。能力表（vs 3.6）显示 DeepSWE **+16.7 pp**、AutomationBench **+13.4 pp**、OSWorld-2.0 **+14.1 pp**、GDP.pdf **+12.0 pp**、MRCR 128k **+5.2 pp** 等；CharXiv 相对 3.6 **略降 ~0.7 pp**。引入价 **$0.75 / $3.75**（至 2026-12-31）。安全相对 3.6 近似持平（±1 pp）；FSF **April-2026** 下 CBRN/Cyber **达 alert、未达 CCL**，并报告 **TCL not reached**；出货加强 CBRN/cyber offense 防护。技术深度仍依赖外链方法页与 FSF 报告。
 
 ## 相关笔记
 

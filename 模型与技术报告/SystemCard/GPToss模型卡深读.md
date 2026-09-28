@@ -34,7 +34,7 @@ archived: 2026-09-22
 | 分发（博文 Availability） | Hugging Face 权重（原生 **MXFP4**）；harmony renderer（Python/Rust）；PyTorch / Apple Metal 参考推理；多平台合作（Azure、vLLM、Ollama、llama.cpp、LM Studio、AWS 等——博文列举） |
 | API 兼容叙事 | 兼容 **Responses API**；支持 **Structured Outputs**；博文：未来「may consider API support for gpt-oss」 |
 | Knowledge cutoff | **June 2024**（§2.4） |
-| 相对 Astra / GPT-5 系 | 闭源旗舰卡 **已入库** → 本卡 **不**复述 Astra Preparedness 域阈/监控栈；只录 gpt-oss **开源**字段 |
+| 相对 Astra / GPT-5 系 | 闭源旗舰卡见 [[GPT6Astra系统卡深读]]、[[GPT5系统卡深读]] → 本卡 **不**复述 Astra Preparedness 域阈/监控栈；只录 gpt-oss **开源**字段 |
 
 **型号（Table 1 + §2 正文 + 博文表）：**
 
@@ -51,9 +51,9 @@ Table 1 分项：120b — MLP 114.71B，Attention 0.96B，Embed+Unembed 1.16B；
 
 ## 2. 相对闭源 GPT 旗舰卡 / 既有开源 MoE 的「开源增量」对照
 
-> 左列锚本 PDF + 博文；右列仅标已入库闭源卡覆盖面。Astra/GPT-5 未公开架构数字不回填到 gpt-oss，也不用 DeepSeek/Qwen MoE 拓扑「补全」本卡未写字段。
+> 左列锚本 PDF + 博文；右列仅标相邻闭源卡覆盖面。Astra/GPT-5 未公开架构数字不回填到 gpt-oss，也不用 DeepSeek/Qwen MoE 拓扑「补全」本卡未写字段。
 
-| 维度 | GPT-5 系 / Astra（已入库闭源卡） | **gpt-oss（本卡）** | 开源增量读法 |
+| 维度 | GPT-5 系 / Astra（[[GPT5系统卡深读]] / [[GPT6Astra系统卡深读]]） | **gpt-oss（本卡）** | 开源增量读法 |
 |---|---|---|---|
 | 文档形态 | System Card / 长安全章（Astra **118** 页量级） | **35** 页 **Model Card**（明确不用 system card 名义） | 技术可核对深度集中在 §2 架构/训练 + Table 3；安全 §3–5 是开源专用剖面 |
 | 权重 | API / 产品；**无可下载** LM 权重（相对本议题） | **Apache 2.0** HF 权重 + 参考实现 | **本议题核心增量**；博文称自 GPT-2 后首个 open-weight LM |

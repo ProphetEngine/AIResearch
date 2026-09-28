@@ -57,7 +57,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[硬件软件协同部署]]** | 「当代加速器有 tensor core / 高带宽域」是物理前提一句 | Blackwell NVL72 / TPU Ironwood datasheet 表 |
 | **[[注意力效率族MQA到MLA]]** | GQA / 注意力是 TK 的**示例工作负载** | MHA→MQA/GQA→MLA 公式与质量—带宽取舍全文 |

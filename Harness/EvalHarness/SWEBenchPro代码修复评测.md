@@ -58,7 +58,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[代码智能体Harness史线]]** | Pro 主结果用 **SWE-Agent**；Verified 用 **mini-swe-agent / AgentCompass**——仅作「统一 scaffold / 协议」字段 | ACI 四原则、viewer/edit/search 消融、OpenHands 四包 SDK、生产失败率 61% |
 | **[[评测与排行榜可靠性]]** | 「scaffold / pass@k / 泄漏」抽象提醒；Pro 的 copyleft + 商业私有 = 一种抗污染设计 | o1/Claude System Card 全表、thinking 开关通史、第三方聚合榜定论 |

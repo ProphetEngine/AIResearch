@@ -53,7 +53,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 2.1 相对相邻笔记只取接口
 
-| 已入库 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[ToRL工具集成强化学习]] ToRL** | 「工具调用可以是可学习策略」这一直觉相邻 | 解释器进 RL rollout、code ratio、AIME 无工具 vs 有工具对照全文 |
 | **[[智能体工具与长程任务]]** | BFCL / 工具增强是产品能力切片的上游数据问题 | MCP 史、System Card 长程、extended thinking with tools |

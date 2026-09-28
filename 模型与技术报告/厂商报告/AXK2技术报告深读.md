@@ -11,7 +11,7 @@ archived: 2026-09-22
 
 # A.X K2 Technical Report 深读卡
 
-> **定位**：A.X K2 增量技术报告主题轴（相对已入库 DeepSeek-V3 / Kimi-K2 / GLM-4.5 / Qwen3）。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30181`（2026-09-22 CST）。
+> **定位**：A.X K2 增量技术报告主题轴（相对 [[DeepSeekV3训练与MoE基建]] / [[KimiK2技术报告深读]] / [[GLM45技术报告深读]] / [[Qwen3技术报告深读]]）。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30181`（2026-09-22 CST）。
 > **研究线**：**架构思想（主）** + **评测字段 / agentic bench（辅）**。
 > **刻意不写**：DeepSeek-V3 MoE+MLA+DualPipe/FP8 分块配方全文（见 [[DeepSeekV3训练与MoE基建]]）；Kimi-K2 MuonClip / 15.5T / agentic 数据合成通史（见 [[KimiK2技术报告深读]]）；GLM-4.5 / Qwen3 训练 Infra 与 scaling 配方全文；DSA 两阶段续训（见 [[DeepSeekV32技术报告深读]]）；EAGLE 投机解码通史（[[推理引擎生态]] / 留给 [[EAGLE3投机解码]]）。本卡只补「SKT **A.X K2** 相对 **A.X K1** 与开源 MoE 对照表里的本 PDF 新公开点」。
 > A.X K1 独立 TR、Nemotron/GLM-5.1/Kimi-K2.6 等对照模型数字 **仅录本 PDF Table 6 转述**。
@@ -48,17 +48,17 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 
 ---
 
-## 二、相对已入库超大开源 MoE / 前代 K1 的增量对照
+## 二、相对超大开源 MoE / 前代 K1 的增量对照
 
-> 左列以本 PDF 明文为准。V3 / Kimi-K2 / GLM-4.5 / Qwen3 列仅作「已入库笔记锚点」，本卡不重写其 Infra。
+> 左列以本 PDF 明文为准。V3 / Kimi-K2 / GLM-4.5 / Qwen3 列仅作相邻笔记锚点，本卡不重写其 Infra。
 
-| 维度 | DeepSeek-V3 / Kimi-K2 等（已入库） | **A.X K1（本 PDF 转述）** | **A.X K2（本 PDF）** |
+| 维度 | DeepSeek-V3 / Kimi-K2 等（相邻笔记） | **A.X K1（本 PDF 转述）** | **A.X K2（本 PDF）** |
 |---|---|---|---|
 | 报告入口 | V3 2412.19437；K2 2507.20534 等 | 引 SKT 2026，仓库无独立 PDF | arXiv:**2608.30181v1** · **35** 页 · 2026-08-31 |
 | 问题设定 | 造超大 MoE 基座 / agentic 开源旗舰 | 前代 Sovereign 基座 | **固定算力+70 天**下抬 token 效率 + **长文可服务** + **可切换 thinking** |
 | 总参 / 激活 | V3 671B/37B；K2 1.04T/32.6B（各自 TR） | **519B** / **33B** | **688B** / **33B** |
 | Routed experts | V3 256；K2 384（各自 TR） | **192** | **256**（保持 33B 激活） |
-| 注意力 | MLA / MLA+DSA 等（已入库） | （未在本 PDF 重开完整表） | **MLA** + 全程 **gated attention** + 长文阶段加 **sparse indexer（SGA）** |
+| 注意力 | MLA / MLA+DSA 等（相邻笔记） | （未在本 PDF 重开完整表） | **MLA** + 全程 **gated attention** + 长文阶段加 **sparse indexer（SGA）** |
 | 归一化稳定 | — | **dual-normalization** | **GN** 替代 dual-norm（吞吐约 −5%，换稳定与低精度） |
 | 预训练 token | V3 14.8T；K2 15.5T | **~10T** | 总计 **~8.5T**（预训练 **~8.2T**） |
 | 长上下文 | 各系 YaRN / 继续训配方不同 | dense 长文对照 | 原生 **128K（ABF）**；推理 **YaRN→256K**；SGA **k=2048** |
@@ -67,7 +67,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 | 叙事身份 | 开源旗舰 / 推理 | 韩国前代 | **韩国 Sovereign AI**；韩语/文化 + 可控部署 |
 
 **增量一句话：**
-相对已入库「V3/Kimi 怎么把 MoE/MLA/优化器训稳」的通史，本卡公开增量几乎全部落在 **相对 K1 的专家扩容（192→256）+ SGA sparse warmup + GN 换 dual-norm + Think-Fusion + 固定 B200×70 天工程包**——**不当新 MoE 拓扑史或对照模型 Infra 重写**。
+相对「V3/Kimi 怎么把 MoE/MLA/优化器训稳」的通史，本卡公开增量几乎全部落在 **相对 K1 的专家扩容（192→256）+ SGA sparse warmup + GN 换 dual-norm + Think-Fusion + 固定 B200×70 天工程包**——**不当新 MoE 拓扑史或对照模型 Infra 重写**。
 
 ---
 
@@ -224,7 +224,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 2. **固定时间/GPU 预算** → 相对「更大算力同规模」模型有作者自承的性能短板。
 3. **纯文本**；计划原生多模态；结论展望万亿参。
 
-**相对已入库笔记的增量边界：**
+**与相邻笔记的增量边界：**
 
 | 已有笔记 | 本卡不复述 | **本卡新增** |
 |---|---|---|

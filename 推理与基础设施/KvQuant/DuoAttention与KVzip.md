@@ -188,7 +188,7 @@ $$
 | 多 query 复用 | Streaming 侧天然 query-无关；Retrieval 侧全保留 | **设计目标**即跨 query 复用 |
 | 文内互指 | — | 可替换 DuoAttention 的 head-score 优化 |
 
-| 已入库 | 本卡只取接口 | 本卡不写 |
+| 相邻笔记 | 本卡只取接口 | 本卡不写 |
 |---|---|---|
 | **[[KV缓存量化与压缩]]** | 「可与 4-bit KV / QServe 叠」一句 | KIVI/KVQuant 误差轴、残差窗 |
 | **[[检索式注意力]]** | 「都是减 KV 负担」一句对照 | ANNS / InfiniRetri 句缓存 |

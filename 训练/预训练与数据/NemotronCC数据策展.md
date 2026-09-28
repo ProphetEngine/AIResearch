@@ -229,7 +229,7 @@ HQ 子集 = 最高分 **真实** + **Diverse QA** 合成（短程公平对照用
 
 | 笔记 | 接口一句 |
 |---|---|
-| **[[分词器与数据配比]]** | FineWeb / DCLM / Dolma / SentencePiece **通史**已入库；本篇只记 Nemotron-CC 对「砍量换分」的 **长程修正** |
+| **[[分词器与数据配比]]** | FineWeb / DCLM / Dolma / SentencePiece **通史**见该笔记；本篇只记 Nemotron-CC 对「砍量换分」的 **长程修正** |
 | **[[合成数据与教科书式数据]]** | Textbooks / Self-Instruct 是 **造教材/指令**；本篇合成是 **网页改写与结构变换** |
 | **[[合成对齐数据Magpie]]** | Magpie / ActiveUF = 对齐数据；并行数据侧，非本篇 |
 | **数据源引用** | 若点名 Nemotron-CC 为训练源，回指本卡管线 |

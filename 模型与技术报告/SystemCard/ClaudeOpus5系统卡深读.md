@@ -208,7 +208,7 @@ Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / com
 
 ## 7. 相对 Opus 4.5 的增量（桥接说明）
 
-> **对照前提：** Opus 5 System Card **从未点名 Opus 4.5**；卡内定量对照主轴是 **Opus 4.8 / Fable 5 / Mythos 5**。下表把「已入库 4.5 深读卡」与「本卡 + 公告」做**结构/政策增量**对照；4.5 的 SWE-bench Verified 80.9% 与 5 的 96.0% 不同 harness，不可直接相减。
+> **对照前提：** Opus 5 System Card **从未点名 Opus 4.5**；卡内定量对照主轴是 **Opus 4.8 / Fable 5 / Mythos 5**。下表把[[ClaudeOpus45系统卡深读]]与「本卡 + 公告」做**结构/政策增量**对照；4.5 的 SWE-bench Verified 80.9% 与 5 的 96.0% 不同 harness，不可直接相减。
 
 | 维度 | Opus 4.5（[[ClaudeOpus45系统卡深读]]，封面 Nov 2025） | Opus 5（本卡，Jul 24, 2026） |
 |---|---|---|

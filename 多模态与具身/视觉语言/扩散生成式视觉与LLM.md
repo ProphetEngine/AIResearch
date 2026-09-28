@@ -29,7 +29,7 @@ archived: 2026-09-22
 
 产品与研究里「多模态」常被一张图文截图糊成同一议题。跟读时至少拆成两条互不替代的能力：
 
-| 能力轴 | 代表入口（已入库 / 本卡） | 默认输出 | 骨干直觉 |
+| 能力轴 | 代表入口（相邻笔记 / 本卡） | 默认输出 | 骨干直觉 |
 |--------|---------------------------|----------|----------|
 | **理解 / 对话** | [[多模态架构脉络]]：CLIP → Flamingo → LLaVA 等 | 文本（答案、caption、对话） | 视觉编码 →（对齐或桥接）→ **自回归 LM** |
 | **生成 / 合成** | 本卡：LDM → DiT（及后续文生图产品） | 图像（像素或经解码器） | **去噪网络**（U-Net 或 Transformer）在噪声链上迭代 |
@@ -273,7 +273,7 @@ LDM 与 DiT 均依赖 Ho & Salimans 的 CFG：训练丢条件、采样时外推�
 - Dhariwal & Nichol. *Diffusion Models Beat GANs on Image Synthesis*（ADM；U-Net 消融与 Gflops 讨论的前作）
 - Ronneberger et al. U-Net；Dosovitskiy et al. ViT；Esser et al. VQGAN；Ramesh et al. DALL-E（LDM 对比的两阶段 AR 路线）
 
-### 6.3 与已入库笔记的双链
+### 6.3 与相邻笔记的双链
 
 - **[[多模态架构脉络]]**：理解/对话线；本卡不重写 CLIP/Flamingo/LLaVA。
 - [[MOC_多模态与具身]]
