@@ -258,9 +258,9 @@ Top claim（inability）
 
 ## 相关笔记
 
-- [[法律专科模型|Legal Specialty Models]]
-- [[MixtureOfAgents与TUMIX|MoA / TUMIX]]
-- [[图谱检索GraphRAG|Graph RAG]]
-- [[MemoryR1强化学习记忆维护|Memory-R1]]
-- [[安全论证SafetyCases|Safety Cases]]
+- [[法律专科模型]]
+- [[MixtureOfAgents与TUMIX]]
+- [[图谱检索GraphRAG]]
+- [[MemoryR1强化学习记忆维护]]
+- [[安全论证SafetyCases]]
 
