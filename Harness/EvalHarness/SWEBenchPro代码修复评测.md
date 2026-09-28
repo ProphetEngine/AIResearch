@@ -26,7 +26,7 @@ timezone: Asia/Shanghai (CST)
 > **研究线**：**评测字段（主）**——规模切分、Pass@1 / accuracy、协议旋钮（增广 / 预算 / scaffold）、泄漏通道与修复前后分差。
 > **范围与相邻笔记**：
 > - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 控制环正文。两文只用 SWE-Agent 或 mini-swe-agent 作**统一评测脚手架引用**，不展开命令面 / 观测格式 / 四包 SDK。
-> - **≠ [[评测与排行榜可靠性]]**：不重写污染 / 路由 / thinking 模式 / System Card 榜单通史全文；本卡只录 **Pro 族专用字段**（copyleft 抗污染、三分集、anti-hacking、任务校正）。
+> - **≠ [[评测与排行榜可靠性]]**：不重写污染 / 路由 / thinking 模式 / System Card 榜单通史全文；本篇只列 **Pro 族专用字段**（copyleft 抗污染、三分集、anti-hacking、任务校正）。
 > - **≠ [[科研智能体]]**：不把「科研模板改码 / ChemCrow 工具化学」写成仓库级 SE 补丁环；本卡对象是 **issue→patch→fail2pass/pass2pass**。
 > - **不重写 SWE-agent 控制环**（ReAct 步、viewer/edit/search 消融等 → 已在 [[代码智能体Harness史线]]）。
 > Scale Labs 网页摘要与 arXiv **v2** 摘要数字不一致处显式对照。

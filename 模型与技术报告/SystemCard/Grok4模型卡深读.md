@@ -222,13 +222,13 @@ Grok 4 卡是一份 **8 页、几乎纯安全评测** 的 model card：能力侧
 ### 4.1 局限与待核实
 
 1. **通用能力数字**：Grok 4 / 4.1 / 4.20 官方卡均**未**给出 MMLU、GPQA、SWE-bench、LiveCodeBench 等——若需能力深读，须另找 xAI blog / API docs / 第三方榜（**待核实**，本卡不填）。
-2. **参数量、架构（dense/MoE）、上下文窗口、知识截止日期**：三卡正文均未写；4.20 API 文档网页称 context 等——**属 docs 层，非 model card 原文**，引用时须另开源。
+2. **参数量、架构（dense/MoE）、上下文窗口、知识截止日期**：三卡正文均未写；4.20 API 文档网页称 context 等——**属 docs 层，非 model card 原文**，引用时须另注出处。
 3. **Grok 4 卡 Table 1 与 4.1 卡多语修正**：4.1 明确说旧卡 refusal 曾只评英文 → **跨卡 abuse 数字不可直接纵向比较**（已在 §3.2 标注）。
 4. **VCT 数字跨卡不一致**：Grok 4 卡 API VCT=0.60、Web=0.71；4.20 表中 Grok 4 列写 0.55——可能评测设置/checkpoint 不同，**待对照原表脚注或后续勘误**。
 5. **MakeMeSay**：Grok 4 卡 0.12 vs 4.1 表中 Grok 4 列 0.13——微小差异，**待核实是否同一协议/对手模型**。
 6. **RMF / FAIF 全文**：卡内引用 `xAI, 2025` Risk Management Framework / Frontier Artificial Intelligence Framework；完整政策 PDF（如 media.x.ai 上 FAIF 草案）**未纳入本笔记深读**。
 7. **第三方评估方名称与报告**：4.20 称提供 early checkpoint 给第三方，**未点名机构**。
-8. **Grok 4 Fast**：有独立卡，但本笔记未做等深对照；需要时可另开 Grok 4 Fast 专项卡。
+8. **Grok 4 Fast**：有独立卡，但本笔记未做等深对照。
 9. **4.6 / 4.7 等更新卡**：检索曾出现 `media.x.ai` 上 Grok 4.6 Model Card（2026-08）等；**不在本次用户指定的 4 / 4.1 / 4.20 范围内**，未深读。
 
 ### 4.2 直接引用（官方 PDF）

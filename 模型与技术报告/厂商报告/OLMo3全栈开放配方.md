@@ -284,7 +284,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 - **[[GPToss模型卡深读]] / [[Gemma4技术报告深读]]**：另两路「开源权重卡」样本。
 - [[Qwen3技术报告深读]] / [[DeepSeekV3训练与MoE基建]] / [[Llama4待核实备忘]]：基线与 pending 位。
 - **[[对齐脉络RLHF与偏好优化]] / [[推理时扩展TestTimeScaling]]**：偏好优化与 test-time thinking 通史接口。
-- 同主题过程监督 / 工具环（[[可验证过程监督]] / [[ToolLoop工具数据合成]]）可作 RLVR / function-calling **下游用法**交叉，不升本卡主轴。
+- 同主题过程监督 / 工具环（[[可验证过程监督]] / [[ToolLoop工具数据合成]]）可作 RLVR / function-calling **下游用法**交叉，本篇不展开。
 
 ---
 

@@ -26,7 +26,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[计算机使用智能体]] CUA**：不重写 Operator System Card 安全栈、OSWorld 2.0 长程桌面、StateAct；本卡若点到 Operator，仅作 Online-Mind2Web **人工 SR 表内一列**，不写截图键鼠产品安全。
 > - **≠ [[WorfBench工作流基准]] WorfBench**：不重写 agentic **workflow 图生成**与 WorFEval；本卡对象是 **浏览问答 / 在线网页操作完成**，不是 DAG 工作流合成。
 > - **≠ [[VendingBench经营长程评测]] Vending-Bench**：不重写经营仿真净值 / meltdown；介质与目标完全不同。
-> **主要来源**：[BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents](https://arxiv.org/abs/2504.12516)；[An Illusion of Progress? Assessing the Current State of Web Agents](https://arxiv.org/abs/2504.01382)；[BrowseComp: a benchmark for browsing agents](https://openai.com/index/browsecomp)（截至 2026-09-22）。两文主张差异标为**该文主张**，不升跨文「谁更真实」裁决。
+> **主要来源**：[BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents](https://arxiv.org/abs/2504.12516)；[An Illusion of Progress? Assessing the Current State of Web Agents](https://arxiv.org/abs/2504.01382)；[BrowseComp: a benchmark for browsing agents](https://openai.com/index/browsecomp)（截至 2026-09-22）。两文主张差异标为**该文主张**，不构成跨文「谁更真实」的结论。
 
 ---
 
@@ -125,7 +125,7 @@ timezone: Asia/Shanghai (CST)
 
 ¹ 脚注（文内）：Deep Research **在专门教 BrowseComp 类任务的数据上训过**——读榜须带此条件，不可当作「无偏置的通用浏览上界」。
 
-**字段解读（文内主张，不升裁决）：**
+**字段解读（文内主张，非裁决）：**
 - 单开 browsing（4o 0.6→1.9）不够；无浏览但强推理的 o1 到 9.9，说明部分题可被内部知识/推理「蹭」到。
 - Deep Research ~半题正确，但 **校准误差更高**——文称浏览工具可能抬高错误答案上的自信（与 Deep Research 产品自述校准弱一致）。
 - Figure 1：早期 Deep Research 上 **test-time browsing effort** 与 Accuracy **平滑上升**（log-scale compute）。

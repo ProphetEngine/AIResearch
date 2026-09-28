@@ -101,7 +101,7 @@ PDF **未**逐步写出：投影层维度、是否 prefix 拼接 vs 层间 cross
 - 条件形式为式 (1)；
 - Figure 2 示意 **Audio Encoder → QwenLM → Next Token Prediction**。
 
-跟读时勿把视觉 LMM（LLaVA 线性投影 / Flamingo gated xattn）的具体接法 **原样投射** 到本模型——除非另开实现级源码笔记。
+跟读时勿把视觉 LMM（LLaVA 线性投影 / Flamingo gated xattn）的具体接法 **原样投射** 到本模型。
 
 ---
 

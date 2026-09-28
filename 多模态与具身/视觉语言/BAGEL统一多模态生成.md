@@ -32,11 +32,11 @@ timezone: Asia/Shanghai (CST)
 > **研究线**：**架构思想（主）**——MoT / 双编码器（SigLIP2 + FLUX VAE）/ 广义因果注意力 / NTP⊕Rectified Flow；**评测字段（辅）**——Table 4–10 与 IntelligentBench 文内数字转述。
 > **范围与相邻笔记**：
 > - **≠ [[扩散生成式视觉与LLM]]**：不写成 **LDM / DiT 图像潜扩散层图通史**。本卡只写 BAGEL 的 **统一 MoT + RF 视觉头**；LDM/DiT 仅作谱系对照一句，不重写感知压缩 / U-Net→ViT 规模化。
-> - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等无可核长 TR）。本卡对象是 **统一理解+生成基础模型**；文内「视频交错数据 / 多帧生成」只作为 **训练源与世界建模定性展示**，不升「视频生成正式报告」主轴。
+> - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等无可核长 TR）。本卡对象是 **统一理解+生成基础模型**；文内「视频交错数据 / 多帧生成」只作为 **训练源与世界建模定性展示**，文生视频见 [[视频生成正式报告]]。
 > - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」**理解/对话通史**；经典祖先仅 related-work 接口。
 > - **≠ [[SiLVR与ChainOfFrames]]**：不写成 **SiLVR / Chain-of-Frames 视频理解推理框架**；本卡是 **生成侧统一模型 + 编辑/世界建模**，不是纯语言管道 VideoQA。
 > - **≠ [[QwenOmni音视频原生]]**：不写成 **Qwen Omni Thinker–Talker 音视频产品卡**；BAGEL 主轴是 **视觉理解+图像生成/编辑**，非流式语音合成 Omni。
-> - **谱系一句**：**Chameleon**（早期融合）过旧 → 仅 Table 4/5 对照与设计空间一句。**Foley-Omni**（音轨统一生成）→ **后置**。
+> - **谱系一句**：**Chameleon**（早期融合）过旧 → 仅 Table 4/5 对照与设计空间一句。**Foley-Omni**（音轨统一生成）本篇不展开。
 > **主要来源**：[Emerging Properties in Unified Multimodal Pretraining](https://arxiv.org/abs/2505.14683)；[ByteDance-Seed/Bagel README](https://github.com/ByteDance-Seed/Bagel)（截至 2026-09-22）；文内未给出精确 GPU 小时与完整层宽公式。
 
 ---

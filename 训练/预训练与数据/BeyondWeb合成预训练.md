@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 > **研究线**：**架构思想（主）**——generator-driven vs source-rephrasing；质量种子 / 风格对齐 / 多样性三原则；改写器族与规模饱和；**评测字段（辅）**——Table 1 与 Fig.1（1B×1T、3B/8B×180B；14 基准 0+5-shot 均值）。
 > **范围与相邻笔记**：
 > - **≠ [[NemotronCC数据策展]]**：不写成 **Nemotron-CC** 全管线（Justext→分类器集成→全局去重→HQ 合成改写→6.3T）复述。本卡只把 **Nemotron-Synth**（Nemotron-CC 的 **HQ 合成子集**）当 **合成预训练对照基线**；CC 策展增量见 [[NemotronCC数据策展]]。
-> - **≠ [[合成数据与教科书式数据]]**：不写成 phi / *Textbooks Are All You Need* / Cosmopedia 式 **教科书 / de novo 生成器驱动** 通史。本卡主轴是 **对已有网页 source rephrasing**；§4.2 把 Cosmopedia 当「可被简单摘要逼近」的对照，不升教科书主文。
+> - **≠ [[合成数据与教科书式数据]]**：不写成 phi / *Textbooks Are All You Need* / Cosmopedia 式 **教科书 / de novo 生成器驱动** 通史。本卡主轴是 **对已有网页 source rephrasing**；§4.2 把 Cosmopedia 当「可被简单摘要逼近」的对照，教科书式数据见 [[合成数据与教科书式数据]]。
 > - **≠ [[分词器与数据配比]]**：不重写 **FineWeb / DCLM / Dolma** 抽取—启发式—模型过滤通史。文中 BeyondWeb 作用于「DCLM 高质量子集（DatologyAI 策展方法）」仅作 **种子来源一句**；过滤通史留 [[分词器与数据配比]]。
 > - **≠ [[合成对齐数据Magpie]]**：Magpie / ActiveUltraFeedback 是 **对齐侧**指令/偏好合成；本卡是 **预训练侧** 改写合成 + 长程 scaling 消融。
 > 文内未公开完整 prompt 配方与 BeyondWeb 专有生成策略细节。

@@ -18,7 +18,7 @@ related: ["推理引擎生态", "Prompt前缀缓存", "NVSHMEM与DeepEP通信", 
 > - **Goose**（*Anisotropic Speculation Trees*）：**无训**各向异性脊柱树；联合 **PLD 上下文 n-gram**（高接受 spine）与 **TR 转移表**（低接受 branches），证明异构接受率下最优树非各向同性；**不训草稿头**。
 > **研究线**：**AI Infra / 投机解码拓扑与校验规则（主）** + **数学原理（辅）**（margin、接受异构、脊柱树期望产量下界）。
 > **范围与相邻笔记**：
-> - **≠ [[EAGLE3投机解码]]**：不重写 training-time test、特征融合、EAGLE→EAGLE-2→EAGLE-3 谱系与 SGLang 吞吐表正文。AdaptiveSpec **以 EAGLE-3 为草稿器/静态基线**，贡献是 **margin 校验 + 逐步树形**；Goose 文内明示与 EAGLE-3 **跨类（cross-category）**——无神经草稿头，本卡只录对照句，不抄 EAGLE-3 方法。
+> - **≠ [[EAGLE3投机解码]]**：不重写 training-time test、特征融合、EAGLE→EAGLE-2→EAGLE-3 谱系与 SGLang 吞吐表正文。AdaptiveSpec **以 EAGLE-3 为草稿器/静态基线**，贡献是 **margin 校验 + 逐步树形**；Goose 文内明示与 EAGLE-3 **跨类（cross-category）**——无神经草稿头，本篇只列对照句，EAGLE-3 方法见 [[EAGLE3投机解码]]。
 > - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang/TRT-LLM 选型通史，不写 Leviathan/Chen/Medusa/Lookahead 基线课。
 > - **≠ [[Prompt前缀缓存]] / [[NVSHMEM与DeepEP通信]] / [[ThunderKittens内核DSL]]**：不写 Prompt Caching 计费、NVSHMEM/DeepEP、ThunderKittens 内核 DSL。
 > - **≠ [[KV缓存量化与压缩]] / [[连续批处理与Orca]]**：不写 KV 量化、Orca 连续批处理。

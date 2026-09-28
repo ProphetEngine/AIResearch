@@ -30,7 +30,7 @@ timezone: Asia/Shanghai (CST)
 > - Memory-R1 在 `{ADD, UPDATE, DELETE, NOOP}` 上的 RL / 双 agent 蒸馏 → 「MemoryR1强化学习记忆维护」；Mem0 本文的四操作是 **LLM tool-call 启发式**，不是 RL 策略学习。
 > - 稠密检索 / DPR / 向量库产品通史 → 「检索增强与知识外挂」；RAG 仅作 Mem0 文内 chunk×k 对照槽。
 > - Microsoft GraphRAG **文档语料**社区摘要 + map-reduce 全局问答 → 「图谱检索GraphRAG」；Zep 虽引用 GraphRAG 作 community 灵感，对象是 **agent 对话/业务记忆的时序 KG**，不是文档库 QFS。
-> **材料口径**：表数字、延迟、token、准确率一律锚定官方 PDF（检索截止 2026-09-22）。Mem0 文对 Zep「构建延迟 / 图 token 膨胀」的批评、Zep 文对 MemGPT/DMR 的批评，均标为**该文主张**，不升为跨文客观裁决。
+> **材料口径**：表数字、延迟、token、准确率一律锚定官方 PDF（检索截止 2026-09-22）。Mem0 文对 Zep「构建延迟 / 图 token 膨胀」的批评、Zep 文对 MemGPT/DMR 的批评，均标为**该文主张**，不构成跨文客观结论。
 
 ---
 

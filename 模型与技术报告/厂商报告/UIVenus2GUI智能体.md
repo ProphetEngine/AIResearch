@@ -19,7 +19,7 @@ archived: 2026-09-22
 > **定位**：GUI 智能体技术报告主题轴——**Ant Group Venus Team** 的跨 **mobile / web / desktop** foundation GUI agent；主轴是 **截图观测 → 推理 → 结构化 GUI 动作 → 环境反馈** 的统一闭环，以及为离线 RL 供能的 **trace / sample 级可验证信号**。
 > **研究线**：**架构思想（主）** + **评测字段（trace/sample 验证与多基准表，辅）**。
 > **范围与相邻笔记**：**不写** ReAct / MCP / 通用工具环全文（→ **[[智能体工具与长程任务]]**）；**不写** 具身机器人 VLA / 连续动作 flow（→ **[[视觉语言动作谱系]]**）；GRPO/DAPO 算法族细节仅交叉引用（→ **[[GRPO与DAPO算法族]]**），本篇不展开配方。
-> **同窗附录索引**：BlueLM-GUI（arXiv **2609.12394**）仅作对照入口，**不另开同题正文**。
+> **同窗附录索引**：BlueLM-GUI（arXiv **2609.12394**）仅作对照入口，本篇不展开。
 > 正文未展开的投票协议 / 安全训练细节 / 离线 RL 具体损失标「文内未细写」。
 
 ---
@@ -247,13 +247,13 @@ CAPTCHA 在叙事上还有数据缩放作用：避免登录/注册等流程卡�
 
 ---
 
-## 九、附录索引：BlueLM-GUI（不升正文）
+## 九、附录索引：BlueLM-GUI
 
 | 项 | 核验（arXiv API，2026-09-22） |
 |---|---|
 | 标识 | arXiv:**2609.12394v3** \[cs.AI\]；标题 *BlueLM-GUI Technical Report: A Real-Device-Centric Flywheel for Self-Improving Mobile GUI Agents* |
 | 摘要抓手 | **真机中心** flywheel；三原则 Every Sample / Every Rollout Is Real / Every Query Evolves；模型 **35B-A3B**；报 MobileGUI-VBench **87.4**、AndroidWorld **84.9**（开源侧叙述） |
-| 与本篇关系 | 同窗 mobile GUI agent TR，侧重 **真机分布与自改进飞轮**；UI-Venus-2 侧重 **跨端统一闭环 + 验证器扩 RL 信号**。本卡**仅索引，不另开同题笔记** |
+| 与本篇关系 | 同窗 mobile GUI agent TR，侧重 **真机分布与自改进飞轮**；UI-Venus-2 侧重 **跨端统一闭环 + 验证器扩 RL 信号**。本篇**仅作索引** |
 
 ---
 

@@ -20,7 +20,7 @@ archived: 2026-09-22
 > - **≠ [[KV缓存量化与压缩]]**：不写 K/V 非对称量化、残差窗、outlier 比特轴；两文均称量化可叠加，本篇只录「组合后容量」一句。
 > - **≠ [[检索式注意力]]**：不写 KV 向量 ANNS / 句级 token 缓存；本篇是 **头分工** 与 **prefill 期 query-agnostic 驱逐**，不是 decode 期检索近似。
 > - **≠ [[长上下文位置编码与系统侧]]**：不重写 YaRN / PagedAttention / vLLM 调度通史。
-> - **SnapKV / PyramidKV / H2O / StreamingLLM / TOVA / FastGen**：仅作文内基线槽，**不另开**方法课。
+> - **SnapKV / PyramidKV / H2O / StreamingLLM / TOVA / FastGen**：仅作文内基线槽，本篇不展开其方法。
 
 ---
 

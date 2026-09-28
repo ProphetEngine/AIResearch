@@ -37,7 +37,7 @@ timezone: Asia/Shanghai (CST)
 | **主文** | StepFun Audio Team, *Step-Audio 2 Technical Report* | arXiv:**2507.16632v3** \[cs.CL\] **27 Aug 2025**；XMP MetadataDate 2025-08-28T01:06:32Z（→ **2025-08-28 09:06 CST**）；许可证 arXiv nonexclusive-distrib/1.0；`https://arxiv.org/abs/2507.16632`（**21** 页 letter） | 主锚：架构 + 预训练/SFT/RL + 评测 + mini 附录 |
 | **代码入口（文内明示）** | stepfun-ai/Step-Audio2 | https://github.com/stepfun-ai/Step-Audio2 | 开源入口；含 StepEval 基准与 mini 权重叙事（本篇不跟 commit） |
 
-**谱系一句：** 同系前作 **Step-Audio**（Huang et al., arXiv:2502.11946）与 **Step-Audio-AQAA**（arXiv:2506.08967）被文内称为「以离散音频 token 统一理解与生成、约 **130B**」的先例；Step-Audio 2 **参数更少**，并把 **音频 token 生成进一步并入语言建模**。细节以本 TR 为准，不另开卡。
+**谱系一句：** 同系前作 **Step-Audio**（Huang et al., arXiv:2502.11946）与 **Step-Audio-AQAA**（arXiv:2506.08967）被文内称为「以离散音频 token 统一理解与生成、约 **130B**」的先例；Step-Audio 2 **参数更少**，并把 **音频 token 生成进一步并入语言建模**。细节以本 TR 为准。
 
 **一句话抓手：**
 原始音频 → **冻结 25 Hz 编码器** → **2× 下采样适配器（12.5 Hz）** → **LLM 输出文本/音频交织离散 token** → **CosyVoice 2 tokenizer + Flow Matching + HiFi-GAN** 出波形；训练侧 **1.356T token 续预训练（21 天）+ 4B SFT + PPO×2 + GRPO**；推理侧可调 **web / audio search** 等工具做多模态 RAG。

@@ -21,7 +21,7 @@ archived: 2026-09-22
 > **范围与相邻笔记**：
 > - **≠ [[推理时扩展TestTimeScaling]]**：不写 o1/R1 产品通史、语言 CoT 提示/RL 训练配方；只取「语言空间推理有瓶颈 → 换到连续空间」这一接口。
 > - **≠ [[推理时树搜索ABMCTS]] AB-MCTS**：不写外层 **显式 token/答案树** + Thompson sampling；Coconut 的「BFS」是 **潜表示内并行编码多候选**，无外层搜索控制器。
-> - **≠ 机制可解释性**：不写 SAE / 电路 / 归因图通史；文中对 latent 的 probe（把 continuous thought 解码成候选概念概率）只作 **行为解释证据**，不升 MI 方法论。
+> - **≠ 机制可解释性**：不写 SAE / 电路 / 归因图通史；文中对 latent 的 probe（把 continuous thought 解码成候选概念概率）只作 **行为解释证据**，不作 MI 方法论展开。
 > - AGCLR 仅作补链点名，本卡不展开。
 
 ---

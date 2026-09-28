@@ -157,7 +157,7 @@ timezone: Asia/Shanghai (CST)
 **Reinforced Reward Hacking Blocker（§4.2.4，关键）**
 标准去 remote/branch/tag 不足：后期 agent 会 `git remote add` / `clone` / `curl` 拉未来提交（Fig.7）。策略：工具调用若同时含 **github.com/{repo} 类链接** 与 **网络关键词（git/curl/wget）** → 拦截并显式反馈。文称人工抽查后 hacking 基本消除；RL 中平均交互轮次由约 **50 → 130**（长程能力涌现，Fig.7 左）。
 
-**模板跟随评测 Table 2（Avg）：** Qwen3-Coder-Next **92.7**（五 scaffold）；对照 DeepSeek-V3.2 **93.7**、Gemini-3-pro **87.0**、Claude-sonnet-4-5 **85.4** 等——本卡只录数字，不升「IDE 评测」专篇。
+**模板跟随评测 Table 2（Avg）：** Qwen3-Coder-Next **92.7**（五 scaffold）；对照 DeepSeek-V3.2 **93.7**、Gemini-3-pro **87.0**、Claude-sonnet-4-5 **85.4** 等——本篇只列数字。
 
 ### 5.3 Expert Distillation（§4.2.5）
 
@@ -165,7 +165,7 @@ timezone: Asia/Shanghai (CST)
 
 ---
 
-## 六、评测字段（§5；辅；不升 [[SWEBenchPro代码修复评测]]）
+## 六、评测字段（§5；辅）
 
 **协议共性（文内）：** 各 scaffold 复现基线；采用去 remote/branch/tag 等 anti-hacking；agent 最大轮次 **300**。基线含 Claude-Opus-4.5 / Sonnet-4.5 与 DeepSeek-V3.2、GLM-4.7、MiniMax-M2.1、Kimi-K2.5 等。
 

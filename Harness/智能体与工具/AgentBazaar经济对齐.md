@@ -21,7 +21,7 @@ archived: 2026-09-22
 > - **不重写** 金融交易 bot / QuantAgent / FinAgent **通史**（Related 仅点名「单代理交易」邻槽后立即回到本篇的系统性失败）。
 > - **不重写** [[合成用户仿真]] 合成用户仿真（本篇买家/卖家是 **市场角色**，不是 τ-bench 风格工具环用户仿）。
 > - **不重写** [[对齐脉络RLHF与偏好优化]] RLHF / Constitutional AI 通史——只取「单交互 helpfulness ≠ 系统性经济安全」接口句。
-> - Vending-Bench / Arena（文内对照）→ **索引一句**；本主题轴不另开经营长程通史。
+> - Vending-Bench / Arena（文内对照）→ **索引一句**；经营长程评测见 [[VendingBench经营长程评测]]。
 > **主要来源**：[Agent Bazaar: Enabling Economic Alignment in Multi-Agent Marketplaces](https://arxiv.org/abs/2605.17698)；[Agent Bazaar](https://sethkarten.ai/papers/agent-bazaar.html)（作者项目页）（截至 2026-09-22）。
 
 ---

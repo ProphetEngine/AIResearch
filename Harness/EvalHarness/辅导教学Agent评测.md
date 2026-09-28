@@ -138,7 +138,7 @@ Win rate 定义（Table 4 注）：RM 更偏好 **模型响应** 相对 **教师
 
 1. **专长不自动变成理解与教学法**：Qwen2.5-Math-7B Problem Solving **0.88**，但 scaff. win rate 仅 **0.06**。
 2. **辅导专科模型**：SocraticLM 相对基座在脚手架上有提升，但 Student Understanding 多项崩（Solution Correctness **0.05**）。
-3. **LearnLM-1.5-Pro** 在文内被描述为各技能更均衡；长对话（hard）上「Only LearnLM can keep consistent performance」——**仅作文内对照句**，不升为本卡训练主轴。
+3. **LearnLM-1.5-Pro** 在文内被描述为各技能更均衡；长对话（hard）上「Only LearnLM can keep consistent performance」——**仅作文内对照句**。
 4. **GPT-4o** Ped. IF **0.82**（相对 scaff. **0.50** 大幅提升），显示强指令遵循；多数开源模型 IF 增益有限或持平。
 5. **更长对话更难**：hard 列普遍掉分。
 

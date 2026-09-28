@@ -166,4 +166,4 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 | **主** | Wang, Zuo, Chen, Liang, Yu, Yang. *Prefill-Decode Aggregation or Disaggregation? Unifying Both for Goodput-Optimized LLM Serving*（TaiChi） | https://arxiv.org/abs/2508.01989 （v1，2025-08-04；17 pages） |
 | **史前对照** | Zhong, Liu, Chen, Hu, Zhu, Liu, Jin, Zhang. *DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving* | https://arxiv.org/abs/2401.09670 |
 | **一句交叉** | Qin et al. *Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving* | 见主文 References |
-| **聚合侧基线（文内）** | Orca（OSDI 2022）；Sarathi-Serve（OSDI 2024，chunked prefill） | 详见 [[连续批处理与Orca]]；Sarathi 不另开题 |
+| **聚合侧基线（文内）** | Orca（OSDI 2022）；Sarathi-Serve（OSDI 2024，chunked prefill） | 详见 [[连续批处理与Orca]]；Sarathi 本篇不展开 |

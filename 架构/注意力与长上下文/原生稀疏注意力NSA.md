@@ -20,7 +20,7 @@ archived: 2026-09-24
 # 原生稀疏注意力（NSA）
 
 > **定位**：可端到端训练、且与现代 GPU / GQA 内存访问对齐的 **原生稀疏注意力** 入口。主文 Yuan、Gao、Dai 等（DeepSeek-AI / 北大），*Native Sparse Attention: Hardware-Aligned and Natively Trainable Sparse Attention*（arXiv:2502.11089）。
-> **边界**：相对 [[注意力效率族MQA到MLA]]，头压缩线止于 MLA；本篇另开「可训稀疏」入口，不重写 MQA/GQA/MLA 接线史。相对 [[DeepSeekV32技术报告深读]]，仅交叉一句 DSA 系谱接口，不重写 V3.2 后训练、GRPO 或 agent 合成。相对 [[检索式注意力]]：后者多为推理期 / training-free 检索近似；NSA 把稀疏写进预训练计算图。
+> **边界**：相对 [[注意力效率族MQA到MLA]]，头压缩线止于 MLA；本篇讲「可训稀疏」，不重写 MQA/GQA/MLA 接线史。相对 [[DeepSeekV32技术报告深读]]，仅交叉一句 DSA 系谱接口，不重写 V3.2 后训练、GRPO 或 agent 合成。相对 [[检索式注意力]]：后者多为推理期 / training-free 检索近似；NSA 把稀疏写进预训练计算图。
 
 ---
 

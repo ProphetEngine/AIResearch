@@ -33,7 +33,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[视频生成正式报告]]**：不重写文生视频 / Sora 正式报告缺口备忘；本卡是 **理解 / 推理**，不是生成。
 > - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」通史阶梯；经典多模态祖先仅作 related-work 接口。
 > - **≠ [[QwenOmni音视频原生]] Qwen-Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、36/215 基准产品表；本卡不写 Omni 产品栈。
-> **补链**：**STORM/TORM**（arXiv **2605.26014**；PDF 题名 **TORM**，GitHub `aiming-lab/storm`）——把时空推理**内化到有界连续 latent**，方法面异于「语言管道 / 帧锚定文本 CoT」→ **仅附录一句**，不升第二主轴。
+> **补链**：**STORM/TORM**（arXiv **2605.26014**；PDF 题名 **TORM**，GitHub `aiming-lab/storm`）——把时空推理**内化到有界连续 latent**，方法面异于「语言管道 / 帧锚定文本 CoT」→ **仅附录一句**。
 > SiLVR Table 1 与 Table 2 在 CGBench/CinePile 列出现互换迹象 → **主结果以 Table 1 + 正文叙述为准**。
 
 ---
@@ -50,7 +50,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|
 | SiLVR | https://sites.google.com/cs.unc.edu/silvr（摘要）；OpenReview 论坛上列 |
 | CoF | PDF 注解 URI：https://github.com/SaraGhazanfari/CoF（摘要写「Code available at GitHub」） |
-| STORM/TORM | https://github.com/aiming-lab/storm（摘要；仅补链） |
+| STORM/TORM | https://github.com/aiming-lab/storm（摘要；仅作索引） |
 
 **一句话抓手：**
 - **SiLVR**：别再为视频专门训 RL/CoT——把多感官视频**压成语言**，交给已会推理的 LLM；用 **ACR** 按上下文上限自适应加粗 clip。

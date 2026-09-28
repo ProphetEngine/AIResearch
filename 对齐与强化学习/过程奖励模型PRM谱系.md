@@ -241,7 +241,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 |---|---|
 | Uesato et al. 2022 原文数字表 | 仅经 Lightman/Shepherd 转述；未深读 |
 | Lightman generator/ORM 具体 GPT-4 变体与 MathMix 构造细节 | Appendix A 未全文展开进本卡 |
-| Math-Shepherd SE vs HE 完整消融曲线 | §5 有分析；本卡只录 HE 主实验设定 |
+| Math-Shepherd SE vs HE 完整消融曲线 | §5 有分析；本篇只列 HE 主实验设定 |
 | 综述中 OmegaPRM / GenPRM / PURE min-form 等 | **仅索引**，数字待各自 PDF |
 | 与 R1/GRPO 生产线的具体接线（是否用 PRM、何种聚合） | **各 TR 为准**；本篇不猜测 |
 

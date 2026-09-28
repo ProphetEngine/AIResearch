@@ -13,7 +13,7 @@ archived: 2026-09-22
 > 官方 PDF：`https://arxiv.org/abs/2607.02770`（**17** 页 A4；Title: *Gemma 4 Technical Report*）
 > 辅：开发者概述 https://ai.google.dev/gemma/docs/core （Last updated **2026-07-08** UTC；作分发/内存/QAT 产品字段，**不**替代 TR 架构主张）
 > 对照笔记：[[Gemini25技术报告深读]]；[[Gemini3Pro模型卡深读]]；[[Gemini37Flash模型卡深读]]
-> **划界（只写开源权重增量）：** 相对 [[Gemini25技术报告深读]] / [[Gemini3Pro模型卡深读]] **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本卡只录 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**不重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
+> **划界（只写开源权重增量）：** 相对 [[Gemini25技术报告深读]] / [[Gemini3Pro模型卡深读]] **闭源卡**与 [[Gemini37Flash模型卡深读]] Flash **卡**——本篇只列 Gemma 4 **公开权重族**的架构/效率/评测/安全字段；**不重写** Gemini TR（MoE 口号、1M 窗、Deep Think、TPUv5p/Pathways 细节、FSF 域表等）。可点到 **[[端侧小模型]] on-device** 交叉，**不写**端侧专篇（PLE/mobile QAT 仅作本族效率字段）。
 > 专家数/路由算法、层宽表、训练 token 总量、视频管线细节 TR 未写者标「未公开 / 仅 docs」。
 
 ---

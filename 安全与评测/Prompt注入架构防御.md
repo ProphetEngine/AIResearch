@@ -283,7 +283,7 @@ CaMeL 解释器执行
 | 只要提示/检测器 | **不足**（见 Adaptive 补链；且 CaMeL Table 7 启发式仍有成功攻击） |
 | 要挡的是越狱违规内容而非应用控制流 | → **[[审慎对齐与断路器]] / [[宪法分类器防御]] / [[安全红队与对抗评测]]**，非本卡 |
 
-**可组合性：** CaMeL §11 明确可与「提升模型自身鲁棒」的方法联用；StruQ 把 instruction hierarchy（Wallace et al.）视为多级推广。本库不把 hierarchy 升为本卡主文。
+**可组合性：** CaMeL §11 明确可与「提升模型自身鲁棒」的方法联用；StruQ 把 instruction hierarchy（Wallace et al.）视为多级推广。instruction hierarchy 本篇不展开。
 
 ---
 

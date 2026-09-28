@@ -33,7 +33,7 @@ archived: 2026-09-22
 
 ## 2. 已核实主张（仅据博文 + 官方 MODEL_CARD.md）
 
-来源：GitHub `models/llama4/MODEL_CARD.md` 及官博摘要口径；未另开 PDF。
+来源：GitHub `models/llama4/MODEL_CARD.md` 及官博摘要口径；未读 PDF。
 
 | 项 | 官方声称（摘要） |
 |----|------------------|

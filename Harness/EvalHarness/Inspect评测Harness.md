@@ -322,7 +322,7 @@ LLM 辅助文档索引（站点提供）：`llms.txt` / `llms-guide.txt`；页�
 
 - 以文档站与 GitHub 为一手入口；不以二手博客补「论文贡献列表」。
 - GitHub **瞬时 star / fork / release tag**：页面会变；引用以仓 URL + 文档版本行为为准。
-- 具体基准得分、某模型在 Inspect Evals 上的数字：需另开评测日志笔记，本文不写未核数字。
+- 具体基准得分、某模型在 Inspect Evals 上的数字：本篇不收录未核实的得分数字。
 - Agents / Tools / Extensions 专章全文：本文只保留 CTF/`react` 与 sandbox 工具链入口。
 
 ---

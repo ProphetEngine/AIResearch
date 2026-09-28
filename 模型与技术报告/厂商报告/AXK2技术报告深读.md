@@ -92,7 +92,7 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 - 算力锚：约 **70 天 × 512 NVIDIA B200** → 固定 FLOPs 预算；MoE scaling laws（Tian et al., 2025）指导下 **偏知识容量 + 推理吞吐**，而非严格 compute-optimal token。
 - 相对 K1：专家 **192→256**（2 的幂、128 的倍数，对齐 EP sharding / kernel tiling），**激活参保持 33B**。
 - 头数 64 + shared dense experts：文称受 Kimi 经验启发，优先 **降注意力推理开销**。
-- QK-normalization；路由细节见 §3.6（本卡只录超参，不写 MoE 通史）。
+- QK-normalization；路由细节见 §3.6（本篇只列超参，不写 MoE 通史）。
 
 ### 3.2 Sparse Gated Attention（SGA，§2.2 + Fig 2）
 

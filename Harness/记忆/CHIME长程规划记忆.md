@@ -89,7 +89,7 @@ timezone: Asia/Shanghai (CST)
 [[Mem0与Zep生产级记忆]] = 生产记忆层 API
 [[HippoRAG2与CatRAG]] = 文档检索图 → 非参记忆
 [[CHIME长程规划记忆]] = 终局成败怎么归因到「计划 vs 执行」再写入（CHIME）
-MEM1/ReSum = 上下文怎么压成常量/摘要（仅补链）
+MEM1/ReSum = 上下文怎么压成常量/摘要（仅作索引）
 `
 
 ---
