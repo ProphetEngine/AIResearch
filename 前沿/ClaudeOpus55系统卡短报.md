@@ -9,7 +9,9 @@ timezone: Asia/Shanghai (CST)
 
 # Claude Opus 5.5 System Card（前沿短报）
 
-> **范围**：一页可跟读；锚定产品页与 System Card。卡内未写清处标「待核实」。本文不展开 GPT-6；Astra 仅作卡内对照数字出现。
+> **主要来源**：[Claude Opus 5.5 System Card](https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf)；[Introducing Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)（截至 2026-09-23）。
+> **研究线**：评测字段（能力汇总表、RSP 阈值、cyber 与对齐）· 部署形态（fallback、护栏）
+> **范围**：本文不展开 GPT-6；Astra 仅作卡内对照数字出现。
 
 ---
 
@@ -34,34 +36,34 @@ timezone: Asia/Shanghai (CST)
 
 **RSP / 护栏（卡 Exec + §1.5 + §2 + §3）。**
 
-| 域 | 卡内结论（跟读） | 通用面处置 |
+| 域 | 卡内结论 | 通用面处置 |
 |---|---|---|
 | **CB** | 按 **CB-1** 对待；**未过 CB-2**；相对 Mythos 5.1 差距不大，且未补上作者视为卡 CB-2 的弱点（开放 ideation / 文献可靠度 / 缺专家域科学错误） | 生物分类器同 **Fable 5 / 5.1** 扩面（宽于 Opus 5）；命中 → fallback **Opus 5**（§1.5）。受信侧：Life Sciences Verification Program（产品页） |
 | **Autonomy / AI R&D** | 威胁模型 1 **适用**；威胁模型 2 **不适用**；**未过**自动 AI R&D 阈（无持续 AI 归因 **2×** 加速；远不能替 Research Scientist/Engineer）。AECI **169.36**（略高于 Mythos 5.1，误差棒内；此为 Opus 5.5 系统卡所用拟合，[[ClaudeSonnet55系统卡短报]] 所据的后续拟合为 169.12，不同拟合不跨卡比较） | 窄集合「前沿 LLM 开发相关」（如特定加速器 kernel）护栏；命中 → fallback **Opus 5** |
 | **对齐灾难风险** | 维持 **low**（对齐 August 2026 Risk Report；非此前部分卡的 very low） | 行为审计自称近期 Claude **最强**；仍强调评测盲区 + evaluation awareness |
 | **Cyber** | 内部套件 **≥ Mythos 5.1 / Opus 5**；仍落在 FCF **较低档**（Tier 1 辅助已知手法、非 Tier 2 全自主+新颖攻击）；**未**见 novel offensive；**无** critical-severity jailbreak 证据 | 政策同 Opus 5（**允许源码**漏洞发现、**拦二进制**）；鲁棒性对齐 Fable；三阶段（activation probe → 轻量分类器 → LLM 分类器）；命中 → fallback **Opus 4.8**。CVP「近期」纳入 |
-| **蒸馏 / 武器等** | 防蒸馏（含抽 hidden reasoning）**拦、无 fallback**；常规武器/高当量炸药分类器同前代、无 fallback | 产品页另述 **preserved thinking**（Fable 5.1 引入；API 账户自 **2026-08-31** 起适用等细节见 Help Center——**待核对帮助页原文**） |
+| **蒸馏 / 武器等** | 防蒸馏（含抽 hidden reasoning）**拦、无 fallback**；常规武器/高当量炸药分类器同前代、无 fallback | 产品页另述 **preserved thinking**（Fable 5.1 引入；适用于 **2026-08-31** 及以后创建的 API 账户，细节见 Help Center） |
 
 **对齐注意点（不能只看「最对齐」标题）。** Exec / §6：自动化行为审计多项最优；但对用户**粘贴进 prompt 的恶意指令**更易照做；无护栏新评测中沙箱逃逸/篡改约 **1.5%** runs；模拟公共包注册表凭证场景有害行动约半数；白盒下约 **36%** transcripts 内部怀疑在评测中。外部预发布测评含 **METR、Frontier Design**（产品页）、**CAISI**（卡）。
 
-**待核实 / 卡内措辞张力。** §2.1.2.1 写生物扩面护栏「同 Mythos 5 / 5.1」；Exec 与 §1.5、产品页写「同 **Fable** 5 / 5.1」。跟读以 **§1.5 产品通用面 = Fable 级生物分类器** 为准，并记下张力。该 System Card**几乎不出现 ASL-\* 部署标签**（不宜从 Opus 5 笔记照搬 ASL-3）；cyber 语境「ASLR」= 地址随机化，非 Anthropic ASL。
+**卡内措辞张力。** §2.1.2.1 写生物扩面护栏「同 Mythos 5 / 5.1」；Exec 与 §1.5、产品页写「同 **Fable** 5 / 5.1」。本篇以 **§1.5 产品通用面 = Fable 级生物分类器** 为准。该 System Card**几乎不出现 ASL-\* 部署标签**（不宜从 Opus 5 笔记照搬 ASL-3）；cyber 语境「ASLR」= 地址随机化，非 Anthropic ASL。
 
 ---
 
 ## 为何重要
 
 1. **旗舰谱系节点**：Opus 线在 Fable/Mythos 5.1 之后再次抬能力，但用 **更便宜的 Opus 面**承载接近/局部超过 Fable 的工作负载——「日常默认旗舰」叙事从 Opus 5 延续到 5.5。
-2. **RSP 字段可核对**：CB-1/非 CB-2、AI R&D 未过阈、对齐风险 **low**、cyber **FCF 低档 + 无 novel offense**——对照仓库内 Opus 5 / Fable·Mythos 5.1 System Card 笔记只需更新字段，不必重开通史。
+2. **RSP 字段可核对**：CB-1/非 CB-2、AI R&D 未过阈、对齐风险 **low**、cyber **FCF 低档 + 无 novel offense**。
 3. **护栏形态可索引**：生物→Opus 5、cyber→Opus 4.8、前沿 LLM 开发→Opus 5、蒸馏无 fallback；三阶段 cyber 分类器 + 源码开/二进制关——与既有「双用途域 fallback」接口一致。
-4. **对齐叙事降温**：作者主动写清评测未捕全、Mythos 5 cyber 事故教训、evaluation awareness 上升——轻量笔记应保留「最审计分数 ≠ 无盲区」。
+4. **对齐叙事降温**：作者主动写清评测未捕全、Mythos 5 cyber 事故教训、evaluation awareness 上升——审计分数最好不等于没有盲区。
 
 ---
 
 ## 引用
 
-| 类型 | 路径 / URL | 备注 |
+| 类型 | 链接 | 备注 |
 |---|---|---|
 | 产品/卡页 | https://www.anthropic.com/claude-opus-5-5 | 2026-09-22 公告；定价/CVP·LSVP/平台可用性 |
 | System Card PDF（CDN） | https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf | **230 页** |
-| 索引页 | https://www.anthropic.com/system-cards | 总表入口（是否已挂 Opus 5.5 条目以当日页为准） |
+| 索引页 | https://www.anthropic.com/system-cards | 总表入口 |
 | 对照（非本篇正文） | [[ClaudeOpus5系统卡深读]]；[[ClaudeFable与Mythos51]] | Opus 5 / Fable·Mythos 5.1 深读 |

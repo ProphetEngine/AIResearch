@@ -6,7 +6,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 3：gpt-oss-120b / gpt-oss-20b Model Card 深读
+# gpt-oss-120b / gpt-oss-20b Model Card 深读
 
 > 研究线：**架构思想（主：开源权重 MoE + harmony/可变 reasoning effort + agentic 工具）** + **评测字段（辅：推理/编码/工具/健康，开源对齐）**
 > 锚点：OpenAI, *gpt-oss-120b & gpt-oss-20b Model Card*（封面日期 **August 5, 2025**）

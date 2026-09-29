@@ -6,7 +6,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 5：Gemini 3.7 Flash Model Card 深读
+# Gemini 3.7 Flash Model Card 深读
 
 > 研究线：**架构思想（产品 / 安全字段）**
 > 锚点：Google DeepMind, *Gemini 3.7 Flash Model Card*（**Published: August 2026**；卡页写 **Published 13 August 2026**）

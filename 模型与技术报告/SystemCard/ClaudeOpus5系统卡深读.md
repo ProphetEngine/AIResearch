@@ -6,12 +6,12 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 4：Claude Opus 5 System Card 深读（+ Fable/Mythos 5.1 附录索引）
+# Claude Opus 5 System Card 深读（+ Fable/Mythos 5.1 附录索引）
 
 > 研究线：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
 > 主锚点：Anthropic, *System Card: Claude Opus 5*（封面 **July 24, 2026**）
 > 官方/CDN PDF：见下（**193** 页；Title: Claude Opus 5 System Card）
-> 官方 PDF（用户指定 CDN）：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
+> 官方 PDF：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
 > 索引页：https://www.anthropic.com/system-cards（条目 **Claude Opus 5 / July 2026**）
 > 公告：https://www.anthropic.com/news/claude-opus-5（**Jul 24, 2026**）
 > 对照笔记：[[ClaudeOpus45系统卡深读]]（相对增量）；[[安全红队与对抗评测]]（**不重写**红队方法全文）
@@ -132,7 +132,7 @@ Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completi
 | **OSS-Fuzz**（~830 入口 / 228 项目） | **79.4%** 非零分；满分 1.0 的 **4** 个目标，另 **6** 个达 0.8 | Opus 4.8：38.5% 非零、最高仅一目标 0.6；Mythos 5：~80% 非零但 **13** 个完整利用（§3.3.2） |
 | **Firefox 147**（50 类×5 试=250） | 全利用 **131/250 = 52.4%**；至少部分进展 **87.2%** | Opus 4.8：22/250=**8.8%**；Mythos 5：221/250=**88.4%**（§3.3.3） |
 | **CyScenarioBench**（9 题子集） | 总解决率 **33.7%** | Opus 4.8 **24.4%**；Sonnet 5 **3.3%**；Mythos 5 **47.0%**（§3.3.4）；后续系统卡改用 10 题子集并重测旧模型，Sonnet 5 为 0.7%（见 [[ClaudeSonnet55系统卡短报]]），与本行不可直接比较 |
-| **ExploitGym** | 相对 Opus 4.8 **大幅提升**，2h budget 接近 Mythos 5（精确柱高见 Fig 3.3.5.A，txt 未抽出全数 → **待核实读图**） | — |
+| **ExploitGym** | 相对 Opus 4.8 **大幅提升**，2h budget 接近 Mythos 5（精确柱高见 Fig 3.3.5.A，原文未给出全部数值 → **待核实读图**） | — |
 | **UK AISI ranges**（早期 checkpoint；100M token/次） | *The Last Ones*：**8/10** 端到端；*Doing Life*：未通关但达 **22/23**（此前最佳 21/23）；*Cooling Tower*：未通关，最佳 **3/5** flags | 机构判断：在已获内网立足点、弱防护小企业网上，Opus 5 与 Mythos 5 / Mythos Preview **能力相近**（§3.3.6 原文转述） |
 
 ### 4.3 缓解架构：两段式 cyber 分类器（§3.2）——本篇核心字段
