@@ -6,7 +6,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 1：Gemma 4 Technical Report 深读
+# Gemma 4 Technical Report 深读
 
 > 研究线：**架构思想（主）** + **AI Infra / 效率·量化（辅）**
 > 锚点：Gemma Team, Google DeepMind, *Gemma 4 Technical Report*（arXiv **2607.02770v2**；页眉日期 **2026-06-19**；API published **2026-07-02**，updated **2026-07-24**）

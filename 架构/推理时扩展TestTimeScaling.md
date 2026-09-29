@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 8：推理时计算 / test-time scaling / 链式推理前沿
+# 推理时计算 / test-time scaling / 链式推理前沿
 
 > 研究线：**架构思想（主）** + **数学原理（辅）** + **AI Infra（辅）**
 > 锚点材料：OpenAI *Introducing OpenAI o1-preview*（2024-09-12）；OpenAI *Learning to reason with LLMs*（2024-09-12）；OpenAI o1 System Card（arXiv:2412.16720，2024-12）；DeepSeek-R1（arXiv:2501.12948，2025-01）

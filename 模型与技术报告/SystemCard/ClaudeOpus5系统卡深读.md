@@ -8,14 +8,13 @@ archived: 2026-09-22
 
 # Claude Opus 5 System Card 深读（+ Fable/Mythos 5.1 附录索引）
 
-> 研究线：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
-> 主锚点：Anthropic, *System Card: Claude Opus 5*（封面 **July 24, 2026**）
-> 官方/CDN PDF：见下（**193** 页；Title: Claude Opus 5 System Card）
-> 官方 PDF：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
-> 索引页：https://www.anthropic.com/system-cards（条目 **Claude Opus 5 / July 2026**）
-> 公告：https://www.anthropic.com/news/claude-opus-5（**Jul 24, 2026**）
-> 对照笔记：[[ClaudeOpus45系统卡深读]]（相对增量）；[[安全红队与对抗评测]]（**不重写**红队方法全文）
-> 卡未提 Opus 4.5 时**不以 4.5 数字硬横比**；Fable/Mythos 5.1 **仅附录索引**，不全文重写；不复述可操作攻击步骤。
+> **主要来源**：[System Card: Claude Opus 5](https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf)；[Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5)（截至 2026-09-22）。系统卡封面 **July 24, 2026**、**193** 页；公告 **Jul 24, 2026**；索引页 https://www.anthropic.com/system-cards 条目为 **Claude Opus 5 / July 2026**。
+> **研究线**：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
+> **范围与相邻笔记**：
+> - ≠ [[ClaudeOpus45系统卡深读]]：本篇不写 Opus 4.5 本身，只写相对 4.5 的增量；系统卡未提 Opus 4.5 的地方，不拿 4.5 的数字直接横比。
+> - ≠ [[安全红队与对抗评测]]：本篇不写红队方法全文。
+> - ≠ [[ClaudeFable与Mythos51]]：Fable / Mythos 5.1 只在附录做索引，本篇不写其全文。
+> - 本篇不收可操作的攻击步骤。
 
 ---
 
@@ -137,11 +136,11 @@ Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completi
 
 ### 4.3 缓解架构：两段式 cyber 分类器（§3.2）——本篇核心字段
 
-`
+```
 全流量 activation probe（筛）
  ↓ 可疑则升级
 独立训练的 LLM cyber classifier（与 probe 裁决联合决定是否 block）
-`
+```
 
 要点（均据原文）：
 
@@ -161,7 +160,7 @@ Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completi
 
 ---
 
-## 5. Safeguards / Agentic safety（可核对摘录，防与 [[安全红队与对抗评测]] 重复）
+## 5. Safeguards / Agentic safety（可核对摘录）
 
 ### 5.1 无害率 / 过度拒绝（§4.1）
 
@@ -237,14 +236,14 @@ Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / com
 3. SHADE-Arena / LinuxArena 具体 stealth 百分数（§6.7 有叙述，本笔记未全表抄录）。
 4. 内部 AI R&D 套件任务定义与对外可复现材料。
 5. 参数量、预训练 token、具体 RL 算法超参：**卡中未给**。
-6. CDN 备链：Fable 5.1 文档页 HTML 内嵌 PDF；系统卡索引链到 `https://www.anthropic.com/claude-fable-5-1-mythos-5-1-system-card`。同页还出现其他模型 PDF 引用，下载时须核 `Content-Disposition` Title。
+6. CDN 备链：Fable 5.1 文档页 HTML 内嵌 PDF；系统卡索引链到 `https://www.anthropic.com/claude-fable-5-1-mythos-5-1-system-card`。
 
 ### 8.2 推荐引用
 
-`text
+```text
 Anthropic. System Card: Claude Opus 5. July 24, 2026.
 （CDN：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf ；193 pp.）
-`
+```
 
 引用分数时附带：**thinking/effort、是否关护栏、trials、harness、grader**。Cyber 数字多为 **safeguards off**。
 
@@ -263,9 +262,9 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 | 产品双轨 | **Fable 5.1**：通用，生物/cyber 等高风险双用途额外护栏；**Mythos 5.1**：同模型、护栏更松，受信访问；并支撑 **Claude Security**（Enterprise） |
 | RSP 摘要（Exec） | CB-1、**未达** CB-2（含不确定性）；AI R&D 风险 **low**（METR 外部一致）；**对齐灾难风险由 very low 调为 low**（指向 2026-08 Risk Report / cyber 评测相关事件披露后的不确定性↑） |
 | Cyber 摘要（Exec） | 发布以来最强 cyber；≥ Mythos 5；**几乎全面强于 Opus 5**（ExploitBench / OSS-Fuzz / Firefox 147 / ExploitGym）；Fable 5.1 **同样放开源码漏洞发现**；因能力↑取**更宽安全边际**（误伤仍高于 Opus 5，但假阳性少于 Fable 5 发布时）；**未发现 critical severity jailbreak** |
-| 与本篇关系 | 只作同窗对照索引；**不**在此重写 5.1 全文。若后续单独立项，应主读 5.1 PDF，并回头链本篇 Opus 5 cyber/RSP 节。 |
+| 与本篇关系 | 只作同窗对照索引，本篇不写 5.1 全文。 |
 
-**章结构速览（5.1 TOC，便于以后派工）：** §2 RSP（CB / Autonomy / Alignment risk）→ §3 Cyber → §4 Safeguards → §5 Agentic safety → §6 Alignment → §7 Model welfare → §8 Capabilities → Appendix。
+**章结构速览（5.1 TOC）：** §2 RSP（CB / Autonomy / Alignment risk）→ §3 Cyber → §4 Safeguards → §5 Agentic safety → §6 Alignment → §7 Model welfare → §8 Capabilities → Appendix。
 
 ---
 
@@ -274,7 +273,6 @@ Anthropic. System Card: Claude Opus 5. July 24, 2026.
 - [[GPT6Astra系统卡深读]]
 - [[DeepSeekV41Flash深读]]
 - [[Qwen38Next架构深读]]
-- [[ClaudeOpus5系统卡深读]]
 - [[GRPO与DAPO算法族]]
 - [[MOC_模型与技术报告]]
 

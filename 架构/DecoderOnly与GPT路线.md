@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# 2：Decoder-only / GPT 路线如何成为主流
+# Decoder-only / GPT 路线如何成为主流
 
 > 研究线：架构思想（主）+ AI Infra（辅，数据与训练栈）。入口论文为 Brown et al., *Language Models are Few-Shot Learners*（GPT-3, 2020）；产品与后训练节点以 OpenAI GPT-4 官方页与技术报告为准。未核实处统一标「待核实」。
 

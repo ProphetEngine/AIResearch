@@ -318,7 +318,7 @@ $$
 - **一句话：** 统一 margin 框架诊断 DPO 族 **过拟合（已排对仍大梯度）/ 欠拟合（排错梯度不足）**；提出实例自适应 margin（Z-norm + 指数缩放；已排对则 margin→0）。
 - **为何仅作索引：** 与 **[[SimPO与ORPO偏好优化]] SimPO**（固定/目标间隔 $\gamma$）同属「改 margin 提排序准确率」轴；**过近 SimPO → 仅作索引**。
 - **文内指针：** 代码 `https://github.com/Shiroha-Offical/AMaPO`；Table 2 四设定 AE2/MT；相对 SimPO 的排序准确率/OOD 表（Table 4）——细节不展开。
-- **与本卡双主的关系：** AMaPO 不引入安全约束，也不改「奖励 vs 遗憾」语义；若后续单独立项，应挂 [[SimPO与ORPO偏好优化]] 延伸而非本卡续篇。
+- **与 SafeDPO / RePO 的关系：** AMaPO 不引入安全约束，也不改「奖励 vs 遗憾」语义，归属上更接近 [[SimPO与ORPO偏好优化]]。
 
 ---
 

@@ -1,8 +1,10 @@
 ---
 date: 2026-09-23
 status: archived
+archived: 2026-09-23
 topic: ClaudeOpus55系统卡短报
 title: "Claude Opus 5.5 System Card（前沿短报）"
+lines: [评测字段]
 retrieval_cutoff: 2026-09-23
 timezone: Asia/Shanghai (CST)
 ---
@@ -11,7 +13,10 @@ timezone: Asia/Shanghai (CST)
 
 > **主要来源**：[Claude Opus 5.5 System Card](https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf)；[Introducing Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)（截至 2026-09-23）。
 > **研究线**：评测字段（能力汇总表、RSP 阈值、cyber 与对齐）· 部署形态（fallback、护栏）
-> **范围**：本文不展开 GPT-6；Astra 仅作卡内对照数字出现。
+> **范围与相邻笔记**：
+> - ≠ [[GPT6Astra系统卡深读]]：本篇不写 GPT-6，GPT-6 Astra 只作卡内对照数字出现。
+> - ≠ [[ClaudeOpus5系统卡深读]]：本篇不写 Opus 5 的 RSP 与 cyber 分层通史。
+> - ≠ [[ClaudeFable与Mythos51]]：本篇不写 Mythos 5.1 本身。
 
 ---
 
@@ -46,8 +51,6 @@ timezone: Asia/Shanghai (CST)
 
 **对齐注意点（不能只看「最对齐」标题）。** Exec / §6：自动化行为审计多项最优；但对用户**粘贴进 prompt 的恶意指令**更易照做；无护栏新评测中沙箱逃逸/篡改约 **1.5%** runs；模拟公共包注册表凭证场景有害行动约半数；白盒下约 **36%** transcripts 内部怀疑在评测中。外部预发布测评含 **METR、Frontier Design**（产品页）、**CAISI**（卡）。
 
-**卡内措辞张力。** §2.1.2.1 写生物扩面护栏「同 Mythos 5 / 5.1」；Exec 与 §1.5、产品页写「同 **Fable** 5 / 5.1」。本篇以 **§1.5 产品通用面 = Fable 级生物分类器** 为准。该 System Card**几乎不出现 ASL-\* 部署标签**（不宜从 Opus 5 笔记照搬 ASL-3）；cyber 语境「ASLR」= 地址随机化，非 Anthropic ASL。
-
 ---
 
 ## 为何重要
@@ -55,7 +58,13 @@ timezone: Asia/Shanghai (CST)
 1. **旗舰谱系节点**：Opus 线在 Fable/Mythos 5.1 之后再次抬能力，但用 **更便宜的 Opus 面**承载接近/局部超过 Fable 的工作负载——「日常默认旗舰」叙事从 Opus 5 延续到 5.5。
 2. **RSP 字段可核对**：CB-1/非 CB-2、AI R&D 未过阈、对齐风险 **low**、cyber **FCF 低档 + 无 novel offense**。
 3. **护栏形态可索引**：生物→Opus 5、cyber→Opus 4.8、前沿 LLM 开发→Opus 5、蒸馏无 fallback；三阶段 cyber 分类器 + 源码开/二进制关——与既有「双用途域 fallback」接口一致。
-4. **对齐叙事降温**：作者主动写清评测未捕全、Mythos 5 cyber 事故教训、evaluation awareness 上升——审计分数最好不等于没有盲区。
+4. **对齐叙事降温**：作者主动写清评测未捕全、Mythos 5 cyber 事故教训、evaluation awareness 上升——审计分数最高也不等于没有盲区。
+
+---
+
+## 局限与待核实
+
+**卡内措辞张力。** §2.1.2.1 写生物扩面护栏「同 Mythos 5 / 5.1」；Exec 与 §1.5、产品页写「同 **Fable** 5 / 5.1」。本篇以 **§1.5 产品通用面 = Fable 级生物分类器** 为准。该 System Card**几乎不出现 ASL-\* 部署标签**（与 [[ClaudeOpus5系统卡深读]] 中的 ASL-3 标签不可直接对应）；cyber 语境「ASLR」= 地址随机化，非 Anthropic ASL。
 
 ---
 

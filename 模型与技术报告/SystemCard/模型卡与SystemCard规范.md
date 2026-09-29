@@ -18,11 +18,12 @@ archived: 2026-09-22
 > 2. Hugging Face Hub，《Model Cards》：https://huggingface.co/docs/hub/en/model-cards
 > - Annotated Template：https://huggingface.co/docs/hub/en/model-card-annotated
 > - Guidebook（引用 Mitchell；模板演进）：https://huggingface.co/docs/hub/en/model-card-guidebook
-> 3. **对照（增量，不重写各卡正文）**：相邻深读卡
+> 3. **对照**：相邻深读卡
 > - System Card 系：[[GPT5系统卡深读]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]、[[GPT6Astra系统卡深读]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]、[[ClaudeOpus5系统卡深读]]、[[ClaudeFable与Mythos51]]、[[ClaudeOpus55系统卡短报]]、[[ClaudeSonnet55系统卡短报]]
-> - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]
+> - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]、[[GPToss模型卡深读]]、[[Gemini37Flash模型卡深读]]
 > - [[MOC_模型与技术报告]]
-> **范围**：写「文档体裁 → 字段接口 → 归档最小集」；不重写各厂卡的能力/安全数字与案例正文。
+> **范围与相邻笔记**：本篇写「文档体裁 → 字段接口 → 归档最小集」。
+> - ≠ 上列 System Card 系与 Model Card 系各篇：本篇不写各厂卡的能力/安全数字与案例正文。
 
 ---
 
@@ -111,7 +112,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-## 三、System Card 实践差异（对照相邻卡笔记，不重写正文）
+## 三、System Card 实践差异（对照相邻卡笔记）
 
 ### 3.1 命名与体量：同一词根，不同产品形态
 
