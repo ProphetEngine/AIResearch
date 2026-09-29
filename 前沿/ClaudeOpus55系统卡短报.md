@@ -37,7 +37,7 @@ timezone: Asia/Shanghai (CST)
 | 域 | 卡内结论（跟读） | 通用面处置 |
 |---|---|---|
 | **CB** | 按 **CB-1** 对待；**未过 CB-2**；相对 Mythos 5.1 差距不大，且未补上作者视为卡 CB-2 的弱点（开放 ideation / 文献可靠度 / 缺专家域科学错误） | 生物分类器同 **Fable 5 / 5.1** 扩面（宽于 Opus 5）；命中 → fallback **Opus 5**（§1.5）。受信侧：Life Sciences Verification Program（产品页） |
-| **Autonomy / AI R&D** | 威胁模型 1 **适用**；威胁模型 2 **不适用**；**未过**自动 AI R&D 阈（无持续 AI 归因 **2×** 加速；远不能替 Research Scientist/Engineer）。AECI **169.36**（略高于 Mythos 5.1，误差棒内） | 窄集合「前沿 LLM 开发相关」（如特定加速器 kernel）护栏；命中 → fallback **Opus 5** |
+| **Autonomy / AI R&D** | 威胁模型 1 **适用**；威胁模型 2 **不适用**；**未过**自动 AI R&D 阈（无持续 AI 归因 **2×** 加速；远不能替 Research Scientist/Engineer）。AECI **169.36**（略高于 Mythos 5.1，误差棒内；此为 Opus 5.5 系统卡所用拟合，[[ClaudeSonnet55系统卡短报]] 所据的后续拟合为 169.12，不同拟合不跨卡比较） | 窄集合「前沿 LLM 开发相关」（如特定加速器 kernel）护栏；命中 → fallback **Opus 5** |
 | **对齐灾难风险** | 维持 **low**（对齐 August 2026 Risk Report；非此前部分卡的 very low） | 行为审计自称近期 Claude **最强**；仍强调评测盲区 + evaluation awareness |
 | **Cyber** | 内部套件 **≥ Mythos 5.1 / Opus 5**；仍落在 FCF **较低档**（Tier 1 辅助已知手法、非 Tier 2 全自主+新颖攻击）；**未**见 novel offensive；**无** critical-severity jailbreak 证据 | 政策同 Opus 5（**允许源码**漏洞发现、**拦二进制**）；鲁棒性对齐 Fable；三阶段（activation probe → 轻量分类器 → LLM 分类器）；命中 → fallback **Opus 4.8**。CVP「近期」纳入 |
 | **蒸馏 / 武器等** | 防蒸馏（含抽 hidden reasoning）**拦、无 fallback**；常规武器/高当量炸药分类器同前代、无 fallback | 产品页另述 **preserved thinking**（Fable 5.1 引入；API 账户自 **2026-08-31** 起适用等细节见 Help Center——**待核对帮助页原文**） |
