@@ -24,7 +24,7 @@ archived: 2026-09-22
 > - MCP / ReAct / 旗舰工具环与 System Card 长程叙事 → 「智能体工具与长程任务」；本篇只把 ReAct 当作 SWE-agent 控制环引用一句，把 MCP 当作 OpenHands **工具抽象的一等公民接入点**（schema 互转），不展开协议史。
 > - SWE-bench 数据集构造全文 → 「评测与排行榜可靠性」/ 原 Jimenez et al.；本篇只录 harness 侧 resolve 数字。
 > - GUI 基础智能体、合成用户仿真 → 各自专篇，本篇不展开。
-> **材料口径**：数字、消融、生产错误率一律锚定官方 PDF（检索截止 2026-09-22）。
+> **主要来源**：[SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering](https://arxiv.org/abs/2405.15793)；[The OpenHands Software Agent SDK: A Composable and Extensible Foundation for Production Agents](https://arxiv.org/abs/2511.03690)（截至 2026-09-22）。
 
 ---
 
@@ -102,38 +102,26 @@ Abstract / §1–2：LM agent 常被塞进 **已有人类界面**（Linux shell�
 
 ### 3.4 实验设置与主结果（§4–5）
 
-| 项 | 事实 |
-|---|---|
-| 主评测 | **SWE-bench** 全量 **2,294**；消融/分析用 **SWE-bench Lite 300**；另 **HumanEvalFix** |
-| 模型 | 主：**GPT-4 Turbo**（`gpt-4-1106-preview`）、**Claude 3 Opus**（`claude-3-opus-20240229`）；文称其他开源/闭源 agent 设定表现不佳 / 窗过小 |
-| 基线 | **RAG**（BM25 检索后一次出 patch，Jimenez et al.）；**Shell-only**（InterCode 式纯 shell 交互，Yang et al.） |
-| 指标 | **% Resolved / pass@1**；**$ Avg. Cost**（仅对成功实例均摊）；单实例预算 **$4**，超预算自动提交已有编辑 |
-| SWE-bench 全量 | GPT-4 Turbo **12.47%**（286/2294）；Claude 3 Opus **10.46%** |
-| SWE-bench Lite | GPT-4 Turbo **18.00%**；Claude **13.00%**；Shell-only GPT-4 **11.00%**（无演示 7.33%）；RAG GPT-4 **2.67%** / Claude **4.33%** |
-| HumanEvalFix pass@1 | Abstract 汇总 **87.7%**；Table 2：Python **87.7** / JS **89.7** / Java **87.9**（SWE-agent w/ GPT-4 Turbo） |
+在 SWE-bench 全量（**2,294**）、SWE-bench Lite（**300**，用于消融）与 HumanEvalFix 上，以 GPT-4 Turbo 与 Claude 3 Opus 为底座，对照两条基线：**RAG**（BM25 检索后一次出 patch）与 **Shell-only**（纯 shell 交互）。指标为 % Resolved（pass@1）。
 
-相对 RAG：Lite 上约 **8–13×** 更贵、约 **6.7×** resolve；相对 Shell-only：同 GPT-4 Turbo 约 **+64%** 相对提升（11.00→18.00）。
+| 设定 | 主要结果 |
+|---|---|
+| SWE-bench 全量 | GPT-4 Turbo **12.47%**；Claude 3 Opus **10.46%** |
+| SWE-bench Lite（GPT-4 Turbo） | SWE-agent **18.00%**；Shell-only **11.00%**；RAG **2.67%** |
+| HumanEvalFix | pass@1 **87.7%**（GPT-4 Turbo） |
+
+相对 Shell-only，同一模型只换界面即有约 **+64%** 相对提升（11.00→18.00）；相对 RAG 约 **6.7×** resolve，但成本约 **8–13×**。
 
 ### 3.5 消融：人类 UI ≠ ACI（Table 3，Lite，GPT-4）
 
-默认 ACI（含 lint、Summarized search、100 行窗、Last 5 Obs）= **18.0%**。对照（文内 ↓ 相对默认）：
+默认 ACI（带 lint 的编辑、汇总式搜索、100 行窗口、只保留最近 5 条完整观测）为 **18.0%**。逐项替换：
 
-| 轴 | 变体 | % Resolved |
-|---|---|---|
-| Editor | edit **w/ linting**（默认） | **18.0** |
-| | edit **无** linting | 15.0 ↓3.0 |
-| | **No edit**（靠重定向/`sed` 等） | 10.3 ↓7.7 |
-| Search | **Summarized**（默认） | **18.0** |
-| | **Iterative**（仿 Vim/VSCode 逐条 next/prev） | 12.0 ↓6.0 |
-| | **No search** | 15.7 ↓2.3 |
-| File viewer | **100 lines**（默认） | **18.0** |
-| | 30 lines | 14.3 ↓3.7 |
-| | Full file | 12.7 ↓5.3 |
-| Context | **Last 5 Obs.**（默认） | **18.0** |
-| | Full history | 15.0 ↓3.0 |
-| | w/o demo. | 16.3 ↓1.7 |
+- **编辑**：去掉 lint 降到 15.0；不给编辑命令（靠重定向 / `sed`）降到 **10.3**。
+- **搜索**：仿 Vim / VSCode 的逐条迭代搜索降到 **12.0**，比完全不给搜索（15.7）还差。
+- **查看**：窗口缩到 30 行为 14.3，整文件显示为 12.7。
+- **上下文**：保留全量历史为 15.0，去掉演示为 16.3。
 
-**跟读结论（文内 §5.1）：**
+**结论（原文 §5.1）：**
 
 1. **Iterative search 比「无搜索」更差**：agent 倾向穷尽每条匹配 → 烧预算/上下文；**压缩汇总 + 过多则拒** 更 LM 友好。
 2. **紧凑多行编辑 + 自动刷新视图** 远好于整文件重写/`sed`；lint 再抬一截。
@@ -193,11 +181,11 @@ SWE-agent 把「编码 agent」从 **提示词 + 裸 shell** 提升为 **可消�
 
 **生产（15 天 V0/V1 并行，Table 2）：** 系统归因错误 / 1k conversations：V0 **78.0** → V1 **30.0**（约 **−61%**）。V0 基建错误（如跨 pod HTTP 401、runtime 未就绪）在 V1 **共置执行** 后观测为 **0.0 / 1k**；V1 剩余 SDK 错误 **29.7 / 1k**（文称 rollout 期 condensation × extended thinking 约束 bug，后续正式版已修）。
 
-**事件源开销（Table 3，433 条 SWE-Bench Verified 轨迹，39,870 events）：** 单事件持久化中位 **0.20 ms**；全量 replay 中位 **4.1 ms**；崩溃恢复中位 **7.4 ms**（最长 358 events 时 recovery **32.1 ms**）——相对 LLM 往返可忽略。
+**事件源开销（Table 3，SWE-Bench Verified 轨迹）：** 单事件持久化中位 **0.20 ms**、全量 replay 中位 **4.1 ms**、崩溃恢复中位 **7.4 ms**——相对 LLM 往返可忽略。
 
 **能力保持（Table 4，SWE-Bench Verified）：** Claude Sonnet 4：V0=V1 **68.0%**（架构换皮不伤基线）；Sonnet 4.5：V0 **64.6%** → V1 **72.8%**（+8.2；作者归因 V1 更易接 extended thinking）。
 
-**多模型五类任务（Table 5，14 模型）：** Best SDK 示例——SWE-Bench Verified **76.6%**（Opus 4.5）、Commit0 **56.2%**（GPT-5.4）、SWE-Bench MM **44.1%**（Gemini 3.1 Pro）、SWT-Bench V. **78.8%**（Opus 4.6）、GAIA test **80.0%**（Opus 4.6）。文称 5 项中 3 项超当时 published SOTA；完整分模型见 Index（持续更新；本篇数字均取自 PDF 表内）。
+**多模型五类任务（Table 5，14 模型）：** 最佳成绩如 SWE-Bench Verified **76.6%**（Opus 4.5）、GAIA test **80.0%**（Opus 4.6）；文称 5 项中 3 项超过当时 published SOTA，完整分模型见 OpenHands Index。
 
 ### 4.6 站 2 收束
 
@@ -234,7 +222,7 @@ OpenHands SDK 把 SWE-agent 时代的问题从「**设计一个好 ACI**」推�
 
 ---
 
-## 七、跟读收束句
+## 七、小结
 
 > **架构思想上**，编码智能体史线的关键变量是 **界面与运行时合同**：SWE-agent 用 ACI 四原则证明「少而高效的动作 + 简洁反馈 + guardrail」可在不改权重下显著抬升真实仓库修复率；OpenHands SDK 用四包与事件源把同一问题提升为 **可组合、可确认、可本地/远程切换** 的生产基础。
 > **AI Infra 辅线上**，Docker/进程边界、状态持久化开销、跨 pod 认证失败、opt-in 沙箱与 REST/WebSocket 服务，决定的是 **复现与上线**，不是榜面文案——换 harness 仍可能换故事，但合同应可审计。
@@ -245,10 +233,10 @@ OpenHands SDK 把 SWE-agent 时代的问题从「**设计一个好 ACI**」推�
 
 ## 相关笔记
 
-- [[智能体工具与长程任务]]
-- [[评测与排行榜可靠性]]
-- [[Inspect评测Harness]]
-- [[UIVenus2GUI智能体]]
-- [[合成用户仿真]]
-- [[推理引擎生态]]
-- [[AI基础设施总览]]
+- [[智能体工具与长程任务]]：写 2025 旗舰（Claude 4、GPT-5）如何把工具环和长程任务做成产品能力，并提醒公开高分绑在 scaffold 与 harness 上；本篇把这句提醒展开成 ACI 到 SDK 的界面与运行时史。
+- [[评测与排行榜可靠性]]：写污染、路由、thinking 模式等如何影响榜单可比性；本篇的 SWE-bench 分数同样随 harness 变化，可比性问题在那里系统讨论。
+- [[Inspect评测Harness]]：UK AISI 的开源评测运行时 Inspect（Task / Solver / Scorer、sandbox、日志）；同属 harness，本篇是让 agent 干活的运行时，Inspect 是评测 agent 的运行时。
+- [[UIVenus2GUI智能体]]：UI-Venus-2 的截图观测到结构化 GUI 动作闭环；与本篇并列的另一类动作界面，对象是 GUI 而非代码仓库的命令面。
+- [[合成用户仿真]]：用 LM 模拟用户或工具环境做多轮策略与风险评测（τ-bench、ToolEmu）；本篇不展开的合成评测轴在那里。
+- [[推理引擎生态]]：vLLM、SGLang、TRT-LLM 等推理引擎的选型地图，属模型服务层；本篇的 agent 运行时位于其上层，两者不重叠。
+- [[AI基础设施总览]]：训练并行、推理 serving、量化与硬件协同的 Infra 总览；与本篇的沙箱、远程 runtime 同属 Infra，但讲的是模型训练与服务侧。

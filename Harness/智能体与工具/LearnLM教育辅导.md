@@ -14,7 +14,7 @@ archived: 2026-09-22
 
 # Education tutors：LearnLM（教学法对齐 / 辅导交互）
 
-> **定位**：教育辅导主题轴 **可选短卡**——仓库此前无「教学法对齐 / 辅导交互」专科线。主文是 **LearnLM（2412.16429）**：把教育学行为改写成 **pedagogical instruction following（教学法系统指令遵循）**；对照早期评测驱动报告 **2407.12687**（LearnLM-Tutor / Gemini 1.0 微调）。
+> **定位**：教育辅导主题轴——「教学法对齐 / 辅导交互」专科线。主文是 **LearnLM（2412.16429）**：把教育学行为改写成 **pedagogical instruction following（教学法系统指令遵循）**；对照早期评测驱动报告 **2407.12687**（LearnLM-Tutor / Gemini 1.0 微调）。意义在于把「好导师」从写死在权重里的固定人格，改成可由教师或开发者用系统指令指定、并能与通用后训练共训的能力；文内称其部分改进已进入 Gemini 2.0。
 > **研究线**：**架构思想（主）**——不锁死单一教学法定义，而用 System Instructions 条件化辅导行为 + 与 Gemini 后训练共训；**评测字段（辅）**——场景化多轮辅导、教学法量尺、专家偏好。
 > **范围与相邻笔记**：
 > - **不写成「AI 家教产品手册 / 替代教师操作指南」**；只记论文主张、管线与评测字段。
@@ -149,19 +149,7 @@ archived: 2026-09-22
 
 ### 5.2 早期报告：七套基准与 taxonomy（§4.3.2 / Figure 2）
 
-文内称 **seven pedagogical benchmarks**，覆盖定量/定性、自动/人类；Figure 2 用 taxonomy 组织权衡，正文具名展开包括：
-
-| 块 | 代表内容 |
-|---|---|
-| **人类 · 无引导** | §5.1 主观学习者反馈（约 45 分钟开放会话，接地 YouTube 学术视频） |
-| **人类 · 回合级** | §5.2 教师回合级教学法评分 |
-| **人类 · 会话级** | §5.3 会话级教学法 |
-| **人类 · 并排** | §5.4 Side-by-side 教师偏好（Figure 1 所称 teacher preferences 之一） |
-| **自动 · LME** | §6.1 Language Model Evaluations：按维度拆任务 + critic LLM（可给特权信息，如正确解） |
-| **真实部署** | §7 ASU Study Hall：**HallMate** Chrome 扩展；CSE 110；访谈 𝑛=10 等（细节见该节） |
-| **定向能力** | §8 evaluative practice、程序性作业反馈等（偏能力切片，服务研发） |
-
-**LME 与五原则的例映射（Table 2）：** Stay on topic；Do not reveal the answer / guide towards the answer / promote active engagement；Identify misconceptions；Positive tone / affect cues；Adapt to learner’s level——文内明确 LME 是 **窄行为 spot check**，不能完整覆盖量尺。
+文内称 **seven pedagogical benchmarks**，覆盖定量/定性、自动/人类，用 taxonomy（Figure 2）组织权衡。人类侧有无引导的学习者主观反馈、教师回合级与会话级教学法评分、并排教师偏好（原文 §5.1–5.4）；自动侧是 **LME**（Language Model Evaluations，按维度拆任务、由 critic LLM 判定，原文 §6.1），文内明确它只是 **窄行为 spot check**，不能完整覆盖量尺；另有 ASU Study Hall 的 **HallMate** 真实部署（§7）与定向能力切片（§8）。
 
 **准确率护栏（早期报告 §4.1）：** 标准教育相关基准上 LearnLM-Tutor **复现** Gemini Pro 量级（例：MMLU **0.72**、MATH **0.33**）；开放接地对话的回合事实性上与 prompt-tuned Gemini 1.0 **无显著差**（Fully verified 约 **96%** vs **93%**，𝑝=0.13）。
 
@@ -171,6 +159,8 @@ archived: 2026-09-22
 - 早期报告：教育场景额外风险（有害请求上的不当表扬、拟人化等，Table 6–8 一类自动评）。
 - 主文 §5 展望：从 **内在** 教学法量尺走向 **外在** 学习成效；量尺原则有学习科学依据，但 **不等价于已证明提分**。
 - 角色扮演专家 ≠ 真实学生；早期报告亦强调 WEIRD 参与者局限与统计功效受限。
+
+**小结：** 「教学法指令遵循」的价值在于不必替所有场景统一定义好教学法，而是让教师、开发者用系统指令指定行为，模型负责在多轮对话中守住这些指令，并能与 Gemini 通用后训练数据共训而少遗忘。局限也很清楚：评测衡量的是专家量尺上的「像不像好导师」，而非已证明的学习成效；评估者是角色扮演的专家而非真实学生；对照模型是 2024-10 前后的时点版本。
 
 ---
 
@@ -196,8 +186,6 @@ archived: 2026-09-22
 
 ## 相关笔记
 
-- [[SHADEArena隐瞒与监控]]
-- [[天气气候基础模型]]
-- [[QwenOmni音视频原生]]
-- [[LearnLM教育辅导]]
-
+- [[SHADEArena隐瞒与监控]]：测 frontier agent 在完成主任务时能否暗做有害侧任务而不被 LLM 监控者识破；与本篇没有方法上的直接联系，两者都按交互过程中的行为而非单轮答案来评测。
+- [[天气气候基础模型]]：以 Aurora 为主锚的天气与地球系统基础模型；与本篇同属 [[MOC_专科基础模型]] 按领域导航的专科方向（气候 / 教育），方法上没有直接联系。
+- [[QwenOmni音视频原生]]：Qwen3-Omni 到 Qwen3.5-Omni 的原生全模态模型；与本篇没有方法上的直接联系。

@@ -24,7 +24,7 @@ archived: 2026-09-24
 
 # MCP 协议与大规模工具导航评测（LiveMCPBench）
 
-> **定位**：在 MCP 成为「模型—外部工具」公共接口之后，评测从「单服务器、工具直接注入上下文」转向 **大规模工具海中的检索与组合**。主锚为 LiveMCPBench（Mo 等，arXiv:2508.01780）：95 条日常任务 × 70 服务器 / 527 工具；辅对照 MCP-Universe（Luo 等，arXiv:2508.14704）的真实服务器 + 执行式评判。
+> **定位**：在 MCP 成为「模型—外部工具」公共接口之后，评测从「单服务器、工具直接注入上下文」转向 **大规模工具海中的检索与组合**。主锚为 LiveMCPBench（Mo 等，arXiv:2508.01780）：95 条日常任务 × 70 服务器 / 527 工具；辅对照 MCP-Universe（Luo 等，arXiv:2508.14704）的真实服务器 + 执行式评判。两套基准共同说明「MCP 已可用 ≠ agent 已会用」：工具生态变大之后，瓶颈从「会不会调用」移到「能不能找到并组合对的工具」，LiveMCPBench 上失败近半出在检索。
 > **研究线**：**评测字段（主）**——任务成功、检索失败占比、主动组合与成功相关；**架构思想（辅）**——MCP client/server 与 tools / resources / prompts 的稳定公开概念，仅够支撑「为何需要工具导航」一句。
 > **范围与相邻笔记**：
 > - **≠ [[智能体工具与长程任务]]**：不写 Claude / GPT 旗舰产品通史、System Card 长程叙事、并行工具产品化；MCP 在彼文是产品挂载点，在本文是 **评测对象的协议底座**。
@@ -89,12 +89,12 @@ LiveMCPBench 开篇对照三类设定（Fig.1）：
 
 | 组件 | 内容 |
 |---|---|
-| **Diverse Daily Tasks** | **95** 条多步日常任务；六域：Office / Lifestyle / Leisure / Finance / Travel / Shopping（Fig.示意占比约 33% / 16% / 15% / 14% / 13% / 9%） |
+| **Diverse Daily Tasks** | **95** 条多步日常任务；六域：Office / Lifestyle / Leisure / Finance / Travel / Shopping |
 | **LiveMCPTool** | **70** MCP 服务器、**527** 工具；从市场配置中过滤需专有 API key 者，Docker 打包；强调 **plug & play** 复现 |
 | **MCP Copilot Agent** | ReACT 环；动作空间含 **Route**（检索 top-$k$ 候选，主实验 $k=5$）、**Execute**、**Response** |
 | **LiveMCPEval** | LLM-as-a-Judge；以 **key points**（关键子目标）核验任务是否完成，兼容动态数据与多条合法轨迹 |
 
-任务构造：提案者与校验者两组（各三人）两阶段流程；初稿约 **300** 候选，精炼至 **95**。Route 打分沿用 MCP-Zero 形式：server / tool 余弦相似度的联合分（文式 (2)）。
+任务经人工两阶段提案与校验，从约 **300** 条候选精炼至 **95** 条；Route 沿用 MCP-Zero 的 server / tool 相似度联合打分（原文式 (2)）。
 
 ### 4.2 与既有基准一行对照（Table 1 摘要）
 
@@ -152,7 +152,7 @@ MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）�
 
 ---
 
-## 六、与库内工具通史 / ToRL 的分工
+## 六、与相邻笔记的分工
 
 | 笔记 | 主问题 | 本篇只取 | 本篇不写 |
 |---|---|---|---|
