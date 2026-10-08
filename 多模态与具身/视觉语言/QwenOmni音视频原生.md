@@ -8,234 +8,101 @@ sources:
  - https://arxiv.org/abs/2509.17765
  - https://arxiv.org/abs/2604.15804
 arxiv: ["2509.17765", "2604.15804"]
-related: ["SpeechLLM语音语言模型", "多模态架构脉络", "Qwen3技术报告深读"]
+related: ["SpeechLLM语音语言模型", "多模态架构脉络", "Qwen3技术报告深读", "StepAudio2语音旗舰", "SeamlessM4T语音翻译", "音视频联合Flamingo", "OnPolicy蒸馏OPD范式", "BAGEL统一多模态生成"]
 archived: 2026-09-22
 ---
 
 # Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni
 
-> **定位**：原生 Omni 模态横切增量——相对 **[[SpeechLLM语音语言模型]]**（以 Qwen2-Audio 为锚的 Speech-LLM / Audio→Text）的「编码器连续特征 ⊕ LLM 下一文本 token」栈，本篇只收 **原生 Omni**：同一 Thinker–Talker 端到端统一 **文本·图像·音频·视频**，并 **流式合成语音**。
-> **研究线**：**架构思想（主）**——AuT 替换 Whisper、Thinker/Talker MoE、多码本 RVQ + MTP + Code2Wav、TM-RoPE / 显式时间戳、ARIA；**评测字段（辅）**——36 / 215 音视频基准、VoiceBench、首包延迟、非降级对照同尺 Qwen。
+> **主要来源**：[Qwen3-Omni Technical Report](https://arxiv.org/abs/2509.17765)（Qwen Team，v1 2025-09-22）；[Qwen3.5-Omni Technical Report](https://arxiv.org/abs/2604.15804)（Qwen Team，v1 2026-04-17，v2 2026-04-21）（截至 2026-07-17）。
+> **研究线**：架构思想（主：Thinker–Talker 双 MoE、自研音频编码器 AuT、多码本流式语音合成、ARIA 交织对齐）；评测字段（辅：音视频基准、VoiceBench、首包延迟、与同尺寸单模态模型的对照）
 > **范围与相邻笔记**：
-> - **不重抄** [[SpeechLLM语音语言模型]] 的 Qwen2-Audio 章节：Whisper-large-v3 前端、40 ms/帧、三阶段（多任务预训练 / 联合 SFT / DPO）、Voice Chat vs Audio Analysis 接口表、ASR/S2TT 表内逐格数字。本篇仅在对照句点名「[[SpeechLLM语音语言模型]] = 音频理解→文本输出」前置。
-> - **不重写** [[多模态架构脉络]] 视觉 LMM 通史、[[Qwen3技术报告深读]] 全文；仅取「Qwen3 / Qwen3.5 骨干初始化、Strong-to-Weak Distillation / GSPO」接口。
-> - 中间代 **Qwen2.5-Omni**（文内 Xu et al., 2025）本仓库未单独立档；本篇只记两篇 Omni TR **显式声明相对 2.5-Omni / 相对 3-Omni 的升级点**，不展开 2.5-Omni 未引用细节。
-> **与 [[SpeechLLM语音语言模型]] 的接口一句**：[[SpeechLLM语音语言模型]] 回答「如何把波形压成连续帧条件在 7B LLM 上出文本」；本篇回答「如何在 **MoE Thinker–Talker** 上做到 **音视频入 + 文本/语音出**、长上下文与低首包延迟，且文本/视觉相对同尺单模态 **不降级**」。
-> **主要来源**：[Qwen3-Omni Technical Report](https://arxiv.org/abs/2509.17765)；[Qwen3.5-Omni Technical Report](https://arxiv.org/abs/2604.15804)；[QwenLM/Qwen3-Omni README](https://github.com/QwenLM/Qwen3-Omni)（截至 2026-09-22）；3.5 摘要写「数百亿参数」，但正文未给出 Plus/Flash 精确总参。
+> - ≠ [[SpeechLLM语音语言模型]]：那篇以 Qwen2-Audio 为锚，写「音频编码器接 LLM、输出文本」；本篇写文本、图像、音频、视频都能输入，并流式输出语音的原生全模态模型。
+> - ≠ [[Qwen3技术报告深读]]：本篇只取骨干初始化与后训练接口，不写 Qwen3 文本训练。
+>
+> **意义**：全模态模型过去有个默认代价：加入音频和视觉后，文本与视觉能力会比同尺寸的单模态模型差。Qwen3-Omni 在预训练早期就混入单模态与跨模态数据，报告首次在文本、图像、音频、视频上都不低于同尺寸的 Qwen 单模态模型，同时在 36 个音频与音视频基准中的 22 个上达到总体最好，并用多码本加轻量卷积解码把理论首包延迟压到 234 ms；Qwen3.5-Omni 再把上下文扩到 256k、可处理 10 小时以上音频，并用 ARIA 解决流式语音合成的不稳。两代合起来说明「一个模型看、听、说」已可以不以牺牲单项能力为代价。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文 A** | Qwen Team, *Qwen3-Omni Technical Report* | arXiv:**2509.17765v1** \[cs.CL\] **22 Sep 2025**（页眉日期 **2025-09-23**）；PDF：https://arxiv.org/pdf/2509.17765 · `https://arxiv.org/abs/2509.17765`（**25** 页 A4） | Thinker–Talker MoE + AuT（20M h）+ 多码本流式；30B-A3B 开源 |
-| **主文 B** | Qwen Team, *Qwen3.5-Omni Technical Report* | arXiv:**2604.15804v2** \[cs.CL\] **21 Apr 2026**（页眉 **2026-04-22**）；PDF：https://arxiv.org/pdf/2604.15804 · `https://arxiv.org/abs/2604.15804`（**28** 页 A4） | Hybrid MoE + AuT（40M h / 6.25 Hz）+ **ARIA** + 256k；Plus/Flash API |
+语音进入大模型有三种形态：识别—翻译—合成的级联；音频编码器接 LLM、只输出文本（如 Qwen2-Audio，见 [[SpeechLLM语音语言模型]]）；同一模型多模态输入、直接流式输出语音。第三种要同时解决三件事：音视频长输入的时间对齐、语音输出的低延迟、加入新模态后原有文本与视觉能力不退化。Qwen2.5-Omni 提出 Thinker–Talker 架构：Thinker 负责理解与生成文本，Talker 负责生成语音（Qwen3-Omni §1）。Qwen3-Omni 与 Qwen3.5-Omni 是在此基础上的两次升级。
 
-**一句话抓手：**
-- **Qwen3-Omni**：在 Qwen2.5-Omni 的 Thinker–Talker 上把 **双方升级为 MoE**，用从零训练的 **AuT（~0.6B，20M 小时监督音频，12.5 Hz）** 替换 Whisper 系编码器，Talker 以 **多码本 RVQ + MTP + 因果 ConvNet Code2Wav** 做首帧即可播的流式语音；宣称冷启理论端到端首包 **234 ms**，单实例 ASR/口语理解可达 **40 分钟**级音频。
-- **Qwen3.5-Omni**：再升 **Hybrid-Attention MoE**、上下文 **256k**（>10 h 音频 / 400 s@720P·1FPS AV）、AuT 扩到 **40M 小时、6.25 Hz（~160 ms/帧）**，用 **ARIA** 把双轨文本–语音生改成自适应交织单流；产品面强调可控 AV 字幕、实时打断/音色克隆、原生工具调用与 **Audio-Visual Vibe Coding**；**Plus** 在文内 215 项音视频子任务上报 SOTA。
+## 二、脉络
 
----
+| 时间 | 工作 | 关键一步 |
+|---|---|---|
+| 2022-12 | [Whisper](https://arxiv.org/abs/2212.04356) | 大规模弱监督语音识别，此后多数语音 LLM 用它作音频编码器 |
+| 2023-11 | [Qwen-Audio](https://arxiv.org/abs/2311.07919) | 多任务音频语言模型，音频入、文本出 |
+| 2024-07 | [Qwen2-Audio](https://arxiv.org/abs/2407.10759) | 支持语音聊天与音频分析两种交互模式，仍只输出文本 |
+| 2025-03 | [Qwen2.5-Omni](https://arxiv.org/abs/2503.20215) | 提出 Thinker–Talker，端到端全模态输入并流式输出语音 |
+| 2025-09 | Qwen3-Omni | 双方改为 MoE，自研 AuT 替换 Whisper，多码本流式合成，报告不降级 |
+| 2026-04 | Qwen3.5-Omni | 混合注意力 MoE、256k 上下文、ARIA 单流交织 |
 
-## 二、议题边界：从「Audio→Text Speech-LLM」到「原生 Omni」
+## 三、方法
 
-### 2.1 与相邻笔记的分工
+### 3.1 Qwen3-Omni 相对 Qwen2.5-Omni 的五项改动（§1、§2）
+
+1. **双 MoE**：Thinker 与 Talker 都改为 MoE，开源版 Thinker 为 30B-A3B。
+2. **AuT 替换 Whisper**：从零训练的音频编码器，用 2000 万小时有监督音频训练，约 0.6B 参数，输出 12.5 Hz 的音频 token，并用分块窗口注意力支持实时预填充。
+3. **多码本语音表示**：Talker 每步生成一帧编码，由多 token 预测模块补出其余码本层。
+4. **轻量波形解码**：把分块扩散解码换成因果卷积网络，拿到第一帧编码就能开始输出波形。
+5. **低码率**：输入与输出音频都降到 12.5 Hz。
+
+另外两个设计：音视频按绝对时间对齐的 TM-RoPE，不再像 2.5-Omni 那样切固定 2 秒块；Talker 不再读取 Thinker 的高层文本表示，只依赖多模态特征，文本可经外部模块（检索、函数调用、安全过滤）改写后再交给 Talker（§1、§2.3）。预训练分三段：先锁住从 Qwen3 初始化的 LLM 训编码器与适配器，再在约 2T token 上从一开始就混合单模态与跨模态数据，最后把上下文从 8,192 扩到 32,768（§3）。Thinker 后训练沿用 Qwen3 的强到弱蒸馏，再做 GSPO（§4）。
+
+### 3.2 Qwen3.5-Omni 的改动（§1–4）
+
+- **骨干**：Thinker 与 Talker 都用 Qwen3.5 的混合注意力 MoE（含 Gated DeltaNet），利于长音视频推理；上下文 256k，可处理 10 小时以上音频或 400 秒 720P（1 FPS）视频（§2.1、§2.5）。
+- **AuT 再训**：4000 万小时音频—文本数据，输出 6.25 Hz（每帧约 160 ms）（§2.2）。
+- **ARIA**：流式合成不稳常因文本与语音分词器的编码效率不一致。ARIA 把双轨输入改成单通道交织，不依赖强制对齐或固定交织比，只约束任意前缀中语音与文本 token 的累积比例不超过该样本的全局比例（§2.4）。
+- **时间戳**：保留 TM-RoPE，但在每个视频与音视频时间块前插入以秒为单位的文本时间戳，音频按随机间隔插入，缓解长序列上时间位置编码过大、过稀的问题（§2.3）。
+- **Thinker 后训练三阶段**：各领域教师分别做 SFT 与 RL 后蒸馏进统一模型；在线策略蒸馏，把同一问题在文本输入下的更好回答作为音频输入时的蒸馏目标；面向多轮交互体验（语码切换、人设漂移、长程指令遵循）的强化学习（§4.1）。
+
+## 四、结果
+
+| 工作 | 评测 | 结果 |
+|---|---|---|
+| Qwen3-Omni | 36 个音频与音视频基准（摘要） | 32 个开源最好，22 个总体最好 |
+| Qwen3-Omni | 理论首包延迟（Table 1） | 音频输入 234 ms，视频输入 547 ms |
+| Qwen3-Omni | VoiceBench 总分（Table 7） | 30B-A3B-Thinking 88.8，Flash-Thinking 89.5，Gemini-2.5-Pro 89.6 |
+| Qwen3.5-Omni | 音频与音视频理解、推理与交互（摘要） | Plus 在 215 个子任务与基准上达到最好，关键音频任务超过 Gemini-3.1 Pro，综合音视频理解与之相当 |
+| Qwen3.5-Omni | VoiceBench（Table 5） | Plus 93.1，Gemini-3.1 Pro 88.9 |
+| Qwen3.5-Omni | LibriSpeech clean / other 词错率（Table 5） | Plus 1.11 / 2.23，Gemini-3.1 Pro 3.36 / 4.41 |
+| Qwen3.5-Omni | 理论首包延迟（Table 1） | Flash 音频 235 ms、视频 426 ms；Plus 435 ms、651 ms |
+
+不降级的证据是同尺寸对照：Qwen3-Omni 对 Qwen3-30B-A3B 与 Qwen3-VL-30B-A3B（§6）；Qwen3.5-Omni-Plus 对 Qwen3.5-Plus-Instruct，文本能力持平、指令遵循略好，视觉持平、视频理解更强（§5.1.1、§5.1.3）。
+
+## 五、意义
+
+两代 Omni 把「全模态」从拼接系统推进到一个可开源部署的端到端模型：自研编码器解决音频表示，Thinker–Talker 解耦让文本可被外部模块改写后再说出口，多码本加因果卷积解决首包延迟，早期混合预训练解决能力退化。Qwen3.5-Omni 的在线策略蒸馏与交互对齐 RL 则把重心转向「用语音问和用文字问一样好」与多轮对话体验，这是语音助手从演示走向产品的关键。
+
+## 六、局限与待核实
+
+- **参数量不公开**：Qwen3.5-Omni 摘要只说「数千亿参数」，正文没有给出 Plus 与 Flash 的精确参数量或专家配置；两者只通过 API 提供，开源的是 Qwen3-Omni 的 30B-A3B Instruct、Thinking 与 Captioner（Apache 2.0）。
+- **语音输出语种口径不一**：Qwen3.5-Omni 摘要写语音生成覆盖 10 种语言，正文与 Table 3 写语音输出 36 种（29 种语言加 7 种方言），本篇按表。
+- **VoiceBench 列名**：Qwen3-Omni 正文说「Qwen3-Omni-Thinking 得 89.5」，但 Table 7 中 89.5 属于 Flash-Thinking 列，开源的 30B-A3B-Thinking 为 88.8。
+- **延迟不可横比**：首包延迟是理论值；Qwen3.5-Omni 的 Flash 与 Plus 部署时的资源分配与并行策略不同，作者提示延迟不宜直接比较（§2.5）。
+- **涌现能力无评测协议**：「音视频 Vibe Coding」（按音视频指令直接写代码）是 Qwen3.5-Omni 报告的涌现能力，论文没有给出对应基准。
+
+## 七、与相邻笔记的分工
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **[[SpeechLLM语音语言模型]] Qwen2-Audio** | 「音频编码器连续特征条件 LLM → **文本**」；无原生波形输出 | Whisper 初始化、40 ms/帧公式、三阶段训练全文、评测表逐格 |
-| **[[多模态架构脉络]] / 视觉 LMM** | 「视觉编码器 + LLM」并列轴存在 | LLaVA/Flamingo 接法通史 |
-| **[[Qwen3技术报告深读]]** | 骨干初始化、Strong-to-Weak Distillation、GSPO 槽位 | Qwen3 文本训练全文 |
-| **Qwen2.5-Omni（文内引用）** | Thinker–Talker 祖先；3-Omni 列出的 5 项升级对照 | 未读的 2.5-Omni TR 细节 |
+| [[SpeechLLM语音语言模型]] | 上游：Qwen2-Audio 的「Whisper 编码器接 LLM、输出文本」在那篇，本篇是其后替换编码器并加上语音输出的一代 | Whisper 前端与三阶段训练 |
+| [[多模态架构脉络]] | 定位：那篇「全模态入、语音出」一条以本篇为节点 | 视觉 LMM 通史 |
+| [[Qwen3技术报告深读]] | 上游：本篇的 LLM 初始化与强到弱蒸馏来自那篇 | Qwen3 文本训练 |
+| [[StepAudio2语音旗舰]] | 对照：Step-Audio 2 用单一解码器按固定比例交织音文 token，本篇用 Thinker–Talker 双模型，Qwen3.5-Omni 改为自适应交织 | Step-Audio 2 训练与评测 |
+| [[SeamlessM4T语音翻译]] | 对照：那篇是专门的多语语音翻译模型与同传策略，本篇是通用全模态助手 | UnitY 与 EMMA |
+| [[音视频联合Flamingo]] | 对照：那篇是非 Qwen 系的开源音视频联合理解模型，把 Qwen-Omni 列为对照，语音输出靠自带可选的流式 TTS 模块 | OmniVinci 系训练配方 |
+| [[OnPolicy蒸馏OPD范式]] | 方法：Qwen3.5-Omni 后训练第二阶段用在线策略蒸馏，把文本输入下的回答质量迁到音频输入 | OPD 的一般形式与其他用法 |
+| [[BAGEL统一多模态生成]] | 对照：同为多模态入、多模态出，BAGEL 输出图像，本篇输出流式语音 | 图像生成与编辑 |
 
-### 2.2 能力面跃迁（跟读）
+## 八、延伸阅读
 
-`
-[[SpeechLLM语音语言模型]] 锚点： 音频 / 文本入 → 文本出（分析 + 语音聊，仍无 TTS）
-Omni 锚点： 文本·图像·音频·视频入 → 文本出 + 流式语音出（同一端到端模型）
-额外主张： 早期混入单模态+跨模态预训练 → 相对同尺文本/视觉 Qwen「非降级」
-`
-
-**可跟读金句（3-Omni Abstract）：** 「a single multimodal model that for the first time maintains state-of-the-art performance across text, image, audio, and video **without any degradation** relative to single-modal counterparts」；「Talker autoregressively predicts discrete speech codecs using a **multi-codebook** scheme」。
-
----
-
-## 三、世代对照总表（跟读用）
-
-| 维度 | Qwen3-Omni（2509） | Qwen3.5-Omni（2604）相对 3 的增量 |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| 骨干叙事 | Thinker–Talker；双方 **MoE**（相对 2.5-Omni 的 5 升级之首） | 双方 **Hybrid-Attention MoE**（含 GDN，利于长音视频 KV） |
-| 音频编码器 | **AuT** 从零训；**~20M** 小时；Conv2D× **8** → **12.5 Hz**（~**80 ms**/帧）；AuT 编码器约 **0.6B / Table1: 650M** | AuT 再训；**~40M** 小时（文称由 Qwen3-ASR 生成音文对）；Conv2D× **4** 下采样 **16×** → **6.25 Hz**（~**160 ms**/帧）；多语比例 **中:英:多语 ≈ 3.5:3.5:3** |
-| 视觉 | Qwen3-VL 视觉编码器，**SigLIP2-So400M ~540–543M** | 采用 **Qwen3.5** 视觉编码器（Table1 写 **SigLIP2**） |
-| 位置 / 时间 | **TM-RoPE**；音视频按绝对时间对齐，**取消** 2.5-Omni 固定 2s chunk | 保留 TM-RoPE 思路，但改在视频/AV patch 前插入 **秒级文本时间戳**；音频随机插时间戳，减轻长序列稀疏 temporal ID |
-| 语音生成 | RVQ 多码本；骨干预测第 0 码本 + **MTP** 残差；**Code2Wav = 因果 ConvNet**（替 block-wise DiT） | 继承 RVQ+MTP+ConvNet；新增 **ARIA**（自适应 speech/text 交织约束，并双轨→单流） |
-| Thinker↔Talker 条件 | Talker **不再吃** Thinker 高层文本表示，只吃音视频多模态特征 + 可经外部模块注入文本（便于 RAG/安全过滤） | Talker 条件含历史文本、多模态表示、**当前轮流式文本**；ARIA 对齐文本–语音单元 |
-| 上下文 / 时长 | 预训练 S3 到 **32,768**；理解侧宣称单实例 **>40 min** 音频 | 预训练 S3 到 **262,144**；产品宣称 **256k**、**>10 h** 音频、**400 s** 720P@1FPS AV |
-| 语言覆盖（表） | 文本 **119**；语音入 **19**；语音出 **10**（Table 3） | 文本 **201**；语音入 **113**（74 语 + 39 中文方言）；语音出 **36**（29 语 + 7 方言）（Table 3）。**注意**：3.5 Abstract 另写「speech generation across **10** languages with human-like emotional nuance」——与 Table 3 的 36 **口径不同**，跟读以表为准，不捏合 |
-| 首包延迟（理论） | 30B-A3B：音频/视频 **234 / 547 ms**（Table 1） | Flash：**235 / 426 ms**；Plus：**435 / 651 ms**（Table 1） |
-| 开源 / 产品 | **30B-A3B** Instruct / Thinking / Captioner，**Apache 2.0**（README + Abstract） | 文称 **Plus / Flash** Instruct，**经 API 公开**；正文 **未**给 Plus/Flash 精确参数量（仅 Abstract「hundreds of billions」） |
-| 训练 token（S2） | ~**2T**（文 0.57 / 音 0.77 / 图 0.82 / 视 0.05 / 视音 0.05） | ~**4T**（文 0.92 / 音 1.99 / 图 0.95 / 视 0.14 / 视音 0.29） |
-
----
-
-## 四、Qwen3-Omni：架构思想（主读）
-
-### 4.1 相对 Qwen2.5-Omni 的五条升级（§1）
-
-文内显式列举（勿与 [[SpeechLLM语音语言模型]] 混淆）：
-
-1. Thinker / Talker 均改为 **MoE**；
-2. **Whisper → AuT**（20M 小时监督，block-wise window attention 以支持实时 prefill 缓存）；
-3. 语音侧采用 **多码本** 表示（容量覆盖音色 / 副语言 / 声学现象）；
-4. Talker **单轨 → 多轨 codec**，MTP 预测残差层；波形级 **DiT → 轻量 ConvNet**；
-5. 入/出音频码率降至 **12.5 Hz**，输出 codec 支持 **单帧即合成**。
-
-另列相对 2.5-Omni 的四条产品向改进：>40 min 音频理解；119/19/10 语覆盖；**Thinking** 全模态推理；端到端延迟低至 **234 ms**。
-
-### 4.2 AuT（§2.2）
-
-- 结构：attention-encoder-decoder；Qwen3-Omni **只用其 encoder**。
-- 数据配比（训练）：**80%** 中英伪标 ASR、**10%** 其他语 ASR、**10%** 音频理解。
-- 动态注意力窗：**1–8 s** query 模式，兼顾实时 prefill 与离线任务。
-- 前端（§2.3）：16 kHz；128-ch mel；窗 **25 ms** / hop **10 ms**——与 [[SpeechLLM语音语言模型]] 前端数字同族，但 **编码器与帧率已换代**（此处只记 Omni 侧：约 **80 ms**/帧 @12.5 Hz）。
-
-### 4.3 Thinker 感知与 TM-RoPE（§2.3）
-
-- 文本：Qwen tokenizer，vocab **151,643**。
-- 音视频：按 temporal ID **显式锚定绝对时间**对齐，**不再**像 2.5-Omni 切固定 2 s chunk → 支持任意时长流式输入。
-- TM-RoPE：相对 M-RoPE 重分配旋转角（时间/高/宽 **24 / 20 / 20**），缓解长程外推问题。
-
-### 4.4 Talker：多码本流式与「文本解耦」（§2.1, §2.4–2.5）
-
-**控制面关键改动：** Talker **不消费** Thinker 高层文本表示，只条件于音视频多模态特征——动机：(i) 离散文本 token 与 embedding 信息等价；(ii) 翻译等需要保韵律/音色的 AV 协调。解耦后可用 **不同 system prompt** 分别控 Thinker 文风与 Talker 音色；也可让 RAG / function calling / 安全过滤改写 Thinker 文本后再注入 Talker。
-
-**生成路径：** 每步 Talker 出一帧 → MTP 补残差码本 → 仅左上下文的流式 codec 解码 → **首 token 即可出波形**（对比 2.5-Omni 需等够 block 上下文）。
-
-**Table 1 模块账（30B-A3B）：** AuT 650M · SigLIP2-So400M 540M · Thinker **30B-A3B** · Talker **3B-A0.3B** · MTP 80M · Code2wav 200M；端到端首包 **234/547 ms**（音/视）。
-
-### 4.5 预训练三阶段（§3）
-
-| 阶段 | 要点 |
-|---|---|
-| **S1 Encoder Alignment** | LLM 锁参，初始化自 **Qwen3**；视觉自 Qwen3-VL；音频自 AuT。先训 adapter 再训 encoder；**放弃**「冻 LLM 同时联合训 encoder+adapter」——文称后者会让 encoder 代偿冻住的 LLM，损害感知 |
-| **S2 General** | ~**2T** token，早期即混单模态+跨模态；相对 2.5-Omni **多样自然语言提示**（非每任务单提示） |
-| **S3 Long Context** | 最大长度 **8,192 → 32,768**；提高长音频/长视频占比 |
-
-### 4.6 后训练（§4）
-
-**Thinker 三阶段：** 轻量 **SFT** → Qwen3 式 **Strong-to-Weak Distillation**（off-policy 响应蒸馏 + on-policy KL 对齐教师 **Qwen3-32B / Qwen3-235B-A22B**）→ **GSPO**（规则奖励 + LLM-as-judge；视觉任务用 Qwen2.5-VL 作裁判）。
-
-**Talker 四阶段：** 大规模多模态语境语音映射 → 高质量 **CPT** + 长上下文 → 多语偏好 **DPO** → **speaker fine-tuning**。
-
-**Captioner：** 在 30B-A3B 上微调细粒度音频描述 → **Qwen3-Omni-30B-A3B-Captioner**（开源；填补「通用音频 caption」缺口）。
-
-### 4.7 开源变体（README + Abstract）
-
-| 名称 | 角色（README） |
-|---|---|
-| **Instruct** | Thinker+Talker；音/视/文入，音+文出 |
-| **Thinking** | 仅 Thinker + CoT；音/视/文入，**文本出** |
-| **Captioner** | 自 Instruct 下游微调；音频入→细粒度文本 caption |
-
-另有文内 **Flash-Instruct / Flash-Thinking**（in-house，强调效率与方言等；非上述三权重同级开源声明）。
-
----
-
-## 五、Qwen3.5-Omni：相对 3-Omni 的架构增量
-
-### 5.1 文内五条技术升级 + 三条新能力（§1）
-
-**技术：** (1) Hybrid-Attention MoE；(2) **256k** 与超长音/AV；(3) 多码本单帧即合成（继承并强化）；(4) **ARIA**；(5) 多语大幅扩展（识别 113 / 合成 36，Table 3）。
-
-**新能力叙事：** (1) 可控 AV 字幕（结构化、时间戳、分镜/人物–音频关系）；(2) 全面实时交互（原生轮次意图打断、音量/语速/情绪端到端控制、用户样本零样本克隆）；(3) 原生 Omni **agent**——自主 WebSearch、复杂 FunctionCall、以及涌现的 **Audio-Visual Vibe Coding**（直接按音视频指令写可执行代码）。
-
-### 5.2 ARIA（§2.4–2.5）——本代最宜跟读的生成侧新件
-
-问题陈述：流式合成不稳/不自然，常因 **文本 tokenizer 与语音 tokenizer 编码效率不一致**。
-
-机制要点：
-
-- 把 3-Omni 的 **dual-track** Talker 输入改成 **单通道交织**；
-- **不用** MFA 对齐或固定交织率；
-- 约束：对生成序列任意前缀，累积 **speech/text token 比** 不得超过该样本级全局比；
-- 效果主张：减少跳词、错音、数字含糊；支持任意文本前缀后续接连贯语音 token；并降低双轨同步开销。
-
-### 5.3 时间戳策略修正（§2.3 / §3）
-
-诊断 TM-RoPE 直接绑绝对时间的两点限制：长 AV 上 temporal ID **过大过稀**；且需要跨 fps **均匀大采样** 抬高数据成本。对策：每个视频/AV temporal patch 前置 **「秒」格式文本时间戳**；音频序列 **随机间隔** 插时间戳。代价：上下文略增；收益：长上下文时间感知更稳。
-
-### 5.4 预训练 / 后训练增量要点
-
-**预训练：** 同三阶段骨架；S2 ~**4T**；S3 **32,768 → 262,144**；初始化改 **Qwen3.5** 文本+视觉 + AuT。
-
-**Thinker 后训练（三阶段叙事变了）：**
-
-1. **Specialist Distillation**：各域教师（含视觉/音频）独立 SFT+RL，再蒸馏进统一模型；
-2. **On-Policy Distillation**：针对「同题音频条件回答质量弱于文本条件」——用文本条件响应作音频条件蒸馏目标；
-3. **Interaction-Aligned RL**：多轮轨迹上针对语码切换、人设漂移、长程指令遵循等交互体验塑奖。
-
-**Talker：** General（>**20M** 小时多语语音+多模态语境）→ 长上下文 CPT（至 **64k**，并借助 3-Omni-Captioner 抑幻觉）→ **DPO + 规则奖励 / GSPO** → speaker FT。相对 3-Omni Talker，文强调更多 **instruction-following speech** 任务，而非单纯单调映射。
-
----
-
-## 六、评测字段（辅；只摘主张与可核验锚点）
-
-### 6.1 Qwen3-Omni（§5–6）
-
-- **音视频榜面主张（Abstract / Conclusion）：** 36 项音/AV 基准上开源 SOTA **32**、总体 SOTA **22**；并点名优于 Gemini-2.5-Pro、Seed-ASR、GPT-4o-Transcribe 等（具体格点见正文大表，本笔记不整表重抄）。
-- **VoiceBench Overall（Table 7）：** Gemini-2.5-Pro **89.6**；Qwen3-Omni-Flash-Thinking **89.5**；30B-A3B-Thinking **88.8**；30B-A3B-Instruct **85.5**。（正文叙述写「Thinking … 89.5」与表中 **Flash-Thinking** 列对齐时需小心——**以 Table 7 列名为准**。）
-- **非降级（§6）：** 与同尺 **Qwen3-30B-A3B** / **Qwen3-VL-30B-A3B** 对照；文称 Omni 在文本与视觉上匹配同尺单模态，同时具备音频/AV。
-- **延迟：** 理论首包 **234 ms**（音频入，1 并发）；Table 2 给出 4/6 并发下延迟与 RTF（RTF 均 **<1**）。
-
-### 6.2 Qwen3.5-Omni（§5）
-
-- **规模主张：** Plus 在 **215** 项音/AV 理解·推理·交互子任务上报 SOTA；相对 **Gemini-3.1 Pro**，文称在通用音频理解/推理/识别/翻译/对话上超越，AV 理解整体达同级。
-- **VoiceBench（Table 5）：** Gemini-3.1 Pro **88.9**；Flash **87.8**；**Plus 93.1**。
-- **ASR 摘录（Table 5，WER↓）：** 如 Librispeech clean|other：Gemini **3.36|4.41** vs Plus **1.11|2.23**；KeSpeech：Gemini **23.67** vs Plus **3.46**（完整语种/方言列见原表）。
-- **非降级：** Table 4 对照 **Qwen3.5-Plus-Instruct**，文称 Omni-Plus 文本能力持平；Table 6 视觉持平且视频更强。
-- **延迟：** Flash 音频首包 **235 ms** 与 3-Omni 234 ms 同量级；Plus 更重（**435 ms**）。Table 2 注明 Flash/Plus **部署资源不同，不宜硬比横向**。
-
-### 6.3 诚实边界
-
-- 3.5 **未**在 TR 中给出 Plus/Flash 的 Thinker/Talker 精确 B 数或专家配置；「hundreds of billions」仅摘要措辞。
-- 「Audio-Visual Vibe Coding」为文内**涌现能力叙事**，本篇不另造评测协议。
-
----
-
-## 七、延伸阅读
-
-建议用时 25–35 分钟：
-
-1. **3-Omni** Abstract + §1 五升级清单 + Figure 2 文字说明（Thinker–Talker / MTP / Code2Wav）。
-2. §2.2 AuT → §2.1 Talker 与文本解耦 → §2.5 Table 1–2 延迟账。
-3. §3 S1–S3 与「放弃冻 LLM 联合训 encoder」一句；§4 Thinker/Talker/Captioner 阶段名。
-4. **3.5-Omni** Abstract + §1 五升级/三能力 → §2.2 AuT 6.25 Hz → **§2.4 ARIA** → Table 1 延迟。
-5. §3 时间戳修正 + 4T / 262k；§4 Specialist / OPD / Interaction-Aligned RL。
-6. 扫 Table 7（3-Omni VoiceBench）与 Table 5（3.5 vs Gemini-3.1 Pro）核对主张，不背全表。
-
----
-
-## 八、可回收结论（写进总账时用）
-
-1. **相对 [[SpeechLLM语音语言模型]]：** 问题从「Audio-Language → 文本」升级为「**原生 Omni** → 文本+流式语音」，并纳入视觉/视频与工业级首包延迟；音频栈核心符号从 Whisper 连续帧变为 **AuT + 离散多码本 Talker**。
-2. **3 → 3.5：** 主增量不是再换一套 Thinker–Talker 口号，而是 **Hybrid MoE + 更长上下文 + 更重 AuT + ARIA 对齐 + 交互/Agent 后训练**；语言与时长覆盖数量级上跳。
-3. **共用科学主张：** 早期混合单模态与跨模态预训练，追求相对同尺 Qwen **文本/视觉不降级**——两篇均把「非降级」写成可检的同尺对照，而非口号。
-4. **落地分流：** 要权重与本地复现 → **3-Omni 30B-A3B（Apache 2.0）**；要更长上下文/更强交互与 API → **3.5-Omni Plus/Flash**（TR 口径）。
-
----
-
-## 九、来源
-
-| 链接 | 用途 |
-|---|---|
-| `https://arxiv.org/abs/2509.17765` | 一手 TR A |
-| `https://arxiv.org/abs/2604.15804` | 一手 TR B |
-
-## 相关笔记
-
-- [[SHADEArena隐瞒与监控]]
-- [[天气气候基础模型]]
-- [[QwenOmni音视频原生]]
-- [[LearnLM教育辅导]]
-
+| 1 | [Qwen3-Omni](https://arxiv.org/abs/2509.17765) §1–3、Table 1 | 五项改动、AuT、Talker 解耦、预训练三段与延迟账 |
+| 2 | [Qwen3.5-Omni](https://arxiv.org/abs/2604.15804) §2.3–2.4、§4.1 | 时间戳、ARIA、后训练三阶段 |
+| 3 | [Qwen3.5-Omni](https://arxiv.org/abs/2604.15804) §5、Table 4–6 | 与 Gemini-3.1 Pro 及同尺寸单模态模型的对照 |
+| 4 | [[SpeechLLM语音语言模型]] | 前一代音频入、文本出的做法 |

@@ -5,267 +5,106 @@ date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
 sources:
-aux:
  - https://arxiv.org/abs/2604.08995
- - https://arxiv.org/pdf/2604.08995
  - https://arxiv.org/abs/2501.03575
- - https://arxiv.org/pdf/2501.03575
  - https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/
 arxiv: ["2604.08995", "2501.03575"]
-related:
- - "世界模型与VJEPA"
- - "视频生成模型脉络"
- - "DiffusionForcing族"
- - "视觉语言动作谱系"
-retrieval_cutoff: 2026-09-22
+related: ["世界模型与VJEPA", "视频生成模型脉络", "DiffusionForcing族", "视觉语言动作谱系", "BAGEL统一多模态生成"]
+retrieval_cutoff: 2026-09-29
 timezone: Asia/Shanghai (CST)
 ---
 
 # 交互视频世界模型增量：Matrix-Game 3.0 + Cosmos WFM 平台（≠ V-JEPA）
 
-> **定位**：交互生成式世界模型增量——在 **[[世界模型与VJEPA]]** 已立「非生成式 JEPA 表征预测」之后，本卡只写 **交互 / 流式生成式世界模型** 增量切片：
-> - **Matrix-Game 3.0**（Skywork AI）：**实时流式交互 WM** + **相机感知长程记忆** + 工业数据引擎 + few-step 蒸馏部署（720p / 至约 40 FPS）。
-> - **Cosmos World Foundation Model Platform**（NVIDIA）：**Physical AI 世界基础模型平台**——视频策展 / 连续·离散 tokenizer / 扩散与自回归预训练 WFM / 后训练样例 / guardrail。
-> **对照**：**Genie 3** 仅有 DeepMind 博文（2025-08-05）、**无正式 PDF TR** → 不作主锚，仅作产品对照一句。
-> **研究线**：**架构思想 / 平台接口（主）** + **文内交互一致性 / 吞吐字段（辅）**。
+> **主要来源**：[Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2604.08995)（Skywork AI，v1 2026-04-10，v3 2026-09-29）；[Cosmos World Foundation Model Platform for Physical AI](https://arxiv.org/abs/2501.03575)（NVIDIA，v1 2025-01-07，v3 2025-07-09）；对照：[Genie 3: A new frontier for world models](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/)（DeepMind 博文，2025-08-05）（截至 2026-09-29）。
+> **研究线**：架构思想（主：交互式世界模型的记忆与蒸馏、世界基础模型平台的分层）；评测字段（辅：吞吐消融、VAE 重建、物理对齐）
 > **范围与相邻笔记**：
-> - **≠ [[世界模型与VJEPA]]**：不重写 JEPA **mask-denoising 表征预测**入门、V-JEPA 2 probe / VidQA / AC 后训练长文。本卡预测落在 **像素 / 潜视频生成**（动作条件交互或 Video2World），与表征空间 JEPA **正交**。
-> - **≠ [[视频生成模型脉络]]**：不写成 **视频生成通史**（Sora、Veo 等旗舰与开放模型的脉络在那篇，Matrix-Game、Cosmos、Genie 3 在那篇只作节点）。本篇对象是 **交互/流式 WM + Physical AI WFM 平台**。
-> - **≠ [[DiffusionForcing族]]**：不重写 Diffusion Forcing → Self Forcing → Causal Forcing **训推对齐 forcing 族通史**。Matrix 文内引用 Self-Forcing / DMD / Causal Forcing 仅作 **蒸馏接口一句**，不展开族谱。
-> - **≠ [[视觉语言动作谱系]]**：不写成 **Robotics VLA 控制部署通史**（RT-2 / OpenVLA / π0）。Cosmos 后训练含机器人 manipulation **样例**，本篇只列「预训练 WFM → 域内后训练」平台接口，不写闭环 VLA 策略谱系。
-> **主要来源**：[Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2604.08995)；[Cosmos World Foundation Model Platform for Physical AI](https://arxiv.org/abs/2501.03575)；[Genie 3: A new frontier for world models](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/)（截至 2026-09-22）；文内未给出算力明细与完整配方。
+> - ≠ [[世界模型与VJEPA]]：那篇是表征空间里的非生成预测，本篇的预测落在像素或潜视频上。
+> - ≠ [[视频生成模型脉络]]：本篇不写视频生成通史，Matrix-Game、Cosmos、Genie 3 在那篇只作节点。
+> - ≠ [[视觉语言动作谱系]]：Cosmos 的机器人后训练只作平台样例，闭环控制策略在那篇。
+>
+> **意义**：生成式世界模型要回答两个问题：能不能边接收键鼠动作边实时生成、并在几分钟后回到同一地点时还记得场景；能不能先训一个通用的世界模型，再用少量数据适配到机器人、驾驶等物理 AI 任务。Matrix-Game 3.0 给出前者的开源系统答案：5B 模型在 720p 下最高 40 FPS，并用按相机位姿检索的记忆维持分钟级一致；Cosmos 给出后者的平台答案：视频策展、分词器、扩散与自回归两类预训练模型和后训练样例一并开放。Genie 3 在博文中展示了同类能力，但没有公开方法。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 页数 | 角色 |
-|---|---|---|---|
-| **主文 A** | Wang, Liu, Li, Huang, Xu et al.（Skywork AI）, *Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory* | arXiv:**2604.08995**v2 \[cs.CV\] **13 Apr 2026**（abs：Submitted **10 Apr 2026**）；PDF https://arxiv.org/pdf/2604.08995；**20** 页 letter | **实时流式交互 WM**：error-aware 基座 + 相机感知记忆 + multi-segment DMD 蒸馏 + INT8/VAE 剪枝 → **720p@~40FPS（5B）**；scale-up **MoE-28B / 2×14B** |
-| **主文 B** | NVIDIA（Agarwal, Ali, Bala, … Liu et al.）, *Cosmos World Foundation Model Platform for Physical AI* | arXiv:**2501.03575**v3 \[cs.CV\] **9 Jul 2025**（abs：Submitted **7 Jan 2025**）；PDF https://arxiv.org/pdf/2501.03575；**75** 页 A4 | **Physical AI WFM 平台**：策展→tokenizer→扩散/AR 预训练→后训练样例→guardrail；开源/开权重入口 **NVIDIA Cosmos-Predict1** |
-| **对照** | Parker-Holder & Fruchter（DeepMind）, *Genie 3: A new frontier for world models* | 博文 **2025-08-05**；https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ | **产品对照**：文生交互世界 **24 FPS / 720p / 数分钟一致性**；**无正式 PDF TR**，仅作对照 |
+「世界模型」指能根据过去观测和动作预测未来的模型（概念来路见 [[世界模型与VJEPA]]）。Cosmos 把视觉世界模型写成 $\hat{x}_{t+1}=\mathcal{W}(x_{0:t},c_t)$：$x$ 是 RGB 视频，$c$ 可以是动作、文本或随机扰动（Cosmos §2）。随着视频扩散模型变强，用它直接充当可交互的模拟器成为一条路线，但有三个难点同时存在（Matrix §1）：
 
-**一句话抓手：**
-- **Matrix-Game 3.0**：把「交互视频世界模型」做成 **可部署系统**——UE/AAA/真实四元组数据 + **自校正双向 DiT** + **相机感知记忆检索** + **多段 DMD 蒸馏**，在 5B 上冲 **720p 实时流式**。
-- **Cosmos**：把「世界模型」做成 **可后训练的平台**——先大规模视频策展与 tokenizer，再预训练 **扩散 / 自回归** 两类 WFM，再用小数据后训练到相机控制 / 机器人 / 驾驶。
-- **Genie 3（对照）**：闭源实时交互世界演示（博文宣称 24 FPS·720p·数分钟）；配方与栈未公开——本卡不跟。
+- **实时**：交互要求每秒生成数十帧，多步扩散太慢；
+- **长程一致**：自回归生成误差累积，离开后再回来，场景往往已经变了；
+- **数据**：需要同时带动作、相机位姿和画面的长视频，网络视频很少提供。
 
----
+Matrix §1 指出，Genie 3 实现了实时交互与分钟级一致但未开源；Matrix-Game 2.0 等开源系统能实时流式生成，却缺少分钟级记忆。
 
-## 二、议题边界：生成式交互 WM / WFM 平台 ≠ JEPA / 视频报告缺口 / Forcing 族 / VLA
+## 二、脉络
 
-### 2.1 四向对照（跟读）
-
-| 轴 | 预测落在哪 | 交互 / 控制 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|---|
-| **[[世界模型与VJEPA]] V-JEPA** | **表征空间** mask-denoising | AC 后训练接口 | [[世界模型与VJEPA]] | **否**（不重写 JEPA 入门） |
-| **[[视频生成模型脉络]]** | 视频生成通史（像素或潜空间生成） | 多为离线生成 | [[视频生成模型脉络]] | **否** |
-| **[[DiffusionForcing族]] Forcing 族** | 序列上 per-token 噪声 / 自 rollout | 训推对齐手法 | [[DiffusionForcing族]] | **否**（仅蒸馏引用） |
-| **[[视觉语言动作谱系]] VLA** | 观测→动作策略 | 闭环机器人 | [[视觉语言动作谱系]] | **否**（Cosmos 机器人后训练仅样例） |
-| **Matrix-Game 3.0** | **动作条件潜视频**流式生成 + 显式记忆 | 键鼠 / 相机；实时 | **本篇 A** | **是** |
-| **Cosmos WFM** | Text2World / Video2World（扩散或 AR） | 后训练接相机位姿 / 指令 / 多视角 | **本篇 B** | **是** |
-| **Genie 3** | 文生可导航交互世界 | 导航 + promptable events | **对照** | **索引 only** |
-
-跟读直觉：[[世界模型与VJEPA]] 问「**世界如何在表征里可预测**」；Matrix 问「**人在键鼠下能否实时流式滚出分钟级一致世界**」；Cosmos 问「**如何先训通用 WFM 再便宜地后训练到 Physical AI 任务**」；Genie 3 是闭源产品演示位。四者可叠在「world model」外壳下，但**旋钮不同**——本卡不滑回 JEPA / Sora 备忘 / Forcing 通史 / VLA 谱系。
-
-### 2.2 文内自划界（跟读）
-
-- **Matrix §1 / Related**：点名 Genie 3「约 24 FPS·720p·分钟级」但 **未开源、细节不清**；Matrix-Game 2.0 / HY-Gamecraft-2 有实时流式但 **缺分钟级记忆**；Lingbot-World 靠扩上下文但难同时实时；本工作主打 **记忆一致性 × 高分辨率 × 真实时** 同框。Related 中 Diffusion Forcing / Self-Forcing / Causal Forcing / SVI 仅作 **长视频误差累积** 谱系，**不写 forcing 族通史**（→ [[DiffusionForcing族]]）。
-- **Cosmos §1–2**：明确定义 $ \hat{x}_{t+1}=\mathcal{W}(x_{0:t},c_t) $ 的 **视觉 WFM**；用途列表含策略评估 / 初始化 / RL / MPC / 合成数据，但 **§2.1 明示本文不含将这些用途的实证结果**——本卡亦不外推。后训练机器人 / 驾驶 → **平台样例**，控制部署 → [[视觉语言动作谱系]]。
-- **Genie 3 博文**：强调实时交互、数分钟一致性、promptable world events、与 SIMA 联调；**Limitation** 含有限动作空间、多 agent、真实地理精度、交互时长「数分钟而非数小时」——本篇仅作对照。
-
-`
- 「world model」外壳（接口可取自 [[世界模型与VJEPA]] 定义句，正文不写 JEPA）
- │
- ┌────────────────────┼────────────────────┐
- ▼ ▼ ▼
- Matrix-Game 3.0 Cosmos WFM 平台 Genie 3（对照）
- 实时流式交互+记忆 策展/Tokenizer/预训练/后训练 闭源博文演示
- 本篇 A 本篇 B 索引 only
-`
-
----
-
-## 三、主文 A：Matrix-Game 3.0（2604.08995）
-
-### 3.1 问题立轴：实时 × 高分辨率 × 长程记忆，三者同框仍稀缺
-
-摘要 / §1：交互视频生成里，扩散模型越来越像世界模型，但既有路线难 **同时** 做到：
-
-1. **记忆启用的长程时空一致**（分钟级、可回访场景）；
-2. **高分辨率真实时**（文称 720p、至约 40 FPS）；
-3. **可复现的数据 / 训推栈**（对标 Genie 3 等闭源系统）。
-
-相对 Matrix-Game 2.0：3.0 在 **数据、模型、推理** 三侧系统升级。
-
-### 3.2 四组件协同（§3 总览）
-
-| 组件 | 作用（文内） |
-|---|---|
-| **Error-aware interactive base** | 双向 DiT + 动作条件；error buffer 收集/注入残差，学自校正（对齐后续蒸馏） |
-| **Camera-aware long-horizon memory** | 按相机位姿 / FoV 重叠检索记忆帧；与 past / current 同注意力空间；相对 Plücker；共享误差注入 |
-| **Multi-segment few-step distillation** | 双向学生多段自 rollout + **DMD**，对齐流式 few-step 推理 |
-| **Real-time acceleration** | DiT **INT8**（注意力投影）、**MG-LightVAE** 剪枝、GPU 近似记忆检索；异步 **8 DiT + 1 VAE** |
-
-骨干：交互基座基于 **Wan2.2-TI2V-5B**；动作模块进前 **15** 个 DiT block（沿用 2.0）。Scale-up：**MoE-28B**（摘要亦写 **2×14B**）；高低噪声分工——高噪声管动作精确、低噪声可吃互联网视频做细节；第一/第三人称高噪声分模型、共享低噪声。
-
-### 3.3 Error-aware 基座（§3.1）
-
-设计原则（文内两点）：
-
-1. **师生同构双向架构**——避免异构 teacher–student 映射失配（引用 Causal Forcing 等理论动机，**不展开**）；
-2. **对不完美上下文鲁棒**——训练时也应见自生成历史噪声，而非只见干净 GT。
-
-流程要点：序列 latent 分 past（条件）与 current（加噪预测）；flow-matching 损失只加在 current。键盘离散动作 → **Cross-Attention**；鼠标连续信号 → **Self-Attention**。
-
-误差机制（跟 SVI）：收集 $\delta=\hat{x}_i-x_i$ 入 buffer $E$；注入 $ \tilde{x}_i=x_i+\gamma\delta $。目标示意（式 3，抽取）：在扰动历史与动作条件 $c$ 下匹配速度场。
-
-### 3.4 相机感知长程记忆（§3.2）
-
-拒两条旁路后的选择：
-
-- **拒** MoC 式稀疏长上下文（高噪声段相似度不稳 + 训时开销）；
-- **拒** 单独 memory 分支 + 层层注入（收敛慢）。
-
-**采纳**：检索到的 memory latent、近期 past、当前 noised current **同一 DiT self-attention**；可选保留序列首帧作 **sink latent**；相对几何用 **Plücker-style**；memory 与 history 共享误差注入（式 4–6）；时间 RoPE 注入真实帧索引 + **head-wise perturbed RoPE base**（式 7，$\sigma_\theta=0.8$）减轻周期对齐导致的「远距字面复制」。
-
-训练设定（§5.1）：约 **5 memory + 4 past + 10 noisy** latent；记忆增强训集约 **4.8M** clips。
-
-### 3.5 多段蒸馏与实时部署（§3.3–3.4）
-
-- **多段 DMD**：双向学生按真实 few-step 多段 rollout；段 $i$ 的 past 取段 $i-1$ 尾；记忆自在线池按当前视角取；首段无记忆 → I2V。冷启动单段 600 step → 多段 $k\sim U\{1..6\}$ 共 2400 step（§5.1）。
-- **加速**：INT8 @ attention projection（LightX2V 算子）；MG-LightVAE 50%/75% 剪枝（文称解码加速约 **×2.6 / ×5.2**）；GPU 采样近似视锥重叠替代 CPU 精确体积交；**8+1** 异步至约 **40 FPS**。
-
-**Table 1**（75% VAE 剪枝设定下，去掉组件后的 FPS）：
-
-| Configuration | FPS | ↓ Drop |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| Full | **~40** | – |
-| − INT8 quantization | 27.38 | 12.62 |
-| − MG-LightVAE | 25.79 | 14.21 |
-| − GPU retrieval | 6.60 | 33.40 |
+| 2018-03 | [World Models](https://arxiv.org/abs/1803.10122) | 用 VAE 加 RNN 学环境模型，让智能体在「梦中」训练 |
+| 2024-02 | [Genie](https://arxiv.org/abs/2402.15391) | 从无动作标注的网络视频学出可交互的环境模型 |
+| 2025-01 | Cosmos | 物理 AI 世界基础模型平台：策展、分词器、扩散与自回归预训练、后训练 |
+| 2025-06 | [Matrix-Game](https://arxiv.org/abs/2506.18701) | Skywork 的交互世界基础模型 |
+| 2025-08 | Genie 3 | 博文发布：文本生成可实时导航的世界，24 FPS、720p、一致性维持数分钟 |
+| 2025-08 | [Matrix-Game 2.0](https://arxiv.org/abs/2508.13009) | 开源的实时流式交互世界模型 |
+| 2026-04 | Matrix-Game 3.0 | 加入相机感知的长程记忆、误差自校正与多段蒸馏，5B 模型 720p 最高 40 FPS |
 
-**Table 2**（720×1280、17-frame；PSNR/SSIM 与时间）：
+## 三、方法
 
-| Model | PSNR↑ | SSIM↑ | Full(s)↓ | Dec.(s)↓ |
-|---|---|---|---|---|
-| Wan2.2 VAE | 33.79 | 0.99 | 0.99 | 0.76 |
-| MG-LightVAE 50% | 31.84 | 0.99 | 0.52 | 0.30 |
-| MG-LightVAE 75% | 31.14 | 0.99 | 0.35 | 0.13 |
+### 3.1 Matrix-Game 3.0（§3）
 
-### 3.6 数据引擎（§4）
+- **误差感知的交互基座**：基于 Wan2.2-TI2V-5B 的双向 DiT，键盘动作经交叉注意力、鼠标信号经自注意力注入。训练时把模型预测与真实帧的残差收进误差缓冲区，再随机注入到历史条件中，让模型学会在不完美的上下文上自我校正。
+- **相机感知记忆**：按相机位姿与视野重叠检索过去的记忆帧，与近期历史、当前待生成帧放进同一自注意力，用相对 Plücker 编码表达几何关系。作者没有采用稀疏长上下文或单独记忆分支：前者在高噪声阶段相似度不可靠，后者收敛慢（§3.2）。
+- **多段少步蒸馏**：受 DMD 与 Self Forcing 启发，学生在多段上按推理方式自行展开，再做分布匹配；教师与学生同为双向架构，理由引自 Causal Forcing 关于师生架构失配的分析（§3.1、§3.3，[[DiffusionForcing族]]）。
+- **实时部署**：DiT 做 INT8 量化、VAE 解码器剪枝、记忆检索改到 GPU 上近似计算，8 张卡跑 DiT、1 张卡跑 VAE 异步流水（§3.4、§5.2.3）。
+- **扩到 28B**：用 MoE-28B（摘要称 2×14B）骨干，高噪声模型负责动作精度、用动作标注准确的数据训练，低噪声模型负责细节、可用网络视频训练（§3.5）。
+- **数据**：Unreal Engine 5 合成、游戏录制与真实世界数据集（DL3DV-10K、RealEstate10K 等）三源，产出带动作与相机位姿标注的视频；过滤后约去掉 20% 原始数据（§4）。
 
-三源互补，产出 **Video–Pose–Action–Prompt** 四元组：
+### 3.2 Cosmos（§3–7）
 
-1. **Unreal-Gen（UE5）**：>1000 场景；tick 同步 RGB / 位姿 / 动作；NavMesh–RL 探索；角色组合 $|C|>10^8$ 变体。
-2. **AAA 四层解耦录制**：GTA V / RDR2 / Palworld / Cyberpunk 2077 / Hogwarts Legacy 等；OBS 分段；由位移推断 WSAD。
-3. **真实世界**：DL3DV-10K、RealEstate10K、OmniWorld-CityWalk、SpatialVid-HD；统一用 **ViPE** 重标姿态。
+1. **视频策展**：从约 2000 万小时原始视频中切出约 1 亿个 2–60 秒片段，经镜头切分、过滤、标注、语义去重后入训（§3）。
+2. **分词器**：连续分词器服务扩散模型，离散分词器服务自回归模型，二者都是因果的，当前帧不依赖未来帧（§4）。
+3. **预训练**：扩散族先训 7B / 14B 的 Text2World，再派生 Video2World；自回归族是从零训练的 4B / 12B 视频下一 token 模型，再派生 5B / 13B 的 Video2World；全部模型在约 1 万张 H100 上训练约三个月（§5、Table 10）。
+4. **后训练样例**：相机位姿控制、机器人操作（按动作或指令预测未来）、多视角自动驾驶（§6）。
+5. **护栏**：输入端与输出端各一道安全过滤（§7）。
 
-标注：InternVL3.5-8B 四层 caption + 感知质量分；轨迹/速度过滤 + 质量过滤，文称去掉约 **20%** 原始数据。
+模型以 NVIDIA Open Model License 开放权重。
 
-### 3.7 实验读法（§5，辅）
+## 四、结果
 
-- **场景回访协议**（Fig.9）：后半动作反转前半，迫使回到已见区域——成功重建不能只靠短时连续，需长程记忆。质化显示结构 / 外观细节可恢复。
-- 蒸馏模型（Fig.11）继承记忆；28B 第三人称长视频质化（Fig.10）。
-- **注意**：公开表以 **吞吐消融与 VAE 重建** 为主；分钟级一致性多以定性图支撑——跟读时勿把「~40 FPS」直接外推成统一榜上的一致分数。
-
----
-
-## 四、主文 B：Cosmos World Foundation Model Platform（2501.03575）
-
-### 4.1 平台立轴：先通用 WFM，再小数据后训练到 Physical AI
-
-摘要 / §1：Physical AI 需要「自身的数字孪生（策略）」与「世界的数字孪生（世界模型）」。Cosmos 把 **World Foundation Model** 定位为 **可后训练的通用世界模型**，平台覆盖：
-
-1. **视频策展管线**；
-2. **预训练 WFM**（扩散族 + 自回归族）；
-3. **后训练样例**（相机控制 / 机器人 manipulation / 自动驾驶）；
-4. **视频 tokenizer**（连续 / 离散、因果）；
-5. **Guardrail**（pre-Guard / post-Guard）。
-
-开放：文称 **开源 + 开权重**（NVIDIA Open Model License），入口 **NVIDIA Cosmos-Predict1**。
-
-WFM 接口（§2，Fig.3）：$ \hat{x}_{t+1}=\mathcal{W}(x_{0:t},c_t) $，$x$ 为 RGB 视频，$c$ 可为动作、随机扰动、文本描述等。
-
-### 4.2 视频策展（§3）
-
-- 原料约 **20M 小时** 原始视频（720p–4k）；管线抽出约 **100M** clips（**2–60 s**）；每 256 帧用 VLM 出一条 caption。
-- 五步：**split**（镜头检测 + GPU H.264 转码）→ **filtering**（运动 / 画质 / 叠字 / 类型）→ **annotation** → **semantic dedup** → **sharding**（分辨率与宽高比）。
-- 编排：Ray；目标是吞吐匹配不同理解模型速率。
-
-本卡只立「策展接口」，不展开每个过滤器阈值。
-
-### 4.3 Tokenizer（§4，接口）
-
-- **连续**（向量）服务扩散 WFM；**离散**（整数）服务 AR WFM。
-- **因果**：当前帧不依赖未来——便于图-视频联合训，并与 Physical AI 因果世界对齐。
-- 文内家族名示例：`Cosmos-Tokenize1-CV8×8×8-720p`、`Cosmos-Tokenize1-DV8×16×16-720p`；离散侧 FSQ 词表大小文给 **64,000**（$8^3\times5^3$）。
-
-### 4.4 预训练地图（§5 / Table 10）
-
-文称全部 WFM 在约 **10,000×H100、约三个月** 集群上训练（§5 开篇）。
-
-| Type | 扩散族 | 自回归族 |
+| 工作 | 评测 | 结果 |
 |---|---|---|
-| 基座 → 派生 | 7B / 14B **Text2World** → **Video2World** | 4B / 12B next-token → 5B / 13B **Video2World**（+T5 cross-attn） |
-| Tokenizer | CV8×8×8-720p | DV8×16×16-720p |
-| 增强器 | Prompt upsampler **12B**（基于 Mistral-NeMo-12B-Instruct） | Diffusion decoder **7B**（DV→CV） |
+| Matrix-Game 3.0 | 吞吐（§5.2.3、Table 1） | 完整配置最高约 40 FPS；去掉 INT8 量化降到 27.38，去掉 VAE 剪枝降到 25.79，去掉 GPU 检索降到 6.60 |
+| Matrix-Game 3.0 | VAE 剪枝（§3.4） | 剪枝 50% 与 75% 时解码分别加速 2.6 倍与 5.2 倍 |
+| Matrix-Game 3.0 | 场景回访（Figure 9） | 后半段动作反转前半段，迫使模型回到见过的区域；只有定性示例 |
+| Cosmos | 物理对齐（§5.3.2、Table 20） | 条件帧越多预测越好；9 帧条件下扩散模型的像素级预测优于自回归模型；更大的模型画质更好，但物理一致性并未更好 |
 
-- **扩散**：EDM 式去噪分数匹配 + 不确定性加权；DiT 骨干；两阶段 Text2World → Video2World。
-- **自回归**：Llama3-style GPT **从零**训视频 next-token；3D RoPE + YaRN（时间轴）+ 3D APE；QK-Norm。
-- **评测字段（辅）**：§5.3 给 3D consistency 与 physics alignment；**Table 20** 示物理对齐在 1 vs 9 帧条件下 PSNR/SSIM/DreamSim/Avg.IoU——文内观察：更多条件帧通常更好；扩散在 9 帧条件像素级更好；**更大模型不一定更贴物理**（画质更好但物理仍挣扎）。本卡转述表意，不外推「已解决物理」。
+## 五、意义
 
-### 4.5 后训练样例（§6）——平台接口，非 VLA 通史
+两篇代表生成式世界模型的两种落地方式。Matrix-Game 3.0 把误差自校正、按位姿检索记忆、少步蒸馏和工程加速组合成可复现的系统，说明实时与长程记忆可以兼得，不必依赖闭源系统。Cosmos 把世界模型当作需要后训练的基础模型，开放从数据到护栏的整套组件，为机器人与自动驾驶研究提供了现成起点。与 [[世界模型与VJEPA]] 的表征预测相比，这条路线以算力换取可视化、可交互的预测。
 
-| 样例 | 做法（压缩） | 本卡边界 |
+## 六、局限与待核实
+
+- **Matrix 的一致性证据偏定性**：公开表格只有吞吐消融与 VAE 重建，分钟级记忆一致主要靠示例图；40 FPS 依赖 8+1 张 GPU 的异步部署（§5.2.3），单机 7+1 配置吞吐略低。
+- **Matrix 版本口径**：v3（2026-09-29）与本篇原先依据的 v2（2026-04-13）实验数字一致，但 v3 删去了数据引擎中的商业游戏名称与「TB 级」「零人工参与」等表述，改为「游戏录制」，并对图中示例做了模糊处理；本篇按 v3 写。
+- **Cosmos 的用途声明未经实证**：§2.1 列出策略评估、策略初始化、强化学习、模型预测控制、合成数据等用途，但明言该论文不包含这些用途的实证结果；作者也承认各模型在物理一致性上同样吃力，需要更好的数据与模型设计（§5.3.2）。
+- **Genie 3 只有博文**：24 FPS、720p、数分钟一致性均为博文自述，没有技术报告；博文自列的限制包括可执行动作有限、多智能体交互、真实地点精度不足，以及交互时长只有几分钟。
+
+## 七、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **相机控制** | 扩散 WFM 后训练接相机位姿 → 可导航虚拟世界 | 录接口；≠ Matrix 键鼠实时栈 |
-| **机器人 manipulation** | video–action / 指令条件预测未来 | **≠ [[视觉语言动作谱系]]** 闭环 VLA 谱系 |
-| **自动驾驶** | 多视角 Text/Video2World 样例 | 仅样例 |
+| [[世界模型与VJEPA]] | 对照：世界模型的概念来路与非生成路线在那篇；本篇是像素或潜视频上的生成路线 | JEPA 目标、探针与动作条件后训练 |
+| [[视频生成模型脉络]] | 定位：那篇脉络的 2025-01、2025-08、2026-04 节点在本篇展开 | 视频生成通史与旗舰系统卡 |
+| [[DiffusionForcing族]] | 上游：Matrix 的多段蒸馏借鉴的 Self Forcing、DMD 与 Causal Forcing 在那篇 | 各 forcing 的训练目标与评测 |
+| [[BAGEL统一多模态生成]] | 对照：BAGEL 用导航与视频数据训练后也能做世界导航，但只有定性示例；本篇两项工作是专门的交互世界模型与平台 | 统一理解与生成架构 |
+| [[视觉语言动作谱系]] | 下游：Cosmos 的机器人后训练只到「预测未来」，从观测直接输出动作的控制策略在那篇 | VLA 谱系与部署 |
 
-§2.1 列出的策略评估 / MPC / RL 等 **本文无实证**——跟读时保持「平台能力声明 ≠ 已验证部署」。
+## 八、延伸阅读
 
-### 4.6 Guardrail（§7，一句）
-
-pre-Guard 拦有害输入、post-Guard 拦有害输出——本卡不展开分类器配方。
-
----
-
-## 五、Genie 3 对照
-
-来源：DeepMind 博文 *Genie 3: A new frontier for world models*（**2025-08-05**，Parker-Holder & Fruchter）。
-
-| 博文宣称（压缩） | 与本卡关系 |
-|---|---|
-| 文本提示 → 可导航动态世界；**24 FPS**、**720p**、一致性维持 **数分钟** | Matrix 文内对标「实时+分钟级」；本卡 **不** 当可核 TR |
-| 相对 Genie 2：首次 **实时交互**，并提升一致性与真实感 | 谱系位 |
-| Promptable world events；与 SIMA agent 联调 | 产品能力索引 |
-| 限制：动作空间有限、多 agent、真实地点精度、时长「数分钟非数小时」等 | 跟读时勿夸大 |
-
-无正式 PDF TR（截至 2026-09-22），本篇仅作对照一句。
-
----
-
-## 六、阅读重点与范围外
-
-**优先跟：**
-
-1. Matrix：**error buffer + 相机记忆同注意力 + 多段 DMD** 如何共同服务「流式分钟级」；Table 1/2 吞吐与 VAE 代价。
-2. Cosmos：**策展 → 因果 tokenizer → 扩散/AR 双轨预训练 → 小数据后训练** 的平台分层；Table 10 模型地图。
-
-**范围外：**
-
-- 把 Cosmos 写成「又一个文生视频模型评测」或把 Matrix 写成「又一个离线 DiT 视频」。
-- 把 Genie 3 博文数字当作已 peer-review 的可复现配方。
-- 未在原文出现的 FLOPs 明细、未公开的 Genie 训练预算、或「已验证 MPC/RL 收益」。
-
----
-
-## 七、来源与核验
-
-| 项 | 值 |
-|---|---|
-| Matrix PDF | https://arxiv.org/pdf/2604.08995 （v2；20p） |
-| Cosmos PDF | https://arxiv.org/pdf/2501.03575 （v3；75p） |
-| Genie 3 博文 | https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/ |
-| 核验时刻 | **2026-09-22 CST** |
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [Matrix-Game 3.0](https://arxiv.org/abs/2604.08995) §3、§5.2 | 四个组件与吞吐消融 |
+| 2 | [Cosmos](https://arxiv.org/abs/2501.03575) §2、§5、Table 10、§5.3.2 | 世界模型定义、模型地图、物理对齐 |
+| 3 | [Genie 3 博文](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/) Limitations | 闭源对照与自述限制 |
+| 4 | [[DiffusionForcing族]] | 少步蒸馏的方法来源 |

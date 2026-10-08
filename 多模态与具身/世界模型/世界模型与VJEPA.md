@@ -6,278 +6,104 @@ lines: [架构思想]
 status: archived
 sources:
  - https://arxiv.org/abs/2506.09985
+ - https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/
 arxiv: ["2506.09985"]
+related: ["视觉语言动作谱系", "MatrixGame与Cosmos", "视频生成模型脉络", "DiffusionForcing族", "多模态架构脉络", "扩散生成式视觉与LLM", "Pi05与Pi07机器人基础模型"]
 archived: 2026-09-22
 ---
 
-# World models 入门（V-JEPA 2 等非生成式预测）
+# World models 入门：V-JEPA 2 与非生成式表征预测
 
-> **定位**：世界模型 / JEPA 表征预测横切——立 **世界模型 / JEPA 表征空间预测** 入门线，相对 LLM 自回归与像素生成式视频模型的平行轴。
-> **研究线**：**架构思想（主）**。
-> **刻意不写**：**robotics 控制 / MPC 部署 / Franka·Octo·Cosmos 对比表**（见 [[视觉语言动作谱系]]）；本篇只保留「action-conditioned 潜空间预测存在、为规划提供动力学」的接口一句。
-> **主要来源**：[V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning](https://arxiv.org/abs/2506.09985)；[Introducing the V-JEPA 2 world model and new benchmarks for physical reasoning](https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/)（截至 2026-09-22）；Meta 博文「1.2B」与论文 Table 12「ViT-g 1B」不一致处标 **待核实**，不擅自调和。
-
----
-
-## 一、材料元信息
-
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文** | Assran et al., *V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning* | arXiv:**2506.09985v1** \[cs.AI\] **11 Jun 2025**；文内 Date: **June 13, 2025**；[abs](https://arxiv.org/abs/2506.09985) · [pdf](https://arxiv.org/pdf/2506.09985)；（48 页） | 一手 TR：JEPA 预训练、理解/预测/VidQA、AC 后训练 |
-| **代码** | facebookresearch/vjepa2 | https://github.com/facebookresearch/vjepa2（论文页眉） | 复现入口（本篇不跟 commit） |
-
-**一句话抓手：** 用 **互联网规模无动作视频** 在 **表征空间** 做 mask-denoising 预测（非像素生成）→ 得到可探针的运动理解与动作预期 → 再用少量交互数据学 **动作条件** 潜动力学；规划/控制细节留给 [[视觉语言动作谱系]]。
+> **主要来源**：[V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning](https://arxiv.org/abs/2506.09985)（Assran 等，Meta FAIR，v1 2025-06-11）；[Introducing the V-JEPA 2 world model and new benchmarks for physical reasoning](https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/)（Meta 博文，2025-06-11）（截至 2026-04-24）。
+> **研究线**：架构思想（主：在表征空间做掩码预测，先用无动作视频预训练，再用少量机器人数据学动作条件动力学）
+> **范围与相邻笔记**：
+> - ≠ [[视觉语言动作谱系]]：本篇只写动作条件预测器的接口与一行规划结果，机器人控制策略在那篇。
+> - ≠ [[MatrixGame与Cosmos]]、[[视频生成模型脉络]]：那两篇是像素或潜视频上的生成式路线，本篇是非生成路线。
+>
+> **意义**：世界模型要让 AI 像人一样「在脑中预演」：理解当前场景、预测接下来会发生什么、再据此规划动作。生成式路线逐像素预测未来，代价高且会把算力花在草叶位置这类不可预测的细节上。V-JEPA 2 只在学到的表征空间里预测，用超过 100 万小时的网络视频自监督预训练，在动作理解与动作预期上达到当时最好水平；再冻结编码器、只用不到 62 小时的无标注机器人视频训练动作条件预测器，就能在两个实验室的机械臂上零样本完成抓放，每个动作规划 16 秒，而同在单张 RTX 4090 上、每轮采样数只有其十分之一的 Cosmos 对照每个动作要 4 分钟（Table 3）。它是「从观察中学世界」这一假设迄今最完整的工程证据。
 
 ---
 
-## 二、何谓 world model（本议题边界）
+## 一、问题背景：世界模型从哪里来
 
-### 2.1 Meta 博文的三能力（入口定义）
+「世界模型」的想法来自认知科学：人通过整合感官输入形成对外部世界的内部模型，用它表征和预测未来，并据此规划行动（V-JEPA 2 §1 引 Craik、Rao 与 Ballard、Friston 等）。在机器学习中，它先在强化学习里落地：Ha 与 Schmidhuber 的 World Models 用 VAE 加 RNN 学环境模型，让智能体在「梦中」训练；Dreamer 系列在学到的潜空间里想象轨迹来学策略。V-JEPA 2 §1 把 Sutton 与 Barto、Ha 与 Schmidhuber、Hafner 等的工作归为一类：依赖状态—动作序列，常常还要环境给出奖励，而真实世界的交互数据稀少，限制了规模。
 
-据 Meta 博文「What are world models?」与「Understanding / Predicting / Planning」条目，世界模型应支持：
+另一条路是用网络视频训练动作条件的视频生成模型（如 Cosmos），其节点与演进见 [[视频生成模型脉络]]（那篇写像素或潜空间的生成路线，本篇是它的非生成对照）；V-JEPA 2 §1 指出，这类工作多评测预测的逼真度与画质而少测规划能力，作者推测与靠生成视频做规划的计算代价有关。LeCun 在 2022 年提出联合嵌入预测架构（JEPA）：不重建像素，而是在学到的表征空间里预测被遮住或未来的部分，从而只建模场景中可预测的结构。V-JEPA 2 是这一纲领在视频上的规模化实现。
 
-| 能力 | 博文原意（压缩） | 本篇覆盖 |
+Meta 博文把世界模型应具备的能力归为三项：理解（识别物体、动作与运动）、预测（世界如何演化，以及智能体采取某动作后会怎样）、规划（据预测选择达成目标的动作序列）。
+
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **Understanding** | 从观测识别物体、动作、运动 | §五 probe 分类 + §七 VidQA |
-| **Predicting** | 预测世界如何演化；以及「若 agent 采取某动作」会怎样 | §二–四 JEPA 目标；§六 动作预期 |
-| **Planning** | 在预测之上，规划达成目标的动作序列 | **仅接口提及**；控制实验 → **[[视觉语言动作谱系]]** |
+| 2018-03 | [World Models](https://arxiv.org/abs/1803.10122) | VAE 加 RNN 学环境模型，在模型内训练策略 |
+| 2022 | LeCun 的自主机器智能纲领 | 提出 JEPA：在表征空间而非像素空间预测（V-JEPA 2 §1 引用） |
+| 2023-01 | [DreamerV3](https://arxiv.org/abs/2301.04104) | 依赖交互数据的潜空间世界模型，跨多领域用同一配置学策略 |
+| 2023-01 | [I-JEPA](https://arxiv.org/abs/2301.08243) | 图像上的 JEPA：从上下文块预测被遮块的表征 |
+| 2024-02 | [V-JEPA](https://arxiv.org/abs/2404.08471) | 把表征预测推广到视频，200 万段视频预训练 |
+| 2025-01 | Cosmos | 生成式世界基础模型平台，V-JEPA 2 的规划对照（[[MatrixGame与Cosmos]]） |
+| 2025-06 | V-JEPA 2 | 数据、模型、训练时长与分辨率四方面扩展，并加动作条件后训练 V-JEPA 2-AC |
 
-认知/经典引用链见论文 §1：Craik；Rao & Ballard；Friston；Clark；Sutton & Barto；Ha & Schmidhuber；Wolpert & Ghahramani；以及 LeCun (2022) JEPA 纲领——**本篇不展开哲学史**，只作谱系锚点。
+## 三、方法
 
-### 2.2 与相邻路线的划界（架构思想）
+### 3.1 表征空间的掩码预测（§2.1）
 
-| 路线 | 预测落在哪 | 与 V-JEPA 2 关系 |
+编码器把视频切成 2×16×16 的时空块后编码，丢弃其中一部分；预测器以可见块的表征加上标示被丢位置的掩码 token 为输入，预测被丢块的表征。目标是编码器权重滑动平均（EMA）版本给出的表征，并截断梯度以防表征坍塌；损失只在被遮位置上算 L1。编码器和预测器都是 ViT，位置编码改用 3D-RoPE，以稳定最大模型的训练。
+
+### 3.2 规模化的四个杠杆（§2）
+
+| 杠杆 | 从 V-JEPA 到 V-JEPA 2 |
+|---|---|
+| 数据 | 200 万段视频扩到 2200 万（VideoMix22M），超过 100 万小时视频加 100 万张图像，YT-Temporal-1B 部分经检索式策展 |
+| 模型 | 编码器从 ViT-L（3 亿参数）扩到 ViT-g（10 亿） |
+| 训练时长 | 9 万步增至 25.2 万步，学习率先热身、再恒定、最后衰减 |
+| 分辨率与时长 | 主训练用短片段低分辨率，只在最后的冷却阶段提高到 384 分辨率、64 帧，据图 5 图注，相对全程高分辨率最多加速约 8 倍 |
+
+四项累积后，六个理解任务（SSv2、Diving-48、Jester、Kinetics、COIN、ImageNet）的冻结探针平均分达到 88.2（§2）。
+
+### 3.3 动作条件后训练（§3）
+
+冻结预训练编码器，另训一个约 3 亿参数的块因果 Transformer 预测器，输入交织的动作（相邻帧末端执行器状态之差）、状态与帧表征，预测下一帧的表征。训练只用 Droid 数据集中不到 62 小时的机器人视频与末端状态，不用任务成功标签或奖励。规划时给定目标图像，在表征空间里用交叉熵方法搜索动作序列，使预测表征接近目标表征（§3、§4）。
+
+## 四、结果
+
+| 能力 | 评测 | 结果 |
 |---|---|---|
-| **像素/视频生成式世界模型**（论文 §1、§8：Cosmos 等） | 帧/像素或生成 latent，强调视觉逼真 | JEPA **刻意忽略**不可预测细节（草叶位置等），只学可预测结构 |
-| **纯交互数据 WM**（Dreamer 族等，§1/§8） | 状态–动作轨迹，常依赖奖励 | 交互数据稀缺 → V-JEPA 先用 **无动作** 网络视频规模化 |
-| **VLA / 行为克隆**（§8；[[视觉语言动作谱系]]） | 直接观测→动作 | 无显式世界动力学；本篇不写 |
-| **JEPA / V-JEPA 2** | **learned representation space** 上的预测 | 本篇主轴 |
-
-论文原文对照（§1，意译要点）：相对 video generation，JEPA 聚焦可预测方面（如运动物体轨迹），而生成目标因做像素级预测会强调不可预测细节。
-
----
-
-## 三、JEPA 元架构与 V-JEPA 2 预训练目标
-
-### 3.1 Encoder + Predictor（两件套）
-
-据 Meta 博文与论文 Figure 2（左）：
-
-- **Encoder** $E_\theta$：原始视频 → embeddings（场景状态语义）。
-- **Predictor** $P_\phi$：在给定「要预测什么」的上下文（mask tokens 等）下，输出 **预测 embeddings**（不是重建像素）。
-
-训练为 **自监督、无需额外人工标注**（博文）；论文强调损失只施加于 **被 mask 的 patch 预测**。
-
-### 3.2 Mask-denoising in representation space（式 1，主）
-
-论文 §2.1：从被 mask 的视角 $x$ 预测视频 $y$ 的 **已学表征**。目标（矢量形式以 arXiv HTML/PDF 为准； 会丢掉 EMA 上划线）：
-
-$$
-\min_{\theta,\phi,\Delta_y}
-\bigl\|
-P_\phi\bigl(\Delta_y,\, E_\theta(x)\bigr)
-\mathrm{sg}\bigl(E_{\bar\theta}(y)\bigr)
-\bigr\|_1
-$$
-
-其中：
-
-- $\Delta_y$：可学习 **mask token**，标示被丢弃 patch 的位置；
-- $\mathrm{sg}(\cdot)$：stop-gradient；
-- $\bar\theta$：encoder 权重的 **EMA**（防表征坍塌）；
-- 损失 **仅** 在 mask 位置上算 L1。
-
-流程（Figure 2）：patchify → 丢弃子集 → encoder 出嵌入 → 与 mask tokens 拼接 → predictor → 回归到 EMA-encoder 目标。
-
-### 3.3 架构细节（相对原版 V-JEPA 的增量）
-
-| 组件 | 论文事实 |
-|---|---|
-| 骨干 | Encoder / Predictor 均为 **ViT**（Dosovitskiy et al., 2020） |
-| 位置编码 | **3D-RoPE**（时/高/宽三分特征维分别旋转）；相对 Bardes et al. (2024) 的绝对 sincos，文称有助于稳定最大模型 |
-| Tubelet | $2\times 16\times 16$（$T\times H\times W$） |
-| Masking | 与 V-JEPA 相同的 **multiblock** 策略（Bardes et al., 2024） |
-| Predictor 规模 | 各 encoder 共用同一 predictor，**约 ViT-small / 22M**（Table 12） |
-
-**Table 12（附录 A.3）encoder 族：**
-
-| Model | Params | Width | Depth | Heads | MLP |
-|---|---:|---:|---:|---:|---:|
-| ViT-L | 300M | 1024 | 24 | 16 | 4096 |
-| ViT-H | 600M | 1280 | 32 | 16 | 5120 |
-| ViT-g | **1B** | 1408 | 40 | 22 | 6144 |
-| Predictor ViT-s | **22M** | 384 | 12 | 12 | 1536 |
-
-> **待核实：** Meta 博文写「**1.2 billion-parameter** model」；论文正文与 Table 12 写 encoder **ViT-g = 1B**（+ predictor 22M 仍远小于 1.2B）。本笔记以 **PDF Table 12** 为准引用参数量，博文数字不合并。
-
----
-
-## 四、规模化配方：从 V-JEPA → V-JEPA 2
-
-论文 §2 列出四条 **Key Scaling Ingredients**（相对 Bardes et al. 2024）：
-
-| # | 杠杆 | 文内幅度 | Figure 3 累计效应（ViT-L/16 基线 → 最终） |
-|---|---|---|---|
-| 1 | **Data** | 2M → **22M** videos（VM22M） | +1.0 avg |
-| 2 | **Model** | ViT-L 300M → **ViT-g ~1B** | +1.5 |
-| 3 | **Longer training** | 90K → **252K** iterations；warmup–constant–decay | +0.8 |
-| 4 | **Resolution / duration** | cooldown 阶段升到更高时空分辨率（如 $256\to384$，$16\to64$ frames） | 最终六任务平均 **88.2**（相对基线累计 **+4.0**） |
-
-**渐进分辨率（效率）：** 主阶段用短 clip、低分辨率；仅在 **cooldown** 升分辨率/时长。Figure 5（中）：相对全程全分辨率，可至约 **$8\times$** GPU 时间节省（文内对 64×384×384 量级的对比）。Figure 5（右）：即便评测仍用 16 帧，cooldown 用更长视频仍可 +0.7 avg。
-
-### 4.1 VideoMix22M（Table 1）
-
-| Source | Samples | Type | Total Hours | Curation | Weight |
-|---|---:|---|---:|---|---:|
-| SSv2 | 168K | EgoVideo | 168 | No | 0.056 |
-| Kinetics (400/600/700) | 733K | ExoVideo | 614 | No | 0.188 |
-| HowTo100M | 1.1M | ExoVideo | 134K | No | 0.318 |
-| YT-Temporal-1B | 19M | ExoVideo | 1.6M | **Yes**（簇检索降噪） | 0.188 |
-| ImageNet | 1M | Images | n/a | No | 0.250 |
-
-- 图像：时间维复制为 **16 帧相同帧** 以兼容视频管线。
-- YT1B 策展：场景嵌入 + 面向 Kinetics/SSv2/COIN/EpicKitchen **训练集** 分布的 cluster retrieval；验证集视频不进未策展池（§2.3）。
-- 策展增益（Figure 4 右，ViT-L）：Curated-YT1B vs 未策展 **+1.4** avg；大数据混合对更大模型更有益（附录 A.2/A.4）。
-
-**数据规模叙事对齐：** 摘要/博文「**>1 million hours** of internet video + **1M images**」；Table 1 各源小时数加总与 YT1B「1.4M video-hours」叙述一致量级——**以论文表述为准**，不另推精确总和。
-
-### 4.2 预训练期冻结评测协议（§2.1）
-
-六任务平均：SSv2、Diving-48、Jester（运动）+ Kinetics、COIN、ImageNet（外观）。
-协议：冻结 encoder，训 **4-layer attentive probe**。用于配方消融，细节结果见 §五。
-
----
-
-## 五、Understanding：探针分类（非生成式表征质量）
-
-**Table 4（节选，同一冻结协议）：**
-
-| Method | Param. | Avg. | SSv2 | Diving-48 | Jester | K400 | COIN | IN1K |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| DINOv2 | 1.1B | 81.1 | 50.7 | 82.5 | 93.4 | 83.6 | 90.7 | 86.1 |
-| InternVideo2s2-1B | 1B | 87.0 | 69.7 | 86.4 | 97.0 | 89.4 | 93.8 | 85.8 |
-| V-JEPA (ViT-H, 2024) | 600M | 85.2 | 74.3 | 87.9 | 97.7 | 84.5 | 87.1 | 80.0 |
-| **V-JEPA 2 ViT-g** | 1B | **87.5** | 75.3 | 90.1 | 97.7 | 86.6 | 90.7 | 84.6 |
-| **V-JEPA 2 ViT-g384** | 1B | **88.2** | **77.3** | 90.2 | 97.8 | 87.3 | 91.1 | 85.1 |
-
-架构读法：在 **运动理解**（SSv2 等）上相对对比式图像编码器与部分视频–文本预训练编码器优势明显；外观任务 **竞争性** 而非全面碾压。摘要强调的 **77.3 SSv2 top-1** 即 ViT-g384 行。
-
----
-
-## 六、Prediction：人类动作预期（表征空间「向前看」）
-
-任务：**Epic-Kitchens-100**，默认 **1 秒** anticipation；指标 mean-class **recall-at-5**（verb / noun / action）。
-
-机制（§6）：上下文 clip → encoder；predictor 带 **未来 1s 帧的 mask tokens** 预测未来表征；encoder+predictor 输出拼接后接 attentive probe（三个 query → verb/noun/action）；focal loss。
-
-**Table 5（action recall-at-5 主列）：**
-
-| Method | Param. | Verb | Noun | **Action** |
-|---|---:|---:|---:|---:|
-| PlausiVL（前 SOTA，专用/LLM） | 8B | 55.6 | 54.2 | 27.6 |
-| V-JEPA 2 ViT-L | 300M | 57.8 | 53.8 | 32.7 |
-| V-JEPA 2 ViT-H | 600M | 59.2 | 54.6 | 36.5 |
-| V-JEPA 2 ViT-g | 1B | 61.2 | 55.7 | 38.0 |
-| **V-JEPA 2 ViT-g384** | 1B | 63.6 | 57.1 | **39.7** |
-
-文称 ViT-g384 相对 PlausiVL action 列 **+12.1**（约 **44%** 相对提升）。规模上 action recall 近似随模型线性上升。局限（§6 Limitations）：更长时域预期变差；厨房封闭词表；类别集外不可泛化——**诚实边界，勿夸成通用物理仿真器**。
-
----
-
-## 七、Understanding × Language：无语言监督视频编码器对齐 LLM
-
-要点（§7）：LLaVA 式 early fusion；文称据其所知，这是 **首个** 用 **无语言监督预训练的视频编码器** 训 VidQA MLLM 的系统结果之一。
-
-**受控设置（Table 6，冻结视觉，Qwen2-7B-Instruct，同数据）：** V-JEPA 2 ViT-g512 平均 **52.3**，高于 DINOv2 / SigLIP2 / PE（同表）；在 MVP、TemporalBench、TVBench 等时间向基准上拉开更明显。
-
-**放大对齐数据（Table 8，88.5M，Llama 3.1 8B 类）：** 文报 8B 档多项 SOTA，例如：
-
-| Benchmark | V-JEPA 2 ViT-g384 + LLaMA 3.1 8B |
-|---|---|
-| PerceptionTest (test, SFT) | **84.0** |
-| MVP paired-acc | **44.5** |
-| TempCompass multi-choice | **76.9** |
-| TemporalBench (MBA-short QA) | **36.7** |
-| TOMATO | **40.3** |
-
-（TVBench / MVBench 未全面超过 PerceptionLM 8B——以 Table 8 原文为准。）
-
-架构含义：JEPA 表征 **可** 与语言对齐并驱动时空推理；「必须对比预训练才能做 VQA」并非本设定下的必然。
-
----
-
-## 八、Action-conditioned 接口（到此止步；控制见 [[视觉语言动作谱系]]）
-
-论文第二阶段（§3）：**冻结** V-JEPA 2 encoder，新训 ~**300M** block-causal transformer **predictor**，在 Droid 上以 **&lt;62 hours** 未标注机器人视频（文：仅用原始视频 + 末端执行器状态，**不用**任务成功标签/奖励）做 **下一帧表征** 的 teacher-forcing + 短 rollout L1（式 2–4）。
-
-- 输入交织：动作 $a_k$、状态 $s_k$、帧表征 $z_k=E(x_k)$。
-- 动作：相邻帧末端状态差分（7 维）。
-- 产物名：**V-JEPA 2-AC**——潜空间中的动作条件世界模型。
-
-**本篇不做：** 能量最小化式 (5)、CEM 规划、Franka 双实验室成功率表、与 Octo / Cosmos 的分钟级规划时延对比——以上属 **操作控制 / 具身部署**，移交 **[[视觉语言动作谱系]]**。此处只固定结论句：表征空间动力学使「给定图像子目标做闭环规划」成为可能，且论文强调数据量远小于典型专家轨迹规模。
-
----
-
-## 九、Meta 附带的物理推理基准（博文；非 V-JEPA 2 自证分数）
-
-博文发布三项评测（强调 **人类近完美 vs 现有视频模型接近随机或明显落后**）：
-
-| 基准 | 测什么 |
-|---|---|
-| **IntPhys 2** | 成对视频中识别「违反直觉物理」的那条（violation-of-expectation） |
-| **MVPBench（Minimal Video Pairs）** | 最小变更视频对 + 同题反义答案，抑制外观/文本捷径 |
-| **CausalVQA** | 因果 / 反事实 / 预期 / 规划类视频问答 |
-
-博文称 top models（含 V-JEPA 2）在部分设定上仍有显著人类差距——**作评测地图，不在此列具体表分**（分数以各基准论文/排行榜为准）。
-
----
-
-## 十、架构思想总结（可背）
-
-1. **世界模型 ≠ 必须生成像素**：JEPA 在 **embedding 空间** 预测，用 mask-denoising + EMA teacher 防坍塌，逼模型编码 **可预测结构**。
-2. **规模化路径可检验**：数据混合与策展、模型到 ~1B、长训程、渐进分辨率——Figure 3 给出可加总的 avg 增益叙事。
-3. **无动作预训练已够「懂」与「预期」**：SSv2 77.3、EK100 action 39.7、对齐 LLM 后多项 VidQA SOTA——支撑「观察中学世界」假设的工程证据。
-4. **动作条件是薄适配层**：冻结视觉骨干 + 少量交互数据 → 潜动力学；**如何闭环控臂** 不在本篇。
-5. **与生成式 WM / VLA 正交**：生成式重逼真与想象视频；VLA 重模仿；JEPA 重 **紧凑可规划表征**——三者可组合（论文 §8/§9 亦如是说），但概念上先分开。
-
----
-
-## 十一、与仓库已有笔记的边界
-
-| 已有 / 姊妹篇 | 本篇关系 |
-|---|---|
-| [[多模态架构脉络]] 多模态 | 视觉指令/融合通史；本篇不重写 LLaVA 管线，只写 V-JEPA 作视觉塔的特例 |
-| [[扩散生成式视觉与LLM]] 扩散视觉 | 生成式图像/视频；本篇对照「非生成式预测」 |
-| **[[视觉语言动作谱系]]** Robotics VLA | **承接** AC 规划、RT-2 / OpenVLA / π0 与操作控制；不在本篇展开 |
-| [[视频生成模型脉络]] 视频生成通史 | 像素或潜空间的视频生成路线；与本篇表征空间预测正交 |
-
----
-
-## 十二、局限与待核实
-
-- Meta 博文 **1.2B** vs 论文 Table 12 **ViT-g 1B + ViT-s 22M**：以 PDF 为准；1.2B 来源未在本 PDF 解释。
-- 论文 HTML 摘要偶见后续日期戳（抓取页曾见 Aug 2026）；**官方 PDF 为 2506.09985v1，Date June 13, 2025**——版本演进若再发 v2+ 需重抽。
-- IntPhys 2 / MVPBench / CausalVQA 的完整分表、与人类基线逐格对比：**未写入本 PDF 主实验表**，需各基准独立 PDF。
-- I-JEPA / 点云 JEPA / 原版 V-JEPA (2404.08471) 配方细节：仅作谱系引用，**未**深读其 PDF。
-- Hugging Face 权重文件名、许可证条文：本篇不抄 CDN/哈希。
-
----
-
-## 十三、来源清单
-
-1. Assran et al., 2025. *V-JEPA 2* — arXiv:**2506.09985**（https://arxiv.org/abs/2506.09985）；Code: https://github.com/facebookresearch/vjepa2 。
-2. 谱系锚点（未深读 PDF）：LeCun, 2022 (JEPA 纲领)；Bardes et al., 2024 *V-JEPA* (arXiv:2404.08471)；Assran et al., 2023 *I-JEPA*。
-3. 相邻笔记：**[[视觉语言动作谱系]]**（VLA / 控制）；交叉 [[多模态架构脉络]]、[[扩散生成式视觉与LLM]]。
-
-## 相关笔记
-
-- [[Gemini37Flash模型卡深读]]
-- [[KV缓存量化与压缩]]
-- [[连续批处理与Orca]]
-- [[机制可解释性入门]]
-- [[世界模型与VJEPA]]
-- [[SpeechLLM语音语言模型]]
-- [[视觉语言动作谱系]]
-- [[智能体长程记忆]]
-- [[可扩展监督与弱到强]]
-
+| 理解 | Something-Something v2 冻结探针 top-1（§5、Table 4） | 77.3，偏重运动理解；外观类任务与 DINOv2 等图像编码器相当而非全面领先 |
+| 预测 | Epic-Kitchens-100 提前 1 秒动作预期 recall@5（§6、Table 5） | 39.7，比此前最好的模型相对提高 44% |
+| 理解 + 语言 | 与 8B 级 LLM 对齐后的视频问答（§7） | PerceptionTest 84.0、TempCompass 76.9、MVP 44.5 |
+| 规划 | 第二个实验室（Lab 2）的 Franka 机械臂零样本操作（§4、Table 3） | 每个动作规划 16 秒；基于 Cosmos 的对照每个动作 4 分钟，物体交互任务成功率更低 |
+
+注：规划一行的两边都在单张 RTX 4090 上用交叉熵方法规划，每轮采样数 V-JEPA 2-AC 为 800、Cosmos 为 80（Table 3）。
+
+## 五、意义
+
+V-JEPA 2 把「世界模型」与「生成视频」解耦：它说明不重建像素也能学到足以理解、预期和规划的动力学，而且非生成的预测在规划时快一个量级以上。它还验证了分阶段的数据策略：用海量无动作视频学通用表征，只用几十小时交互数据补上动作条件。视频问答结果也表明，未经语言监督的视频编码器同样可以作为多模态大模型的视觉塔。与像素生成式世界模型相比，两条路线各有所长：生成式便于人看和交互，表征式便于规划和控制。
+
+## 六、局限与待核实
+
+- **作者自述**：动作条件模型对相机位置敏感，作者手动试过多个机位才选定一个；长时域规划受自回归误差累积和搜索空间指数增长限制（§4.3）。动作预期只测 1 秒，更长时域准确率下降；EK100 限于厨房场景和封闭词表（§6）。
+- **参数量口径不一**：Meta 博文写「12 亿参数」；论文 Table 12 写编码器 ViT-g 为 10 亿、预训练预测器 2200 万，V-JEPA 2-AC 另有约 3 亿参数的动作条件预测器（§3）。博文数字与哪种组合对应，论文未作说明，本篇按论文写。
+- **物理推理基准**：博文同时发布 IntPhys 2、MVPBench、CausalVQA 三个基准，并称包括 V-JEPA 2 在内的模型与人类差距明显，但这些分数不在 V-JEPA 2 论文中，本篇不列。
+- **只见于图中的数字**：四个规模化杠杆各自带来的平均分增益只在图 3、图 5 中，本篇不列。
+
+## 七、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[视觉语言动作谱系]] | 对照：VLA 直接从观测输出动作、通常不显式学动力学；本篇的动作条件预测器加规划是另一条路 | VLA 谱系与控制部署 |
+| [[MatrixGame与Cosmos]] | 对照：那篇是生成式世界模型；本篇规划实验的对照组正是 Cosmos 视频生成模型 | 交互生成与平台组件 |
+| [[视频生成模型脉络]] | 对照：那篇是像素或潜空间的视频生成路线，与本篇的表征空间预测相对 | 视频生成通史 |
+| [[DiffusionForcing族]] | 对照：同样处理「逐步预测时误差累积」，那篇在生成式视频扩散里修训练与推理的分布差，本篇在表征空间里做自回归预测 | forcing 的训练目标 |
+| [[多模态架构脉络]] | 下游：本篇把 V-JEPA 2 接到 LLM 做视频问答，采用的是那篇所写的 LLaVA 式接法 | 多模态理解通史 |
+| [[扩散生成式视觉与LLM]] | 对照：那篇是生成式图像与视频建模，本篇刻意不预测像素 | 扩散模型架构 |
+| [[Pi05与Pi07机器人基础模型]] | 对照：π0.7 用 BAGEL 初始化的轻量世界模型生成子目标图像给策略作提示，是生成式世界模型用于机器人的另一种方式 | 机器人基础模型训练 |
+
+## 八、延伸阅读
+
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [V-JEPA 2](https://arxiv.org/abs/2506.09985) §1–2 | 世界模型动机、预训练目标与四个规模化杠杆 |
+| 2 | [V-JEPA 2](https://arxiv.org/abs/2506.09985) §3–4、Table 3 | 动作条件后训练与零样本规划 |
+| 3 | [Meta 博文](https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/) | 三项能力的定义与三个物理推理基准 |
+| 4 | [[MatrixGame与Cosmos]] | 生成式世界模型路线 |

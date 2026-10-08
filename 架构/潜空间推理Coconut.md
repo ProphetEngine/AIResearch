@@ -7,7 +7,7 @@ status: archived
 sources:
  - https://arxiv.org/abs/2412.06769
 arxiv: ["2412.06769"]
-related: ["推理时扩展TestTimeScaling", "推理时树搜索ABMCTS", "机制可解释性入门"]
+related: ["推理时扩展TestTimeScaling", "推理时树搜索ABMCTS", "机制可解释性入门", "SiLVR与ChainOfFrames"]
 github: "https://github.com/facebookresearch/coconut"
 openreview_pdf: "https://openreview.net/pdf?id=KrWSrrYGpT"
 补链索引: ["AGCLR 2606.07720（概念瓶颈）"]
@@ -231,4 +231,5 @@ Coconut 变体：**w/o curriculum**（直接末阶段）；**w/o thought**（同
 - [[潜空间推理Coconut]]
 - [[审慎对齐与断路器]]
 - [[DeepSeekV4技术报告深读]]
+- [[SiLVR与ChainOfFrames]]：那篇附记的 TORM 第二阶段采用类 Coconut 设定，只监督最终答案、让隐向量内化视频时空推理；本篇写文本侧的连续隐向量推理，那篇是它在视频上的用法。
 

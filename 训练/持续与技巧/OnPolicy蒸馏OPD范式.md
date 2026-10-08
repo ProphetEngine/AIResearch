@@ -21,6 +21,7 @@ related:
   - DeepSeekV4技术报告深读
   - KimiK3技术报告
   - 持续学习
+  - QwenOmni音视频原生
 github: https://github.com/nick7nlp/Awesome-LLM-On-Policy-Distillation
 retrieval_cutoff: 2026-08-07
 timezone: Asia/Shanghai (CST)
@@ -148,6 +149,7 @@ Hinton 等、MiniLLM、GKD 三行据各自论文；MiniLLM 的 arXiv 现行题�
 | [[Nemotron3Ultra技术报告深读]] | 多教师 OPD 的工业实例：那篇的后训练在 RLVR 之后做两轮 MOPD | Nemotron 后训练全文 |
 | [[DeepSeekV4技术报告深读]] | 工业实例：V4 先按领域 SFT → GRPO 训出专家，再让学生在自身采样上以反向 KL 对齐超过 10 个教师，做多教师 OPD 合并，取代 V3.2 的混合 RL 合并阶段 | V4 架构与后训练全文 |
 | [[KimiK3技术报告]] | 多教师 OPD 的工业实例：那篇在九个专家 RL 之后用 MOPD 合并为统一模型 | K3 架构与预训练 |
+| [[QwenOmni音视频原生]] | 跨模态实例：那篇的 Qwen3.5-Omni 后训练用 OPD，把同一问题在文本输入下的回答作为音频输入时的蒸馏目标 | 全模态架构与评测 |
 | [[持续学习]] | 那篇写持续学习的地图与抗遗忘方法，本篇补一种新工具：在学新知识后用旧版模型作教师做 OPD，恢复被冲掉的后训练行为 | 持续学习场景分类与 Lifelong-MoE |
 | [[模型合并]] | 把多个专家能力合成单模型的两条路：本篇的多教师 OPD 用学生采样加教师信号再训练，那篇直接在权重空间合并，不需再训练 | 合并算法与 MergeBench |
 

@@ -9,231 +9,104 @@ sources:
  - https://arxiv.org/abs/2506.00318
  - https://arxiv.org/abs/2605.26014
 arxiv: ["2505.24869", "2506.00318", "2605.26014"]
-related:
- - "音视频联合Flamingo"
- - "视频生成模型脉络"
- - "多模态架构脉络"
- - "QwenOmni音视频原生"
+related: ["音视频联合Flamingo", "视频生成模型脉络", "多模态架构脉络", "DeepSeekR1推理训练深读", "潜空间推理Coconut"]
 code_urls:
  - "https://sites.google.com/cs.unc.edu/silvr"
  - "https://github.com/SaraGhazanfari/CoF"
  - "https://github.com/aiming-lab/storm"
-retrieval_cutoff: 2026-09-22
+retrieval_cutoff: 2026-07-17
 timezone: Asia/Shanghai (CST)
 ---
 
 # 视频—语言推理：SiLVR + Chain-of-Frames（≠ AV-Flamingo）
 
-> **定位**：多模态推理横切——在 **[[音视频联合Flamingo]] AV-Flamingo（开源音视频联合基础模型卡）**、**[[视频生成模型脉络]] 视频生成通史**、**[[多模态架构脉络]] 多模态通史**、**[[QwenOmni音视频原生]] Qwen-Omni 产品卡**之外，补「**理解侧视频—语言推理框架**」空位。双主锚：
-> - **SiLVR**（*Simple Language-based Video Reasoning*）：**训练免费**；短 clip 视觉描述 + ASR 字幕 → **Adaptive Context Reduction** → 强推理 LLM（默认 DeepSeek-R1）在**纯语言空间**做复杂 VideoQA。
-> - **Chain-of-Frames（CoF）**：视频 LLM **单阶段**推理迹中显式引用帧 ID（Frame-k）；用 **CoF-DATA**（真实 VideoEspresso + 合成 CLEVRER，164,186 条）微调 InternVL 等，强化时序锚定。
-> **研究线**：**架构思想（主）**——语言管道 vs 帧锚定 CoT；**评测字段（辅）**——文内 VideoMME / Video-MMLU / CGBench / VSI-Bench 等表，不外推未测榜。
+> **主要来源**：[SiLVR: A Simple Language-based Video Reasoning Framework](https://arxiv.org/abs/2505.24869)（Zhang 等，UNC Chapel Hill，TMLR 2026-01，v3 2026-04-15）；[Chain-of-Frames: Advancing Video Understanding in Multimodal LLMs via Frame-Aware Reasoning](https://arxiv.org/abs/2506.00318)（Ghazanfari 等，NYU / EPFL，简称 CoF，v2 2026-04-04）；补充：[STORM: Internalized Modeling for Spatial-Temporal Reasoning in Video-Language Models](https://arxiv.org/abs/2605.26014)（Liang、Chen 等，v1 2026-05-25，正文题名为 TORM）（截至 2026-07-17）。
+> **研究线**：架构思想（主：把视频转成语言交给推理模型，或在推理链中显式引用帧号）；评测字段（辅：VideoMME、Video-MMLU、CGBench、VSI-Bench 等）
 > **范围与相邻笔记**：
-> - **≠ [[音视频联合Flamingo]] AV-Flamingo**：不重写 OmniVinci 初始化、SigLip/AF-Whisper、CRTE、AV-Skills 课程、TAVIT/AV-Think、GRPO 产品配方。本卡对象是 **推理框架 / 数据形态**，不是开源 AV 基础模型卡。
-> - **≠ [[视频生成模型脉络]]**：不重写视频生成通史；本篇是 **理解 / 推理**，不是生成。那篇第五节辨析了 Wiedemer 等的 chain-of-frames 与本篇 Chain-of-Frames 同名不同义。
-> - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」通史阶梯；经典多模态祖先仅作 related-work 接口。
-> - **≠ [[QwenOmni音视频原生]] Qwen-Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、36/215 基准产品表；本卡不写 Omni 产品栈。
-> **补链**：**STORM/TORM**（arXiv **2605.26014**；PDF 题名 **TORM**，GitHub `aiming-lab/storm`）——把时空推理**内化到有界连续 latent**，方法面异于「语言管道 / 帧锚定文本 CoT」→ **仅附录一句**。
-> SiLVR Table 1 与 Table 2 在 CGBench/CinePile 列出现互换迹象 → **主结果以 Table 1 + 正文叙述为准**。
+> - ≠ [[音视频联合Flamingo]]：那篇是开源音视频联合基础模型，本篇是视频推理的框架与数据形态。
+> - ≠ [[视频生成模型脉络]]：本篇是理解与推理，不是生成。
+>
+> **意义**：推理模型（如 DeepSeek-R1）在文本上进步很快，视频理解却难以直接受益：要么为视频专门收集思维链数据再训练，要么用多阶段代理先挑关键帧再回答，成本高且时间定位弱。两篇给出相反的两种简化：SiLVR 完全不训练，把视频切段写成描述、配上语音转写，交给推理 LLM 在纯语言空间作答，在 Video-MMLU、CGBench 等长视频基准上取得当时最好成绩；CoF 让视频模型在一次解码的推理链里写出「第 k 帧：……」，用 16 万条含低成本合成数据的样本微调，就让 InternVL3-8B 在五个基准上平均提高 5.1 分。前者说明强推理 LLM 可以零训练迁移到视频，后者说明时间定位可以靠推理链格式学会。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主 A** | *SiLVR: A Simple Language-based Video Reasoning Framework* | arXiv:**2505.24869v3** \[cs.CV\]（**15 Apr 2026**）；*TMLR*（01/2026）；UNC Chapel Hill（Zhang, Lin, Wang, Bansal, Bertasius）；OpenReview `mQZbh9Zlbw` | `https://arxiv.org/abs/2505.24869` | **25** letter |
-| **主 B** | *Chain-of-Frames: Advancing Video Understanding in Multimodal LLMs via Frame-Aware Reasoning* | arXiv:**2506.00318v2** \[cs.CV\]（**4 Apr 2026**）；Ghazanfari et al.（NYU / EPFL） | `https://arxiv.org/abs/2506.00318` | **22** letter |
-| **可选补链** | *TORM: Internalized Modeling for Spatial-Temporal Reasoning in Video-Language Models*（GitHub 作 STORM / `storm`） | arXiv:**2605.26014v1** \[cs.CV\]（**25 May 2026**）；Liang*, Chen* et al.（Purdue / Harvard / UNC / UCF / NVIDIA / Physion） | `https://arxiv.org/abs/2605.26014` | **18** letter |
+长视频问答的难点有两个：信息量远超上下文（CGBench、EgoLife 的视频平均超过 1 小时，SiLVR §4.1），以及回答需要定位到具体时刻。CoF §3.1 把已有视频思维链做法的问题归为两类：一类靠 LLM 加人工标注生成思维链数据，成本高（VideoCoT 只有 11k 条），且推理步骤不与具体帧对齐；另一类用多个辅助模型先找关键帧再推理（如 VideoEspresso），推理开销大，且只把部分帧交给模型，丢失完整时间上下文。LLM 代理（VideoAgent、VideoTree 等）则需要与大模型多轮交互（SiLVR §4.4）。
 
-| 材料 | 代码 / 主页（文内可核） |
-|---|---|
-| SiLVR | https://sites.google.com/cs.unc.edu/silvr（摘要）；OpenReview 论坛上列 |
-| CoF | PDF 注解 URI：https://github.com/SaraGhazanfari/CoF（摘要写「Code available at GitHub」） |
-| STORM/TORM | https://github.com/aiming-lab/storm（摘要；仅作索引） |
+## 二、脉络
 
-**一句话抓手：**
-- **SiLVR**：别再为视频专门训 RL/CoT——把多感官视频**压成语言**，交给已会推理的 LLM；用 **ACR** 按上下文上限自适应加粗 clip。
-- **CoF**：别做多阶段「先抽关键帧再答」——在**单次解码**的推理迹里写「Frame k: …」，用可规模化 **CoF-DATA**（含低成本合成）教会模型时序锚定。
-- **STORM/TORM（补）**：别把中间证据外化成文本/工具——训练期用 thought-video 对齐 **latent slots**，推理期只做有界 latent rollout。
-
----
-
-## 二、议题边界：只写「理解侧推理框架」，不写 AV 基础卡 / 生成 / 通史 / Omni 产品
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[音视频联合Flamingo]] AV-Flamingo** | 「长复杂真实音视频理解」是共同任务床 | OmniVinci/SigLip/CRTE/AV-Skills/TAVIT/GRPO 配方全文 |
-| **[[视频生成模型脉络]]** | 「视频」一词相邻；chain-of-frames 同名不同义 | 视频生成通史 / Sora System Card |
-| **[[多模态架构脉络]]** | 多模态生成式接口是前序 | CLIP/Flamingo/LLaVA/Gemini 阶梯通史 |
-| **[[QwenOmni音视频原生]] Qwen-Omni** | 「端到端多模态助手」产品对照一句 | Thinker–Talker / AuT / ARIA / 延迟与非降级表 |
+| 2024-03 | [VideoAgent](https://arxiv.org/abs/2403.10517) | 以 LLM 为代理，多轮检索帧来回答长视频问题 |
+| 2024-05 | [VideoTree](https://arxiv.org/abs/2405.19209) | 自适应树状组织视频片段供 LLM 推理 |
+| 2024-11 | [VideoEspresso](https://arxiv.org/abs/2411.14794) | 带核心帧选择的大规模视频思维链数据集，CoF 的真实数据来源 |
+| 2025-01 | [DeepSeek-R1](https://arxiv.org/abs/2501.12948) | 强化学习训出的推理 LLM，SiLVR 的默认推理器 |
+| 2025-05 | SiLVR | 免训练：视频转语言后交给推理 LLM |
+| 2025-05 | Chain-of-Frames | 单阶段推理链中引用帧号，配套 CoF-DATA |
+| 2026-05 | TORM（STORM） | 把时空推理内化到有界的连续隐向量中，推理时不再输出文字思维链 |
 
-### 2.2 双主轴 vs 补链 vs 范围外
+## 三、方法
 
-`
-视频—语言「理解侧推理」横切（本卡）
- │
- ┌────┼────────────────┐
- ▼ ▼ ▼
- SiLVR Chain-of-Frames STORM/TORM（补链）
- 训练免费语言管道 帧锚定单阶段 CoT 内化时空 latent
- NVILA+Whisper CoF-DATA SFT thought-video→latent
- → DeepSeek-R1 InternVL / Phi 推理无再生视频
-`
+### 3.1 SiLVR（§3）
 
-| 问题 | SiLVR | CoF | STORM/TORM（补） |
-|---|---|---|---|
-| 视觉证据何时进模型？ | **前置**成 caption/字幕文本 | **始终**以帧序列进视觉 LLM；推理迹里**引用帧 ID** | 训练用 thought-video；推理只跑 **latent** |
-| 要不要视频侧训？ | **否**（captioner/ASR/LLM 即插即用） | **要**（在 CoF-DATA 上 SFT/LoRA） | **要**（两阶段 latent 对齐） |
-| 相对多阶段 keyframe agent？ | 单次 LLM 调用 + ACR | 单阶段、无辅助帧选模块 | 无工具 / 无帧重插 |
+1. **视频转语言**：把视频切成短片段，用预训练描述模型（默认 NVILA）逐段描述，并用 Whisper-large-v3 做语音转写，二者拼接（§3.1、§3.3）。
+2. **语言推理**：把拼接文本与问题交给推理 LLM（默认 DeepSeek-R1，温度 1.0），推理完全在语言空间完成（§3.2、§3.3）；描述模型、语音识别与 LLM 都可替换，无需重训。
+3. **自适应上下文压缩（ACR）**：从细粒度片段开始，若文本超出 LLM 上下文上限就把片段长度加倍重新描述，直到放得下（Algorithm 1）。
 
----
+### 3.2 Chain-of-Frames（§3–§4.1）
 
-## 三、SiLVR：训练免费的语言管道式视频推理
+- **推理链格式**：模型在一次推理中写出引用相关帧的推理过程再给答案；帧号用帧在视频中的位置（「Frame 1」「Frame 2」），而非时间戳，因此与视频时长和采样频率无关（§3.2）。InternVL 的视频输入本来就在各帧之间插入「Frame-1」「Frame-2」等文字标记，所以作者认为这种格式特别适合 InternVL（§4.1）。
+- **CoF-DATA**：真实部分来自 VideoEspresso 的关键帧描述，先重标帧号，再用 Llama-3.1-8B-Instruct 生成问题、推理链与答案；合成部分来自 CLEVRER 三维物体交互视频，用手工模板生成计数、出现顺序、相对距离等问题，无需 LLM。过滤掉问题中已点名帧的样本，并减少但不完全去掉推理链不引用帧的样本，共 164,186 条（§3.3）。
+- **训练**：InternVL2.5-4B 冻结视觉编码器、全量微调语言模型与投影层；InternVL3-8B 用 LoRA。推理时均匀采 30 帧（§4.1）。
 
-### 3.1 两阶段分解（§3 / Fig. 2）
+### 3.3 TORM（补充）
 
-1. **多感官→语言**：视频切成非重叠短 clip `{v_i}`，预训练 captioner `M`（默认 **NVILA**）得 `C={c_i}`；并行用 **Whisper-large-v3** 得带时间戳字幕 `S={s_j}`；拼接 `Z = concat(S, C)`。
-2. **语言→推理**：把 `Z` 与问题 `Q` 喂给强推理 LLM `F`（默认 **DeepSeek-R1**，temperature **1.0**）。推理**完全在语言空间**，不依赖视频侧 RL/专门 CoT 数据。
+第一阶段用生成的「思维视频」表示对齐若干隐向量 token，第二阶段只用答案监督，让推理过程内化到隐向量中。思维视频只在训练时使用，推理时只做有界的隐向量展开，不再生成视频、重插帧或调用外部视觉工具（摘要、§3）。
 
-文内主张的好处：**简单 / 可泛化 / 模块化 / 可插拔**（换 captioner、ASR、LLM 无需重训整条视频栈）。
+## 四、结果
 
-### 3.2 Adaptive Context Reduction（Algorithm 1）
-
-长视频（文内强调 CGBench / EgoLife 等平均 **>1 小时**）易撑爆 LLM 上下文。ACR：
-
-`
-Require: V, Q, F, M, W, 初始 clip 长 L
-S ← ASR(V)
-limit ← getContextLength(F)
-while True:
- 按 L 切分 → 生成 captions C → Z = concat(S, C)
- if tokens(Z) > limit: L ← L × 2
- else: break
-return answer(Z, Q, F)
-`
-
-直觉：从细粒度起步，**超限则加倍 clip 长度**以减少段数/token，适配不同时长仍尽量保性能。Table 8（VideoMME overall）：ACR **76.7** vs 最佳固定 8s **74.2**（+2.5%）。
-
-### 3.3 评测字段（锚定 Table 1 / 正文；辅表）
-
-**设定（§4.1）**：Video-MMMU 用 **comprehension** split；VideoMME 用 **long + subtitles**（主表）。分「推理榜」与「通识视频榜」。
-
-**Table 1 · SiLVR（ours）主数字（可核）：**
-
-| 榜 | Video-MMMU | Video-MMLU | MMVU | MMWorld | VideoMME (long+sub) | CGBench | EgoLife | CinePile |
-|---|---|---|---|---|---|---|---|---|
-| **SiLVR** | **82.7** | **83.1** | 68.2 | 59.9 | **77.7** | **51.8** | **42.0** | 59.4 |
-
-正文声称：**best-reported** 于 Video-MMLU、VideoMME（long+sub）、CGBench、EgoLife；Video-MMLU 相对 Claude 3.5 Sonnet（71.3）**+11.8**；CGBench 相对 Qwen-2-VL-72B（45.3）**+6.9**；VideoMME / EgoLife 相对 Gemini 1.5 Pro **+0.3 / +5.1**。
-
-**推理 LLM 是否关键（Table 2）**：同管道换 DeepSeek-R1 vs DeepSeek-V3 / Llama 4——推理榜平均增益 **+8.0**，通识榜 **+3.8**（相对 V3）；VideoMME 类别上推理类问题 vs Llama 4 **+11.1%**，非推理类 **+4.9%**（Fig. 3 / 正文）。
-
-**vs agent 多轮（Table 3，VideoMME long，无字幕）**：SiLVR（NVILA-7B + DeepSeek-R1）**62.7** > VCA 56.3 / VideoTree 54.2 / DrVideo 51.7 / VideoAgent 46.4；文内强调对手多轮 LLM 交互，SiLVR **单次**推理调用。
-
-**时序 grounding（Table 5）**：CGBench Grounded VideoQA **mIoU = 11.84**（摘要写相对先前最佳 **+6.1%**；正文相对 VideoMind-7B 7.10 / Claude 4.17 等）。Video-MMMU **Δknowledge = 17.2**（高于 GPT-4o 15.6）。
-
-**效率（Table 4，VideoMME Long，无 ASR 设定）**：SiLVR-best **442s / 62.7**；SiLVR-fast **83s / 57.2**（仍高于多个 agent / 原生视频基线）。具体硬件：多数单卡 A6000；Qwen-2.5-VL-7B 768-frame 例外需四卡。
-
-**模态消融要点（正文 §）**：砍 50–75% **语音** token 掉点 **11.4–20.7%**，砍同比例 **视觉 caption** token 仅 **7.8–9.0%** → 该设定下语音 token 信息量更大（Table 7，本卡不逐格抄）。
-
-> **表一致性备注**：Table 2 打印行把 CGBench/CinePile 写成 59.4 / 51.8，与 Table 1（51.8 / 59.4）及正文「CGBench 51.8%」冲突 → **以 Table 1 + 正文叙述为准**。
-
----
-
-## 四、Chain-of-Frames：帧锚定的单阶段视频 CoT
-
-### 4.1 问题诊断（§3.1）与提案（§3.2）
-
-既有视频 CoT 两极：
-- **多阶段**：辅助网络抽关键帧再推理（VideoEspresso、Video-of-Thought 等）→ 贵、任务特化、偏离「自然语言 CoT」。
-- **单阶段纯文本 CoT**：无显式帧—推理连接 → **时序接地差**。
-
-**CoF**：在**单次推理**的文本迹中用 **Frame-k**（位置 ID，非时间戳）引用相关帧，再给答案。声称四点：数据质量可规模化、简单（无辅助模块）、显式时序 grounding、可解释。
-
-与 InternVL 编码亲和：帧前已有 `Frame-1` 等文本标识（Fig. 4），利于长上下文里对齐「说到的帧」与「看到的帧」。
-
-### 4.2 CoF-DATA（§3.3 / Fig. 3）
-
-| 子集 | 源 | 生成方式 |
+| 工作 | 评测 | 结果 |
 |---|---|---|
-| **CoF-DATA_real** | VideoEspresso 训练集关键帧描述 | 对齐帧 ID → **Llama-3.1-8B-Instruct** 从原始标注生成 (Q, CoF-trace, A) |
-| **CoF-DATA_synth** | **CLEVRER** 合成 3D 交互 | **手工模板**（计数 / 出现顺序 / 相对距离等），无需 LLM，成本低 |
+| SiLVR | Video-MMLU（Table 1） | 83.1，比此前最好的 Claude 3.5 Sonnet 高 11.8 分 |
+| SiLVR | CGBench 问答（Table 1、§4.2） | 51.8%，比此前最好的 Qwen-2-VL-72B 高 6.9 分 |
+| SiLVR | VideoMME 长视频加字幕 / EgoLife（Table 1） | 77.7 / 42.0，比 Gemini 1.5 Pro 高 0.3 / 5.1 分 |
+| SiLVR | 推理 LLM 的作用（Table 2） | DeepSeek-R1 比 DeepSeek-V3 在推理类基准平均高 8.0 分、通用视频基准高 3.8 分 |
+| SiLVR | VideoMME 长视频无字幕，对比多轮代理（Table 3、§4.4） | 62.7，高于 VideoAgent、VideoTree 等，且只调用一次 LLM |
+| SiLVR | CGBench 定位问答 mIoU（Table 5、§4.6） | 11.84，比 GPT-4o 高 6.11，比同期的 VideoMind 高 4.74 |
+| CoF | 五基准平均（Table 1） | InternVL2.5-4B 由 60.8 升到 64.6（+3.8），InternVL3-8B 由 67.0 升到 72.1（+5.1） |
+| CoF | VSI-Bench / Video-MME（Table 1） | CoF-InternVL3-8B 为 51.3 / 73.7，底座为 41.0 / 66.5 |
+| TORM | Qwen2.5-VL-7B 底座，32 帧（Table 1） | VideoMME 61.0、MVBench 61.1、TempCompass 74.3 |
 
-流水线：先 **Frame ID alignment**（下采样 / 裁到模型可接受时长如 30s，重标定帧号，保持标注对齐）→ 生成迹 → 过滤「问题里已点名帧」样本；保留一定比例「无帧引用」样本以免强迫无关问题也出 CoF。**最终 164,186** 条。
+SiLVR 的消融显示语音转写比画面描述更重要：在 VideoMME 上，去掉 50% / 75% 的语音 token，准确率由 70.3 降到 65.3 / 56.0，去掉同比例的画面描述只降到 68.9 / 67.7（Table 7）；ACR 比最好的固定 8 秒片段高 2.5 分（76.7 对 74.2，Table 8）。CoF 的消融中，同样规模下只用合成数据在多数基准上好于只用真实数据，二者合用则在 EventHallusion 以外的基准上都最好（§5.1）。
 
-### 4.3 训练与推理
+## 五、意义
 
-- **CoF-InternVL2.5-4B**：全量微调 LLM + projection，**冻视觉编码器**。
-- **CoF-InternVL3-8B**：**LoRA**。
-- 另测 **Phi-3.5-Vision**（附录，本卡不展开数字）。
-- 推理：均匀采 **30** 帧；不限死 30 秒视频时长。
+两篇代表视频推理的两种成本取舍。SiLVR 把视频理解拆成感知与推理两个模块，推理端直接继承文本推理模型的进步，换模型不必重训，在长视频上尤其有效；它也提示语音转写在许多视频问答中比画面描述更有信息量。CoF 则保留端到端视频模型，只改变推理链的书写格式，并表明低成本的合成数据就能教会帧级定位。TORM 再往前一步，把推理从可读文字改成连续隐向量，以可解释性换取推理开销。
 
-### 4.4 评测字段（Table 1 / 2 / 3 / Fig. 6）
+## 六、局限与待核实
 
-**Table 1（五榜 + Average）：**
+- **SiLVR 的信息瓶颈**：画面先被压成文字，细粒度视觉信息可能丢失；去掉语音转写后八个基准全部下降（VideoMME 由 77.7 降到 62.7，Table 6），说明它依赖带语音的视频。
+- **SiLVR 表格不一致**：Table 2 中 DeepSeek-R1 一行的 CGBench 与 CinePile 两列写成 59.4 / 51.8，与 Table 1（51.8 / 59.4）及正文「CGBench 51.8%」相反，本篇按 Table 1 与正文。
+- **SiLVR 正文与表格口径不一**：摘要说 CGBench mIoU 比此前最好方法高 6.1%，但 Table 5 中最好的基线是 VideoMind（7.10），差距为 4.74，6.11 是相对 GPT-4o 的差距；§4.7 写去掉语音 token 下降 11.4%–20.7%、去掉画面描述下降 7.8%–9.0%，与 Table 7 的数值对不上，本篇只用表中数值。
+- **CoF 的基线口径随提示方式而变**：Table 1 中 InternVL2.5-4B 的基线是 CoT 提示下的分数（与 Table 4 的 CoT 提示行、Table 3 的「+ CoT Prompting」行相同），Table 3 的「Original」用的是标准提示，所以 Video-MME 有 54.7 与 54.9 两个值；InternVL3-8B 在 Table 1 中的基线与 Table 4 标准提示、CoT 提示两行都对不上（如 MVBench 为 74.4，两行分别为 72.0 与 74.3）。比较增益时要说明用的是哪种提示，本篇正文的 +3.8 / +5.1 按 Table 1 计；CoF 依赖 InternVL 的帧号交织格式，合成数据与真实视频之间也有分布差。
+- **STORM 与 TORM 名称不一**：arXiv 页面题名为 STORM（摘要里写作 STORMS），正文题名为 TORM，代码仓库名为 storm。
+- **TORM 证据有限**：只有 v1，主结果只在一个 7B 底座上报告。
 
-| Model | VSI-Bench | Video-MME | MVBench | VidHal | EventHallusion | Average |
-|---|---|---|---|---|---|---|
-| InternVL2.5-4B | 33.5 | 54.7 | 71.5 | 77.0 | 67.4 | 60.8 |
-| **CoF-InternVL2.5-4B** | 36.9 | 59.7 | 76.1 | 79.2 | 71.2 | **64.6**（**+3.8**） |
-| InternVL3-8B | 41.0 | 66.5 | 74.4 | 80.9 | 72.1 | 67.0 |
-| **CoF-InternVL3-8B** | **51.3** | **73.7** | **77.1** | 79.5 | **78.7** | **72.1**（**+5.1**） |
+## 七、与相邻笔记的分工
 
-文内：更大骨干增益更大；CoF-8B 在 VSI / MVBench 取最佳或前列，Video-MME / VidHal 第二优等（相对表内闭源/大开源对照）。
-
-**vs 多阶段视频 CoT（Table 2，共享榜）**：相对各法自报基线，CoF-InternVL3-8B 在 NEXT QA **+4.9**（对比 M-LLM 相对其基线 **+0.8**）；CoF-4B 在 Video-MME **+4.8**、NEXT QA **+4.3**（相对本骨干 Original）。
-
-**CoF vs 朴素 CoT 变体（Table 3，InternVL2.5-4B）**：CoT prompting / SFT-QA-only / SFT-CoT（去帧引用）均不如 **SFT with CoF**；五榜上 CoF 行全面最优（表内：36.9 / 59.7 / 76.1 / 79.2 / 71.2）。
-
-**合成数据（Fig. 6，等量 164k）**：多数榜上 **仅 synth > 仅 real**；**combined** 除 EventHallusion 外全面更好——文内强调合成 OOD 仍可迁移「计数/顺序」类技能。
-
----
-
-## 五、双主轴对照（跟读用）
-
-| 维度 | SiLVR | Chain-of-Frames |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| 范式 | **外置语言管道** + 推理 LLM | **内生视频 LLM** + 帧锚定 CoT |
-| 训练 | **Training-free**（换件即用） | **需要** CoF-DATA SFT/LoRA |
-| 时序接地 | 靠 caption/字幕时间戳与 ACR 粒度；另有 Grounded QA prompt 解 start–end | 推理迹内 **Frame-k** |
-| 多感官 | **显式 ASR**（Whisper） | 主文设定为视觉帧序列（不主打音频） |
-| 长视频策略 | ACR 加倍 clip | 均匀 30 帧；训练裁段对齐 |
-| 代表涨点 | Video-MMLU **83.1**；CGBench QA **51.8** / mIoU **11.84** | CoF-8B Avg **72.1**（+5.1）；VSI **51.3** |
-| 典型风险 | caption/ASR 信息瓶颈；纯语言可能丢细粒度像素 | 依赖帧 ID 与 InternVL 交织格式；合成—真实分布差 |
+| [[音视频联合Flamingo]] | 对照：同样面向长时真实音视频理解，那篇训练一个音视频联合模型，SiLVR 用现成语音识别与描述模型外接推理 LLM | 音视频联合模型的训练配方 |
+| [[视频生成模型脉络]] | 辨析：那篇讨论的 Wiedemer 等「逐帧生成即逐步推理」的 chain-of-frames，与本篇在推理链中引用帧号的 Chain-of-Frames 同名不同义 | 视频生成通史 |
+| [[多模态架构脉络]] | 上游：CoF 微调的 InternVL 属于那篇所写的「视觉编码器接 LLM」路线 | 多模态理解通史 |
+| [[DeepSeekR1推理训练深读]] | 上游：SiLVR 的默认推理器 DeepSeek-R1 的训练方法在那篇，本篇的 Table 2 显示换成非推理 LLM 会明显掉分 | R1 的强化学习配方 |
+| [[潜空间推理Coconut]] | 上游：TORM 把那篇所写的连续隐向量推理（被 TORM 引为相关工作）用到视频时空推理上 | 文本侧潜空间推理 |
 
-二者正交：**SiLVR** 回答「已有强推理 LLM 时，如何**零训**吃长视频多感官」；**CoF** 回答「视频 LLM 如何在**不引入多阶段管线**的前提下学会**指向帧**的推理」。不把任一写成 AV-Flamingo / Omni 产品续作。
+## 八、延伸阅读
 
----
-
-## 六、可选补链：STORM / TORM
-
-PDF 题名为 **TORM**（*Spatial-Temporal reasOning via inteRnalized Modeling*）；GitHub 写作 **STORM**（`aiming-lab/storm`）。本篇只记方法面差异：
-
-- **动机**：文本 CoT / 关键帧重插 / 工具链把时空证据**外化**，延迟与工程复杂。
-- **做法**：Stage I 用生成 **thought-video** 对齐有界 **latent tokens**（答损 + λ·latent 对齐）；Stage II 仅答损（Coconut 式），逼 latent 内化。**推理期不再生视频、不重插帧、不调外部视觉工具**。
-- **骨干**：Qwen2.5-VL-7B-Instruct；Table 1：**VideoMME 61.0 / MVBench 61.1 / TempCompass 74.3**（32 frames）；Table 2：**VideoEspresso 58.7 / Video-Holmes 37.8 / MMVU 65.9**。
-
-与双主轴关系：同属「视频推理」，但旋钮是 **连续 latent 内化**，不是语言管道、也不是帧锚定文本迹 → 仅作邻域索引。
-
----
-
-### 7.1 延伸阅读
-
-1. SiLVR Abstract + §3（含 Algorithm 1）+ Table 1/2/3/5。
-2. CoF Abstract + §3.2–3.3 + Table 1/2/3 + Fig. 6。
-3. （可选）STORM/TORM Abstract + Fig. 1/3 + Table 1/2 —— 只记「latent 内化」对照句。
-
-### 7.2 开放核对点
-
-- SiLVR Table 1↔Table 2 的 CGBench/CinePile 列不一致 → 跟读以 Table 1 + 正文「CGBench 51.8%」为准。
-- CoF 摘要「Code available at GitHub」具体仓由 PDF 注解确认为 `SaraGhazanfari/CoF`；本篇不跟 commit。
-- STORM vs TORM 命名：PDF 题名 **TORM**，仓名 **storm**——引用时两者并列。
-
----
-
-## 八、摘要
-
-本卡立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。范围 **≠[[音视频联合Flamingo]] / ≠[[视频生成模型脉络]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅作补链。三 PDF **以官方 HTTPS 外链为准**。
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [SiLVR](https://arxiv.org/abs/2505.24869) §3、Table 1–3、Table 6–8 | 两阶段框架、ACR、主结果与消融 |
+| 2 | [Chain-of-Frames](https://arxiv.org/abs/2506.00318) §3.2–3.3、Table 1、§5.1 | 推理链格式、CoF-DATA 与合成数据的作用 |
+| 3 | [TORM（STORM）](https://arxiv.org/abs/2605.26014) 摘要、Figure 1 | 隐向量内化推理的思路 |
