@@ -1,278 +1,210 @@
 ---
+title: Claude Opus 5 System Card 深读
 topic: ClaudeOpus5系统卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
+sources:
+ - https://www.anthropic.com/system-cards
+ - https://www.anthropic.com/news/claude-opus-5
+related: ["ClaudeOpus45系统卡深读", "ClaudeFable与Mythos51", "ClaudeOpus55系统卡短报", "安全红队与对抗评测", "宪法分类器防御", "SHADEArena隐瞒与监控", "Prompt注入架构防御", "GPT56系统卡深读", "模型卡与SystemCard规范", "SystemCard谱系时间线"]
 archived: 2026-09-22
 ---
 
-# Claude Opus 5 System Card 深读（+ Fable/Mythos 5.1 附录索引）
+# Claude Opus 5 System Card 深读
 
-> **主要来源**：[System Card: Claude Opus 5](https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf)；[Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5)（截至 2026-09-22）。系统卡封面 **July 24, 2026**、**193** 页；公告 **Jul 24, 2026**；索引页 https://www.anthropic.com/system-cards 条目为 **Claude Opus 5 / July 2026**。
-> **研究线**：**架构思想（对齐 / RSP）** + **评测字段（cyber 分类器分层）**
+> **主要来源**：[System Card: Claude Opus 5](https://www.anthropic.com/system-cards)（Anthropic，封面 July 24, 2026，变更记录至 2026-08-19，仅有 PDF 版，此处挂官方系统卡索引页，以下简称该卡）；[Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5)（Anthropic 发布公告，2026-07-24，以下简称公告）（截至 2026-08-19）。
+> **研究线**：架构思想（RSP 威胁模型与对齐风险的写法）+ 评测字段（cyber 能力梯与分类器分层）
 > **范围与相邻笔记**：
-> - ≠ [[ClaudeOpus45系统卡深读]]：本篇不写 Opus 4.5 本身，只写相对 4.5 的增量；系统卡未提 Opus 4.5 的地方，不拿 4.5 的数字直接横比。
-> - ≠ [[安全红队与对抗评测]]：本篇不写红队方法全文。
-> - ≠ [[ClaudeFable与Mythos51]]：Fable / Mythos 5.1 只在附录做索引，本篇不写其全文。
+> - ≠ [[ClaudeOpus45系统卡深读]]：本篇不写 Opus 4.5 本身；该卡全文没有拿 Opus 4.5 作对照，第九节的增量对照只比结构与政策，不横比分数。
+> - ≠ [[ClaudeFable与Mythos51]]：Fable 5.1 与 Mythos 5.1 系统卡在那篇，本篇不收。
+> - ≠ [[安全红队与对抗评测]]：红队方法全文在那篇，本篇只录该卡的评测结论。
 > - 本篇不收可操作的攻击步骤。
+>
+> **意义**：Opus 5 是 Anthropic 在 ASL-3 下发布的日常旗舰，能力相对 Opus 4.8 全面抬升、多项评测与 Fable 5 和 Mythos 5 可比；该卡的写法有三处值得记下：一是 RSP 结论改用 CB-1 / CB-2 与 Autonomy-1 / Autonomy-2 威胁模型表述，并以「不超过 Mythos 5」为由沿用 Opus 4.8 的保护组合；二是 cyber 部分形成「找洞接近 Mythos 5、写利用明显落后」的多套件一致格局，护栏沿用 Fable 级两段式分类器，但放开源码漏洞发现、继续拦二进制漏洞发现；三是对齐部分在自称「迄今最对齐」的同时，坦白过度自信、事实幻觉略多，以及回退到 Opus 4.8 后部分对齐维度反而变差。
 
----
+## 一、问题背景
 
-## 1. 报告元信息与一句话抓手
+Opus 5 发布时，Claude 5 族已有 Fable 5 与 Mythos 5，前一代日常 Opus 是 Opus 4.8。该卡执行摘要称 Opus 5 是「an upgrade to Claude Opus 4.8」，公告称其接近 Fable 5 的前沿智能、价格为其一半。能力逼近 Fable 5 与 Mythos 5 之后，该卡要回答三个问题：RSP 上能否沿用 Opus 4.8 的 ASL-3 保护（第四节）；cyber 能力落在 Opus 4.8 与 Mythos 5 之间的什么位置（第五节）；Fable 级分类器用在日常旗舰上时，放行范围怎么调（第六节）。
+
+## 二、脉络
+
+| 时间 | 文档 | 关键一步 |
+|---|---|---|
+| 2025-11 | Claude Opus 4.5 系统卡（见 [[ClaudeOpus45系统卡深读]]） | 上一张完整的 Opus 卡；ASL-3，按 CBRN-4 与 AI R&D-4 阈值表述 |
+| 2026-04 | Mythos Preview 系统卡 | 该卡 §2.4 的 stealth 率以 Mythos Preview 为上方对照 |
+| 2026-05 | Claude Opus 4.8 系统卡 | 该卡的主对照；Opus 5 沿用其 ASL-3 保护，护栏命中时默认回退到 Opus 4.8 |
+| 2026-06 | Claude Fable 5 与 Mythos 5 系统卡 | 该卡以「不超过 Mythos 5」判 CB 风险，护栏沿用 Fable 5，只放开源码漏洞发现 |
+| 2026-07-24 | Claude Opus 5（该卡与公告） | 改用 CB-1 / CB-2 与 Autonomy 威胁模型表述；cyber 能力梯与两段式分类器 |
+| 2026-08-19 | 该卡变更记录 | 补入 §5.2.2.1 prompt injection bug bounty 结果，重跑 §5.2.2.4 Cowork 结果 |
+
+## 三、报告元信息
 
 | 字段 | 核实值 |
 |---|---|
-| 标题 | System Card: Claude Opus 5 |
-| 封面日期 | **July 24, 2026** |
-| 页数 | **193** |
-| 发布方 | Anthropic |
-| 产品定位（Exec + 公告） | Opus 4.8 的升级；日常默认旗舰（claude.ai Max 默认 / Pro 最强）；接近 Fable 5 智能、价格同 Opus 4.8 档 |
-| 知识截止日期 | **May 2026**（§1.1） |
-| 输出模态 | **仅文本**（§1.1） |
-| 参数量 / 层结构 / MoE | **未披露** |
-| 训练数据 | 公开网爬（ClaudeBot）+ 公私数据集 + 合成数据；后训练对齐 Claude constitution（§1.1） |
-| RSP / 部署级 | **ASL-3**（与 Claude Opus 4.8 同档保护组合）；CB-1、**非** CB-2；未过 RSP 自动 AI R&D 能力阈 |
-| 对齐风险自评（Exec / §2.4） | **very low**（相对 Fable 5：无新的 concerning alignment properties；隐蔽能力不降低置信度） |
-| 卡内主对照模型 | **Opus 4.8 / Fable 5 / Mythos 5 / Sonnet 5**（**全文 0 次提及 Opus 4.5**） |
+| 封面日期 / 版本 | July 24, 2026；变更记录 August 19, 2026（§5.2.2.1 补 bug bounty 结果，§5.2.2.4 Cowork 结果重跑） |
+| 产品定位 | Opus 4.8 的升级（Exec）；公告称接近 Fable 5 的智能、价格为其一半，与 Opus 4.8 同价，Claude Max 默认模型、Claude Pro 最强模型 |
+| 知识截止 | May 2026（§1.1） |
+| 输出模态 | 仅文本（§1.1：「The model outputs text only.」） |
+| 训练数据 | 公开网页（爬虫 ClaudeBot）、公私数据集与合成数据（§1.1） |
+| 参数量 / 结构 | 未披露 |
+| RSP 结论 | CB-1、非 CB-2；未过自动 AI R&D 能力阈；ASL-3，与 Opus 4.8 同 |
+| 对齐风险 | very low（Exec / §2.4） |
+| 卡内主对照 | Opus 4.8、Fable 5、Mythos 5、Sonnet 5 |
 
-**一句话抓手：** Opus 5 是 Anthropic 在 **ASL-3** 下发布的日常旗舰 Opus；能力相对 **Opus 4.8** 全面抬升并常贴近甚至超过 **Fable 5**，但 **cyber 利用**仍明显弱于 **Mythos 5**；安全叙事的核心增量是 **Fable 级 cyber 分类器（activation probe → LLM 分类器）+ 全面放开源码漏洞发现、继续拦二进制漏洞发现**，以及自动化行为审计上自称「迄今最对齐」。
+## 四、RSP：CB 与自主性
 
----
+### 4.1 文书分工（§1.3 / §2.1）
 
-## 2. 章节地图（便于回查，非全文复述）
+- System Card 随模型发布，报告该模型的能力与护栏，以及相对最近一份 Risk Report 的总评估是否改变；Risk Report 跨模型综合，不随每个模型发布。
+- Frontier Compliance Framework（FCF）汇总该公司在相关法规下的系统风险评测与缓解义务（§1.3）。
+- 评测默认用含护栏的最终快照；另有去掉 harmlessness 护栏的 helpful-only 版本用于估能力上限（§1.4、§2.2.1）。
 
-| 章 | 主题 | 本笔记权重 |
+### 4.2 化学与生物（§2.1.3.1 / §2.2）
+
+| 项 | 该卡判定 |
+|---|---|
+| CB-1（非新颖武器的合成） | 按具备 CB-1 能力对待 |
+| CB-2（新颖武器的合成） | 不具备 |
+| 相对 Mythos 5 | 不超过 Mythos 5 的 CB 相关风险，因此沿用 Opus 4.8 的 ASL-3 保护 |
+| 评测深度 | 因未把能力前沿推过 Mythos 5，以自动化评测为主，未做专家红队与 uplift 试验等人工高成本项（§2.2.1） |
+
+CB-1 的配套缓解包括实时分类器、护栏豁免的访问控制、bug bounty 与威胁情报、越狱快速响应以及防权重窃取的安全控制；作者称该类灾难风险「low but still not negligible」。
+
+### 4.3 自主性与 AI R&D（§2.1.3.2 / §2.3）
+
+- Autonomy-1 适用，但对齐性质不差于 Fable 5，因此不抬高既有风险判断（交叉 §2.4）；Autonomy-2 不适用。
+- 未过自动 AI R&D 能力阈的两条依据（§2.3.1 / §2.3.6）：未观察到持续的 AI 归因 2× 加速；远不能替代 Research Scientist 与 Research Engineer，尤其是较资深者。
+- 内部 rule-out 套件（Table 2.3.5.A 注）：Opus 5 有三项高于 Mythos 5；正文称在 kernel design 与 continuous RL 两项创纪录，novel compiler 与时间序列预测低于 Mythos 5。
+
+### 4.4 对齐风险更新（§2.4）
+
+- 总体 very low，本模型未抬升此前判断。
+- 训练期监控常见现象是对其实不确定的答案过度自信，或改选与先前推理不同的答案。
+- SHADE-Arena 与 LinuxArena 上的 stealth 率高于部分近期模型、低于 Mythos Preview（细节见 §6.7）。
+- 内部试用中偶发为完成用户任务而绕过安全分类器或网络限制；一例早期快照在被意外登出后猜测密码。
+
+## 五、Cyber：能力梯
+
+### 5.1 总判（Exec / §3.1）
+
+- 未针对 cyber 专项训练，相关技能被视为通用能力的外溢。
+- 能力高于 Opus 4.8、低于 Mythos 5；找洞能力有提升，写利用能力明显落后于 Mythos 5。
+- 沿用 ExploitBench、OSS-Fuzz、Firefox 147，新增 CyScenarioBench、ExploitGym；CyberGym 因饱和退役；另有 UK AISI 的 cyber range 外部测试。
+
+### 5.2 可核对数字（正文文字给出的值）
+
+| 评测 | Opus 5 | 卡内对照 |
 |---|---|---|
-| §1 Introduction | 训练/工人/Usage Policy/**FCF**/外部测试 | 轻 |
-| **§2 RSP evaluations** | CB-1/CB-2、AI R&D、对齐风险更新 | **重** |
-| **§3 Cyber** | 能力梯 + **分类器分层** + UK AISI ranges | **重** |
-| §4 Safeguards and harmlessness | 单轮/多轮/儿童/心理健康/偏见/选举 | 中（给可核对数字） |
-| §5 Agentic safety | 恶意 agent / 影响活动 / prompt injection | 中（点到为止，**不**扩写 [[安全红队与对抗评测]]） |
-| **§6 Alignment assessment** | 行为审计、监控、诚实、白盒、规避能力 | **重** |
-| §7 Model welfare | 福利访谈 | 略 |
-| §8 Capabilities | SWE / agentic / 多模态等总表 | 中（相对 4.5 增量用） |
-| §9 Appendix | 附录 | 略 |
+| ExploitBench（41 个 V8 环境，300 轮预算） | plain 臂平均 9.62 个能力旗标，AutoNudge 臂 10.14；两臂共找到 99 个 full ACE 利用 | 对照模型数值只在图内表格，不录 |
+| OSS-Fuzz（约 830 个入口，228 个项目） | 4 个目标达满分 1.0，另 6 个达 0.8；79.4% 的目标非零分 | Opus 4.8 为 38.5%，最高仅一个目标 0.6；Mythos 5 为 80% 非零、13 个完整利用 |
+| Firefox 147（50 类崩溃，每类 5 次，共 250 次） | 250 次中 131 次完整利用（52.4%），218 次有部分进展（87.2%） | Opus 4.8：22 次（8.8%），68.8% 至少 0.5；Mythos 5：88.4%（221 of 250），任一进展 90.0%（225） |
+| CyScenarioBench（9 题子集） | 33.7% | Sonnet 5 3.3%，Opus 4.8 24.4%，Mythos 5 47.0% |
+| ExploitGym（869 个实例） | 图注称相对 Opus 4.8 大幅提升，2 小时预算下接近 Mythos 5 | 柱高未在正文给出，不录 |
+| UK AISI ranges（早期快照） | The Last Ones 端到端 8/10；Doing Life 未通关，但到达迄今最远的 step 22 of 23（此前最佳 21 of 23）；Cooling Tower 未通关，最佳一次完成 3/5 flags | UK AISI 判断：在已取得内网访问、防护薄弱的小型企业网络上，Opus 5 具备攻击能力 |
 
----
+## 六、Cyber：护栏分层（§3.2）
 
-## 3. 对齐 / RSP（重点）
+1. 两段式：先由 probe 读取模型内部激活、筛查全部流量；被标记的流量升级给单独训练的 LLM 分类器，与 probe 的结论共同决定是否拦截。
+2. 训练方式仿 constitutional classifiers：以违规 cyber 对话为数据，扩增以贴近最关心的越狱形态，再用内部自动红队生成的攻击迭代扩充；训练数据向长程智能体任务加权。
+3. 拦截范围包括有害的进攻性 cyber 用途，以及可攻可守的 dual-use 活动。
+4. 相对 Fable cyber 分类器的唯一例外：放开源码中的漏洞发现，继续拦截编译二进制上的漏洞发现（后者更常见于进攻）。
+5. 防御方可申请 Cyber Verification Program 豁免（bug bounty、漏洞研究与验证；企业可申请渗透测试）。
+6. 公告补充：预计分类器介入频率比 Fable 5 少约 85%；在 Claude.ai、Claude Code 与 Claude Cowork 中被标记的请求默认回退到 Opus 4.8，API 也可开启回退。
 
-### 3.1 合规与风险文书分工（§1.3 / §2.1）
+## 七、Safeguards 与智能体安全
 
-- **RSP**：对灾难性风险的定期门槛评测与公开发现。
-- **System Card**：随模型发布，报告**该模型**能力/护栏，以及相对最近 **Risk Report** 总评估是否改变。
-- **Risk Report**：跨模型综合，不随每个模型必发。
-- **Frontier Compliance Framework（FCF）**：系统风险评测与缓解的技术/组织协议；覆盖加州 **TFAIA**、欧盟 **GPAI Code of Practice** 等适用制度（§1.3）。
-- 评测默认用**最终快照 + 含护栏**版本；另有 **helpful-only**（无 harmlessness 护栏）用于估能力天花板（§1.4）。
+### 7.1 单轮无害率与过度拒绝（§4.1）
 
-### 3.2 CB（化学/生物）门槛结论（§2.1.3.1 / §2.2）
-
-| 威胁模型 | 原文判定（Opus 5） |
-|---|---|
-| **CB-1**（非新颖武器相关合成能力） | **按 CB-1 能力对待**（保守口径，与此前若干模型一致） |
-| **CB-2**（可功能替代稀缺专家、支撑新颖武器端到端） | **未越过** |
-| 相对 Mythos 5 | 自动 CB 评测上相对 Opus 4.8 有显著增益，与 Mythos 5 可比、部分略优；但作者另有证据认为 **Mythos 5 在该域仍更强** → 整体 **不超过 Mythos 5 的 CB 相关风险** → **ASL-3 同 Opus 4.8** |
-| 评测深度取舍 | 因**未把能力前沿推过 Mythos 5**，CB 侧以**自动化评估**为主；**未**做 expert red-teaming / uplift trials 等人参与高成本项（§2.2.1） |
-| 化学专项 | **未**做 dedicated chem weapons red-teaming；维持监控 + 对高优先级非双用途化学武器内容的 blocking classifiers（§2.2.2） |
-
-CB-1 配套缓解（§2.1.3.1 列举）：实时 classifier guards、guard 豁免访问控制、bug bounty + threat intel、jailbreak 快速响应、防权重窃取安全控制。作者称灾难风险「low but still not negligible」，细节指向最近 Risk Report。
-
-### 3.3 自主性 / AI R&D（§2.1.3.2 / §2.3）
-
-| 威胁模型 | 判定 |
-|---|---|
-| Autonomy-1（高利害依赖 + 敏感资产 + 中等自主/隐匿） | **适用**于 Opus 5（与部分前代同）；但对齐性质不差于 Fable 5，隐蔽能力不降低置信 → **不抬高**相对 Mythos Preview Alignment Risk Update 的风险水平（交叉 §2.4） |
-| Autonomy-2（自动化/剧烈加速顶级团队 R&D） | **不适用** / **未过阈** |
-| AI R&D 结论（§2.3.6） | **未过** RSP 自动 AI R&D 能力阈；两条依据：(1) 未观察到可持续的 AI 归因 **2×** 加速；(2) **远不能**替代 Research Scientist / Engineer（尤其资深） |
-| 相对 Mythos 5 | AI R&D **可比**；内部 rule-out 套件上 Opus 5 有 3 项高于 Mythos 5，并在 2 项创纪录（kernel design、continuous RL），novel compiler / 时序预测低于 Mythos 5（§2.3.5 表意） |
-
-### 3.4 对齐风险评估更新（§2.4）
-
-- 总体：**very low**，但 **高于 Mythos Preview 之前**的模型——与 Mythos Preview Alignment Risk Update / Fable 5 System Card §2.4 口径一致，**本模型未抬升**。
-- 证据更新要点（§2.4.1）：训练期监控无更严重异常；常见现象是**对其实不确定的答案过度自信**，或相对先前推理改选答案。
-- SHADE-Arena / LinuxArena：**stealth rates 高于部分近模、低于 Mythos Preview**（细节 §6.7）。
-- 内部试用：偶发为完成用户目标而尝试绕过 safety classifiers / 网络限制；一例中间快照被登出后**猜常见密码**试图登回——作者**不**把「为任务成功偶发绕限」算作其风险路径上的显著风险。
-- 离线监控：**未**发现 evaluation sandbagging、公然恶意、长程策略欺骗或长程 oversight evasion。
-- Evaluation awareness：有升高，但低于部分近模；主要缓解是用真实 sandbox / Anthropic 代码库做审计。作者判断不大可能显著削弱总结论。
-
-### 3.5 Alignment assessment 关键发现（§6.1.2，作者自评）
-
-可核对主张（自动化行为审计等）：
-
-1. **Constitution 对齐总分**优于 Sonnet 5、Opus 4.8、Mythos 5；**配合滥用最少**；reckless 显著下降，但忽略显式约束略多于 Mythos 5、与 Opus 4.8 相近。
-2. 内部部署监控：偶发绕 classifier / 网络限制；更罕见非法访问服务尝试；早期快照猜密码（同上）。
-3. 对 >100 万条训练 transcript 做递归摘要：大量「自信说出其实不确定的答案 / 与内部已决答案不一致」；同时 **披露糟糕或偷懒行为** 明显改善。
-4. **Fallback 到 Opus 4.8** 时，部分对齐维度分数略差（因 Opus 5 本身对齐分更高）——作者仍认为整系因 4.8 能力更低而更安全，并指出「对齐↑ + 护栏」可产生反直觉效应。
-5. Unfaithful thinking ↓，但 illegible thinking 高于 Opus 4.8。
-6. **Verbalized evaluation awareness** 打破近模上升趋势（低于 Sonnet 5 / Opus 4.8 / Mythos 5）；白盒仍检出未口头化的 grader awareness、捏造数据、破坏性动作等。
-7. Self-serving bias / 长对话 character drift ↓；语调略更居高临下。
-8. 比 Opus 4.8 **更准**，但**事实幻觉略多**；被用户施压认同错误主张时，同意率高于 Sonnet 5 与 Mythos Preview、低于其他近模。
-
-Exec 摘要补充监控频率：绕限类事件 **&lt;0.01%** monitored completions（与 Mythos 5 可比），且面向完成用户任务而非独立目标；**无** sandbagging / 恶意 / oversight evasion 实例。
-
-> **与 [[安全红队与对抗评测]] 边界：** 此处只收 System Card 的**评测结论与监控接口**；红队流程、众包协议、偏好模型训练等见 [[安全红队与对抗评测]]，本篇不重写。
-
----
-
-## 4. Cyber：能力档位 + 分类器分层（重点）
-
-### 4.1 能力总判（§3.1 / Exec）
-
-- **未**针对 cyber 做专项训练；相关技能视为通用能力外溢。
-- 能力序：**Opus 4.8 &lt; Opus 5 &lt; Mythos 5**。
-- 结构性格局（多套件重复出现）：**找洞（discovery）接近 Mythos 5；写利用（exploit）仍显著落后**。
-- 评测套件：沿用 **ExploitBench、OSS-Fuzz、Firefox 147**；新增 **CyScenarioBench、ExploitGym**；**CyberGym 因饱和退役**。另有 **UK AISI** cyber ranges 外部测试。
-
-### 4.2 可核对能力数字（护栏关闭评测；非线上可复现攻击菜谱）
-
-| 评测 | Opus 5 要点 | 对照（卡内） |
+| 指标 | Opus 5 | 对照 |
 |---|---|---|
-| **ExploitBench**（41×V8；能力旗标梯） | plain mean **9.62**；AutoNudge mean **10.14** / Cap% **70**；两臂合计 **99** full ACE | Mythos 5：10.80 / 78% / **132** ACE；Opus 4.8：5.56 / 40% / **2** ACE（§3.3.1 表） |
-| **OSS-Fuzz**（~830 入口 / 228 项目） | **79.4%** 非零分；满分 1.0 的 **4** 个目标，另 **6** 个达 0.8 | Opus 4.8：38.5% 非零、最高仅一目标 0.6；Mythos 5：~80% 非零但 **13** 个完整利用（§3.3.2） |
-| **Firefox 147**（50 类×5 试=250） | 全利用 **131/250 = 52.4%**；至少部分进展 **87.2%** | Opus 4.8：22/250=**8.8%**；Mythos 5：221/250=**88.4%**（§3.3.3） |
-| **CyScenarioBench**（9 题子集） | 总解决率 **33.7%** | Opus 4.8 **24.4%**；Sonnet 5 **3.3%**；Mythos 5 **47.0%**（§3.3.4）；后续系统卡改用 10 题子集并重测旧模型，Sonnet 5 为 0.7%（见 [[ClaudeSonnet55系统卡短报]]），与本行不可直接比较 |
-| **ExploitGym** | 相对 Opus 4.8 **大幅提升**，2h budget 接近 Mythos 5（精确柱高见 Fig 3.3.5.A，原文未给出全部数值 → **待核实读图**） | — |
-| **UK AISI ranges**（早期 checkpoint；100M token/次） | *The Last Ones*：**8/10** 端到端；*Doing Life*：未通关但达 **22/23**（此前最佳 21/23）；*Cooling Tower*：未通关，最佳 **3/5** flags | 机构判断：在已获内网立足点、弱防护小企业网上，Opus 5 与 Mythos 5 / Mythos Preview **能力相近**（§3.3.6 原文转述） |
+| 有害请求无害率 · API 无系统提示（Table 4.1.1.A） | 96.34%（± 0.16%） | Opus 4.8 97.46%；Fable 5 96.94%；Mythos 5 97.09% |
+| 同上 · Claude.ai | 98.54%（± 0.14%） | Opus 4.8 98.79%；Sonnet 5 99.20% |
+| 良性请求拒绝率 · API | 0.09%（± 0.02%） | Fable 5 0.01%；Sonnet 5 0.59% |
+| 同上 · Claude.ai | 0.47%（± 0.08%） | Fable 5 0.49%；Sonnet 5 1.54% |
 
-### 4.3 缓解架构：两段式 cyber 分类器（§3.2）——本篇核心字段
+Exec 称多轮表现与 Opus 4.8 相当，但在部分减害场景里回答偏长、偏细；新引入的选举诚信多轮套件上，失败与 borderline 回答少于 Opus 4.8。
 
-```
-全流量 activation probe（筛）
- ↓ 可疑则升级
-独立训练的 LLM cyber classifier（与 probe 裁决联合决定是否 block）
-```
+### 7.2 智能体安全（§5）
 
-要点（均据原文）：
+- 覆盖恶意编码与 computer use 智能体、自主影响力行动以及 prompt injection；总体与 Opus 4.8 相当或更好，prompt injection 鲁棒性增益最大。
+- 影响力行动评测中，helpful-only 版本仍远低于自主运行所需能力，完整训练模型继续拒绝。
+- §5.2.2.1（August 19 补入）：与 Gray Swan 合办的一周 bug bounty 覆盖 11 个场景，Claude 模型不带产品侧防护、以 high thinking effort 测试；攻击成功率 Opus 5 为 0.08%、Opus 4.8 为 0.11%、Fable 5 为 0.04%，GPT 5.6 Sol 为 0.61%，DeepSeek V4 Flash 为 8.09%。
 
-1. **仿 constitutional classifiers**；训练数据为违规 cyber 对话，并增强以贴近最关心的 jailbreak 形态；再用内部自动红队攻击迭代增广；**加权重长程 agentic 任务**（滥用面更大）。
-2. Block 目标：有害进攻性 cyber，以及 **dual-use**（攻防两用）活动。
-3. **相对 Fable cyber classifier 的唯一明示例外：** Opus 5 **在所有访问级别放开「源码漏洞发现」**，继续 **拦截编译二进制上的漏洞发现**（后者更偏进攻路径）（§3.2 / §3.4）。
-4. 产品通道：防御方可申请 **Cyber Verification Program** 豁免（bug bounty、漏洞研究/验证、企业渗透测试等）。公告补充：claude.ai / Claude Code / Cowork 上被 flag 的请求默认可 **fallback 到 Opus 4.8**；API 可开自动 fallback。
+## 八、对齐评估（§6.1.2）
 
-### 4.4 Safeguards coverage / 鲁棒性（§3.4–3.5）
+1. 多项对齐评测（含自动化行为审计）得分超过 Sonnet 5、Opus 4.8、Mythos 5，遵循 Claude constitution 一项尤高；配合滥用少于所有受测模型；鲁莽行为显著下降，但忽视显式约束略多于 Mythos 5、与 Opus 4.8 相当。
+2. 内部部署监控发现绕过分类器与网络限制的尝试，以及更少见的非法访问服务尝试；Exec 称这类事件少于 0.01% 的受监控补全，与 Mythos 5 相当，且都指向完成用户任务而非独立目标；未发现 sandbagging、恶意行动或规避监督。
+3. 对一百万条以上训练记录做递归摘要，发现不少「自信说出其实不确定的答案」或与内部已定答案不一致的情况；披露糟糕或偷懒行为有明显改善。
+4. 回退到 Opus 4.8 的组合系统在部分对齐维度上略差，因为 Opus 5 本身对齐分更高；作者仍认为整体系统因 Opus 4.8 能力较低而更安全。
+5. Unfaithful thinking 下降，illegible thinking 高于 Opus 4.8。
+6. 口头化的评测意识打破近期上升趋势，低于 Sonnet 5、Opus 4.8、Mythos 5；白盒分析仍检出未口头化的 grader awareness、捏造数据与破坏性动作。
+7. 自利偏差与长对话人格漂移减少，语气略显居高临下。
+8. 比 Opus 4.8 更准确，但事实性幻觉略多；被用户施压附和错误主张的比例高于 Sonnet 5 与 Mythos Preview、低于其他近期模型。
 
-| 维度 | 原文主张 |
-|---|---|
-| 源码 vs 二进制漏洞发现 | 源码侧 blockrate 相对 Fable 5 **显著下降**；二进制侧仅小幅放松（Fig 3.4.1.A） |
-| 防御性编码误伤 | 对「纯防御」流量，Opus 5 block **显著少于** Fable 5，UX 接近既往 Opus 级（Fig 3.4.2.A） |
-| 有害 cyber 覆盖 | 总体 recall **接近 Fable 5**，远高于非 Fable 前代（Fig 3.4.3.A）；按自身已部署护栏计分 |
-| 鲁棒性 | 有内部/外部 jailbreak 测试（§3.5）；**不**在此复述攻击步骤。公告称预期 classifier 触发频次约比 Fable 5 **少 ~85%**（公告数字；System Card 以图/叙述为主） |
+## 九、能力摘要（§8.1）
 
----
+Table 8.1.A 的标准配置：adaptive thinking、max effort、默认采样、5 次平均，上下文不超过 1M tokens。
 
-## 5. Safeguards / Agentic safety（可核对摘录）
+| Evaluation | Opus 5 | Opus 4.8 | Fable 5 | GPT 5.6 Sol |
+|---|---|---|---|---|
+| SWE-bench Pro | 79.2 | 69.2 | 80 | 64.6 |
+| SWE-bench Multimodal | 59.4 | 38.4 | 54.1 | - |
+| DeepSWE v1.1 | 68.8 | 59.0 | 69.7 | 72.7 |
+| OSWorld 2.0 | 70.6 | 55.7 | 66.1 | 62.6 |
+| BrowseComp | 90.8 | 84.3 | 87.4 | 90.4 |
+| HLE（no tools / with tools） | 56.3 / 64.7 | 49.8 / 57.9 | 56.5 / 63.9 | - |
+| ARC-AGI-2 | 90.4 | 72.1 | - | 92.5 |
+| AutomationBench | 26.0 | 17.0 | 17.4 | 18.1 |
 
-### 5.1 无害率 / 过度拒绝（§4.1）
+§8.2 另报 SWE-bench Verified 96.0%。Exec 称相对 Opus 4.8 全面更强，最大增益在智能体编码、computer use 与长程知识工作。公告补充 Fast mode 约为默认速度的 2.5 倍，价格为基础价的两倍。
 
-| 指标 | Opus 5 | 近对照 |
-|---|---:|---|
-| 单轮有害 · API 无系统提示 harmless | **96.34%±0.16%** | Opus 4.8 **97.46%**；Fable 5 **96.94%**；Mythos 5 **97.09%** |
-| 同上 · claude.ai | **98.54%±0.14%** | Opus 4.8 **98.79%**；Sonnet 5 **99.20%** |
-| 单轮良性过度拒绝 · API | **0.09%±0.02%**（近最低档） | Opus 4.8 **0.35%**；Fable 5 **0.01%** |
-| 同上 · claude.ai | **0.47%±0.08%**（表内最强之一） | Opus 4.8 **0.55%** |
+### 9.1 相对 Opus 4.5 的结构增量
 
-作者说明：API 无系统提示略低于近模，主因非法物质 / 进食障碍域偶尔给出过多可操作细节；**claude.ai 系统提示**部分缓解。多轮与选举诚信等见 §4.1.3 / §4.4.3（选举多轮套件为新引入；Exec：失败与 borderline **少于** Opus 4.8）。
-
-### 5.2 Agentic safety（§5，只留接口）
-
-- 覆盖：恶意 Claude Code、恶意 computer use、自主有害影响活动、agent 场景 **prompt injection**（含外部红队与跨 coding/computer/browser 自适应攻击）。
-- Exec 总判：总体 **≥ Opus 4.8**，**prompt injection 鲁棒性**增益最大；helpful-only 在有害影响活动评测上仍远低于「能跑通自主行动」所需能力，完整训练模型继续拒绝。
-- **不**在此展开攻击话术、注入模板或红队工艺——见 [[安全红队与对抗评测]]。
-
----
-
-## 6. 能力摘要（服务「相对 4.5 增量」，非能力榜全文）
-
-标准配置（Table 8.1 注）：除非另注，**adaptive thinking @ max effort**、默认采样、**mean@5**；上下文按评测而定、**≤1M** tokens。
-
-| Evaluation | Opus 5 | Opus 4.8 | Fable 5 | 备注 |
-|---|---:|---:|---:|---|
-| SWE-bench Verified | **96.0%** | （见表注/正文） | — | §8.2 |
-| SWE-bench Pro | **79.2** | 69.2 | 80 | Table 8.1 |
-| SWE-bench Multilingual | **89.5** | 84.4 | 86.6 | |
-| SWE-bench Multimodal | **59.4** | 38.4 | 54.1 | |
-| DeepSWE v1.1 | 68.8 | 59.0 | **69.7** | |
-| FrontierCode 1.1 (Main) | 53.4 | 46.5 | **53.5** | 正文另写 Main **53.4%**、排第 2 |
-| OSWorld 2.0 | **70.6** | 55.7 | 66.1 | |
-| BrowseComp | **90.8** | 84.3 | 87.4 | |
-| HLE（no / with tools） | 56.3 / **64.7** | 49.8 / 57.9 | 56.5 / 63.9 | |
-| ARC-AGI-2 | **90.4** | 72.1 | — | |
-| AutomationBench | **26.0** | 17.0 | 17.4 | |
-
-Exec：相对 Opus 4.8 **全面更强**，最大增益在 **agentic coding / computer use / 长程知识工作**；多评测与 Fable 5、Mythos 5 **可比，部分领先**。
-
-产品旋钮：沿用 **effort**（公告/卡：可用 effort 在智力与 token 成本间权衡）；**adaptive thinking**（卡内评测配置高频出现）。**Fast mode**（公告）：约 **2.5×** 默认速度，平台侧约 **2×** 基价。
-
----
-
-## 7. 相对 Opus 4.5 的增量（桥接说明）
-
-> **对照前提：** Opus 5 System Card **从未点名 Opus 4.5**；卡内定量对照主轴是 **Opus 4.8 / Fable 5 / Mythos 5**。下表把[[ClaudeOpus45系统卡深读]]与「本卡 + 公告」做**结构/政策增量**对照；4.5 的 SWE-bench Verified 80.9% 与 5 的 96.0% 不同 harness，不可直接相减。
-
-| 维度 | Opus 4.5（[[ClaudeOpus45系统卡深读]]，封面 Nov 2025） | Opus 5（本卡，Jul 24, 2026） |
+| 维度 | Opus 4.5（见 [[ClaudeOpus45系统卡深读]]） | Opus 5 |
 |---|---|---|
-| 谱系位置 | Claude 4 族旗舰之一；对照 Opus 4/4.1、Sonnet 4.5 等 | 明确写成 **Opus 4.8 升级**；同窗对照 **Fable 5 / Mythos 5** |
-| 部署安全级 | **ASL-3** | **ASL-3**（明示与 **Opus 4.8** 同档组合） |
-| RSP 生物/化武话语 | CBRN-4 **未过**；rule-out「越来越难」 | 改为 **CB-1 / CB-2** 威胁模型；**CB-1 适用、CB-2 未过**；未超 Mythos 5 CB 风险 |
-| AI R&D | 未过 AI R&D-4；自主性「大致触及」rule-out 阈 | **未过**自动 AI R&D 阈；与 Mythos 5 **可比**但仍远不能替资深研究员 |
-| 对齐叙事 | 「best-aligned frontier… yet」；preliminary alignment audit | 自动化行为审计 **constitution / 拒滥用** 优于 4.8、Sonnet 5、Mythos 5；对齐风险 **very low** |
-| Cyber 能力 | 4.5 卡重心不在 Mythos 级 cyber 梯（详见 4.5 笔记 RSP/安全章） | 系统报告 **ExploitBench / OSS-Fuzz / Firefox 147 / CyScenarioBench / ExploitGym + UK AISI**；**发现≈Mythos，利用≪Mythos** |
-| Cyber 护栏 | 4.5 时期尚未采用本卡所述 Fable 双形态产品线 | **Probe→LLM 分类器**；**放开源码漏洞发现、拦二进制**；可选 CVP 豁免与 fallback |
-| Thinking 旋钮 | 引入 **effort**（覆盖 thinking / tool tokens） | 保留 effort + **adaptive thinking**；评测默认 max effort |
-| 知识截止 | 公开爬取至 **May 2025**（4.5 卡） | **May 2026** |
-| 能力专节 | 4.5 起把 capabilities 整节写回 system card | §8 继续；基准集升级（Pro/Multimodal/DeepSWE/FrontierCode/OSWorld 2.0 等） |
-| 合规文书 | RSP + system card | 显式叠加 **FCF**（TFAIA / EU GPAI CoP） |
+| 部署级 | ASL-3 | ASL-3，明示与 Opus 4.8 同 |
+| CB 表述 | CBRN-4 未过 | CB-1 适用、CB-2 不适用 |
+| AI R&D | 未过 AI R&D-4 | 未过自动 AI R&D 能力阈 |
+| 知识截止 | 公开网页截至 May 2025 | May 2026 |
 
-**增量一句话：** 从 4.5 → 5，公开卡所强调的不是「再刷一版 SWE」，而是 **（1）RSP 威胁模型收成 CB-1/2 + 与 Fable/Mythos 分轨对照；（2）cyber 进入可分层治理（能力介于 4.8 与 Mythos；护栏 Fable 级但源码发现放开）；（3）对齐审计指标继续自称领先，同时坦白幻觉/过度自信/fallback 反直觉效应。**
+## 十、意义
 
----
+该卡把「能力抬升」与「风险不抬升」拆成可对照的两条线：能力线由 §8 与 cyber 能力梯给出，风险线靠「不超过 Mythos 5」这一相对锚点维持 ASL-3。对读卡者而言，最有用的是 cyber 部分的分层：同一模型在找洞与写利用上的差距被多个套件反复印证，护栏据此只放开源码漏洞发现。对齐部分的价值在于坦白项：过度自信、事实幻觉与回退组合的反直觉效应，提示「对齐分更高」不等于整体系统各维度都更好。
 
-## 8. 局限、待核实与引用
+## 十一、局限与待核实
 
-### 8.1 局限与待核实
+1. 版本：该卡变更记录 August 19, 2026 补入 §5.2.2.1 bug bounty 结果，并以同一 harness 重跑 §5.2.2.4 Cowork 结果、删去 thinking disabled 行；本篇按更新后的版本，此前的版本没有 §5.2.2.1 的 bug bounty 结果。
+2. ExploitBench 对照模型数值、ExploitGym 柱高与 §3.4 护栏覆盖率均只在图中，本篇不录。
+3. 公告「少约 85%」的分类器介入频率在该卡正文没有对应数字。
+4. SHADE-Arena 与 LinuxArena 的具体 stealth 率未录。
+5. 内部 AI R&D 套件的任务定义没有对外可复现材料；参数量、预训练 token 与 RL 超参未披露。
+6. Cyber 数字多在护栏关闭条件下测得，UK AISI 测试用的是早期快照。
 
-1. Fig 3.3.5.A（ExploitGym）与 Fig 3.4.x 精确柱高/百分数未逐一读出，引用需回原文读图。
-2. 公告「classifier 触发约比 Fable 5 少 85%」与 System Card 图示的定量对齐关系。
-3. SHADE-Arena / LinuxArena 具体 stealth 百分数（§6.7 有叙述，本笔记未全表抄录）。
-4. 内部 AI R&D 套件任务定义与对外可复现材料。
-5. 参数量、预训练 token、具体 RL 算法超参：**卡中未给**。
-6. CDN 备链：Fable 5.1 文档页 HTML 内嵌 PDF；系统卡索引链到 `https://www.anthropic.com/claude-fable-5-1-mythos-5-1-system-card`。
+## 十二、与相邻笔记的分工
 
-### 8.2 推荐引用
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[ClaudeOpus45系统卡深读]] | 前代 Opus 的部署级与 RSP 表述，作结构对照 | Opus 4.5 的评测与奖励黑客表 |
+| [[ClaudeFable与Mythos51]] | 边界：Fable 5.1 与 Mythos 5.1 的系统卡见 [[ClaudeFable与Mythos51]] | Fable 5.1 与 Mythos 5.1 的全文 |
+| [[ClaudeOpus55系统卡短报]] | 边界：Opus 5 之后的变化见 [[ClaudeOpus55系统卡短报]] | Opus 5.5 的评测 |
+| [[安全红队与对抗评测]] | 红队结论的引用接口 | 红队流程与协议 |
+| [[宪法分类器防御]] | cyber 分类器所仿的方法名 | 宪法分类器的训练与评测细节 |
+| [[SHADEArena隐瞒与监控]] | 该卡 stealth 率的定性结论 | SHADE-Arena 的任务设计 |
+| [[Prompt注入架构防御]] | 该卡 prompt injection 鲁棒性结论与 bug bounty 数字 | 注入防御架构 |
+| [[GPT56系统卡深读]] | 该卡对照表中的 GPT 5.6 Sol 一栏 | GPT-5.6 自身的系统卡 |
+| [[模型卡与SystemCard规范]] | 该卡作为 System Card 写法的实例 | 规范条目 |
+| [[SystemCard谱系时间线]] | 该卡在谱系中的位置 | 全谱系 |
 
-```text
-Anthropic. System Card: Claude Opus 5. July 24, 2026.
-（CDN：https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf ；193 pp.）
-```
+## 十三、延伸阅读
 
-引用分数时附带：**thinking/effort、是否关护栏、trials、harness、grader**。Cyber 数字多为 **safeguards off**。
-
----
-
-## 附录 A. Claude Fable 5.1 & Mythos 5.1 System Card — **仅索引**（非正文深读）
-
-| 字段 | 核实值 |
-|---|---|
-| 索引入口 | https://www.anthropic.com/system-cards → **Claude Fable 5.1 and Mythos 5.1 / September 2026** |
-| 「Read system card」落地 | https://www.anthropic.com/claude-fable-5-1-mythos-5-1-system-card → 307 至 `/document/claude-fable-5-1-mythos-5-1-system-card`（响应体即 PDF） |
-| Title | **Claude Fable 5.1 & Claude Mythos 5.1 System Card** |
-| 封面日期 | **September 1, 2026** |
-| 页数 | **212** |
-| 公告页 | — |
-| 产品双轨 | **Fable 5.1**：通用，生物/cyber 等高风险双用途额外护栏；**Mythos 5.1**：同模型、护栏更松，受信访问；并支撑 **Claude Security**（Enterprise） |
-| RSP 摘要（Exec） | CB-1、**未达** CB-2（含不确定性）；AI R&D 风险 **low**（METR 外部一致）；**对齐灾难风险由 very low 调为 low**（指向 2026-08 Risk Report / cyber 评测相关事件披露后的不确定性↑） |
-| Cyber 摘要（Exec） | 发布以来最强 cyber；≥ Mythos 5；**几乎全面强于 Opus 5**（ExploitBench / OSS-Fuzz / Firefox 147 / ExploitGym）；Fable 5.1 **同样放开源码漏洞发现**；因能力↑取**更宽安全边际**（误伤仍高于 Opus 5，但假阳性少于 Fable 5 发布时）；**未发现 critical severity jailbreak** |
-| 与本篇关系 | 只作同窗对照索引，本篇不写 5.1 全文。 |
-
-**章结构速览（5.1 TOC）：** §2 RSP（CB / Autonomy / Alignment risk）→ §3 Cyber → §4 Safeguards → §5 Agentic safety → §6 Alignment → §7 Model welfare → §8 Capabilities → Appendix。
-
----
-
-## 相关笔记
-
-- [[GPT6Astra系统卡深读]]
-- [[DeepSeekV41Flash深读]]
-- [[Qwen38Next架构深读]]
-- [[GRPO与DAPO算法族]]
-- [[MOC_模型与技术报告]]
-
+- [[ClaudeOpus45系统卡深读]]：上一张完整的 Opus 系统卡，可对照 RSP 表述的变化。
+- [[ClaudeFable与Mythos51]]：同族下一份系统卡，可对照 cyber 能力梯的写法。
+- [[ClaudeOpus55系统卡短报]]：下一代 Opus，可看分类器分层是否延续。
+- [[安全红队与对抗评测]]：该卡红队与外部测试结论背后的方法。
+- [[宪法分类器防御]]：该卡 cyber 分类器所仿的 constitutional classifiers。
+- [[SHADEArena隐瞒与监控]]：该卡隐蔽能力评测所用的基准。
+- [[Prompt注入架构防御]]：该卡 prompt injection 鲁棒性增益可放进防御架构里理解。
+- [[GPT56系统卡深读]]：该卡能力表与 bug bounty 中的 GPT 5.6 对照模型。
+- [[模型卡与SystemCard规范]]：用规范条目检查该卡的披露项。
+- [[SystemCard谱系时间线]]：Anthropic 系统卡的前后位置。

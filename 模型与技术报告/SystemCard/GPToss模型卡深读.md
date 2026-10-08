@@ -1,263 +1,138 @@
 ---
+title: gpt-oss-120b / gpt-oss-20b Model Card 深读
 topic: GPToss模型卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
 status: archived
+sources:
+ - https://arxiv.org/abs/2508.10925
+ - https://openai.com/index/introducing-gpt-oss/
+related: ["混合专家架构", "长上下文位置编码与系统侧", "推理时扩展TestTimeScaling", "审慎对齐与断路器", "GPT5系统卡深读", "GPT6Astra系统卡深读", "模型卡与SystemCard规范", "开源与闭源前沿模型谱系", "OLMo3全栈开放配方", "智能体工具与长程任务", "SystemCard谱系时间线"]
 archived: 2026-09-22
 ---
 
 # gpt-oss-120b / gpt-oss-20b Model Card 深读
 
-> 研究线：**架构思想（主：开源权重 MoE + harmony/可变 reasoning effort + agentic 工具）** + **评测字段（辅：推理/编码/工具/健康，开源对齐）**
-> 锚点：OpenAI, *gpt-oss-120b & gpt-oss-20b Model Card*（封面日期 **August 5, 2025**）
-> 官方 PDF（同源卡，文件哈希不同）：
-> - CDN：`https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf`（**35** 页 A4；Creator: LaTeX with hyperref；CreationDate **2025-08-12** CST）← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf
-> - arXiv：`https://arxiv.org/abs/2508.10925`（**35** 页；Title: *gpt-oss-120b & gpt-oss-20b Model Card*）← https://arxiv.org/pdf/2508.10925 ；API：**2508.10925v1** \[cs.CL\] published **2025-08-08** UTC（换算 Asia/Shanghai：**2025-08-09 03:24 CST**）
-> 对照：[[GPT6Astra系统卡深读]]（闭源旗舰 **System Card** / Preparedness 全章）；[[GPT5系统卡深读]] 等 GPT-5 系；开源 MoE 对照可点 [[混合专家架构]] / DeepSeek / Qwen 笔记，**不**外推参数拓扑
-> **划界：** 只写 **OpenAI 开源权重推理/agentic 增量**（可下载权重、公开 MoE/注意力配方、harmony、effort、工具 harness、Table 3 能力表）。**不重写 [[GPT6Astra系统卡深读]] Astra 安全全章**（Cyber Critical、CoT controllability、misalignment monitoring 等）——本卡 §3–5 Preparedness 仅作 **开源风险剖面摘要 + 交叉链**。
-> 卡内未给预训练 token 总量、蒸馏配方细节、专家负载均衡损失，本卡不写相关主张。
+> **主要来源**：[gpt-oss-120b & gpt-oss-20b Model Card](https://arxiv.org/abs/2508.10925)（OpenAI，封面日期 2025-08-05，arXiv v1 2025-08-08，以下简称该卡）；[Introducing gpt-oss](https://openai.com/index/introducing-gpt-oss/)（OpenAI 发布博文，2025-08-05，以下简称博文）（截至 2025-08-08）。
+> **研究线**：架构思想（主：开放权重 MoE、MXFP4 量化、harmony 对话格式与三档推理强度）；评测字段（辅：Table 3 的分档能力表与开放权重的 Preparedness 剖面）
+> **范围与相邻笔记**：
+> - ≠ [[GPT5系统卡深读]]：同月的闭源旗舰系统卡在那篇，本篇只写开放权重一侧。
+> - ≠ [[GPT6Astra系统卡深读]]：Preparedness 框架下的 Critical 判定与监控栈在那篇，本篇只录 gpt-oss 的开放权重结论。
+> - ≠ [[混合专家架构]]：MoE 的一般原理在那篇，本篇只写 gpt-oss 公开的配置。
+>
+> **意义**：这是 OpenAI 自 GPT-2 以来首次发布开放权重的语言模型（博文），该卡公开了总参、激活参数、专家数、层数与训练算力。它把 o 系列的推理能力装进 Apache 2.0 许可的 MoE，用 MXFP4 量化让 120b 进单张 80GB GPU、20b 进 16GB 内存；产品接口落在 harmony 对话格式、low/medium/high 三档推理强度和浏览、Python、自定义函数三类工具上。安全上它提出了开放权重特有的问题：权重一旦放出就可能被恶意微调，于是 OpenAI 对 120b 做了对抗微调后再评 Preparedness，结论是仍未达到 High。
 
----
+## 一、问题背景
 
-## 1. 元信息与一句话抓手
+2024 年起，开放权重的 MoE 与推理模型（Mixtral、DeepSeek-V3、DeepSeek-R1、Qwen3）相继发布，而 OpenAI 的语言模型只经 API 与产品提供。该卡在引言里说明开放权重的风险剖面不同（§1）：权重发布后，攻击者可以微调去掉拒答，OpenAI 无法再追加缓解或收回访问；开发者也要自己补上 API 里的系统级防护。因此文档名叫 model card 而不是 system card：模型会被很多方嵌进各自的系统，系统安全由各方自行决定。
 
-| 字段 | 核实值（PDF / / arXiv API / 博文） |
-|---|---|
-| 标题 | gpt-oss-120b & gpt-oss-20b Model Card |
-| 作者 | OpenAI（卡末 Contributors 长名单；arXiv 条目署名 OpenAI 等） |
-| 文档自我定位 | **model card**（非 system card）：权重将嵌入多方维护的多类系统；默认跟 OpenAI safety policies，但下游须自建系统级护栏 |
-| 封面日期 | **August 5, 2025** |
-| arXiv | **2508.10925v1** \[cs.CL / cs.AI\]；published **2025-08-08** UTC |
-| 页数 | **35**（A4） |
-| 许可 | **Apache 2.0** + 「gpt-oss usage policy」（Introduction；博文同） |
-| 模态 | **text-only** |
-| 分发（博文 Availability） | Hugging Face 权重（原生 **MXFP4**）；harmony renderer（Python/Rust）；PyTorch / Apple Metal 参考推理；多平台合作（Azure、vLLM、Ollama、llama.cpp、LM Studio、AWS 等——博文列举） |
-| API 兼容叙事 | 兼容 **Responses API**；支持 **Structured Outputs**；博文：未来「may consider API support for gpt-oss」 |
-| Knowledge cutoff | **June 2024**（§2.4） |
-| 相对 Astra / GPT-5 系 | 闭源旗舰卡见 [[GPT6Astra系统卡深读]]、[[GPT5系统卡深读]] → 本卡 **不**复述 Astra Preparedness 域阈/监控栈；只录 gpt-oss **开源**字段 |
+## 二、脉络
 
-**型号（Table 1 + §2 正文 + 博文表）：**
+| 时间 | 工作 | 关键一步 |
+|---|---|---|
+| 2024-01 | [Mixtral of Experts](https://arxiv.org/abs/2401.04088) | 每层 8 个专家、每 token 选 2 个，47B 总参只用 13B 激活 |
+| 2024-12 | [Deliberative Alignment](https://arxiv.org/abs/2412.16339) | 让模型在回答前回忆并推理安全规范，用于 o 系列对齐 |
+| 2024-12 | [DeepSeek-V3](https://arxiv.org/abs/2412.19437) | 开放权重 MoE 的大规模训练配方 |
+| 2025-01 | [DeepSeek-R1](https://arxiv.org/abs/2501.12948) | 用纯强化学习激发推理能力，开放权重推理模型 |
+| 2025-05 | [Qwen3](https://arxiv.org/abs/2505.09388) | 思考与非思考模式合一，并用思考预算调节推理算力 |
+| 2025-08 | gpt-oss（该卡） | OpenAI 的开放权重 MoE 推理模型，三档推理强度与对抗微调评估 |
 
-| 型号 | 层数 | Total / Active（报告口径） | Experts / Top-k | Checkpoint（Table 1） | 部署内存口号（§2.1 / 博文） |
-|---|---|---|---|---|---|
-| **gpt-oss-120b** | **36** | **116.8B** total / **5.1B** active（Table 1：Total 116.83B，Active 5.13B） | **128** / **4** | **60.8 GiB** | 单卡 **80 GB** GPU |
-| **gpt-oss-20b** | **24** | **20.9B** total / **3.6B** active（Table 1：20.91B / 3.61B） | **32** / **4** | **12.8 GiB** | 约 **16 GB** 内存 |
+## 三、架构与训练
 
-Table 1 分项：120b — MLP 114.71B，Attention 0.96B，Embed+Unembed 1.16B；20b — MLP 19.12B，Attention 0.64B，Embed+Unembed 1.16B。脚注：Unembedding 计入 active，embeddings 不计。命名「120b/20b」为简化，技术参量为 116.8B / 20.9B。
+**型号**（§2、Table 1）：
 
-**一句话抓手：** 这是 OpenAI **自 GPT-2 以来首个正式开源权重语言模型卡**（博文明文）：**Apache 2.0** 的 text-only **MoE 推理模型**，用 **MXFP4 MoE 权重**压到单 80GB / 16GB 可跑，产品轴落在 **harmony 对话格式、low/medium/high 可变 reasoning effort、浏览/Python/开发者函数** 的 agentic 工作流；能力表（high）上 120b 叙事为 **超过 o3-mini、逼近 o4-mini**，20b **对标 o3-mini 量级**。安全上强调开源 **可被下游微调绕过拒答** 的不同风险剖面，并对 120b 做了 **对抗微调 Preparedness**——结论写「默认与对抗微调均未达 High」（Tracked Categories）——细节 **交叉 [[GPT6Astra系统卡深读]]，不在此重写 Astra 全章**。
-
----
-
-## 2. 相对闭源 GPT 旗舰卡 / 既有开源 MoE 的「开源增量」对照
-
-> 左列锚本 PDF + 博文；右列仅标相邻闭源卡覆盖面。Astra/GPT-5 未公开架构数字不回填到 gpt-oss，也不用 DeepSeek/Qwen MoE 拓扑「补全」本卡未写字段。
-
-| 维度 | GPT-5 系 / Astra（[[GPT5系统卡深读]] / [[GPT6Astra系统卡深读]]） | **gpt-oss（本卡）** | 开源增量读法 |
+| 型号 | 层数 | 总参 / 激活 | 专家 / 每 token 选 |
 |---|---|---|---|
-| 文档形态 | System Card / 长安全章（Astra **118** 页量级） | **35** 页 **Model Card**（明确不用 system card 名义） | 技术可核对深度集中在 §2 架构/训练 + Table 3；安全 §3–5 是开源专用剖面 |
-| 权重 | API / 产品；**无可下载** LM 权重（相对本议题） | **Apache 2.0** HF 权重 + 参考实现 | **本议题核心增量**；博文称自 GPT-2 后首个 open-weight LM |
-| 参数 / MoE | 旗舰卡多未公开总参/专家 | Table 1 + §2.2：**总参/激活/专家数/top-4/层数/残差维** 齐全 | 首次在 OpenAI 近月线给出**可下载** MoE 参量表 |
-| Reasoning 旋钮 | o 系列 / 产品 thinking；Astra 另有监控叙事 | System 里 `"Reasoning: low|medium|high"`；Figure 3 显示 AIME/GPQA **随 effort 平滑 TTS** | 开源侧把 effort **写进可复现协议** |
-| 对话协议 | API roles | **harmony**：roles + **channels**（analysis / commentary / final）；指令层级 System>Developer>User>Assistant>Tool | 部署关键路径；多轮须去掉历史 assistant reasoning traces（§2.5.1） |
-| 工具 | 产品内置 browsing/code 等 | 显式训 **browsing / python(Jupyter) / 任意 developer functions**；可开关 | agentic 开源样本；参考 harness 随开源实现 |
-| 上下文 | 产品卡各自口号 | 稠密层 **YaRN 至 131,072**；博文写 **128k** | 以卡内 131,072 / 博文 128k 为准，**不**抄 Astra 窗长 |
-| Preparedness | Astra：Cyber **Critical** 等（见 [[GPT6Astra系统卡深读]]） | 默认 **未达** 三类 Tracked 的 High；对抗 FT Bio/Cyber 亦 **未达 High**；并问「是否显著推进开源生物前沿」→ 卡内答 **否** | **只录开源结论句**；域评测表/红队方法 **交叉链 [[GPT6Astra系统卡深读]] / 本卡 §5，不重写** |
+| gpt-oss-120b | 36 | 116.83B / 5.13B | 128 / 4 |
+| gpt-oss-20b | 24 | 20.91B / 3.61B | 32 / 4 |
 
-**增量一句话：** 相对闭源旗舰「能力/安全产品字段」，gpt-oss 可研增量几乎全部落在 **可下载 MoE + MXFP4 部署配方 + harmony/effort/工具协议 + Table 3 开源对齐榜**；Astra 级安全监控与 Critical 叙事 **点到为止**。
+Table 1 注：unembedding 计入激活参数，embedding 不计；「120b」「20b」是简称。博文表格写作 117B / 21B 总参。
 
----
+**骨干**（§2.2）：自回归 MoE Transformer，沿用 GPT-2、GPT-3 的架构传统；残差维 2880，在每个注意力与 MoE 块前做 RMSNorm（Pre-LN）。路由器对每个 token 选 top-4 专家，输出按所选专家上的 softmax 加权；专家用门控 SwiGLU（脚注说明实现里有截断与残差连接，并不常规）。
 
-## 3. 架构主轴（§2.1–2.2）
+**注意力**（§2.2）：按 GPT-3 的做法，带状窗口（带宽 128 token）与全稠密两种模式逐层交替；每层 64 个查询头、每头 64 维，GQA 用 8 个 KV 头；RoPE 位置编码，稠密层用 YaRN 扩到 131,072 token。每个头在 softmax 分母里有一个可学习的偏置，类似 off-by-one attention 与 attention sinks，使注意力可以不看任何 token。
 
-### 3.1 骨干
+**量化**（§2.1）：后训练时把 MoE 权重量化到 MXFP4（每参数 4.25 比特）；MoE 权重占总参数的 90% 以上，这一步让 120b 能放进单张 80GB GPU、20b 能在 16GB 内存的系统上运行。
 
-- Autoregressive **MoE Transformer**；自称建于 GPT-2 / GPT-3 架构传统。
-- 残差维 **2880**；**Pre-LN** + **RMSNorm**（attention / MoE 块前）。
-- MoE：线性 router → 每 token **top-4**；权重为所选专家上 router 的 **softmax**；专家激活 **gated SwiGLU**（脚注：实现含 clamping 与 residual，称 unconventional）。
-- 专家数：**120b → 128**；**20b → 32**。
+**分词与预训练**（§2.3–2.4）：分词器 o200k_harmony 在 GPT-4o、o4-mini 所用的 o200k 上扩充 harmony 专用 token，共 201,088 个，开源在 TikToken。预训练数据为纯文本、数万亿 token，侧重 STEM、编程与通用知识；沿用 GPT-4o 的 CBRN 预训练过滤器，尤其过滤生物安全相关内容；知识截止 2024 年 6 月。训练用 NVIDIA H100，PyTorch 加专家优化的 Triton 内核与 Flash Attention；120b 用了 2.1 million H100 小时，20b 约少 10 倍。
 
-### 3.2 注意力与长上下文
+**后训练**（§2.5）：与 o3 类似的思维链强化学习，同时教推理与工具使用。博文的说法是与 o4-mini 类似的流程，含监督微调与高算力强化学习；arXiv 摘要另提到大规模蒸馏，正文没有展开。
 
-| 机制 | 报告主张 | 出处 |
+## 四、harmony、推理强度与工具
+
+**harmony 对话格式**（§2.5.1）：用特殊 token 划分消息边界，沿用 API 的 System 与 Developer 角色，指令冲突按 System > Developer > User > Assistant > Tool 的层级解决。消息分三个可见性通道：analysis 放思维链，commentary 放函数与工具调用，final 放给用户看的答案。这使模型可以在思维链中穿插工具调用，或先向用户展示行动计划。该卡强调必须按开源实现与指南使用格式，例如多轮对话中要删去此前各轮的推理痕迹。
+
+**三档推理强度**（§2.5.2、§2.6.1）：在系统提示里写入「Reasoning: low」等关键词即可切换 low / medium / high，档位越高平均思维链越长。Figure 3 显示 AIME 与 GPQA 的准确率随思维链长度平滑上升，多数任务呈对数线性收益；20b 在 AIME 上平均每题使用超过 20k 思维链 token。
+
+**工具**（§2.5.3）：后训练教了三类工具，可在系统提示中开关：浏览（search 与 open，补知识截止之后的信息）、Python（有状态的 Jupyter 环境）、开发者自定义函数（在 Developer 消息中按 harmony 格式定义）。编程评测另用类似 Codex CLI 的终端工具。
+
+**思维链不受直接监督**（博文）：沿袭 o1-preview 以来的原则，没有对思维链施加直接对齐监督，以便研究者自建思维链监控；开发者不应把思维链直接展示给用户，因为其中可能有幻觉或违反安全政策的内容。博文的示例里，系统要求不说「5」，最终回答遵守了，思维链却在明确讨论如何绕开。
+
+## 五、能力
+
+**主表**（Table 3，high 档，pass@1，默认系统提示）：
+
+| 基准 | 120b | 20b |
+|---|---:|---:|
+| AIME 2025（无工具 / 有工具） | 92.5 / 97.9 | 91.7 / 98.7 |
+| GPQA Diamond（无工具） | 80.1 | 71.5 |
+| HLE（无工具 / 有工具） | 14.9 / 19.0 | 10.9 / 17.3 |
+| MMLU | 90.0 | 85.3 |
+| SWE-Bench Verified | 62.4 | 60.7 |
+| Tau-Bench Retail | 67.8 | 54.8 |
+| HealthBench / Hard | 57.6 / 30.0 | 42.5 / 10.8 |
+| Codeforces Elo（无工具 / 有工具） | 2463 / 2622 | 2230 / 2516 |
+
+推理强度的影响以 AIME 2025 无工具为例：120b 从 low 的 50.4 升到 high 的 92.5。
+
+**读表**（§2.6）：Figure 1 与 Figure 2 的图注称 120b 超过 o3-mini、接近 o4-mini，20b 虽小 6 倍仍有竞争力；数学尤强，GPQA 这类知识型任务上 20b 因规模较小落后更多。HealthBench 上 120b 几乎追平 o3，并明显优于 GPT-4o、o1、o3-mini 与 o4-mini；该卡同时声明模型不能替代医疗专业人员。MMMLU（Table 2）14 种语言平均 120b 为 81.3，低于 o4-mini（85.2）与 o3（88.8），斯瓦希里语与约鲁巴语明显偏低（72.3、62.4）。
+
+## 六、安全与 Preparedness
+
+**默认安全**（§3–4）：后训练用审慎对齐教拒答、抗越狱与遵守指令层级。默认安全评测中两款模型与 o4-mini 大体持平：标准违规内容评测上相差 1–2 个点，Production Benchmarks 上多数优于 o4-mini（20b 在违法/暴力类低于 o4-mini）；StrongReject 越狱评测与 o4-mini 相当，但指令层级评测低于 o4-mini，意味着开发者靠系统消息挡越狱的效果不如 OpenAI 在 o4-mini 上的同一做法。
+
+**开放权重的两个追加问题**（§1、§3、§5.1）：
+
+1. 对抗微调能否把 120b 推到生物化学或网络安全的 High？OpenAI 按攻击者的做法分别训练了不发布的对抗微调版本；安全顾问组（SAG）审阅后认为，即便借助 OpenAI 自己的训练栈，也未达到 High。博文称这套方法经三个独立专家组审阅，其建议的采纳与否列在该卡附录 2。
+2. 发布会不会显著推进开放模型的生物能力前沿？对其他开放模型跑同样的生物评测后，多数评测上已有开放模型接近 120b，作者因此认为不太可能显著推进。
+
+默认的 120b 在三个 Tracked Categories（生物化学、网络安全、AI 自我改进）上都未达到 High 的指示阈值。
+
+## 七、意义
+
+gpt-oss 把闭源推理模型的接口约定（角色层级、通道、推理强度、工具调用）连同权重一起公开，开放社区第一次可以在 OpenAI 自己的格式上复现与研究这些行为，包括未受监督的思维链。架构本身并不新：GQA、带状注意力、RoPE 与 YaRN、top-k MoE 都是已知组件，真正的部署增量在 MXFP4 专家权重与单卡可跑的配置。安全上，「对抗微调后再评估」把开放权重的最坏情况纳入发布决策，并用「是否推进开放前沿」作为第二道判据，这是闭源系统卡里没有的问题。
+
+## 八、局限与待核实
+
+1. **蒸馏未展开**：arXiv 摘要写「大规模蒸馏与强化学习」，正文只写与 o3 类似的思维链强化学习，没有教师模型、蒸馏数据或配比。
+2. **后训练参照系不一**：正文说类似 o3，博文说类似 o4-mini 的流程，两说并存。
+3. **口径差**：总参该卡为 116.8B / 20.9B，博文为 117B / 21B；上下文该卡为 131,072 token，博文为 128k。
+4. **Table 3 的异常格**：Tau-Bench Airline 上 20b 的 high（38.0）低于 medium（42.6），该卡未解释。
+5. **对比图**：Figure 1、2、4 中 o3、o3-mini、o4-mini 的具体柱高只在图里，本篇只用图注与正文的定性结论。
+6. **未公开项**：预训练 token 总量、专家负载均衡做法、训练并行拓扑与对抗微调的具体数据（作者称详见另一篇研究论文）。
+7. **版本**：arXiv 只有 v1（2025-08-08），晚于封面日期 2025-08-05；本篇以 arXiv 版为准。
+
+## 九、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| 模式交替 | 跟随 GPT-3：**banded window** 与 **fully dense** 交替；带宽 **128** tokens | §2.2 |
-| 头配置 | **64** query heads，dim **64**；**GQA**，**8** KV heads | §2.2；博文称 group size 8 |
-| 位置 | **RoPE**；稠密层用 **YaRN** 扩到 **131,072** | §2.2 |
-| Softmax bias | 每头学到的 denominator bias（类 off-by-one / **attention sinks**）→ 可对任意 token「不关注」 | §2.2 |
+| [[混合专家架构]] | 那篇在开放 MoE 谱系里列出 gpt-oss 的总参与专家数，本篇写其完整配置 | MoE 原理与路由通史 |
+| [[长上下文位置编码与系统侧]] | 那篇讲 YaRN 等位置外推，本篇只记稠密层用 YaRN 扩到 131,072 | 位置编码方法 |
+| [[推理时扩展TestTimeScaling]] | 三档推理强度与 Figure 3 的测试时扩展曲线，是那篇主题的一个产品化实例 | 测试时扩展的方法与理论 |
+| [[审慎对齐与断路器]] | 那篇写审慎对齐方法本身，并引本篇作后训练用例 | 审慎对齐的训练细节 |
+| [[GPT5系统卡深读]] | 同月的闭源旗舰系统卡，Preparedness 三类风险的口径相同 | GPT-5 的统一系统与安全栈 |
+| [[GPT6Astra系统卡深读]] | 边界：OpenAI 后续旗舰的系统卡见 [[GPT6Astra系统卡深读]] | Critical 判定与监控栈 |
+| [[模型卡与SystemCard规范]] | 该卡自称 model card 而非 system card 的理由，是那篇字段规范的一个实例 | 模型卡字段规范 |
+| [[开源与闭源前沿模型谱系]] | 那篇在时间表中把 gpt-oss 列为 OpenAI 的开放权重节点 | 前沿模型通史 |
+| [[OLMo3全栈开放配方]] | 对照：那篇公开数据、检查点与代码的「全开放」，本篇只开放权重与推理实现 | OLMo 3 的配方 |
+| [[智能体工具与长程任务]] | 浏览、Python 与自定义函数三类工具的训练与 harmony 中的调用方式 | 智能体工具的通论与长程评测 |
+| [[SystemCard谱系时间线]] | 时间线 OpenAI 段的 2025-08 节点（gpt-oss 模型卡） | 各家文档的时间排列 |
 
-### 3.3 量化（§2.1）——部署关键旋钮
+## 十、延伸阅读
 
-- 后训练把 **MoE 权重**量化到 **MXFP4**（**4.25 bits/param**）。
-- MoE 权重占总量 **90%+** → 120b 进单 **80GB** GPU；20b 可在约 **16GB** 系统跑。
-- Checkpoint 尺寸见 Table 1（60.8 / 12.8 GiB）。
-
-→ Infra 读法：这是「开源 MoE × 低比特专家权重 × 单卡」配方样本；**未**公开训练并行拓扑、专家并行策略细节。
-
----
-
-## 4. Tokenizer / 预训练 / 算力（§2.3–2.4）
-
-| 项 | 核实值 |
-|---|---|
-| Tokenizer | **o200k_harmony**（TikToken 开源）；在 GPT-4o / o4-mini 的 o200k 上扩展 harmony 专用 token；词表 **201,088** |
-| 数据 | text-only；「trillions of tokens」；侧重 STEM / coding / general knowledge；多为英语（博文） |
-| 安全过滤 | 预训练复用 GPT-4o 的 **CBRN** 有害内容过滤，尤其生物安全相关 |
-| Cutoff | **June 2024** |
-| 硬件/框架 | **NVIDIA H100**；PyTorch + 专家优化 **Triton** kernels；**Flash Attention** |
-| 算力 | 120b：**2.1 million H100-hours**；20b：约 **少一个数量级（almost 10× fewer）** |
-
-arXiv **abstract** 另写「large-scale **distillation** and reinforcement learning」；正文 §2.5 主轴是「similar **CoT RL** techniques as OpenAI o3」、博文写「similar process as used for **o4-mini**（SFT + high-compute RL）」——**蒸馏具体配方卡内未展开** → 记「abstract 提及 distillation；正文展开 RL/SFT」；卡内无蒸馏数据/教师型号表。
-
----
-
-## 5. Post-training：harmony · effort · agentic 工具（§2.5）——本卡产品主轴
-
-### 5.1 Harmony Chat Format（§2.5.1）
-
-- 专用 chat format：**特殊 token** 划消息边界；关键字标明 author/recipient（User / Assistant 等）。
-- Roles：与 API 相同的 **System / Developer**；冲突解决层级：
- **System > Developer > User > Assistant > Tool**
-- **Channels**（可见性）：
- - `analysis` — CoT
- - `commentary` — function / tool calling
- - `final` — 对用户可见答案
-- 支持 CoT 内交错工具、向用户展示 preamble / 长计划。
-- 部署要点：多轮对话中 **应移除** 过往 assistant 轮的 reasoning traces；附录 Table 17/18 有样例。
-- 开源实现 + guide 被标为「critical to deploy … properly」。
-
-### 5.2 Variable Effort Reasoning（§2.5.2 + Figure 3）
-
-- 三档：**low / medium / high**；在 system prompt 插入如 `"Reasoning: low"`。
-- 更高档 → 平均 **CoT 更长**；Figure 3：AIME / GPQA 上 accuracy 对 CoT+Answer 长度呈 **平滑 test-time scaling**。
-- 评测默认：canonical 榜报 **high** + default system prompt 的 pass@1（§2.6）。
-
-### 5.3 Agentic Tool Use（§2.5.3）
-
-训了三类工具（system 可声明启用/关闭）：
-
-1. **Browsing**：search / open，补 cutoff 后事实。
-2. **Python**：stateful **Jupyter**。
-3. **Arbitrary developer functions**：在 Developer 消息用 harmony 定义 schema（类 API）；可交错 CoT、调用、响应、中间用户可见消息、最终答案。
-
-编码评测另用类似 Codex CLI 的 **terminal / exec** 工具（with/without tools 双列，Figure 2 / Table 3）。
-
-### 5.4 CoT 监督立场（博文 Chain-of-thought）
-
-- 明确：**未**对 CoT 做直接对齐监督（自 o1-preview 原则）；希望开源「非监督 CoT」便于社区研究 **CoT monitoring**。
-- 开发者注意：应用中 **不应直接把 CoT 展示给终端用户**（可能含幻觉/有害内容/违背最终输出约束的语言）。
-- 博文例：系统禁止说「5」时，**final 服从**、**CoT 常显式讨论如何违规**——开源监控研究的直观样本。
-
----
-
-## 6. 能力评测（§2.6 + Table 2/3）——开源对齐字段
-
-> 主表 **Table 3**（low / medium / high）。对照叙事（Figure 1–2 图注 + 博文）：120b **surpasses o3-mini、approaches o4-mini**；20b **surprisingly competitive / matches or exceeds o3-mini**（部分域）。Figure 柱与 o3/o4 精确读数 ** 图轴乱码** → **不读图给友商分**；友商对比以正文定性 + 博文句为准。
-
-### 6.1 Table 3 精选（Accuracy % / Score % / Elo）
-
-| Benchmark | 120b low / med / **high** | 20b low / med / **high** |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| AIME 2024 (no tools) | 56.3 / 80.4 / **95.8** | 42.1 / 80.0 / **92.1** |
-| AIME 2024 (with tools) | 75.4 / 87.9 / **96.6** | 61.2 / 86.0 / **96.0** |
-| AIME 2025 (no tools) | 50.4 / 80.0 / **92.5** | 37.1 / 72.1 / **91.7** |
-| AIME 2025 (with tools) | 72.9 / 91.6 / **97.9** | 57.5 / 90.4 / **98.7** |
-| GPQA Diamond (no tools) | 67.1 / 73.1 / **80.1** | 56.8 / 66.0 / **71.5** |
-| GPQA Diamond (with tools) | 68.1 / 73.5 / **80.9** | 58.0 / 67.1 / **74.2** |
-| HLE (no tools) | 5.2 / 8.6 / **14.9** | 4.2 / 7.0 / **10.9** |
-| HLE (with tools) | 9.1 / 11.3 / **19.0** | 6.3 / 8.8 / **17.3** |
-| MMLU | 85.9 / 88.0 / **90.0** | 80.4 / 84.0 / **85.3** |
-| SWE-Bench Verified | 47.9 / 52.6 / **62.4** | 37.4 / 53.2 / **60.7** |
-| Tau-Bench Retail | 49.4 / 62.0 / **67.8** | 35.0 / 47.3 / **54.8** |
-| Tau-Bench Airline | 42.6 / 48.6 / **49.2** | 32.0 / 42.6 / **38.0** |
-| Aider Polyglot | 24.0 / 34.2 / **44.4** | 16.6 / 26.6 / **34.2** |
-| MMMLU (Average) | 74.1 / 79.3 / **81.3** | 67.0 / 73.5 / **75.7** |
-| HealthBench | 53.0 / 55.9 / **57.6** | 40.4 / 41.8 / **42.5** |
-| HealthBench Hard | 22.8 / 26.9 / **30.0** | 9.0 / 12.9 / **10.8** |
-| HealthBench Consensus | 90.6 / 90.8 / **89.9** | 84.9 / 83.0 / **82.6** |
-| Codeforces Elo (no tools) | 1595 / 2205 / **2463** | 1366 / 1998 / **2230** |
-| Codeforces Elo (with tools) | 1653 / 2365 / **2622** | 1251 / 2064 / **2516** |
-
-**读表要点（正文）：**
-
-- 数学尤强；AIME 高档可到 **~20k CoT tokens/题** 量级（§2.6.1）。
-- 知识向（GPQA）20b 因规模落后更明显。
-- 工具对 AIME/HLE/Codeforces 等有增益；Airline 上 20b high（38.0）**低于** medium（42.6）——**照录，不圆场**。
-- Health：正文称 120b **nearly matches o3** on HealthBench / Hard，并 **显著优于** GPT-4o、o1、o3-mini、o4-mini；博文免责：**不替代医疗专业人员、非诊疗用途**。
-- MMMLU（Table 2）：14 语；120b high Average **81.3** vs o4-mini-high **85.2**、o3 **88.8**（表内 baselines）；Swahili/Yoruba 明显更低（120b high 72.3 / 62.4）。
-
-### 6.2 与 agent / 工具线的咬合（不展开他篇）
-
-| 议题 | 本卡只点到 |
-|---|---|
-| [[智能体工具与长程任务]] / [[代码智能体Harness史线]] / **[[ToRL工具集成强化学习]] ToRL** | developer functions + terminal tool 评测；**不是** tool-use RL 算法专篇 |
-| τ-Bench（[[评测与排行榜可靠性]] 周边） | Retail / Airline 双列；agentic function-calling 字段 |
-| [[推理时扩展TestTimeScaling]] test-time scaling | Figure 3 effort 曲线；无 budget API 数值产品名 |
-| [[计算机使用智能体]] computer-use | **本卡无** OSWorld/Operator；browsing ≠ 桌面 computer-use |
-
----
-
-## 7. 安全与 Preparedness（§3–5）——摘要 + 交叉链，不重写 Astra
-
-> **划界执行：** 下列仅保留开源卡特有结论与默认安全评测骨架；**不**展开 Astra 的 Cyber Critical、CoT controllability 百分比、misalignment monitoring 部署栈等（见 [[GPT6Astra系统卡深读]]）。
-
-### 7.1 方法论立场（§3）
-
-- Post-training：**deliberative alignment** → 拒答 / jailbreak 鲁棒 / **instruction hierarchy**。
-- 开源特有：下游可改权重 → 风险评测「应覆盖恶意方可实现的修改（含 fine-tune）」；卡内对 120b 做了 **内部对抗微调变体（不发布）**。
-- 默认模型：三类 Tracked Categories（Bio/Chem、Cyber、AI Self-Improvement）**均未达 High 指示阈**。
-- 两问两答（Introduction / §3）：
- 1. 对抗 FT 能否把 Bio/Chem 或 Cyber 推到 High？→ SAG 审阅后：**否**（即便用 OpenAI 自有训练栈）。
- 2. 发布是否显著推进**开源**生物能力前沿？→ 多数评测上已有其他开源模型接近 120b → **认为不太可能显著推进**。
-
-### 7.2 默认安全评测骨架（§4，不抄全表）
-
-卡内覆盖：Disallowed Content（含更新的 **Production Benchmarks**）、Jailbreaks、Instruction Hierarchy、Hallucinated CoT、Hallucinations、Fairness/Bias 等。正文定性：gpt-oss 与 **o4-mini** 大体同级（具体分数表见 PDF §4，**若需逐格引用回原文**，勿与 Astra 表合并）。
-
-### 7.3 Preparedness §5（仅结论指针）
-
-- §5.1 Adversarial Training + 外部安全专家反馈（附录 2：采纳 / 未采纳建议）。
-- §5.2 Capability findings：Bio/Chem、Cyber、AI Self-Improvement（含 SWE-bench Verified N=477、OpenAI PRs、PaperBench 等子节）。
-- → **完整域分数与红队程序：读本 PDF §5 或交叉 [[GPT6Astra系统卡深读]] 的框架术语，不在本笔记复述为「Astra 同款结论」。** Astra（2026-09）与 gpt-oss（2025-08）**代际与部署形态均不同**，禁止时间线混读。
-
-### 7.4 博文附加
-
-- **Red Teaming Challenge**（$500,000 奖金池）→ 结束后将发报告并开源基于验证发现的评测集（博文；非本 PDF 正文义务）。
-
----
-
-## 8. 局限与待核实
-
-1. **CDN PDF vs arXiv PDF：** 同为 35 页、同日封面；文件 MD5 不同；arXiv 版页眉含 `arXiv:2508.10925v1`。正文抽取几乎同构 → 笔记以 **CDN + Table 数字** 为主，arXiv 作可引用 preprint。
-2. **「蒸馏」：** abstract 有、§2.5 正文未展开配方 → 标「提及未展开」。
-3. **Post-train 参照系：** 正文「similar CoT RL as **o3**」vs 博文「similar process as **o4-mini**」——并存照录。
-4. **Figure 1/2/4 友商精确柱高：** 需读图；本笔记未把乱码 OCR 当数。
-5. **Tau-Bench Airline 20b：** high < medium（Table 3）——保留异常，待复现或勘误。
-6. **API 托管：** 博文称 gpt-oss 适合自托管微调；平台 API「仍是多模态/内置工具最佳选项」；「may consider」未来 API 支持——**非**已上架主张。
-
----
-
-## 9. 可跟读摘要（中文）
-
-OpenAI 在 **2025-08-05** 放出 **gpt-oss-120b / 20b**：Apache 2.0、纯文本、**MoE**（120b：约 **117B** 总参 / **5.1B** 激活 / **128** 专家 top-4；20b：约 **21B** / **3.6B** / **32** 专家），MoE 权重 **MXFP4**，目标是一张 **80GB** 卡或 **16GB** 级机器就能跑开源推理模型。架构上是熟悉的 Pre-LN MoE + **窗口/稠密交替注意力** + GQA + RoPE/**YaRN(128k 级)**；真正当产品说明书的是 **harmony 格式**（analysis/commentary/final 通道与角色层级）、**低/中/高 reasoning effort**，以及浏览 / Python / 自定义函数这套 **agentic** 工具叙事。榜上（high）数学与工具调用很亮，120b 对标话术是「超 o3-mini、近 o4-mini」，健康榜甚至喊到逼近 o3——但 cutoff 停在 **2024-06**，且博文写明不替代医生。安全上这篇卡的新意是 **开源可被恶意微调** 的剖面，并对 120b 做了对抗微调 Preparedness；结论写默认与对抗版都 **未达 High**。闭源旗舰那套 Astra 监控与 Critical 判定，去读 **[[GPT6Astra系统卡深读]]**，这里不重写。
-
----
-
-## 10. 来源
-
-| 源 | 路径 / URL |
-|---|---|
-| CDN 模型卡 PDF | `https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf` ← https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf |
-| arXiv PDF | `https://arxiv.org/abs/2508.10925` ← https://arxiv.org/pdf/2508.10925 （abs: https://arxiv.org/abs/2508.10925） |
-| 安全交叉 | [[GPT6Astra系统卡深读]]（本卡不重写） |
-
-**检索截止：** 2026-09-22（Asia/Shanghai，CST）。数字与断言均来自上述 PDF/博文；未读清的图柱、未公开的蒸馏配方与专家并行细节未写入主张表。
-
-## 相关笔记
-
-- [[多智能体辩论]]
-- [[形式化验证与LLM]]
-- [[GPToss模型卡深读]]
-- [[计算机使用智能体]]
-- [[ToRL工具集成强化学习]]
-
+| 1 | [该卡](https://arxiv.org/abs/2508.10925) §2 | 架构、量化、harmony、推理强度与 Table 3 |
+| 2 | [该卡](https://arxiv.org/abs/2508.10925) §5 | 对抗微调方法与生物、网安、自我改进的评测 |
+| 3 | [博文](https://openai.com/index/introducing-gpt-oss/) | 发布背景、思维链立场与分发渠道 |
+| 4 | [Deliberative Alignment](https://arxiv.org/abs/2412.16339) | 该卡后训练所用的安全对齐方法 |

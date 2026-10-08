@@ -1,236 +1,138 @@
 ---
+title: Gemini 3 Pro Model Card 深读
 topic: Gemini3Pro模型卡深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
+sources:
+ - https://deepmind.google/models/model-cards/
+ - https://blog.google/products-and-platforms/products/gemini/gemini-3/
+related: ["Gemini25技术报告深读", "Gemini37Flash模型卡深读", "模型卡与SystemCard规范", "推理时扩展TestTimeScaling", "开源与闭源前沿模型谱系", "AI基础设施总览", "SystemCard谱系时间线"]
 archived: 2026-09-22
 ---
 
-# Gemini 3 Pro Model Card 专项深读卡
+# Gemini 3 Pro Model Card 深读
 
-> 研究线：**架构思想（主）** + **AI Infra（辅）**
-> 锚点：Google DeepMind, *Gemini 3 Pro Model Card*（**Model Release: November 2025**；**Last Updated: May 2026**）
-> 官方 PDF：`https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf`（**10** 页 letter；Title: *Gemini 3 Pro Model Card (May 2026)*；Producer: Skia/PDF m150 Google Docs Renderer）
-> 对照笔记：[[Gemini25技术报告深读]]（本地 2.5 技术报告）；旁及 [[开源与闭源前沿模型谱系]] / [[推理时扩展TestTimeScaling]] / [[多模态架构脉络]] / [[AI基础设施总览]]
-> 参数量、专家数、层图与训练规模卡内未写明，标「未公开」。
+> **主要来源**：[Gemini 3 Pro Model Card](https://deepmind.google/models/model-cards/)（Google DeepMind，Model Release: November 2025，Last Updated: May 2026，仅有 PDF 版，此处挂官方模型卡索引页，以下简称该卡）；[A new era of intelligence with Gemini 3](https://blog.google/products-and-platforms/products/gemini/gemini-3/)（Google 发布博文，2025-11-18，以下简称博文）（截至 2026-05）。
+> **研究线**：架构思想（模型卡公开了哪些架构与数据字段）+ AI Infra（训练硬件与软件栈的公开程度）
+> **范围与相邻笔记**：
+> - ≠ [[Gemini25技术报告深读]]：2.5 的架构、Infra 与评测细节在那篇，本篇只写 3 Pro 相对它的字段变化。
+> - ≠ [[Gemini37Flash模型卡深读]]：后续 Flash 增量卡在那篇，本篇不写。
+> - ≠ [[模型卡与SystemCard规范]]：Frontier Safety Framework 作为治理框架的背景与他家框架对照在那篇，本篇只记该卡的档位结论。
+> - 参数量、专家数与训练规模该卡未写，本篇不推测。
+>
+> **意义**：Gemini 3 Pro 是 Google 从「技术报告」转向「十页模型卡加外链方法文档」的代表。该卡比此前的模型卡多写了训练数据来源类别、分发渠道与预期用途，却把 2.5 技术报告里的 TPU 代数、集群规模和评测细节全部收回成概括句；架构上只确认稀疏 MoE 与原生多模态，并声明不是前代模型的微调。安全部分的信息量集中在两处：内部自动评测里 Text to Text Safety 相对 2.5 Pro 为 -10.4%，作者以人工复核解释；Frontier Safety 各域均未达 CCL，但 Cybersecurity 已达 alert 阈值。
 
----
+## 一、问题背景
 
-## 1. 元信息
+Gemini 2.5 用一份技术报告公开了 MoE 骨架、TPUv5p 集群与评测细节（见 [[Gemini25技术报告深读]]）。到 3 代，Google 改为发布模型卡：该卡开篇称其目的在于提供「essential information on Gemini models, including known limitations, mitigation approaches, and safety performance」，并说这一版比此前的模型卡包含更多关于训练数据、分发与预期用途的信息。能力评测的设置与方法另放在外链的 evals-methodology 文档中。
 
-| 字段 | 核实值（据官方 PDF） |
-|---|---|
-| 标题 | Gemini 3 Pro Model Card |
-| 文档自我定位 | Model Cards「essential information… known limitations, mitigation approaches, and safety performance」；可随模型改进更新；DeepMind 站点有 model cards 清单 |
-| 相对既往 model card | 正文写：本卡相对以往「includes **more essential information**」——尤其 training dataset、distribution、intended uses |
-| Model Release | **November 2025** |
-| Last Updated | **May 2026** |
-| 页数 | **10**（letter 612×792 pts） |
-| PDF 元数据 Title | Gemini 3 Pro Model Card (May 2026) |
-| PDF 链接 | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
-| 能力评测方法外链 | 正文：`deepmind.com/models/evals-methodology/gemini-3-pro`；页脚另写 `deepmind.google/models/evals-methodology/gemini-3-pro`（**同一路径、域名写法不同** → 见 §4 待核实） |
-| Frontier Safety 外链 | 「Gemini 3 Pro Frontier Safety Framework Report」（本 PDF **未附**该报告正文） |
-| FSF 版本 | 「latest Frontier Safety Framework (**September-2025**)」 |
+## 二、脉络
 
-**型号与族系（Model Information）：**
-
-| 项 | 原文 |
-|---|---|
-| 定位 | 「next generation in the Gemini series」；「natively multimodal, reasoning models」；「Google’s **most advanced** model for complex tasks」 |
-| Deep Think | 「now features **Deep Think mode**, an **optional** setting… enhance complex problem-solving performance **at time of inference**」 |
-| 依赖关系 | 「**not** a modification or a fine-tune of a prior model」；后续 3 族型号「based on Gemini 3 Pro」 |
-| 族内举例 | Gemini 3 Pro Image；Gemini 3 Flash；Gemini 3.1 Pro；Gemini 3.1 Flash Image；Gemini 3.1 Flash-Lite；Gemini 3.1 Flash Live；Gemini 3.5 Flash |
-| 输入 | Text / images / audio / video；token context **up to 1M** |
-| 输出 | Text；**64K** token output |
-| Knowledge cutoff | **January 2025**（Intended Usage and Limitations） |
-
-**一句话抓手：** 这是 **10 页产品/安全 Model Card**（非 2.5 那种 73 页技术报告）；公开了稀疏 MoE + 原生多模态骨架口号、数据类别、分发渠道、相对 2.5 Pro 的能力表与内部安全 Δ%，以及 FSF 各域「CCL not reached」——**仍无**总参/专家配置/训练 FLOPs。
-
----
-
-## 2. 相对 Gemini 2.5 的增量对照
-
-> 对照源：本卡原文 + [[Gemini25技术报告深读]]（Gemini 2.5 Technical Report）。只写两侧都可锚定或本卡显式相对 2.5 的句子。
-
-### 2.1 产品 / 接口级
-
-| 维度 | Gemini 2.5 Pro（技术报告笔记） | Gemini 3 Pro（本 Model Card） | 增量读法 |
-|---|---|---|---|
-| 文档形态 | 73 页技术报告（架构/Infra/评测展开） | **10** 页 Model Card（essential + 安全） | 3 Pro 公开技术深度**明显变浅**；能力细节外链到 evals-methodology |
-| 输入上下文 | Table 1：**1M** | **up to 1M** | 窗口口径同级；本卡未写 2M |
-| 输出长度 | **64K** | **64K** | 同 |
-| Knowledge cutoff | January 2025 | **January 2025** | **未延长**（本卡明文） |
-| Thinking / Deep Think | Dynamic Thinking + budget；Deep Think 为 I/O 后实验路径 | **Deep Think mode** 写成 3 Pro 的 **optional** inference 设定；安全/FSF 用 Deep Think 评测「consistent with」默认 3 Pro | Deep Think 从「实验路径」升为卡内正式可选模式；**budget 旋钮本卡未写** |
-| 是否前代微调 | 2.5 报告写独立族训练叙事 | 明文「**not** a modification or fine-tune of a prior model」 | 代际独立训练主张（细节未给） |
-| 族扩展 | 2.5 Pro / Flash 等 | 列出 Image / Flash / **3.1** / **3.5 Flash** 等多型号 | 3.x 产品树更宽；各型号细节「see each model card」 |
-
-### 2.2 架构 / 数据 / Infra（AI Infra 辅线）
-
-| 维度 | 2.5 技术报告（已记） | 3 Pro Model Card | 增量 / 缺口 |
-|---|---|---|---|
-| 骨干 | sparse **MoE** Transformer；native multimodal text/vision/audio | 同句式：**sparse mixture-of-experts (MoE)** transformer-based；native multimodal text/vision/audio；引用 Clark/Du/Fedus/Jiang/Lepikhin/Riquelme/Roller/Shazeer + Vaswani | 骨架口号**一致**；本卡加「Developments to the model architecture contribute to… improved performance」——**无具体改动名** |
-| 参数 / 专家 | 未公开 | **仍未公开** | 无增量数字 |
-| 预训练数据 | 多域多模态公开 web/代码/图像/音频/视频 | 同类列举 + 更细渠道：publicly downloadable；crawlers；**licensed**；**user data**（按 ToS/隐私/控件）；业务/员工数据；**AI-generated synthetic data** | Model Card 对数据来源类别写得更「合规清单」化；仍无 token 量/配比 |
-| 后训练 | SFT → RM → RL；verifiable + generative rewards | 「instruction tuning… reinforcement learning data… human-preference」；「RL techniques that can leverage **multi-step reasoning, problem-solving and theorem-proving** data」 | 强调多步推理/证明类 RL 数据；无算法细节 |
-| 过滤 | filtering + dedup（报告） | deduplication；**honoring robots.txt**；safety filtering；quality filtering；含 pornographic / violent / **CSAM** 过滤表述 | robots.txt / CSAM 在卡内写明 |
-| 硬件 | **TPUv5p**；多 DC、多 8960-chip pods；Pathways 弹性/SDC 数字 | 仅「Google’s **TPUs**」；TPU Pods 可扩展叙述 | **退回概括**；无 v5p / pod 规模 / 时间账 |
-| 软件 | JAX + Pathways（报告详） | **JAX and ML Pathways** | 同栈名；无弹性/SDC 段落 |
-
-### 2.3 能力榜：3 Pro vs 2.5 Pro（第 5 页表，Results as of **November 2025**）
-
-> 对照列尚有 Claude Sonnet 4.5、GPT-5.1。粗体为该行表内最优（读图）。SWE-Bench Verified 一行最优为 **Claude Sonnet 4.5（77.2%）**，非 3 Pro。
-
-| Benchmark（设定摘自同表） | Gemini 3 Pro | Gemini 2.5 Pro | 相对 2.5 的可读 Δ |
-|---|---:|---:|---|
-| Humanity's Last Exam（No tools） | **37.5%** | 21.6% | +15.9 pp |
-| HLE（With search and code execution） | **45.8%** | — | 仅 3 Pro 有工具条件分 |
-| ARC-AGI-2（ARC Prize Verified） | **31.1%** | 4.9% | 大幅抬升 |
-| GPQA Diamond（No tools） | **91.9%** | 86.4% | +5.5 pp |
-| AIME 2025（No tools） | **95.0%** | 88.0% | +7.0 pp |
-| AIME 2025（With code execution） | **100%** | — | 与 Claude Sonnet 4.5 同为 100%（表内） |
-| MathArena Apex | **23.4%** | 0.5% | 大幅抬升 |
-| MMMU-Pro | **81.0%** | 68.0% | +13.0 pp |
-| ScreenSpot-Pro | **72.7%** | 11.4% | 屏理解跃迁 |
-| CharXiv Reasoning | **81.4%** | 69.6% | +11.8 pp |
-| OmniDocBench 1.5（edit distance，**lower better**） | **0.115** | 0.145 | 更好（更低） |
-| Video-MMMU | **87.6%** | 83.6% | +4.0 pp |
-| LiveCodeBench Pro（Elo，higher better） | **2,439** | 1,775 | +664 Elo |
-| Terminal-Bench 2.0（Terminus-2 agent） | **54.2%** | 32.6% | +21.6 pp |
-| SWE-Bench Verified（Single attempt） | 76.2% | 59.6% | +16.6 pp（仍略低于 Sonnet 4.5 **77.2%**） |
-| τ2-bench（agentic tool use） | **85.4%** | 54.9% | +30.5 pp |
-| Vending-Bench 2（Net worth mean，$） | **$5,478.16** | $573.64 | 长程 agent 净值量级跳变 |
-| FACTS Benchmark Suite | **70.5%** | 63.4% | +7.1 pp |
-| SimpleQA Verified | **72.1%** | 54.5% | +17.6 pp |
-| MMMLU | **91.8%** | 89.5% | +2.3 pp |
-| Global PIQA | **93.4%** | 91.5% | +1.9 pp |
-| MRCR v2 8-needle 128k（average） | **77.0%** | 58.0% | +19.0 pp |
-| MRCR v2 8-needle 1M（pointwise） | **26.3%** | 16.4% | +9.9 pp；Claude/GPT 表内为 not supported |
-
-**正文总判（非分数）：** 「significantly outperforms Gemini 2.5 Pro across a range of benchmarks requiring enhanced reasoning and multimodal capabilities。」
-
-### 2.4 内部安全自动评测 Δ（第 8 页表，vs Gemini 2.5 Pro）
-
-| Evaluation | 相对 2.5 Pro | 颜色语义（原文） |
+| 时间 | 文档 | 变化 |
 |---|---|---|
-| Text to Text Safety | **-10.4%** | 回归（红）；人工复核称 flagged 多为 false positive 或 not egregious |
-| Multilingual Safety | **+0.2% (non-egregious)** | 改进（绿） |
-| Image to Text Safety | **+3.1% (non-egregious)** | 改进 |
-| Tone | **+7.9%** | 改进（拒绝语气更「objective」） |
-| Unjustified-refusals | **+3.7% (non-egregious)** | 改进（边界提示更敢答且安全） |
+| 2025-07 | Gemini 2.5 技术报告（arXiv 2507.06261） | 长篇技术报告，公开 Infra 与评测细节 |
+| 2025-11 | Gemini 3 Pro 模型卡与博文 | 改为模型卡；Deep Think 写成可选推理模式；Frontier Safety 按 2025 年 9 月版框架 |
+| 2026-05 | 该卡 Last Updated | 族内型号列表扩到 3.1 与 3.5 系列 |
 
-**方法注（原文限定）：**
+## 三、模型信息与相对 2.5 的字段变化
 
-1. 分数为相对指定对照的 **absolute percentage increase/decrease**；自动评测，非 human / red team。
-2. 「Overall, Gemini 3 Pro outperforms Gemini 2.5 Pro across both **safety and tone**, while keeping unjustified refusals low」——与 Text-to-Text **-10.4%** 并存；作者用人工复核解释损失。
-3. 「performance results reported below are computed with **improved evaluations** and thus are **not directly comparable** with… previous Gemini model cards。」
-4. Deep Think 模式下安全评估「**consistent with** the original Gemini 3 Pro safety assessment」。
-
-### 2.5 人类红队 / 风险（相对 2.5，第 9 页）
-
-| 项 | 原文 |
+| 字段 | 该卡原文要点 |
 |---|---|
-| 儿童安全 | 「satisfied required launch thresholds」 |
-| 内容安全总判 | 「similar or **improved** safety performance compared to Gemini 2.5 Pro」 |
-| 范围 | 相对 2.5，「scope of red teaming was **expanded**… outside of our strict policies」；「found **no egregious** concerns」 |
-| 主风险 | (a) **jailbreak** vulnerability——「improved compared to Gemini 2.5 Pro but still an open research problem」；(b) 「possible degradation in **multi-turn** conversations」 |
+| 定位 | 「natively multimodal, reasoning models」；「Google’s most advanced model for complex tasks」 |
+| Deep Think | 「an optional setting designed to enhance complex problem-solving performance at time of inference」 |
+| 依赖关系 | 「not a modification or a fine-tune of a prior model」；族内后续型号都基于 3 Pro，列出 Gemini 3 Pro Image、Gemini 3 Flash、Gemini 3.1 Pro、Gemini 3.1 Flash Image、Gemini 3.1 Flash-Lite、Gemini 3.1 Flash Live、Gemini 3.5 Flash |
+| 输入 / 输出 | 文本、图像、音频、视频，上下文 up to 1M；输出文本，64K token |
+| 知识截止 | January 2025 |
+| 架构 | 稀疏 MoE、基于 Transformer、原生支持文本、视觉与音频输入；只说「Developments to the model architecture contribute to the significantly improved performance」，没有具体改动 |
+| 预训练数据 | 公开网页、文本、代码、图像、音频与视频；另列可下载公开数据集、爬虫数据、商业授权数据、按服务条款与用户控制使用的用户数据、业务运营与员工数据、AI 生成的合成数据 |
+| 后训练 | 指令微调、强化学习与人类偏好数据；强化学习可利用「multi-step reasoning, problem-solving and theorem-proving data」 |
+| 数据处理 | 去重、遵守 robots.txt、安全过滤与质量过滤，含色情、暴力与 CSAM 过滤 |
+| 硬件 / 软件 | 只写 Google 的 TPU 与 TPU Pods 的一般性说明；软件为 JAX 与 ML Pathways |
+| 分发 | Gemini App、Google Cloud / Vertex AI、Google AI Studio、Gemini API、Google AI Mode、Google Antigravity；族内部分型号可经 Notebook LM |
 
----
+与 2.5 技术报告对照，骨架表述一致，而 TPU 代数、pod 规模与训练时间账都没有出现在该卡中，2.5 的这些数字不能直接套到 3 Pro 上。
 
-## 3. 能力 / 安全公开要点
+## 四、能力
 
-### 3.1 架构思想（公开句，勿外推）
+该卡第 5 页的能力表是图片，正文只给出总判：「Gemini 3 Pro significantly outperforms Gemini 2.5 Pro across a range of benchmarks requiring enhanced reasoning and multimodal capabilities」，结果截至 November 2025。博文以文字给出的数字如下：
 
-1. **稀疏 MoE + 原生多模态**：每 token 动态路由到专家子集，解耦总容量与 per-token 算力/serving 成本；输入含 text / vision / audio。
-2. **推理期 Deep Think（可选）**：卡内将其定义为 inference-time 加强复杂解题的可选设定；与 2.5 报告中的 Dynamic Thinking / budget **本卡未做机制对照**。
-3. **RL 后训练叙事**：可利用 multi-step reasoning / problem-solving / theorem-proving 数据——与能力表上 HLE / MathArena / agentic 项的「叙事对齐」，但**无**损失/奖励公式。
-4. **非前代微调**：明确否定「modification or fine-tune of a prior model」。
+| 评测 | Gemini 3 Pro（博文） |
+|---|---|
+| Humanity’s Last Exam（不用工具） | 37.5% |
+| GPQA Diamond | 91.9% |
+| MathArena Apex | 23.4% |
+| MMMU-Pro | 81% |
+| Video-MMMU | 87.6% |
+| SimpleQA Verified | 72.1% |
+| Terminal-Bench 2.0 | 54.2% |
+| SWE-bench Verified | 76.2% |
+| LMArena / WebDev Arena | 1501 Elo / 1487 Elo |
 
-### 3.2 分发与用途
+博文另报 Deep Think 模式：Humanity’s Last Exam 41.0%（不用工具），GPQA Diamond 93.8%，ARC-AGI-2 45.1%（with code execution, ARC Prize Verified）。
 
-**分发渠道：** Gemini App；Google Cloud / Vertex AI；Google AI Studio；Gemini API；Google AI Mode；**Google Antigravity**；族内部分型号还可经 Notebook LM。
+## 五、内容安全
 
-**适合场景（原文 bullet）：** agentic performance；advanced coding；long context and/or multimodal understanding；algorithmic development。
+**评测类型**：训练与开发期的自动和人工评测、模型团队之外的专家人工红队、自动红队、发布前的伦理与安全审查，并按 Frontier Safety Framework 测试。安全政策列六类：儿童性虐待材料、仇恨言论、危险内容、骚扰、色情内容、违背科学或医学共识的医疗建议。
 
-**已知限制：** hallucinations；occasional slowness or timeout；cutoff January 2025。
+**内部自动评测**（相对 Gemini 2.5 Pro，绝对百分比增减）：
 
-**可接受使用：** 适用 Google Generative AI Prohibited Use Policy；并列举不应接入的系统类型（危险非法、破坏安全、性暴力仇恨有害、虚假误导等——原文四类）。
+| Evaluation | vs. Gemini 2.5 Pro |
+|---|---|
+| Text to Text Safety | -10.4% |
+| Multilingual Safety | +0.2% (non-egregious) |
+| Image to Text Safety | +3.1% (non-egregious) |
+| Tone | +7.9% |
+| Unjustified-refusals | +3.7% (non-egregious) |
 
-### 3.3 安全治理流程（Ethics and Content Safety）
+作者称总体在安全与语气上优于 2.5 Pro、同时保持低无理拒绝；人工复核确认损失「overwhelmingly either a) false positives or b) not egregious」。该卡同时说明这些结果用改进后的评测计算，不能与此前 Gemini 模型卡直接比较；Deep Think 模式的安全评测结果与默认模式一致。
 
-评测类型：Training/Development Evaluations（自动+人工，训中/训后持续）；Human Red Teaming（独立专家队）；Automated Red Teaming（规模化）；Ethics & Safety Reviews（发布前）；并按 **FSF** 指南测试。
+**人工红队与风险**：儿童安全达到上线阈值；内容安全总体与 2.5 Pro 相近或更好；红队范围扩展到严格政策之外，未发现严重问题。主要风险为越狱（较 2.5 Pro 改善，但仍是开放研究问题）与多轮对话中可能的退化。缓解手段包括数据过滤、conditional pre-training、SFT、人类与 critic 反馈强化学习以及产品级安全过滤。
 
-**Safety Policies 六类：** CSAM/剥削；Hate speech；Dangerous content；Harassment；Sexually explicit；与科学/医学共识相悖的 medical advice。
+## 六、Frontier Safety
 
-**缓解手段（非穷尽）：** dataset filtering；**conditional pre-training**；SFT；RL from human and critic feedback；safety policies and desiderata；product-level safety filtering。
+该卡按 2025 年 9 月版 Frontier Safety Framework 评估，各域均未达到关键能力档（CCL）；alert 阈值是 CCL 之下的预警线，框架本身见 [[模型卡与SystemCard规范]]。
 
-### 3.4 Frontier Safety（第 9–10 页表）——均「CCL not reached」
-
-| Domain | Key Results（摘要） | CCL | CCL reached? |
+| 领域 | 该卡要点 | CCL | 结论 |
 |---|---|---|---|
-| CBRN | 信息偶有 actionable，但一般不足以显著增强 low–medium resource 威胁行为者 | Uplift Level 1 | **CCL not reached** |
-| Cybersecurity | key skills：v1 hard **11/12** solved；v2 **0/13** end-to-end；「Alert threshold **met**」 | Uplift Level 1 | **CCL not reached** |
-| Harmful Manipulation | 相对 non-generative AI baseline 操纵效力上升，但相对前代无显著 uplift；未达 alert | Level 1 (exploratory) | **CCL not reached** |
-| Machine Learning R&D | 优于 Gemini 2.5（尤其 RE-Bench 的 Scaling Law Experiment 与 Optimize LLM Foundry）；聚合分仍「substantially below」alert | Acceleration level 1；Automation level 1 | **CCL not reached** |
-| Misalignment (Exploratory) | situational awareness **3/11**；stealth **1/4** | Instrumental Reasoning Levels 1+2 | **CCL not reached** |
+| CBRN | 信息准确、偶有可操作性，但一般不足以显著增强中低资源威胁者的能力 | Uplift Level 1 | 未达 |
+| Cybersecurity | key skills 基准 v1 hard 11/12 解出；v2 端到端 0/13；Alert threshold met | Uplift Level 1 | 未达 |
+| Harmful Manipulation | 操纵效力高于非生成式 AI 基线，相对前代无显著提升，未达 alert | Level 1 (exploratory) | 未达 |
+| ML R&D | 优于 Gemini 2.5，尤以 RE-Bench 的 Scaling Law Experiment 与 Optimize LLM Foundry 为甚；聚合分仍远低于 alert | Acceleration level 1；Automation level 1 | 未达 |
+| Misalignment (Exploratory) | situational awareness 3/11，stealth 1/4 | Instrumental Reasoning Levels 1 + 2 | 未达 |
 
-Deep Think 的 FSF 评测：「consistent with the original Gemini 3 Pro assessment」。细节见外链 *Gemini 3 Pro Frontier Safety Framework Report*（**本仓库 PDF 未收录**）。
+细节在单独的 *Gemini 3 Pro Frontier Safety Framework Report*；Deep Think 模式的 Frontier Safety 评测结果与默认模式一致。
 
-### 3.5 与横比友商（第 5 页，仅表内）
+## 七、意义
 
-- 多数推理/多模态/长上下文行：**Gemini 3 Pro** 最优。
-- **SWE-Bench Verified（single attempt）**：Sonnet 4.5 **77.2%** > GPT-5.1 76.3% > Gemini 3 Pro 76.2% > 2.5 Pro 59.6%。
-- MRCR 1M：仅 Gemini 3/2.5 有分；Claude / GPT-5.1「not supported」。
-- 脚手架差异未在本卡展开 → 跨卡硬比需回 evals-methodology（待核实）。
+该卡显示前沿闭源厂商的公开文档在变短：架构只剩一句骨架描述，Infra 只剩硬件品类与软件栈名，能力数字移到图片与外链文档。它的增量在合规字段：数据来源类别、robots.txt 与 CSAM 过滤、分发渠道与禁止用途都写得比 2.5 更完整。对研究者而言，可直接引用的是 Deep Think 被定义为推理期可选设定、「非前代微调」的声明，以及 Frontier Safety 表中 cyber 达 alert 而未达 CCL 的判定。
 
----
+## 八、局限与待核实
 
-## 4. 局限、待核实与引用
+1. 版本：官方模型卡索引页的条目写「Updated 18 November 2025」，该卡 PDF 写「Last Updated: May 2026」，两者不一致；本篇按正文所用 PDF 的日期计，截至只到月份。
+2. 第 5 页能力表与 evals-methodology 文档里的结果表都是图片，本篇只录博文文字给出的数字；与 Claude、GPT 的横比不录。
+3. *Gemini 3 Pro Frontier Safety Framework Report* 未读，cyber alert 的具体评测与分数不在本篇。
+4. 「architecture developments」没有具体内容；Deep Think 的机制与思考预算的关系该卡未写。
+5. 该卡正文写 evals-methodology 的链接为 deepmind.com 域名，页脚为 deepmind.google 域名，两者都跳转到同一份方法文档。
 
-### 4.1 局限与待核实
+## 九、与相邻笔记的分工
 
-| # | 项 | 原因 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| 1 | `deepmind.com` vs `deepmind.google` evals-methodology URL | 正文与页脚域名写法不一致；需浏览器确认最终落地页 |
-| 2 | 第 5 页全部榜分的官方可复制表 | 主表为图；本卡数字来自读图；建议与 evals-methodology 页交叉 |
-| 3 | *Gemini 3 Pro Frontier Safety Framework Report* | 本卡仅引用标题；该报告 PDF **未见** |
-| 4 | Deep Think 算法 / 与 Thinking budget 关系 | 本卡仅「optional setting」；2.5 报告 Deep Think 细节亦外链 Doshi 2025b——机制仍缺 |
-| 5 | 「architecture developments」具体是什么 | 仅有贡献声明，无层/路由/注意力改动名 |
-| 6 | TPU 代数与集群规模 | 本卡只写 TPUs；2.5 报告的 TPUv5p / 8960-chip pods **不能**自动继承到 3 Pro |
-| 7 | Cyber「Alert threshold met」但「CCL not reached」的阈值含义 | 需 FSF（Sep-2025）原文定义 alert vs CCL |
-| 8 | Google Antigravity 产品形态 | 仅出现在分发列表；本卡无解释 |
-| 9 | 与 2.5 技术报告 Table 3 同名榜的口径差 | 例：2.5 笔记 SWE-bench Verified **67.2%（multiple attempts）** vs 本卡 2.5 Pro **59.6%（single attempt）**——**不可无脚注合并** |
-| 10 | CharXiv 拼写 | 读图为 CharXiv Reasoning；若官方页写 ChartXiv 需再核 |
+| [[Gemini25技术报告深读]] | 2.5 的骨架、TPU 与评测作对照 | 2.5 的技术细节 |
+| [[Gemini37Flash模型卡深读]] | 边界：Gemini 3 Pro 之后的变化见 [[Gemini37Flash模型卡深读]] | 3.7 Flash 的增量字段 |
+| [[模型卡与SystemCard规范]] | Frontier Safety Framework 的框架背景 | 框架定义与他家框架对照 |
+| [[推理时扩展TestTimeScaling]] | Deep Think 作为推理期可选设定 | 推理时扩展的方法与曲线 |
+| [[开源与闭源前沿模型谱系]] | Gemini 代际中 3 Pro 的位置 | 全谱系 |
+| [[AI基础设施总览]] | 该卡 Infra 公开度低于 2.5 报告 | TPU 与训练系统细节 |
+| [[SystemCard谱系时间线]] | 该卡在各厂文档谱系中的位置 | 全谱系 |
 
-### 4.2 主要引用
+## 十、延伸阅读
 
-| 类型 | 路径 / 标识 |
-|---|---|
-| 主 PDF | `https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf` |
-| 3.1 Pro 卡页 | `https://deepmind.google/models/model-cards/gemini-3-1-pro/` |
-| 2.5 对照 | `https://arxiv.org/abs/2507.06261`；笔记 [[Gemini25技术报告深读]] |
-| 外链（卡内） | evals-methodology（上表域名待核）；Frontier Safety Framework Report；FSF September-2025 |
-
-### 4.3 与相邻笔记的增量
-
-- **[[开源与闭源前沿模型谱系]]**：Gemini 行代际加 **3 Pro（2025-11 发布 / 卡更新 2026-05）**；Dense/MoE 仍「稀疏 MoE，参数未公开」；Deep Think = 可选 inference 模式。
-- **[[推理时扩展TestTimeScaling]]**：可记「3 Pro 卡确认 Deep Think 为产品旋钮」，但无 budget 曲线。
-- **[[AI基础设施总览]]**：Infra 公开度低于 2.5 报告——勿把 v5p/SDC 数字迁移到 3 Pro。
-- **[[多模态架构脉络]] / [[长上下文位置编码与系统侧]]**：多模态与 1M 长上下文仍在，ScreenSpot-Pro / MRCR 数字可作 3 vs 2.5 增量锚。
-
----
-
-## 5. 摘要
-
-Gemini 3 Pro Model Card（发布 2025-11，更新 2026-05，**10** 页）把 3 Pro 定位为独立训练的稀疏 MoE 原生多模态推理旗舰，可选 **Deep Think**；上下文 **1M** / 输出 **64K** / cutoff **2025-01**（与 2.5 Pro 同截止）。相对 2.5 Pro，第 5 页表显示推理（HLE 37.5% vs 21.6%、ARC-AGI-2 31.1% vs 4.9%）、屏理解、agentic（τ2、Vending-Bench、Terminal-Bench）与长上下文（MRCR）全面抬升，SWE-Bench Verified single-attempt 76.2% 仍略低于表内 Sonnet 4.5。安全上内部 Text-to-Text 自动分相对 2.5 **-10.4%**（作者称多为非严重/假阳性），tone / 无理拒绝改进；FSF 各域均 **CCL not reached**（Cyber 达 alert 但未达 CCL）。架构与 Infra **无**参数量或 TPU 代际数字——技术深度弱于 2.5 技术报告，细节依赖外链报告。
-
-## 相关笔记
-
-### 技术报告专项
-- [[GPT5系统卡深读]]
-- [[GPT52SystemCard更新]]
-- [[Gemini25技术报告深读]]
-- [[Gemini3Pro模型卡深读]]
-- [[ClaudeOpus41系统卡附录深读]]
-- [[ClaudeOpus45系统卡深读]]
-- [[MOC_模型与技术报告]]
-
+- [[Gemini25技术报告深读]]：对照阅读可看出 3 Pro 模型卡收回了哪些技术细节。
+- [[Gemini37Flash模型卡深读]]：同族后续卡如何在 3 Pro 字段之上只报增量。
+- [[模型卡与SystemCard规范]]：Frontier Safety Framework 与 Preparedness、RSP 的对照。
+- [[推理时扩展TestTimeScaling]]：Deep Think 这类推理期加算的方法背景。
+- [[开源与闭源前沿模型谱系]]：3 Pro 在闭源前沿模型中的代际位置。
+- [[AI基础设施总览]]：该卡只写 TPU 品类，训练系统可回到这篇查。
+- [[SystemCard谱系时间线]]：各厂模型卡与系统卡的时间顺序。

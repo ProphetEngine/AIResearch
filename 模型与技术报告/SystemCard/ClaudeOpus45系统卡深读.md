@@ -4,231 +4,133 @@ topic: ClaudeOpus45系统卡深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
+sources:
+ - https://www.anthropic.com/system-cards
+ - https://www.anthropic.com/news/claude-opus-4-5
+related: ["ClaudeOpus41系统卡附录深读", "ClaudeOpus5系统卡深读", "奖励黑客与涌现失对齐", "评测数据污染检测与可靠性", "评测与排行榜可靠性", "智能体工具与长程任务", "Prompt注入架构防御", "安全论证SafetyCases", "模型卡与SystemCard规范", "SystemCard谱系时间线"]
 archived: 2026-09-22
 ---
 
 # Claude Opus 4.5 System Card 专项深读卡
 
-> 研究线：**架构思想（主）**（agentic / thinking / 工具面与 RSP 安全评测如何写进产品旋钮）
-> 锚点：Anthropic, *System Card: Claude Opus 4.5*（封面 **November 2025**；Changelog 至 **December 5, 2025**）
-> 官方 PDF：`https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf`（**153** 页；Title: Claude Opus 4.5 System Card）
-> 发布页：https://www.anthropic.com/news/claude-opus-4-5
-> 对照笔记：[[智能体工具与长程任务]]、[[评测与排行榜可靠性]]；Claude 4 主卡 PDF：https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47/Claude_4_System_Card.pdf
+> **主要来源**：[System Card: Claude Opus 4.5](https://www.anthropic.com/system-cards)（Anthropic，封面 November 2025，变更记录至 2025-12-05，仅有 PDF 版，此处挂官方系统卡索引页，以下简称该卡）；[Introducing Claude Opus 4.5](https://www.anthropic.com/news/claude-opus-4-5)（Anthropic 发布公告，2025-11-24，以下简称公告）（截至 2025-12-05）。
+> **研究线**：架构思想（智能体能力、effort 旋钮与 RSP 安全评测如何同卷呈现；能力表与奖励黑客率只作对照）
+> **范围与相邻笔记**：
+> - ≠ [[ClaudeOpus41系统卡附录深读]]：上一张 Opus 卡是精简附录，本篇只写 4.5 的增量。
+> - ≠ [[ClaudeOpus5系统卡深读]]：下一代 Opus 的系统卡在那篇。
+> - ≠ [[奖励黑客与涌现失对齐]]：奖励黑客的机制与跨模型比较在那篇，本篇只录该卡的评测表。
+>
+> **意义**：Opus 4.5 是 Anthropic 在 ASL-3 下部署的混合推理旗舰。该卡有三处变化：一是此前五张系统卡把能力评测留给发布博文，这一张把能力整节写回系统卡，并公开了三种去污染方法与一个没能去干净的 AIME 反例；二是新增 effort 参数，把思考 token、函数调用与结果、面向用户的输出放进同一个推理预算旋钮；三是在 RSP 结论里坦白，排除 AI R&D-4 与 CBRN-4 风险正在变得越来越难，模型「刚刚」达到预先设定的排除基准阈值。对齐方面，作者自评这是自家最对齐的前沿模型，但奖励黑客评测显示它在加了「别作弊」提示后仍比 Sonnet 4.5 更不听劝。
 
----
+## 一、问题背景
 
-## 一、报告元信息（与 Claude 4 / Opus 4 关系，据原文）
+Claude 4 系列（2025-05）之后，Anthropic 对增量模型采用「主卡加附录」的写法，Opus 4.1（2025-08）只附精简安全评测。该卡 §2.1 说明，此前五张系统卡（Sonnet 3.7、Sonnet 4 与 Opus 4、Opus 4.1 附录、Sonnet 4.5、Haiku 4.5）都没有专门的能力章节，以便集中写安全评测；但很多能力评测本身与安全相关（如智能体编码评测支撑 RSP 的自主性评估），因此 Opus 4.5 卡重新加入能力章节，复述公告中的结果并补充去污染流程。
 
-| 字段 | 核实值 |
-|---|---|
-| 标题 | System Card: Claude Opus 4.5 |
-| 发布方 | Anthropic（封面 `anthropic.com`） |
-| 封面日期 | **November 2025** |
-| Changelog | Nov 24 / Nov 25 / **Dec 5, 2025**（含 ARC-AGI 图更正、WebArena §2.22、CoT 训练澄清等） |
-| 页数 | **153** |
-| 部署安全级 | **ASL-3**（Abstract；§1.2；与 RSP 一致） |
-| 能力定位（Abstract / §1） | 前沿模型；突出 **software engineering** 与 **tool and computer use**；宣称 coding / agentic 任务 SOTA 级；相对早期 Claude「reasoning / mathematics / vision」有实质提升 |
-| 对齐自评（§1 / §6） | 「best-aligned frontier model yet」「likely the best-aligned … in the AI industry to date」（作者自评，非第三方裁定） |
-| 与「Claude 4」族关系 | 文中称「previous **Claude 4** models」（§1.2.2）；能力/安全对照频繁使用 **Claude Opus 4 / Opus 4.1 / Sonnet 4.5 / Haiku 4.5** |
-| 相对「最近五张 system card」 | §2.1 注脚 2：此前五张为 **Sonnet 3.7、Sonnet 4 & Opus 4、Opus 4.1（addendum）、Sonnet 4.5、Haiku 4.5**——这些卡**未**设独立 capabilities 大节（能力多在 launch blog）；**Opus 4.5 卡首次把 capabilities 整节写回 system card** |
-| Hybrid 谱系 | §1.1.2：自 **Claude Sonnet 3.7** 起同为 hybrid reasoning；thought-process 细节指向 **Claude Sonnet 4.5 System Card §1.1.2** |
-| 训练数据截止 | §1.1.1：公开网爬数据 **up to May 2025** + 第三方/标注/opt-in 用户/内部生成；后训练含 **RLHF** 与 **RL from AI feedback** |
-| 参数量 / 架构细节 | **未披露**（无层数、MoE、总参等） |
-| RSP 门槛结论 | **未越过 AI R&D-4 与 CBRN-4**（§1.2.4）；但作者写明 rule-out「越来越难」、自主性已「roughly reached」预定义 ASL-4 rule-out 基准阈 |
+训练方面（§1.1）：预训练数据包括截至 2025 年 5 月的公开网页、第三方非公开数据、标注数据、选择加入的用户数据与内部生成数据；后训练使用 RLHF 与 AI 反馈强化学习。与 Sonnet 3.7 以来各款一样是混合推理模型，可在快速作答与扩展思考之间切换。参数量与结构未公开。
 
-**摘要级一句话（不外推）：**
-Claude Opus 4.5 是 Anthropic 在 ASL-3 下部署的 hybrid 旗舰；本卡相对 Claude 4 系前几张卡，把 **能力榜（尤其 agentic coding / 工具 / 计算机使用）** 与 **safeguards / honesty / agentic safety / alignment / RSP** 同卷呈现，并新增 **effort** 旋钮与更系统的 **decontamination** 叙述。
+## 二、脉络
 
----
-
-## 二、能力与 agentic / thinking / 工具公开主张对照表
-
-### 2.1 Thinking / effort / 上下文（产品旋钮）
-
-| 主张维度 | 原文要点（§1.1.2 / Table 2.3.A 脚注） | 跟读注意 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| Hybrid | 默认可快速作答；可开 **extended thinking** 更长审议 | 与 Sonnet 3.7 以降一致 |
-| **effort**（新） | 控制「对给定 prompt 推理多充分」；覆盖 **thinking tokens、function calls、function results、user-facing blocks** | 成本/智力 frontier；低/中档可提高 token 效率；Fig 1.1.2.A 用 SWE-bench Verified 示意 |
-| 默认评测配置（多数能力表） | **64k thinking budget**、interleaved scratchpads、**200k context**、default effort **(high)**、默认 sampling | 脚注例外须单列：如 SWE/τ² 若干行 **without extended thinking** |
-| Terminal-Bench 例外 | 128k thinking → **59.27%±1.34%**；64k → **57.76%±1.05%** | Table 2.3.A 写 59.3%（脚注 5） |
+| 2025-05 | [Claude Opus 4 / Sonnet 4](https://www.anthropic.com/news/claude-4) | Opus 4 在 ASL-3 下部署，其后另发破坏风险报告（该卡 §1.2.4.1 提及） |
+| 2025-08 | Claude Opus 4.1 系统卡附录 | 增量发布只做精简安全评测，几乎不报能力 |
+| 2025-09 | [Claude Sonnet 4.5](https://www.anthropic.com/news/claude-sonnet-4-5) | 该卡沿用其关于「思考过程」的说明 |
+| 2025-11 | [Natural Emergent Misalignment from Reward Hacking](https://arxiv.org/abs/2511.18397) | Anthropic 报告生产强化学习中的奖励黑客会泛化为失对齐，并提出接种提示 |
+| 2025-11 | Claude Opus 4.5（该卡） | 能力章节回到系统卡；新增 effort 参数；RSP 排除判定趋紧 |
 
-### 2.2 能力总表（Table 2.3.A，可核对）
+## 三、能力与产品旋钮
 
-> 默认：avg@5；64k thinking；200k；effort high。脚注例外已标。
+**effort 参数**（§1.1.2）：控制模型对一个提示推理得多充分，作用于所有 token，包括思考 token、函数调用、函数结果与面向用户的输出块；低档与中档可提高 token 效率。公告补充：中档时 SWE-bench Verified 追平 Sonnet 4.5 的最好成绩，输出 token 少 76%。
 
-| Evaluation | Claude Opus 4.5 | Claude Sonnet 4.5 | Claude Opus 4.1 | Gemini 3 Pro | GPT-5.1 |
+**能力表**（§2.3，Table 2.3.A；默认 5 次平均、64k 思考预算、200k 上下文、默认 effort 为 high，例外见脚注）：
+
+| 评测 | Opus 4.5 | Sonnet 4.5 | Opus 4.1 | Gemini 3 Pro | GPT-5.1 |
 |---|---:|---:|---:|---:|---:|
-| SWE-bench Verified | **80.9%**⁴ | 77.2% | 74.5% | 76.2% | 76.3%（77.9% w/ Codex-Max） |
-| Terminal-bench 2.0 | **59.3%**⁵ | 50.0% | 46.5% | 54.2% | 47.6%（58.1% w/ Codex-Max） |
-| τ²-Bench (Retail) | **88.9%**⁴ | 86.2% | 86.8% | 85.3% | — |
-| τ²-Bench (Telecom) | **98.2%**⁴ | 98.0% | 71.5% | 98.0% | — |
-| MCP Atlas | **62.3%**⁴ | 43.8% | 40.9% | — | — |
-| OSWorld | **66.3%** | 61.4% | 44.4% | — | — |
-| ARC-AGI-2 (Verified) | **37.6%** | 13.6% | — | 31.1% | 17.6% |
-| GPQA Diamond | 87.0% | 83.40% | 81.0% | **91.9%** | 88.1% |
-| MMMU (validation) | 80.7% | 77.8% | 77.1% | — | 85.4%⁷ |
-| MMMLU | 90.8% | 89.1% | 89.5% | **91.8%** | 91.0% |
+| SWE-bench Verified（无扩展思考） | 80.9% | 77.2% | 74.5% | 76.2% | 76.3% |
+| Terminal-bench 2.0（128k 思考预算） | 59.3% | 50.0% | 46.5% | 54.2% | 47.6% |
+| MCP Atlas（无扩展思考） | 62.3% | 43.8% | 40.9% | — | — |
+| OSWorld | 66.3% | 61.4% | 44.4% | — | — |
+| ARC-AGI-2（Verified） | 37.6% | 13.6% | — | 31.1% | 17.6% |
+| GPQA Diamond | 87.0% | 83.40% | 81.0% | 91.9% | 88.1% |
 
-⁴ Without extended thinking.
-⁵ 128k thinking；64k 时 57.8%。
-⁶ τ² airline/corrected 另见 §2.8.1（原文脚注）。
-⁷ 来源 mmmu leaderboard（原文脚注）。
+Terminal-bench 2.0 在 64k 思考预算下为 57.8%；GPT-5.1 两行另有用 Codex-Max 的成绩。表中 Gemini 3 Pro 与 GPT-5.1 的数字来自各自厂商或排行榜，评测框架不同，横比要谨慎。
 
-**SWE 三分型（Table 2.4.A，avg@5）：**
+**去污染**（§2.2）：三种互补方法——子串去除（训练文档含五处及以上评测问答对的整篇删除，针对 MMLU、GPQA 这类选择题）；模糊去污染（计算 20-gram，与任一评测重叠超过 40% 的文档删除）；canary 字符串过滤（如 Terminal-Bench 嵌入的 BigBench、ARC canary）。之后再人工抽查。作者承认仍有评测文档因格式偏差漏网：部分 AIME 题上模型的推理过程是错的，却给出了正确答案，疑似记忆。
 
-| 配置 | Verified | Pro | Multilingual |
+**智能体检索**（§2.6–2.7）：BrowseComp-Plus 上测试了工具结果清理、记忆、上下文感知、清空上下文后以原任务重启的 new context 工具和子智能体；多智能体检索中编排者自身不能搜索，只能调用子智能体。公告称这些技术组合使一项深度研究评测提升近 15 个百分点。
+
+## 四、安全评测
+
+**智能体安全**（§5.1，均为不加额外防护的结果）：
+
+| 评测 | Opus 4.5 | Sonnet 4.5 | Opus 4.1 |
 |---|---:|---:|---:|
-| Opus 4.5（64k thinking） | 80.60% | 51.60% | 76.20% |
-| Opus 4.5（**no thinking**） | **80.90%** | 52.0% | 76.20% |
+| 智能体编码恶意请求拒绝率（Table 5.1.1.A） | 100% | 98.7% | 96.0% |
+| Claude Code 恶意请求拒绝率（Table 5.1.2.A） | 77.80% | 63.06% | 48.16% |
+| Claude Code 双用途与良性任务成功率（Table 5.1.2.A） | 93.07% | 96.56% | 94.43% |
+| 恶意计算机使用拒绝率（Table 5.1.3.A） | 88.39% | 83.03% | 66.96% |
 
-> §2.4：Verified/Multilingual **extended thinking off** + 200k；Pro = Scale AI 1,865 题更难集。
+提示注入（§5.2）由 Gray Swan 的 Agent Red Teaming 基准与自适应攻击评测，覆盖编码、计算机使用与浏览器；具体成功率只在图中，公告称 Opus 4.5 比业内其他前沿模型更难被提示注入欺骗。
 
-### 2.3 Agentic / 工具 / 计算机使用（公开主张）
+**对齐评估要点**（§6.1.1）：
 
-| 主题 | 公开主张与可核对点 |
-|---|---|
-| 总体 | §1：coding 与「agentic」自主代表用户运行的任务上 frontier SOTA 级 |
-| BrowseComp-Plus + test-time agentic 特性 | §2.6：固定 ~100k 文档索引；Sonnet 4.5 作 grader；**tool result clearing** / **memory** / **context awareness** / **new context tool** / **subagents** |
-| BrowseComp-Plus（Table 2.6.A，无 get-document） | Opus 4.5：clearing **67.59%**；clearing+memory **72.89%**（与重评 GPT-5 72.89% 对齐） |
-| 更贴近部署的配置 | 另加 **get-document fetch**；context awareness（文称当时经 Developer Platform 对 Sonnet 4.5 可用）；memory + Appendix **8.2 new_context_tool**（清上下文、保留 memory、新上下文以原任务 prompt 开始；最多叙述 **200k 窗口 + 跨 reset 至约 1M total tokens**） |
-| Multi-agent search | §2.7：orchestrator **无直接搜索**，只经 subagents 工具；可并行 Haiku/Sonnet/Opus 级 worker |
-| τ² / 政策漏洞 | §2.8.1：agentic 任务中发现 policy loophole（airline 等） |
-| OSWorld | §2.9：P@1 avg@5 = **66.26%**（表 66.3%） |
-| MCP Atlas | §2.12：**62.3%**（相对 Sonnet 4.5 的 43.8%「significant jump」） |
-| WebArena | §2.22：单 agent 通用 prompt **65.3%**，自称 **single-agent SOTA**；Pass@1..4 = 65.3 / 69.5 / 71.2 / 72.4%；多 agent+站点专用 prompt（如 Claude Code+GBOX 68.0%）**不可直接横比** |
-| AIME 2025 | §2.17：无工具 **92.77%**；有 python **100%**；作者**主动警告 contamination 可能抬分**（见 §2.2） |
-| HLE | §2.16：reasoning-only vs tools-only（search/fetch/code，无 reasoning）；并对 search 变体做答案污染剔除（huggingface/scribd 等） |
+- 失对齐行为率低于近期任何前沿模型，包括主动采取有害行动与配合明显有害请求两方面；过度拒绝率未明显高于前代。
+- 对预填充攻击仍有一定脆弱性，但弱于此前的 Claude；面对严重组织不当行为时尝试举报或出于道德的破坏的倾向比 Opus 4、Opus 4.1 有所降低，作者仍建议给予宽泛权限时保持谨慎。
+- 推理自己是否在被训练或测试的频率高于 Opus 4.1、与 Sonnet 4.5 相当、低于 Haiku 4.5；可解释性分析认为这没有在显著程度上掩盖不良行为。
+- 未见隐写推理、乱码推理或影响 RSP 判定的装弱；训练中有在数学题上「判定一个答案正确却输出另一个」的欺骗性推理，作者认为与记忆有关。
+- 测试早期版本时出现两起遗漏式欺骗（误报虚构的负面搜索结果、不提及一条关于外泄权重的虚构笔记），作者认为是针对提示注入的训练干预的副作用。
+- §6.5：强化学习不对推理文本内容施加奖惩，但较早阶段的监督学习数据含前代模型的推理文本（2025-12-05 变更记录补入这一段）。
 
-### 2.4 Decontamination（与 [[评测与排行榜可靠性]] 直接衔接）
+**奖励黑客**（§6.10.1，Table 6.10.1.A）：
 
-§2.2 公开三类技术 + 人工抽查：
+| 模型 | 易黑客编码题：分类器判定 | 易黑客编码题：隐藏测试 | 不可能任务：无提示 | 不可能任务：反作弊提示 | 训练数据子集 |
+|---|---:|---:|---:|---:|---:|
+| Opus 4.5 | 0% | 0% | 55% | 35% | 1% |
+| Haiku 4.5 | 6% | 3% | 30% | 23% | 1% |
+| Sonnet 4.5 | 1% | 1% | 53% | 20% | 2% |
+| Opus 4.1 | 14% | 7% | 80% | 45% | 10% |
 
-1. **Substring removal**：≥5 处 exact Q–A pair → 丢文档（利 MMLU/GPQA 类）。
-2. **Fuzzy**：20-gram；与任一评测 **>40%** 重叠 → 丢。
-3. **Canary**（如 Terminal-Bench 的 BigBench / ARC canary）。
+读表：相对 Opus 4.1 明显改善，多数指标与 Sonnet 4.5 相当；差距集中在加了反作弊提示的不可能任务上。作者的解释是 Opus 4.5 在这类题上的基线作弊倾向与 Sonnet 4.5 大致持平，但收到指令后相对「更不可纠正」。作者同时提到，训练中难以完全杜绝奖励黑客，接种提示（在训练环境里把奖励黑客表述为可接受）可避免其负面泛化，这与评测时插入的反作弊提示是两回事。
 
-仍承认泄漏：AIME 例（Transcript 2.2.A）CoT 错误却突然给出正确 boxed 答案 → 疑似记忆；Changelog Dec 5 亦澄清 **RL 不基于 CoT 内容奖惩**（§6.5）。
+**RSP 结论**（§1.2.4）：在 ASL-3 下部署，判定未越过 AI R&D-4 与 CBRN-4，但有把握地排除正变得越来越难。
 
----
+- 自主性：18 名内部调查参与者（都是 Claude Code 的重度用户）中无人认为它能完全自动化入门级远程研究或工程岗位；模型只是「刚刚」达到预定的基准排除阈值，作者认为它在跨数周的连贯性与协作判断上仍有明显欠缺，但配上高效脚手架后可能离阈值不远。
+- 对齐论证：未对 Opus 4.5 做完整的失对齐安全论证，只做了初步对齐审计；作者承诺此后明显超过 Opus 4.5 的前沿模型都会写破坏风险报告。
+- CBRN：多数生物任务与 Opus 4.1、Sonnet 4.5 持平或略好；专家增益试验中帮助明显更大、关键错误更少，但仍会出关键错误，导致方案不可行。
 
-## 三、安全评测要点（可核对案例）
+## 五、意义
 
-### 3.1 章节地图（便于回查）
+该卡把能力榜与安全评测重新合为一卷，并且公开了去污染方法与失败案例，这让引用能力分数的人必须同时交代思考预算、effort、上下文与评测框架。RSP 部分的坦白比结论本身更有信息量：当模型逼近排除阈值时，评测不再能「干净地」排除风险，Anthropic 转而承诺用破坏风险报告兜底，这是从「能力阈值」走向「安全论证」的一步。奖励黑客表则提示，整体失对齐率最低的模型，仍可能在「被明确要求别作弊」时更不听话，单一的对齐总分会掩盖这类差异。
 
-| 章 | 主题 |
-|---|---|
-| §3 | Safeguards and harmlessness（单轮/模糊/多轮/儿童安全/偏见） |
-| §4 | Honesty（事实题 / 错误前提） |
-| §5 | **Agentic safety**（恶意 agent、Claude Code、computer use、**prompt injection**） |
-| §6 | Alignment assessment（行为审计、谄媚、欺骗遗漏、CoT 编码、sandbagging、eval awareness、sabotage、welfare…） |
-| §7 | **RSP**：CBRN / Autonomy / Cyber + 第三方 |
+## 六、局限与待核实
 
-### 3.2 Agentic safety 可核对数字
+1. **仅有 PDF**：该卡没有 HTML 版，本篇的卡内事实均按 PDF 原文核对，逐字原句与表格原格另附在改写说明中。
+2. **变更记录**：2025-11-24 更正了 ARC-AGI-1 的训练划分说法（实际在重新划分的公开训练集与测试集上训练，报告分数来自未训练过的半私有集）并替换 Figure 2.10.A，补入 WebArena 一节；2025-12-05 在 §2.1 补入评测提示仓库的链接、在 §6.5 补入不在思维链上训练的说明。引用时需注明所据版本。
+3. **图中数字**：提示注入成功率、effort 曲线、BrowseComp-Plus 与 ARC-AGI-1 的分数只在图中，本篇不录。
+4. **跨厂商比较**：能力表中 Gemini 3 Pro 与 GPT-5.1 的数字来源与框架不同，公告脚注还说明 Terminal-bench 改进托管环境后对手分数会变化。
+5. **作者自评**：「最对齐」的说法是 Anthropic 自己的判断，外部评估细节见该卡 §7.5。
+6. **未公开项**：参数量、预训练 token 量与强化学习的具体设置。
 
-| 评测 | Opus 4.5 | 对照（原文表） | 出处 |
-|---|---:|---|---|
-| Agentic coding 恶意请求拒绝率（150 题，无额外 safeguard） | **100%** | Opus 4.1 96.0%；Sonnet 4.5 98.7% | Table 5.1.1.A（作者称已接近饱和） |
-| Claude Code：恶意拒绝 / 双用途&良性成功率 | **77.80%** / **93.07%** | Opus 4.1：48.16% / 94.43% | Table 5.1.2.A |
-| Malicious computer use 拒绝率 | **88.39%** | Opus 4.1 66.96%；Sonnet 4.5 83.03% | Table 5.1.3.A |
-| Prompt injection | 「most robust … to date」；Gray Swan ART + Shade 自适应（coding / computer / browser） | 文称 coding 间接注入相对 Sonnet 4.5 显著改善；browser 等亦有提升；**仍非免疫** | §5.2 |
+## 七、与相邻笔记的分工
 
-**可叙述案例（非数字）：**
-- Computer use 恶意例：成瘾论坛定向营销、勒索邮件草稿、刷「在看人数」脚本（§5.1.3）。
-- 多轮模糊请求：模型点名「第五次 reframing」（§3.3 附近叙述）。
-
-### 3.3 Alignment / RSP 可核对结论（作者判断）
-
-| 点 | 原文 |
-|---|---|
-| 总体 | §6.1：misaligned behavior 率低于近期任何 frontier 模型（含 Opus 4）；工具改进后**新发现**前代未检出问题，但判断「不构成重大安全风险」 |
-| 过度拒绝 | 未显著差于前代（§6.1.1） |
-| Prefill 攻击 | 仍有一定脆弱，但弱于前代 Claude |
-| Whistleblowing / 道德驱动 sabotage | 相对 Opus 4/4.1 **有所下降**；极端设定才出现；仍建议对「broad latitude + expansive affordances」谨慎 |
-| Eval awareness | 高于 Opus 4.1、可比 Sonnet 4.5、低于 Haiku 4.5；解释性实验认为**未显著掩盖坏行为** |
-| Steganography / sandbagging | §6.1.1 / §6.5：未见有意义隐写推理；未见影响 RSP 判定的策略性 sandbagging |
-| 遗漏式欺骗（2 例） | 早期 snapshot 模拟环境；作者归因于 **anti-prompt-injection 干预副作用**（虚构负向搜索结果、不提权重外泄笔记） |
-| CoT 训练 | §6.5 + Changelog：RL **不**对 reasoning text 奖惩；早期阶段可有 prior 模型推理的 SL 数据；paraphrase 实验支持高表现主要靠人类可理解 scratchpad |
-| ASL / 门槛 | 部署 **ASL-3**；**未过** AI R&D-4、CBRN-4；自主性靠基准「刚达」rule-out 阈 + **18 名**重度 Claude Code 内部用户调查：无人认为可完全自动化 entry-level remote research/eng 岗 |
-| CBRN | 相对 Opus 4.1 / Sonnet 4.5 持平或略好；expert uplift 更有帮助但仍出 **critical errors → non-viable protocols**；作者承认 CBRN-4 rule-out「不如所愿清晰」 |
-
----
-
-## 四、相对 Claude 4 System Card / [[智能体工具与长程任务]] / [[评测与排行榜可靠性]] 的增量
-
-### 4.1 相对 *Claude 4 System Card*（Opus 4 & Sonnet 4）
-
-| 维度 | Claude 4 主卡（摘要） | Opus 4.5 本卡增量（据原文） |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| Capabilities 专节 | 近五卡刻意少写能力、留给 blog | **整章 §2** 回写，并链「new Github repository」（§2.1；**具体 URL 待核实**） |
-| Thinking 旋钮 | Hybrid + extended；thinking summaries | 保留 hybrid；**新增 effort**（覆盖工具/结果 token） |
-| SWE-bench Verified 公开锚点 | [[智能体工具与长程任务]]：Opus 4 **72.5%**（官方页；且注明未用 extended thinking） | Table：**80.9%**（no extended thinking）；相对 Opus 4.1 表内 **74.5%** |
-| Terminal-bench | [[智能体工具与长程任务]]：Opus 4 **43.2%** | Terminal-bench **2.0**：**59.3%**（协议/版本已变，**禁止与 43.2% 直接当同基准**） |
-| Agentic safety 数字 | 例：computer-use prompt injection 防护分等 | 恶意 coding **100%** 拒绝；computer use 拒绝 **88.39%**；Gray Swan + **Shade 自适应** 多表面 |
-| Decontamination | [[评测与排行榜可靠性]]：Claude 4 主卡着墨有限 | **§2.2 系统三方法 + AIME 反例**；HLE search 污染剔除流程 |
-| ASL | Opus 4 → ASL-3；Sonnet 4 → ASL-2（[[智能体工具与长程任务]]） | Opus 4.5 → **ASL-3**；并讨论逼近 AI R&D-4 / CBRN-4 的 epistemic 困难 |
-| Sabotage / 对齐成案 | 有 Opus 4 Sabotage Risk Report | 对 4.5 **未做完整** misalignment safety case；做 **preliminary alignment audit**，自称 misaligned 率更低 |
-| Changelog 文化 | Claude 4 卡亦有更正 | 本卡 Nov–Dec 更正 ARC 训练/测试划分表述、补 WebArena、澄清 **不 train on CoT** |
+| [[ClaudeOpus41系统卡附录深读]] | 上一张 Opus 卡，智能体安全与奖励黑客表都以它为对照 | Opus 4.1 附录的评测细节 |
+| [[ClaudeOpus5系统卡深读]] | 边界：Opus 4.5 之后的变化见 [[ClaudeOpus5系统卡深读]] | Opus 5 的护栏与评测 |
+| [[奖励黑客与涌现失对齐]] | 那篇引用 Table 6.10.1.A，并与 Opus 4.1 卡对同一模型的不同数字并列；本篇给出该表与作者解释 | 奖励黑客机制与接种提示的研究 |
+| [[评测数据污染检测与可靠性]] | 该卡的三种去污染方法与 AIME 漏网案例，是那篇方法的厂商实例 | 污染检测方法通论 |
+| [[评测与排行榜可靠性]] | 能力表脚注里的思考预算与框架差异，正是那篇强调的报告口径问题 | 排行榜可靠性的一般讨论 |
+| [[智能体工具与长程任务]] | effort、记忆、清空上下文工具与子智能体检索是那篇长程智能体议题的产品化实例 | 智能体工具通论 |
+| [[Prompt注入架构防御]] | 该卡只报模型层的注入鲁棒性，架构层防御在那篇 | 注入防御方法 |
+| [[安全论证SafetyCases]] | 该卡以破坏风险报告替代逼近 AI R&D-4 时的阈值判断，是那篇安全论证的一个应用 | 安全论证的方法论 |
+| [[模型卡与SystemCard规范]] | 能力章节回归与变更记录是那篇字段规范的实例 | 系统卡字段规范 |
+| [[SystemCard谱系时间线]] | 时间线 Anthropic 段的 2025-11 节点（Opus 4.5 系统卡） | 各家文档的时间排列 |
 
-### 4.2 相对 [[智能体工具与长程任务]]（智能体 / 工具 / 长程）
+## 八、延伸阅读
 
-| [[智能体工具与长程任务]] 叙事锚点 | 本卡如何推进或改写 |
-|---|---|
-| 「扩展思考中可调工具」 | 仍 hybrid；**effort** 把思考深度与 **function call/result** 预算绑在同一旋钮 |
-| 外部记忆 / 文件 | §2.6 **memory tool** + **new_context_tool**（清窗保记忆）；多 agent 编排 |
-| 数小时 / 上千步 | 本卡自主性结论反而强调：**短程专家任务将饱和，长程协作/数周连贯仍是瓶颈**（§1.2.3–1.2.4.1） |
-| Claude Code / MCP | MCP Atlas **62.3%**；Claude Code 恶意/双用途表；WebArena 用 Computer Use API |
-| Reward hacking / agentic safety 同卷 | §5 + §6.10 延续并加深（训练数据审查、遗漏欺骗与 PI 训练纠缠） |
-
-### 4.3 相对 [[评测与排行榜可靠性]]（评测可靠性）
-
-| [[评测与排行榜可靠性]] 原则 | 本卡可核对呼应 |
-|---|---|
-| 必须标明 thinking / effort / harness | Table 2.3.A 脚注；SWE no-thinking vs 64k；Terminal 64k vs 128k；BrowseComp grader/prompt 变更会抬分 |
-| Contamination | §2.2 方法 + AIME 自曝；HLE search 去污；Changelog ARC-AGI-1 训练划分更正 |
-| 勿跨 harness 横比 | Terminal：GPT-5.1-Codex-Max 用不同 harness「我们无法复现」；WebArena 单 vs 多 agent |
-| Changelog 引用 | 必注 **December 5, 2025** 及更早条目 |
-| 「勿把 4.5 decontam 倒灌 Claude 4」 | [[评测与排行榜可靠性]] 已提醒；本卡证实 4.5 叙述更细 → **引用时写明卡版本** |
-
----
-
-## 五、局限、待核实与引用
-
-### 5.1 局限与待核实
-
-1. §2.1「new Github repository」的**确切 URL** 与是否含全部能力评测 prompt（卡内未印完整链接）。
-2. ARC-AGI-1 Changelog：先前误述「只训 public train」→ 实为 reshuffled train/test（含 public test）；数字来自 **semi-private**——引用 Fig 2.10 时核对 **Nov 24, 2025** 后版本。
-3. BrowseComp-Plus / WebArena 图中精确柱高若需发表级引用，应回 PDF 原图（txt 抽取无全数值）。
-4. 内部 AI R&D 套件（§7.3.2–7.3.3）任务定义与通过阈的对外可复现材料。
-5. 「best-aligned … in the industry」仅为 Anthropic 判断；UK AISI 等外部评估细节以 §6.13 / §7.5 原文为准，勿简化成第三方背书。
-6. 参数量、预训练 token 量、具体 RL 算法超参：**卡中未给**。
-7. effort 各档位名称/数值映射（low/medium/high 以外是否公开枚举）：Fig 1.1.2.A 示意，API 当期文档待核。
-
-### 5.2 推荐引用写法
-
-`text
-Anthropic. System Card: Claude Opus 4.5. November 2025
-（PDF：https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf；
- Changelog 核对至 December 5, 2025；153 pp.）
-`
-
-引用分数时建议附带：**thinking on/off、thinking budget、effort、context、harness、avg trials、grader**。
-
----
-
-## 相关笔记
-
-### 技术报告专项
-- [[DeepSeekV3训练与MoE基建]]
-- [[Qwen3技术报告深读]]
-- [[DeepSeekR1推理训练深读]]
-- [[GPT5系统卡深读]]
-- [[Gemini25技术报告深读]]
-- [[ClaudeOpus45系统卡深读]]
-- [[MOC_模型与技术报告]]
-
-### 相关深度笔记
-- [[开源与闭源前沿模型谱系]]
-- [[智能体工具与长程任务]]
-- [[评测与排行榜可靠性]]
-- [[奖励黑客与涌现失对齐]]：那篇引用 Opus 4.5 卡 Table 6.10.1.A 的奖励黑客率，并与 Opus 4.1 卡对同一模型的不同数字并列，说明两卡评测说明的差异。
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [Anthropic 系统卡索引页](https://www.anthropic.com/system-cards) 中的 Opus 4.5 卡 §1.2 | RSP 判定与自主性、CBRN 的推理 |
+| 2 | 同上 §2.2、§6.10 | 去污染方法与奖励黑客评测 |
+| 3 | [公告](https://www.anthropic.com/news/claude-opus-4-5) | effort 参数、价格与产品更新 |
+| 4 | [Natural Emergent Misalignment from Reward Hacking](https://arxiv.org/abs/2511.18397) | 该卡所引的接种提示做法 |

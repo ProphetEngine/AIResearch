@@ -141,6 +141,8 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 | 红队 / 外部 | Societal Impact / 伦理测试 | Red Teaming & External Assessments 专章 | 贯穿 safeguards / alignment / RSP | 人类红队叙述（相对前代） | 第三方测试叙述（选择性） |
 | 对齐深层 | Ethical Considerations | Deception、CoT monitor 等 | Alignment assessment；model welfare | 相对短 | Concerning propensities；后卡 alignment audit |
 
+**FSF 背景：** Google DeepMind 的 Frontier Safety Framework（FSF）为每个风险域设关键能力档（CCL），并在 CCL 之下设 alert 阈值，提示模型可能正在接近该 CCL；Gemini 3 Pro 模型卡按 2025 年 9 月版评估，各域均未达 CCL，Cybersecurity 已达 alert（见 [[Gemini3Pro模型卡深读]]）；Gemini 3.7 Flash 模型卡改按 2026 年 4 月版并新增 TCL 列（见 [[Gemini37Flash模型卡深读]]）。框架各版本与 Gemini 的 FSF 报告见 [Frontier safety at Google DeepMind](https://deepmind.google/frontier-safety/)（Google DeepMind FSF 落地页）。
+
 ### 3.3 相对 Mitchell 的系统性偏移（架构思想）
 
 1. **从「分群误差条」到「威胁模型目录」**：前沿 SC 的一级目录常按 jailbreak / injection / CBRN / cyber / agentic / RSP 组织，而非按 demographic unitary×intersectional 主轴。BBQ 等公平基准仍出现，但通常是**专节**而非整卡骨架。

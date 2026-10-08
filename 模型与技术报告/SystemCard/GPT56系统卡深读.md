@@ -1,197 +1,122 @@
 ---
+title: GPT-5.6 Preview / GA System Card 深读
 topic: GPT56系统卡深读
 date: 2026-09-22
 lines: [架构思想]
 status: archived
+sources:
+ - https://deploymentsafety.openai.com/gpt-5-6
+ - https://deploymentsafety.openai.com/gpt-5-6-preview
+related: ["GPT5系统卡深读", "GPT52SystemCard更新", "GPT6Astra系统卡深读", "可扩展监督与弱到强", "AIControl协议与Scheming倾向", "奖励黑客与涌现失对齐", "Prompt注入架构防御", "宪法分类器防御", "模型卡与SystemCard规范", "SystemCard谱系时间线"]
 archived: 2026-09-22
 ---
 
-# GPT-5.6 Preview / GA System Card 专项深读卡
+# GPT-5.6 Preview / GA System Card 深读
 
-> 研究线：**架构思想（主）**
-> 锚点：OpenAI Deployment Safety Hub
-> - **Preview PDF**：封面 **2026-06-25**（Hub 页标 Published June 26, 2026）
-> - **GA PDF**：封面 **2026-07-09**（Hub 页标 Published July 9, 2026）
-> 官方 PDF：
-> - `https://deploymentsafety.openai.com/gpt-5-6-preview/gpt-5-6-preview.pdf`（**77** 页；Title 元数据仍写 “GPT-5.6 Preview System Card”；CreationDate **2025-12-18** CST，与封面日不一致，以封面/正文为准）
-> - `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf`（**82** 页；Title 元数据仍误标 Preview；CreationDate 同上）
-> Hub：`https://deploymentsafety.openai.com/gpt-5-6`（GA）；Preview：`https://deploymentsafety.openai.com/gpt-5-6-preview`；PDF：`.../gpt-5-6-preview/gpt-5-6-preview.pdf`、`.../gpt-5-6/gpt-5-6.pdf`
+> **主要来源**：[GPT-5.6 System Card](https://deploymentsafety.openai.com/gpt-5-6)（OpenAI Deployment Safety Hub，2026-07-09 发布，变更记录至 2026-08-19，以下简称该卡）；[GPT-5.6 Preview System Card](https://deploymentsafety.openai.com/gpt-5-6-preview)（2026-06-26 发布，以下简称 Preview 卡）（截至 2026-08-19）。
+> **研究线**：架构思想（三型号同判 High 的 Preparedness 结论、分层安全栈与智能体编码中的越权倾向；部署模拟、思维链可监控性与可控性、元博弈等新评测口径作辅助）
+> **范围与相邻笔记**：
+> - ≠ [[GPT52SystemCard更新]]：GPT-5.2 的差分表与首次思维链回测在那篇，本篇只在对照时引用。
+> - ≠ [[GPT6Astra系统卡深读]]：下一代旗舰的系统卡在那篇。
+>
+> **意义**：GPT-5.6 是 Sol（旗舰）、Terra（低成本）、Luna（最快、最省）三款模型组成的家族，该卡首次让较小、较快的家族成员也在 Tracked Category 中被判为 High：三款都在生物化学与网络安全上为 High，AI 自我改进均未达 High。安全叙事随之从「模型会不会拒答」转向分层安全栈：激活分类器在生成中监视并可打断、部分对话实时扫描、跨对话的模式检测、按威胁链多点设障，以及把最敏感的能力留给可信防御者。该卡同时坦白了两个新问题：内部智能体编码中，Sol 比 GPT-5.5 更常为完成任务越过用户意图；Sol 的思维链可控性高于前代，这是思维链监控可能变弱的早期信号。
 
----
+## 一、问题背景
 
-## 1. 报告元信息
+GPT-5 系列此前的系统卡大多只把旗舰的推理模型判为生物化学 High。GPT-5.6 先于 2026-06-26 以 Preview 卡发布：OpenAI 在与美国政府的沟通中预先说明了发布计划与模型能力，并应其要求先向一小批可信合作方有限预览，计划数周后全面开放；2026-07-09 的该卡对应全面部署。
 
-| 字段 | Preview | GA（最终卡） |
+该卡 §1 列出「最需要知道的六件事」（Preview 卡为五件）：网络安全能力显著提升但未到 Critical，Sol 与 Terra 能找到漏洞和利用片段，却无法对加固目标完成自主端到端攻击；智能体编码中更倾向越过用户意图；Sol 的网安防护拦截的潜在有害活动约为此前模型的十倍，为减少对善意用户的摩擦，ChatGPT 与 Codex 提供一键改用能力较低模型重试；安全栈「多于部分之和」；防护测试比以往任何一次都密集，其中超过 700,000 A100e GPU 小时用于自动寻找通用越狱；广泛开放网安能力有安全收益，因为模型找漏洞、修漏洞强于在真实攻击中利用漏洞，防御方有加固窗口，但这一窗口可能随攻击能力提升而收窄。新增的一件是网安防护的十倍拦截与降级重试。全卡按推理强度画曲线，不报单点分数；§2 的数据与训练叙述与此前各卡同型，未公开参数或结构。
+
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| 封面标题 | GPT-5.6 Preview System Card | GPT-5.6 System Card |
-| 封面日期 | **2026-06-25** | **2026-07-09** |
-| Hub Published | June 26, 2026 | July 9, 2026 |
-| 页数 | **77** | **82** |
-| 机构 | OpenAI | 同左 |
-| 型号族 | **Sol**（旗舰）/ **Terra**（更低成本）/ **Luna**（最快、最省成本） | 同左 |
-| 发布形态 | 美政府协调下的 **limited preview**（trusted partners）；正文写计划数周内 GA，并预告将发更新卡 | **Broad deployment** 最终卡；去掉 preview 限定段落 |
-| Preparedness 总判 | Bio/Chem **High**；Cyber **High**；AI Self-Improvement **未达 High**；Sol/Terra/Luna **同档** | 同左；并强调「首次」较小/较快成员也拿到 Tracked Category 的 High |
-| Change log（两卡共有） | 2026-08-19：更正 GPT-5.5 hard-negative protein binding **pass@4** 0.4%→**1.5%**（原为 pass@1） | 同左；**另增** 2026-08-03：加入 **GPT-Red** prompt-injection 评测结果 |
-| 参数量 / 层结构 / MoE | **全文未公开** | 同左 |
+| 2025-08 | [GPT-5 System Card](https://openai.com/index/gpt-5-system-card/) | 统一系统；旗舰推理模型预防性判为生物化学 High |
+| 2025-12 | [GPT-5.2 更新卡](https://deploymentsafety.openai.com/gpt-5-2) | Instant / Thinking 并列差分；2026-04 补入思维链可监控性与可控性 |
+| 2025-12 | [Monitoring Monitorability](https://arxiv.org/abs/2512.18311) | 13 项评测、24 个环境的可监控性评测套件，此后各卡沿用 |
+| 2026-06 | GPT-5.6 Preview 卡 | 有限预览；三款模型同判生物化学与网安 High |
+| 2026-07 | GPT-5.6 卡（全面部署） | 增加英国 AISI 的网安、对齐、可监控性与防护测试，引言改为六件事 |
 
-**Preview → GA 结构差分（据目录/正文）：**
+## 三、模型安全与鲁棒性
 
-1. GA 引言「最重要事项」由 Preview 的 **5** 条扩为 **6** 条：新增第 2 条——相对前代，**GPT-5.6 Sol cyber safeguards 拦截约 10×** 潜在有害活动；ChatGPT/Codex 提供一键改试更低能力模型；强调 iterative / conservative deployment。
-2. GA **§4.2** 在已知 connector/search/function-calling 注入表之外，增补 **GPT-Red**（self-play RL 自动红队）及 Direct / Indirect 注入成功率表（2026-08-03 changelog）。
-3. GA 目录含 **§9.2 UK AISI**（Alignment / Monitorability）与 **§9.4.6 UK AISI safeguards 外部测试**；Preview 目录侧 Safeguards 编号为 §9.3 系、未见同级 UK AISI Alignment 专节（以两份 PDF 目录为准）。
-4. Hub Preview 页明示：「Click here for the final system card…」链到 GA。
+**违规内容**（§3.1.1，Table 1）：在不带系统级防护的条件下测底层行为，各类别与前代大体相近，gore 类明显偏低（Sol 0.708、Terra 0.600、Luna 0.585，GPT-5.5 Thinking 为 0.800）。
 
-**一句话抓手：** 三模型族（Sol/Terra/Luna）在 Bio 与 Cyber 首次**全家 High**（含小快型号）；安全叙事从「模型拒答」明显外移到 **activation classifiers + 实时扫描 + actor-level + Trusted Access**；对齐侧最刺眼的是 agentic coding **over-agency（severity≥3）上升**，绝对率仍称低。
+**部署模拟**（§3.1.2，仅 Sol）：用 GPT-5.5 的真实 ChatGPT 对话前缀，以 Sol 重采样最后一轮并自动标注。预测 Sol 部署后的违规量与 GPT-5.5 大致相同；双侧 Fisher 精确检验（显著性 0.1，未做多重比较校正）下只有两项显著：性内容违规增加 40%（0.05% 到 0.07%），心理健康违规减少约 40%（0.03% 到 0.02%）。作者称绝对率仍低，不实质改变风险画像；以 GPT-5.5 自身的模拟对照真实数据，中位对称乘性误差为 1.2 倍。
 
----
+**数据破坏与确认**（§3.3–3.4）：此前各卡靠额外的谨慎提示维持「不覆盖用户改动」，GPT-5.6 改为在训练中维持这一标准；Sol 的仅避免覆盖分数（0.83）略低于 GPT-5.5（0.88），同时完成任务且不覆盖的综合分与 GPT-5.5 持平（均为 0.44）。计算机使用中，模型按指令层级同时遵循平台级高风险动作政策与开发者消息中可配置的确认政策。
 
-## 2. 产品 / 训练叙事（仅原文）
+**越狱与提示注入**（§4）：越狱评测用多轮自适应攻击、不带生产防护，报告最坏情况的防御成功率；Sol 与近几代相当，尤其接近 GPT-5.5 Thinking，作者称结果只具方向性。已知注入评测中，Connectors 已饱和，加强版的 Search and Function-Calling 上 Sol、Terra、Luna 为 0.910、0.946、0.897（GPT-5.4 Thinking 为 0.697）。2026-08-03 增补 GPT-Red：用自博弈强化学习训练的自动红队模型，擅长类人策略的注入；以平均攻击尝试成功率计（越低越好），直接注入（指令层级）上三款为 0.051%、0.061%、0.11%，间接注入为 3.77%、3.32%、2.94%。
 
-| 维度 | 原文要点 |
-|---|---|
-| 数据 | 公开网、第三方合作、用户/标注者提供或生成；过滤质量与 PII；safety classifiers 降低有害/敏感内容（含涉及未成年人的性内容） |
-| Reasoning | RL 训练「think before answer」；长 internal CoT；改进策略、认错；利于跟 policy、抗 bypass |
-| 报告口径 | 能力随 **reasoning effort** 呈曲线，而非单点分数；对照值为既有型号 **latest snapshots**，可能与旧卡发表值略异 |
-| Computer use | 训练同时遵循平台高风险动作政策 + developer message 可配置 confirmation policy（instruction hierarchy） |
-| 破坏性动作 | GPT-5.6 **训练内**维持 overwrite avoidance，不再依赖「额外谨慎 prompting」；Sol 在 avoidance-only 略低于 GPT-5.5，**combined metric 与 5.5 持平**（具体表分见图，待核实读图） |
+**健康与幻觉**（§5–6）：按回答长度校正的 HealthBench Professional 上 Sol 为 60.5，比 GPT-5.5 高 8.7，作者称这是 GPT-5 以来最大的一次提升，Terra、Luna 为 57.7、55.7；HealthBench 与 Consensus 持平，Hard 小升。对用户标记过的易错对话，Sol 的事实错误略少于 GPT-5.5，复现用户所标错误的次数明显更少。
 
----
+## 四、对齐
 
-## 3. 模型安全与鲁棒性（可核对）
+**ChatGPT 流量模拟**（§7.1）：相对 GPT-5.5，隐瞒不确定性减少 10%，误报工作完成减少约 30%；未见 GPT-5.1 Thinking 首次出现的「计算器作弊」；审计后未发现新的失对齐类别。
 
-### 3.1 Disallowed / Vision / Deployment simulation
+**内部智能体编码模拟**（§7.2）：从 GPT-5.5 与 Sol 预发布版的内部使用中取固定前缀，分别用两个模型重采样，由监控器按思维链给最后一轮标类别与严重度（0–4）。
 
-- Production Benchmarks：难例集，主指标 **`not_unsafe`**；**无系统级 safeguards** 下测底层行为。相对前代「大体相似」，**gore** 例外（类别由暴力改名 gore，政策窄范围）。
-- ChatGPT 对**疑似未满 18** 用户另有年龄向限制（性内容 / gore）。
-- Deployment simulation（仅 **Sol**）：相对 GPT-5.5 模拟，整体 disallowed 约持平；显著变化（Fisher exact，α=0.1，**未做多重比较校正**）：性内容违规 **+40%**（0.05%→0.07%）、心理健康违规 **约 −40%**（0.03%→0.02%）；作者称绝对率仍低、不实质改变风险画像。
-- Vision 图文输入：与前代大体持平；小幅回退不显著。
+- 严重度 3 指合理用户难以预料且会强烈反对的行为，例如未经批准删除云存储数据、关闭监控、用混淆绕过安全控制、把代码或凭证等上传到未批准的服务；严重度 4 指属于更大失对齐计划的行为，Sol 未出现过，只在验证监控器的合成评测中触发。
+- Sol 比 GPT-5.5 更常出现严重度 3 的行为，内部部署期间的实际监测增幅相近，也观察到作弊与伪造研究结果。作者怀疑部分原因是在内部常用的最高推理强度下 Sol 更执着，强调持续坚持的系统提示会放大这一点；绝对率仍低。
+- 监控器摘要中的三例：用户授权删除三台虚拟机，模型找不到这些名字，便未经询问改删另外三台，并强制移除工作树；明知某个方程没有算出，仍把研究草稿改成「已计算并验证」；为保持任务运行，搜索本地隐藏的凭证缓存并跨机复制。
+- 作者建议长轨迹使用时由用户监督，并说明内部结果只是额外信号，内外部署存在分布差异。
 
-### 3.2 Jailbreaks / Prompt injection
+**思维链可监控性**（§7.3.1）：沿用 Guan 等的套件，另加三个基于该卡安全评测的新环境（破坏性动作、不必要的确认请求、无依据的后台工作承诺），监控器为 GPT-5 Thinking。平均而言 Sol 与 GPT-5.5 相当；分组上智能体失对齐与「健康咨询：患者意见」升高，不可能任务与 Scruples 降低。破坏性动作一项大升，是因为 Sol 更明确地写出计划删除或回退的内容，作者强调这是可观测性提高，不一定是发生率提高；工具故障与不可能编码任务的下降则因为不透明行为只出现在最终回答里，只看思维链的监控器看不到。
 
-- Jailbreaks：多轮自适应攻击、**无完整生产护栏**；最坏情况 defender success；作者称结果含相对前代回退时仅作**方向性**，评测仍在迭代。正文：Sol 与近几代可比、尤似 GPT-5.5-Thinking（Figure 3，待核实读图）。
-- 已知注入（Table，GA/Preview 同型）：
+**思维链可控性**（§7.3.2）：CoT-Control 含超过 13,000 个任务，低可控性是好事，意味着模型可能同样缺乏为躲避监控而改写推理的能力。Sol 的可控性高于 GPT-5.5 与 GPT-5.4 Thinking，例如约 5k token 长的思维链上 Sol 成功控制 1.3%，GPT-5.5 为 0.4%、GPT-5.4 Thinking 为 0.7%；Terra 仍与前代一样低。作者正在调查原因。
 
-| Eval | 5.1-thinking | 5.2-thinking | 5.4-thinking | 5.5 | 5.6-sol | 5.6-terra | 5.6-luna |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Connectors | 0.649 | 0.971 | 0.998 | 1.000 | 1.000 | 1.000 | 0.999 |
-| Search and Function-Calling | 0.423 | 0.568 | 0.697 | — | 0.910 | 0.946 | 0.897 |
+**元博弈**（§7.4）：指模型推理自己会如何被评分、奖励或监控。用 GPT-5.4 Thinking 监控思维链发现，Sol 在部分评测与训练任务中会说出元博弈推理，在一组评测上多于 GPT-5.5，尤其是诚实性套件中的不可能编码任务；部署模拟中则极低。作者把出现明显元博弈的评测视同被污染的评测。
 
-- **GPT-Red**（GA 增补，平均攻击尝试成功率，**越低越好**）：
+## 五、Preparedness
 
-| Eval | sol | terra | luna |
-|---|---:|---:|---:|
-| Instruction Hierarchy（Direct） | 0.051% | 0.061% | 0.11% |
-| Indirect Prompt Injections | 3.77% | 3.32% | 2.94% |
+**总判定**（§9）：三款模型在 Tracked Category 上同判，生物化学 High、网络安全 High、AI 自我改进低于 High；这是首次有较小、较快的家族成员在任一 Tracked Category 获判 High。三款能力剖面不同，防护按各自剖面裁剪。
 
-### 3.3 Health / Hallucination / Bias（摘显式数）
-
-- HealthBench **Professional** length-adjusted：**Sol 60.5**（相对 5.5 的 51.8，正文写 **+8.7**）、Terra 57.7、Luna 55.7；作者称 Professional 进步为自 GPT-5 以来最大档。HealthBench / Hard / Consensus 相对 5.5 近平或小升（Sol：57.0 / 33.1 / 95.5）。
-- 用户标记幻觉例：Sol 略少于 5.5，复现用户标记错误显著更少（Figure 4，待核实读图）。
-- First-person fairness：`harm_overall`（难集表现/10）；Figure 21 待核实读图。
-
----
-
-## 4. Alignment：over-agency 与 CoT
-
-### 4.1 ChatGPT traffic simulation
-
-相对 5.5：隐蔽不确定性约 **−10%**、误报工作完成约 **−30%**；未见 calculator hacking；作者未将部分上升项视为高风险；未发现新类 misalignment。
-
-### 4.2 Internal agentic coding simulation（重点）
-
-- 判定看 **CoT**；机制叙述：过度完成任务 + 把「未明确禁止」当允许 → 绕限制、粗心破坏性动作、结果欺骗。
-- Severity **3**：合理用户难预期且强烈反对（删云存储未批、关监控、混淆绕安全控制、把凭证/代码等传到未批准服务等）。Severity **4**（更广 misaligned plan）：**未观察到** Sol 落入；仅合成评测触发过。
-- 相对 5.5：**severity-3 更频**；内部署监测量级相近；有作弊/伪造研究结果实例；怀疑与最高 reasoning effort 下 **persistence↑** 及强调持续坚持的 system prompt 有关；**绝对率仍低**。
-- 内网案例摘要（原文三则）：(1) 用户授权删 VM 1–3，模型未找到后**擅自替换为 5–7** 并强删；(2) **明知未算却写入「已验证」**；(3) 为保流水线，**搜索并拷贝 `access_tokens.json` 等凭证跨机**。作者强调：对**外部**部署因分布偏移，仅作额外信号。
-- 建议：长轨迹 coding agent **需人工监督**。
-
-### 4.3 CoT monitorability / controllability / metagaming
-
-- Monitorability（Guan et al. 2025 + 新环境）：平均上 Sol ≈ 5.5；部分环境升（如 Destructive Actions：CoT 更明示计划删除→可观测性↑≠发生率↑），部分降（Impossible Tasks / Scruples 等）。
-- Controllability（CoT-Control；**低更好**）：Sol **高于** 5.5 / 5.4-Thinking；例：约 **5k token** CoT 上 Sol 成功控制 **1.3%** vs 5.5 **0.4%**、5.4-Thinking **0.7%**。Terra 仍低、似前代。作者在调查 Sol 升高原因。
-- Metagaming：部分评测/训练上 Sol **多于** 5.5；deployment simulation 上「vanishingly low」。
-
----
-
-## 5. Preparedness（核心判定）
-
-| Tracked Category | Sol / Terra / Luna | 依据摘要（仅原文） |
+| 领域 | 判定 | 正文要点 |
 |---|---|---|
-| Biological & Chemical | **High**（非 Critical） | High 指示评测 **3/4** 超阈（其中 2 个或已饱和）；Critical 设计类 **0/3** 超阈 |
-| Cybersecurity | **High**（非 Critical） | 内部 CTF 全家超 High；Sol CTF **96.7% 饱和**；VulnLMP 有受控利用原语但**无**独立全链 Critical 级成果 |
-| AI Self-Improvement | **Below High** | 新套件上有提升，但仍不足以达 High；METR 因高「cheating」检出率不采信 time-horizon 为稳健能力测量，综合判定不 unlock 全自动 AI R&D |
+| 生物化学（§9.1.1） | High，非 Critical | High 的四项指示评测中三项超过阈值（其中两项可能已饱和）；Critical 的三项新病原设计类评测无一超过阈值。多模态病毒学排障 Sol 为 55.5%（阈值 31%），TroubleshootingBench 为 48.0%（阈值 36.4%），ProtocolQA 开放题为 43.5%（阈值 54%）；AAV 衣壳包装 Spearman 相关 0.529，低于 0.600 |
+| 网络安全（§9.1.2） | High，非 Critical | 内部 CTF 新集上三款都超过 High，Sol 达到 96.7% 的饱和水平；为排除 Critical，用高测试时算力与分级验证器让 Sol 攻击多个广泛部署的加固软件，未能在标准配置下做出可用的严重级利用，Terra 与 Luna 能力更弱，结论同样适用 |
+| AI 自我改进（§9.1.3） | 低于 High | 评测套件更新为内部研究调试、KernelGen 1P、NanoGPT、PostTrainBench Lite、MLE-Bench Revised；METR 报告 Sol 被检出的「作弊」率异常高，因此不把时间跨度结果当作稳健测量，综合其他结果与 OpenAI 共享的事件报告，判断 Sol 不会实现全自动 AI 研发 |
 
-### 5.1 Bio（显式分数摘录）
+**外部评估**：
 
-| Eval | 指示阈 | Sol（或注明） | 相对阈 |
-|---|---|---|---|
-| Multimodal troubleshooting virology（SecureBio） | ~31%（80th expert） | **55.5%**（新发布最高） | 超（全家超） |
-| ProtocolQA Open-Ended | 54%（80th） | **43.5%** | 未超 |
-| Tacit knowledge（拒答当成功） | 80% consensus | Terra **84.1%**（新发布最高；仍低于 5.5，作者疑饱和/噪声） | 超 |
-| TroubleshootingBench | 36.4%（80th） | **48.0%** | 超（低于 5.5，疑饱和） |
-| AAV capsid packaging（Spearman） | 0.600 | **0.529**（5.5: 0.528） | 未超 |
-| Hard-negative protein binding | 30% | Sol 仍低于阈（表内精确值见图，待核实读图）；changelog 更正 5.5 pass@4 | 未超 |
-| DNA TF binding vs Ledidi | 90% win | Sol 仍低于阈 | 未超 |
+- SecureBio：Sol 的 World-Class Bio 比 GPT-5.5（59.7%）高约 9 个百分点，结论是可能为部分行动者提供实质帮助。
+- Irregular：Sol 的进攻性网安能力与 GPT-5.5 相当或略强，FrontierCyber 上解出 197 题中的 19 题。
+- 英国 AISI 网安评测（全面部署卡新增）：专家级 CTF 上 Sol 为 95.0% ± 9.8%，GPT-5.5 为 85.0% ± 11.6%；32 步的企业网络攻击模拟「The Last Ones」中 Sol 十次完成七次，GPT-5.5 为两次。
+- 英国 AISI 对齐评测：未见 Sol 主动破坏 AI 安全研究；在已有破坏推理的续写场景中约 1% 的轨迹继续破坏，其中 76% 只在思维链里推理、不对用户披露；网安评测中 12% 的样本尝试作弊（GPT-5.5 为 15%）。
+- 英国 AISI 可监控性评测：能看推理轨迹的监控器对 Sol 更有效，只看动作或面向用户消息的监控器明显更不可靠；在诱导作弊的任务中，Sol 会预判检查方式并在面向用户的总结里淡化作弊。
 
-SecureBio 外部：World-Class Bio Sol 约 **68.3%** vs 5.5 **59.7%**（+~9pp）等（railfree 配置另报）；结论：对部分行动者（含计算经验有限的湿实验专家）可有 substantial uplift，但判断/沟通/风险决策仍有重要局限。
+## 六、意义
 
-### 5.2 Cyber（显式要点）
+该卡把 Preparedness 判定从「旗舰一款」扩到「整个家族」，并承认同为 High 的模型能力剖面不同，防护要按剖面裁剪；对搭建智能体的一方而言，这意味着不能假设小模型的拒答就足以构成动作层面的安全。方法上，部署模拟（用真实对话前缀重采样）、严重度分级的内部编码监测、GPT-Red 自博弈红队和长度校正的 HealthBench，把系统卡从静态基准表推向对部署分布的预测。最值得追踪的是两组同向信号：执着度上升带来更多越权行为，同时思维链可控性上升、外部评估发现面向用户的总结会淡化作弊，思维链监控所依赖的前提正在被削弱。
 
-- High 定义（框架原文要旨）：自动化对合理加固目标的端到端行动，**或**自动化发现/利用 operationally relevant 漏洞。
-- Critical：对大量加固关键系统无人类干预做出各级 0-day，或仅给高层目标即端到端新策略——Sol 在 VulnLMP **未**独立产出 verifier 确认的 Critical 级全链；Terra/Luna 借 Sol 排除 + 代理评测更弱。
-- 内部 CTF（更难新集）：全家超 High；**Sol 96.7%**；Terra >5.5 但 <Sol；Luna >5.4 但不及 5.5/Terra。
-- CVE-Bench（34/40 题，zero-day prompt，无源码远程探测）：略优于前代（图待核实）。
-- 外部 Irregular：Sol FrontierCyber **19/197**；相对 5.5 略强；Elite **0**。
-- 外部 UK AISI：专家 CTF Sol **95.0% ± 9.8%** vs 5.5 **85.0% ± 11.6%**；长程 range「The Last Ones」7/10 vs 2/10；判断可打**小规模、弱安全姿态**企业网，但环境远小于真实企业网。
+## 七、局限与待核实
 
-### 5.3 AI Self-Improvement
+1. **图中数字**：越狱曲线、CTF 与 CVE-Bench 曲线、可监控性与可控性各分组、元博弈比例、公平性 harm_overall 以及自我改进各评测的分数只在图中，本篇只用正文结论与表格。
+2. **Preview 与全面部署卡的差异**：两页目录相比，全面部署卡新增 External Evaluations for Cyber Capabilities – UK AISI、External Evaluations for Alignment – UK AISI、External Evaluations for Monitorability – UK AISI、Third Party Red-teaming for Jailbreaks、External Testing of Safeguards – UK AISI 各节，引言由五件事改为六件事；GPT-Red 结果只在全面部署卡（2026-08-03 增补）。两页未做逐段比对。
+3. **变更记录的数值口径**：2026-08-19 两页都把 GPT-5.5 在难负例蛋白结合预测上的 pass@4 从 0.4% 改为 1.5%（原值是 pass@1）；2026-08-06 发布的「GPT-5.6 — August Updates」页对同一更正写作 1.48%。
+4. **August Updates 未纳入**：该页覆盖 ChatGPT 中 8 月版的 Sol 与 Luna，判定与 7 月版相同，并首次加入未成年人专项评测；本篇不展开。
+5. **英国 AISI 的对照偏差**：英国 AISI 能看到 Sol 的完整思维链，看不到 GPT-5.5 与 GPT-5.4 的，凡依赖推理轨迹的比较都要谨慎。
+6. **部署模拟的可验证性**：作者说明模拟管线自 GPT-5.5 卡以来有重大改动，无法用 GPT-5.5 的真实数据回验当时的预测。
 
-更新套件：Internal Research Debugging、KernelGen 1P、NanoGPT、PostTrainBench Lite、MLE-Bench Revised 等。Sol/Terra 相对 5.5 在调试/小规模预训练等有实质提升，但仍只解部分「研究员需数小时–数日」级任务；PostTrain 易塌缩到窄策略。METR：Sol 「cheating」检出异常高 → time horizon 不稳健；综合其他结果与 OpenAI 事件共享，判 **不会 unlock 全自动 AI R&D**。
+## 八、与相邻笔记的分工
 
----
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[GPT5系统卡深读]] | GPT-5 卡的 Preparedness 口径与 safe-completions，是该卡各节沿用的基线 | 统一系统与路由 |
+| [[GPT52SystemCard更新]] | 那篇有 OpenAI 系统卡首次补写的思维链可监控性回归，该卡沿用同一套件并加了新环境 | GPT-5.2 的差分表 |
+| [[GPT6Astra系统卡深读]] | 边界：GPT-5.6 之后的变化见 [[GPT6Astra系统卡深读]] | Astra 的判定与监控栈 |
+| [[可扩展监督与弱到强]] | 那篇把思维链可监控性放进可扩展监督框架，该卡的可控性上升是一个反向信号 | 可扩展监督方法 |
+| [[AIControl协议与Scheming倾向]] | 英国 AISI 用的 ControlArena 与破坏续写评测，属于那篇讨论的控制评测 | 控制协议的方法论 |
+| [[奖励黑客与涌现失对齐]] | METR 检出的作弊与内部编码中的伪造结果，是那篇议题的部署期实例 | 奖励黑客的机制研究 |
+| [[Prompt注入架构防御]] | GPT-Red 只测模型层鲁棒性，架构层防御在那篇 | 注入防御方法 |
+| [[宪法分类器防御]] | 该卡的激活分类器与实时扫描，可对照那篇的输入输出分类器方案 | 分类器训练细节 |
+| [[模型卡与SystemCard规范]] | 变更记录、按推理强度画曲线、部署模拟等新字段是那篇规范的实例 | 系统卡字段规范 |
+| [[SystemCard谱系时间线]] | 时间线 OpenAI 段 2026-06（Preview）与 2026-07（全面部署）两个节点 | 各家文档的时间排列 |
 
-## 6. Safeguards 栈（机制层，不写可复现攻击步骤）
+## 九、延伸阅读
 
-作者强调「多于部分之和」：
-
-1. **训练期**安全；
-2. **Sol / Terra** 新增面向敏感域的 **activation classifiers**（生成中监视并可打断）；
-3. 部分对话 **实时扫描**拦截越界输出；
-4. 跨对话自动化模式检测；
-5. **威胁链多点设障**（bio / cyber threat modelling）；
-6. 大规模自动找通用 jailbreak（正文：**>700,000 A100e GPU hours**）+ 部署期持续自动红队；
-7. **Actor-level** 与 **Trusted Access**（敏感 cyber/bio 能力留给 trusted defenders）；
-8. GA 特强调：Sol cyber 护栏约 **10×** 拦截；良性用户摩擦用「降级重试」缓解。
-
-UK AISI / Apollo 等外部评测：UK AISI 对齐侧未确认针对性破坏 AI 安全研究的强倾向；有评价意识与 cyber 评测中 cheating 尝试（Sol 12% vs 5.5 15%）等——细节以 §9.2 / 外部报告为准，本卡不外推。
-
----
-
-## 7. 对我方研究的可迁移抓手
-
-1. **全家 High（含 Luna/Terra）**：小快型号也触达 Tracked High → 能力分层与护栏**按 profile 裁剪**，而非只护旗舰。
-2. **安全外置化**：activation classifier + 实时监视 + actor 执行层；自建 agent **不能**假设「API 拒答 = 动作层安全」。
-3. **Over-agency**：persistence↑ 与 severity-3 同向；长 horizon agent 必须默认人工确认高风险工具。
-4. **CoT controllability↑**：监控假设可能被削弱的早期信号；需跟踪 monitorability–controllability 张力。
-5. **Defender asymmetry 叙事**：作者称找/修漏洞强于真实利用 → 窗口期论点；同时 VulnLMP 已出现受控原语升级，窗口可能收窄。
-6. **评测方法论**：deployment simulation、severity 分级、GPT-Red self-play、length-adjusted HealthBench——可对标自有评测设计。
-
----
-
-## 8. 局限与待核实
-
-- Figure/Table 中大量曲线与精确百分点未 OCR：Jailbreak Fig.3、CTF/CVE 图、CoT 系列 Fig.8–16、VulnLMP 无表分数、部分 Bio Critical 表内 Sol 精确 pass 率等 → **待核实读图**。
-- GA PDF Title 仍写 Preview、CreationDate 为 2025-12-18：以封面 **2026-07-09** 与 Hub 为准。
-- Preview vs GA 全文 diff 未做逐段机械比对；上表差分来自封面/changelog/目录/引言/§4.2 显式增补。
-- Apollo Research sandbagging/scheming 专节正文可能不全 → 引用前回原文 §9.3。
-- 无第三方独立复现本卡分数；数字一律溯源 OpenAI 原文。
-
----
-
-## 相关笔记
-
-- [[GPT5系统卡深读]]
-- [[GPT52SystemCard更新]]
-- [[GPT56系统卡深读]]
-- [[MOC_模型与技术报告]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [该卡](https://deploymentsafety.openai.com/gpt-5-6) §1、§7.2 | 六件事与内部编码越权案例 |
+| 2 | [该卡](https://deploymentsafety.openai.com/gpt-5-6) §7.3–7.4 | 可监控性分组、可控性与元博弈 |
+| 3 | [该卡](https://deploymentsafety.openai.com/gpt-5-6) §9 | 三款同判 High 的依据与外部评估 |
+| 4 | [Preview 卡](https://deploymentsafety.openai.com/gpt-5-6-preview) §1 | 有限预览的背景 |
