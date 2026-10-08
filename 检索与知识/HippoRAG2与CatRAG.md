@@ -19,10 +19,10 @@ timezone: Asia/Shanghai (CST)
 
 # RAG→记忆新范式：HippoRAG 2 + CatRAG（≠ GraphRAG / Self-RAG）
 
-> **定位**：**RAG / 记忆检索**——在 [[检索增强与知识外挂]] 稠密检索通史、[[图谱检索GraphRAG]] 社区摘要 GraphRAG、[[SelfRAG与CorrectiveRAG]] Self-RAG/CRAG 自适应检索之后，补近窗两刀：**HippoRAG 2**（把 RAG 推向**非参数长期记忆**的事实 / 联想 / 通感三维评测）与 **CatRAG**（在 HippoRAG 2 图上解决「静态图谬误 / hub 漂移」，做**查询自适应遍历**）。
+> **定位**：**RAG / 记忆检索**——在 [[检索增强与知识外挂]] 稠密检索通史、[[图谱检索GraphRAG]] 社区摘要 GraphRAG、[[SelfRAG与CorrectiveRAG]] Self-RAG/CRAG 自适应检索之后，补近窗两刀：**HippoRAG 2**（把 RAG 推向**非参数长期记忆**的事实 / 联想 / 意义建构（sense-making）三维评测）与 **CatRAG**（在 HippoRAG 2 图上解决「静态图谬误 / hub 漂移」，做**查询自适应遍历**）。
 > **研究线**：**架构思想（主）**——OpenIE+PPR 记忆索引、dense-sparse、recognition memory、查询条件边权；**评测字段（辅）**——三轴记忆表 / FCR·JSR 完整性，不外推未测场景。
 > **范围与相邻笔记**：
-> - **≠ [[检索增强与知识外挂]]**：不重写稠密双塔 / DPR / MIPS / 向量库产品通史；本卡只用「标准向量 RAG 缺联想与通感」对照槽。
+> - **≠ [[检索增强与知识外挂]]**：不重写稠密双塔 / DPR / MIPS / 向量库产品通史；本卡只用「标准向量 RAG 缺联想与意义建构」对照槽。
 > - **≠ [[图谱检索GraphRAG]]**：不把 HippoRAG 写成 **GraphRAG 重写**。GraphRAG = 实体图 → Leiden 社区 → **预计算摘要扩库** → map-reduce 全局 QFS；HippoRAG 2 文内自述：KG **辅助检索过程**，**不**用摘要去膨胀检索语料（§2.2）。
 > - **≠ [[SelfRAG与CorrectiveRAG]]**：不重写 Self-RAG reflection tokens / CRAG 三动作 Web 回退；CatRAG 文内把 Self-RAG 等标为**多轮迭代检索**，自称 **one-shot** 改权再单次 PPR（§2.3）。
 > - **≠ [[检索式注意力]]**：不重写 RetrievalAttention 式「模型内注意力检索」；本卡是**库外开放 KG + PPR**。
@@ -44,7 +44,7 @@ timezone: Asia/Shanghai (CST)
 | CatRAG | https://github.com/kwunhang/CatRAG ；README：**2026-04-14** 录 ACL Findings 2026；**2026-08-20** 释出**复现实现**与 HoVer 数据。注意：论文 Limitations 写「**完整源码因专有数据政策不能公开**」，仅给超参表；跟读以「复现仓库 ≠ 论文作者原仓库全量」标注 |
 
 **一句话抓手：**
-- **HippoRAG 2**：OpenIE 短语图 + **passage 节点 / context 边**（dense-sparse）+ **query-to-triple** + LLM **recognition memory** 滤三元组 → PPR → 段落 QA；用事实 / 联想 / 通感三轴证明「结构增强不必牺牲简单事实」。
+- **HippoRAG 2**：OpenIE 短语图 + **passage 节点 / context 边**（dense-sparse）+ **query-to-triple** + LLM **recognition memory** 滤三元组 → PPR → 段落 QA；用事实 / 联想 / 意义建构三轴证明「结构增强不必牺牲简单事实」。
 - **CatRAG**：承认 HippoRAG 2 转移矩阵在索引期**冻结** → hub 漂移 / 高部分召回但证据链断裂；用 **Symbolic Anchoring + 查询感知动态边权 + Key-Fact 段落加权** 把静态图改成查询条件导航，主指标升 **FCR / JSR**。
 
 ---
@@ -86,7 +86,7 @@ timezone: Asia/Shanghai (CST)
 
 ### 3.1 动机：结构增强不能牺牲事实记忆
 
-文首诊断（Abstract / §1 / Fig.1）：标准 RAG 靠向量检索，难捕获人类长期记忆的 **sense-making**（Klein et al.）与 **associativity**（Suzuki）；近期结构增强 RAG（摘要树 / KG / 社区）在多跳与长语篇上有收益，但在**简单事实 QA**上相对最强 embedding RAG **全面掉队**。HippoRAG 2 目标：在联想任务上相对 SOTA embedding **约 7 个点**提升的同时，事实与通感**不劣化甚至略升**（Abstract：「7% improvement in associative memory…」；正文 §1：「average 7 point improvement… associativity」）。
+文首诊断（Abstract / §1 / Fig.1）：标准 RAG 靠向量检索，难捕获人类长期记忆的 **sense-making**（Klein et al.）与 **associativity**（Suzuki）；近期结构增强 RAG（摘要树 / KG / 社区）在多跳与长语篇上有收益，但在**简单事实 QA**上相对最强 embedding RAG **全面掉队**。HippoRAG 2 目标：在联想任务上相对 SOTA embedding **约 7 个点**提升的同时，事实与意义建构**不劣化甚至略升**（Abstract：「7% improvement in associative memory…」；正文 §1：「average 7 point improvement… associativity」）。
 
 与 GraphRAG 的关键一句（§2.2，跟读必留）：GraphRAG / LightRAG 用 KG **生成高层摘要以扩展检索语料**；HippoRAG 2 的 KG **用于辅助检索过程本身**，从而少引入 LLM 摘要噪声——这正是「≠ [[图谱检索GraphRAG]]」的文内锚点。
 
@@ -212,7 +212,7 @@ Hub 量化（100 条 MuSiQue 抽样）：Mean PPR-Weighted Strength **837.0→76
 
 | 维度 | HippoRAG 2 | CatRAG |
 |---|---|---|
-| 问题框 | 结构 RAG 伤事实记忆；要事实+联想+通感三轴 | 静态 $T$ → hub 漂移；部分召回≠完整证据链 |
+| 问题框 | 结构 RAG 伤事实记忆；要事实+联想+意义建构三轴 | 静态 $T$ → hub 漂移；部分召回≠完整证据链 |
 | 图角色 | 开放 KG **辅助检索**（≠ 摘要扩库） | **同一 HippoRAG 2 图**上查询条件改 $T$ |
 | 线上 LLM | recognition 滤三元组 | 再加出边相关性打分（+弱锚定 / Key-Fact 无 LLM） |
 | 主 embedding（文内主表） | NV-Embed-v2 | text-embedding-3-small（隔离拓扑） |
