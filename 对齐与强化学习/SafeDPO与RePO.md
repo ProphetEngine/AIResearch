@@ -1,8 +1,8 @@
 ---
-title: "偏好优化新变体：SafeDPO + RePO（≠ DPO/GRPO/SimPO 主轴）"
+title: "偏好优化新变体：SafeDPO + RePO"
 topic: SafeDPO与RePO
 date: 2026-09-22
-lines: [架构思想, 目标函数接口, 评测字段]
+lines: [架构思想, 评测字段]
 status: archived
 sources:
  - https://arxiv.org/abs/2505.20065
@@ -17,311 +17,167 @@ related:
  - "宪法分类器防御"
  - "审慎对齐与断路器"
 code_promised: null
-retrieval_cutoff: 2026-09-22
+retrieval_cutoff: 2026-06-08
 timezone: Asia/Shanghai (CST)
 ---
 
-# 偏好优化新变体：SafeDPO + RePO（≠ DPO / GRPO / SimPO 主轴）
+# 偏好优化新变体：SafeDPO + RePO
 
-> **定位**：**偏好优化横切**——仓库已有 RLHF/DPO 通史（**[[对齐脉络RLHF与偏好优化]]**）、可验证奖励组相对优势族（**[[GRPO与DAPO算法族]]**）、无参考/单阶段/非成对变体族（**[[SimPO与ORPO偏好优化]]**）。本卡立两条**可划界新刀**，不写成「又一篇 DPO / SimPO / GRPO」：
-> - **SafeDPO**（*Safe Direct Preference Optimization*）：把 **硬安全约束**（不安全响应概率为零）经 cost-augmented reward 与 **安全感知偏好变换 $T$** 收成 DPO 形目标；仅需偏好对 + 二元安全指示，**无需 reward / cost RM、无需在线采样**；额外超参仅安全间隔 $\Delta$。
-> - **RePO**（*Regret-based Preference Optimization*）：把人类偏好解释为 **遗憾最小化**（相对最优策略的相对次优性 + 行为策略未来序列前向 KL），而非即时/累积效用最大化；闭式更新兼容直接偏好优化，并给出无行为策略时的 **RePO_det**。
-> **研究线**：**架构思想 / 目标函数接口（主）**——约束安全变换 vs 反事实遗憾分解；**文内安全—有用性 / 偏好—推理字段（辅）**——PKU-SafeRLHF / XSTest、AlpacaEval2 / Arena-Hard / 数学推理表。
+> **主要来源**：[SafeDPO: A Simple Approach to Direct Preference Optimization with Enhanced Safety](https://arxiv.org/abs/2505.20065)（简称 SafeDPO，v2，ICLR 2026）；[A Regret Minimization Framework on Preference Learning in Large Language Models](https://arxiv.org/abs/2606.09124)（简称 RePO，v1，ICML 2026）；[AMaPO: Adaptive Margin-attached Preference Optimization for Language Model Alignment](https://arxiv.org/abs/2511.09385)（简称 AMaPO，v2，仅作索引）（截至 2026-06-08）。两篇主文均未给出作者自发布的训练代码仓。
+> **研究线**：架构思想（安全约束如何变成偏好数据变换，偏好分数应取奖励还是遗憾，主）· 评测字段（安全与有用的权衡、通用偏好榜与数学推理，辅）
 > **范围与相邻笔记**：
-> - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 InstructGPT 三阶段、DPO 闭式最优策略证明、CAI 通史。本卡只在对照句点名 DPO 外壳。
-> - **≠ [[GRPO与DAPO算法族]]**：不写 GRPO→DAPO、Clip-Higher、可验证奖励 RL 配方与组相对基线谱系。RePO 实验虽含数学 verifier 偏好对，贡献是 **遗憾解释**，不是 GRPO 管线。
-> - **≠ [[SimPO与ORPO偏好优化]]**：不重写 SimPO 平均 log-prob + $\gamma$、ORPO odds ratio、KTO HALO 推导。AMaPO 仅在 §八作索引。
-> - **≠ [[合成对齐数据Magpie]]**：不写 Magpie / ActiveUltraFeedback **合成偏好数据流水线**；本卡消费静态偏好+标签，不造数据。
-> - **≠ [[宪法分类器防御]] / [[审慎对齐与断路器]]**：不写 Constitutional Classifiers、deliberative circuit breakers 等 **安全产品/护栏机制**；本卡是 **离线偏好目标函数** 变体。
-> **补链**：**AMaPO**（自适应 margin，与 SimPO/固定 margin 族过近）→ §八仅索引。
-> SafeDPO / RePO 文内**未见**作者自发布官方训练仓 URL → 记为 **无承诺仓**（仅数据集 / 基线仓索引）。
+> - ≠ [[对齐脉络RLHF与偏好优化]]：本篇不写 InstructGPT 三阶段、DPO 闭式推导与 CAI；DPO 外壳只在对照处点名，共用背景见该篇。
+> - ≠ [[GRPO与DAPO算法族]]：本篇不写在线组相对 RL 与可验证奖励配方；RePO 的数学实验只用验证器构造偏好对。
+> - ≠ [[SimPO与ORPO偏好优化]]：本篇不写 SimPO、ORPO、KTO 的目标推导。
+> - ≠ [[合成对齐数据Magpie]]：本篇不写偏好数据怎样合成与挑选，两种方法都消费现成的偏好数据。
+> - ≠ [[宪法分类器防御]]、[[审慎对齐与断路器]]：本篇不写推理期护栏与安全产品机制，只写离线偏好目标。
+>
+> **意义**：两篇各自把 DPO 外壳里的一个隐含假设拿出来改写。SafeDPO 表明，只要有一个二元安全标签，「不安全回答概率为零」这一硬约束就能化成对偏好对的换序或丢弃，再走普通 DPO，不需要奖励模型、代价模型与在线采样；RePO 主张人类偏好反映的是相对最优的遗憾而不是即时效用，并给出与直接偏好优化兼容的闭式更新。
+
+**一句话**：SafeDPO 用安全标签把偏好对换序或丢弃，硬约束就收进单阶段 DPO；RePO 按负遗憾（最优策略相对似然减去行为策略的未来偏离）给中间步打分，而不是按「到目前为止已实现的奖励」。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主 A** | *SafeDPO: A Simple Approach to Direct Preference Optimization with Enhanced Safety* | arXiv:**2505.20065v2** \[cs.LG\]（**4 Mar 2026**）；ICLR 2026；Kim, Kim, Kim, Lee, Bae*, Jang†§, Lee‡§（LG AI Research） | `https://arxiv.org/abs/2505.20065` | **40** |
-| **主 B** | *A Regret Minimization Framework on Preference Learning in Large Language Models* | arXiv:**2606.09124v1** \[cs.AI\]（**8 Jun 2026**）；ICML 2026（PMLR 306）；Kim*, Cho*†, Kim, Kim, Jang‡, Lee‡, Lee‡（SNU / LG AI Research / UNIST / HodooAI） | `https://arxiv.org/abs/2606.09124` | **33** |
-| **补链** | *AMaPO: Adaptive Margin-attached Preference Optimization for Language Model Alignment* | arXiv:**2511.09385v2** \[cs.CL\]（**15 Nov 2025**）；AAAI 2026；Deng, Feng, Lei*（川大） | `https://arxiv.org/abs/2511.09385` | **20** |
+**安全对齐一侧**：Safe RLHF 一类方法把安全写成约束优化，需要另训奖励模型与代价模型，再做多阶段在线 RL；为便于求解，又常把「不安全回答不出现」的硬约束松弛成「期望代价不超过阈值」（SafeDPO §1、§2.2）。工程复杂，且松弛后的目标并不保证不安全回答被压到零。
 
-| 材料 | 代码 / 数据（文内） |
-|---|---|
-| SafeDPO | 训练仓：**未见**作者自发布 URL。数据：`PKU-Alignment/PKU-SafeRLHF-30K`；参考起点：`alpaca-7b-reproduced-llama-2`；评判：`beaver-7b-unified-reward` / `beaver-7b-unified-cost` |
-| RePO | 训练仓：**未见**作者自发布 URL。基线实现索引：OpenRLHF（DPO/IPO/KTO）、RPO、TDPO 第三方仓（附录） |
-| AMaPO（补链） | `https://github.com/Shiroha-Offical/AMaPO`（文首标注；本卡不跟 commit） |
+**偏好语义一侧**：RLHF 与 DPO 默认人类偏好来自效用（奖励）最大化。RePO 指出这与人类判断的两个特点错位（§4.1）：
+1. **前瞻**：评价一段未完成的推理时，人会想象它将来能否通向正确结果，而不是只看目前已实现的奖励；按即时奖励，「暂时零分但通向正确终态」的片段与失败片段无从区分。
+2. **反事实**：人会比较「换一个动作会怎样」；已实现收益更高的动作未必更接近最优策略。
 
-**一句话抓手：**
-- **SafeDPO**：别再训 cost RM / 多阶段 SafeRLHF——用安全标签 **换序/丢弃** 偏好对，再可选加 $\Delta$ 间隔，把硬约束收成单阶段 DPO。
-- **RePO**：别把中间步偏好当成「到目前为止的即时奖励」——按 **负遗憾**（最优相对似然 − 行为策略未来序列 KL）打分，显式吃行为策略与反事实展开。
+## 二、脉络
 
----
+| 时间 | 节点 | 关系 |
+|---|---|---|
+| 2023-05 | DPO | 把 KL 约束下的 RLHF 改写为偏好对上的分类损失（[[对齐脉络RLHF与偏好优化]]） |
+| 2023-10 | Safe RLHF | 奖励模型 + 代价模型 + 拉格朗日式 PPO，安全约束以期望代价表达 |
+| 2023-10 | CPL | 用最优优势（相对最优策略的遗憾）定义偏好，不经 RL 学习策略；RePO 把自己归入这条「超越奖励最大化」的线（RePO §2） |
+| 2024-02 | KTO | 前景理论式效用，也属「不按奖励最大化解释偏好」（[[SimPO与ORPO偏好优化]]） |
+| 2024-04 | SACPO | 分步对齐有用性与安全，仍依赖期望代价形式 |
+| 2025-05 | SafeDPO | 以安全标签变换偏好对，硬约束进 DPO |
+| 2025-11 | AMaPO | 实例自适应间隔，属 SimPO 一系的「间隔」轴 |
+| 2026-06 | RePO | 遗憾最小化解释偏好，含无行为策略版本 RePO_det |
 
-## 二、议题边界：两条新刀 ≠ 偏好优化主轴
+日期为 arXiv 首版日期。
 
-### 2.1 五向对照（跟读）
+## 三、SafeDPO：硬安全约束 → 安全感知 DPO
 
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| RLHF / DPO 通史与闭式推导 | 三阶段、隐式奖励 $\beta\log(\pi_\theta/\pi_{\mathrm{ref}})$ | **[[对齐脉络RLHF与偏好优化]]** | **否** |
-| GRPO / DAPO 等组相对 + 可验证奖励 | 在线采样、组内优势、Clip 配方 | **[[GRPO与DAPO算法族]]** | **否** |
-| SimPO / ORPO / KTO | 无 ref、单阶段、非成对标签 | **[[SimPO与ORPO偏好优化]]** | **否** |
-| Magpie / ActiveUF | 指令/偏好 **数据从哪来** | **[[合成对齐数据Magpie]]** | **否** |
-| Constitutional Classifiers / circuit breakers | 推理期护栏 / 产品安全机制 | **[[宪法分类器防御]] / [[审慎对齐与断路器]]** | **否** |
-| **SafeDPO** | 偏好对 + **安全指示** → 硬约束等价目标 | **本篇主文 A** | **是** |
-| **RePO** | 偏好 = **遗憾/反事实次优性**（非即时效用） | **本篇主文 B** | **是** |
-| AMaPO | 实例自适应 margin 改排序梯度 | 补链 §八 | **否** |
+### 3.1 推导三步（§3）
 
-跟读直觉：[[对齐脉络RLHF与偏好优化]]/[[SimPO与ORPO偏好优化]] 问「**helpful 偏好损失怎么写**」；[[GRPO与DAPO算法族]] 问「**有 verifier 时怎么做在线组相对 RL**」；SafeDPO 问「**已有安全标签时，如何把硬约束塞进离线 DPO 外壳**」；RePO 问「**人类偏好是否应从遗憾而非奖励最大化来建模**」。四者外壳可同为「成对 log-ratio + $\sigma$」，但**贡献旋钮不同**。
+数据为 $(x,y_w,y_l,h_w,h_l)$，$h=1$ 表示回答不安全。
 
-### 2.2 双主文自划界（文内）
-
-- **SafeDPO**：对照 SafeRLHF / SACPO / CAN——批评其依赖 **辅助 RM/cost、多阶段或期望代价松弛**；主张直接分析原硬约束式 (6)，经 $T(\mathcal{D})$ 落到式 (11)(12)。Figure 1 明示：相对 DPO 只多蓝项（安全指示）；相对 Safe RLHF 少红项（RM/cost/在线采样）。
-- **RePO**：Related work 把 DPO/TDPO/RPO/IPO 放在「奖励最大化视角下的目标修补」；把自己放在 CPL/PPL/KTO 一侧的 **Beyond Reward Maximization**，但贡献是 **KL-正则 MDP 下的遗憾闭式 + 序列前向 KL 估计**，不是 KTO 前景理论重写（KTO 细节 → [[SimPO与ORPO偏好优化]]）。
-
-`
- 离线偏好优化外壳（成对 / BT / log-ratio）
- │
- ┌───────────┼───────────────┐
- ▼ ▼ ▼
- DPO/SimPO SafeDPO RePO
- (有用性主轴) (安全硬约束变换) (遗憾最小化)
- [[对齐脉络RLHF与偏好优化]]/[[SimPO与ORPO偏好优化]] 本篇 A 本篇 B
-`
-
----
-
-## 三、站 1：SafeDPO — 硬安全约束 → 安全感知 DPO（2505.20065）
-
-### 3.1 问题设定（§2.2）
-
-安全对齐数据：$(x,y_w,y_l,h_w,h_l)\sim\mathcal{D}$，其中 $h=1\{c(x,y)>0\}$ 为 **不安全** 指示。原硬约束问题（式 6）：
+1. **代价增广奖励**：不安全回答的奖励记为 $-\infty$。KL 正则下的最优策略于是自动给不安全回答零概率：$\pi^*(y|x)\propto\pi_{\mathrm{ref}}(y|x)\exp(r_c(x,y)/\beta)$，$c(x,y)>0$ 时 $\pi^*=0$。
+2. **安全感知变换 $T$**：既然任何安全回答都优于任何不安全回答，就可以只改数据：被偏好的回答安全，保留；被偏好的不安全而另一条安全，**交换**；两条都不安全，**丢弃**。在 $T(\mathcal D)$ 上做标准 DPO 即可，命题 4.3 证明这与不可直接计算的理论目标相等。
+3. **安全间隔 $\Delta\ge0$**：在（安全，不安全）对上额外要求对数比之差多出 $\Delta$：
 
 $$
-\max_\theta\ \mathbb{E}[r(x,y)-\beta D_{\mathrm{KL}}(\pi_\theta\|\pi_{\mathrm{ref}})]
-\quad\text{s.t.}\quad c(x,y)\le 0\ \forall x,y\sim\pi_\theta.
+\mathcal L_{\mathrm{SafeDPO}}(\theta;\Delta)=-\mathbb E_{T(\mathcal D)}\log\sigma\Big(\beta\log\frac{\pi_\theta(\tilde y_w|x)}{\pi_{\mathrm{ref}}(\tilde y_w|x)}-\beta\log\frac{\pi_\theta(\tilde y_l|x)}{\pi_{\mathrm{ref}}(\tilde y_l|x)}-(\tilde h_l-\tilde h_w)\Delta\Big)
 $$
 
-先验工作常松弛为期望代价 $\mathbb{E}[c]\le\hat C$（式 7）。SafeDPO **拒绝**以期望松弛代替硬约束，主张在可解前提下保留「不安全响应支撑为零」。
+命题 4.4 证明任意 $\Delta\ge0$ 都不改变最优解集合，$\Delta$ 只影响有限训练中的优化动力；论文观察到 $\Delta=50$ 这类过大值会损害有用性（§5.1.3、附录 A.4）。相对 DPO，SafeDPO 只多一个二元安全指示和一个超参 $\Delta$。同一变换也可以挂到其他直接对齐算法上（§3.4），论文只实例化了 DPO。
 
-### 3.2 三步推导（§3.1–3.3）
+理论前提（假设 4.1）：参考策略对每个提示的安全回答集合给出不低于某个正数的概率质量，即可行性成立。
 
-**（1）Cost-augmented reward → 闭式策略。** 定义 $r_c=r$（安全）或 $-\infty$（不安全），得无约束式 (8)；最优策略
+### 3.2 关键结果（§5，PKU-SafeRLHF-30K，Alpaca-7B 复现版起点，主对比 $\Delta=10$）
 
-$$
-\pi^*(y|x)=\frac{1}{Z(x)}\pi_{\mathrm{ref}}(y|x)\exp\!\big(\tfrac{1}{\beta}r_c(x,y)\big)
-\quad\Rightarrow\quad \pi^*(y|x)=0\ \text{若}\ c(x,y)>0.\quad (9)
-$$
+模型评判（附录 Table 17，对应 Figure 2a；有用性为归一化分）：
 
-由此诱导理论偏好分布 $\tilde{\mathcal{D}}$ 与不可观 DPO 形目标式 (10)。
-
-**（2）安全感知变换 $T$（可计算代理）。** 因任意安全响应在 $r_c$ 下优于任意不安全响应：
-
-$$
-T(x,y_w,y_l,h_w,h_l)=
-\begin{cases}
-(x,y_w,y_l) & h_w=0\\
-(x,y_l,y_w) & h_w=1,\ h_l=0\\
-\emptyset & h_w=h_l=1
-\end{cases}
-$$
-
-即：preferred 已安全 → 保留；preferred 不安全且 loser 安全 → **交换**；双不安全 → **丢弃**。在 $T(\mathcal{D})$ 上写标准 DPO：
-
-$$
-\mathcal{L}_{\mathrm{SafeDPO}}(\theta)
-=-\mathbb{E}_{T(\mathcal{D})}\log\sigma\Big(
-\beta\log\frac{\pi_\theta(\tilde y_w|x)}{\pi_{\mathrm{ref}}(\tilde y_w|x)}
--\beta\log\frac{\pi_\theta(\tilde y_l|x)}{\pi_{\mathrm{ref}}(\tilde y_l|x)}
-\Big).\quad (11)
-$$
-
-**命题 4.3**：对任意 $\theta$，不可观式 (10) **等于** 式 (11)。
-
-**（3）安全间隔 $\Delta\ge 0$（优化动力，不改最优集）。**
-
-$$
-\mathcal{L}_{\mathrm{SafeDPO}}(\theta;\Delta)
-=-\mathbb{E}_{T(\mathcal{D})}\log\sigma\Big(
-\beta\log\frac{\pi_\theta(\tilde y_w|x)}{\pi_{\mathrm{ref}}}
--\beta\log\frac{\pi_\theta(\tilde y_l|x)}{\pi_{\mathrm{ref}}}
--(\tilde h_l-\tilde h_w)\Delta
-\Big).\quad (12)
-$$
-
-仅在（安全,不安全）对上 $(\tilde h_l-\tilde h_w)=1$ 时推大间隔；同安全状态时项为零。**命题 4.4**：任意 $\Delta\ge 0$，式 (11) 与 (12) **共享同一最优解集**。文注 $\Delta=50$ 等过大值会在有限训练中伤 helpfulness（附录 A.4）——跟读时区分「最优集不变」与「有限步动力学」。
-
-**SafeDAA（§3.4）：** 同一 $T$ + $\Delta$ 可挂到一般 DAA（式 5 的凸 $g$）；本文只实例化 DPO。
-
-### 3.3 理论三件套（§4；证明 → 附录 A）
-
-| 结果 | 内容 |
-|---|---|
-| **假设 4.1** | 每个 $x$ 上参考策略对安全响应集 $Y_s(x)$ 质量 $\ge\delta>0$（可行性） |
-| **命题 4.2** | 式 (8) 最优解在惩罚 $C\to\infty$ 时 TV 收敛到硬约束式 (6) |
-| **命题 4.3** | $T(\mathcal{D})$ 无偏恢复式 (10) |
-| **命题 4.4** | $\Delta$ 不改变全局最优集合 |
-
-### 3.4 实验字段（§5；不外推未测场景）
-
-**床：** PKU-SafeRLHF-30K（~27k train / 3k test）；共享 SFT 起点（Alpaca-7B reproduced on 同数据）。
-**基线：** DPO-HELPFUL / DPO-HARMLESS / **DPO-SAFEBETTER**（仅滤掉 preferred 不安全的对——用于证明「只过滤不够」）/ SafeRLHF (PPO-λ) / SACPO / P-SACPO。
-**主协议：** beaver reward/cost；GPT-4 有用/无害；人评（末 100 题 ×5 标注员）。
-
-**模型评判 Figure 2(a) 精确值（附录 Table 17）：**
-
-| Method | Helpfulness (N) | Harmless Ratio (%) | Harmlessness |
-|---|---|---|---|
+| 方法 | 有用性 | 无害比例 (%) | 无害性 |
+|---|---:|---:|---:|
 | DPO-HELPFUL | 10.00 | 37.59 | −2.23 |
-| DPO-SAFEBETTER | 9.08 | 49.75 | −0.20 |
+| DPO-SAFEBETTER（只滤掉被偏好者不安全的对） | 9.08 | 49.75 | −0.20 |
 | SafeRLHF | 4.23 | 88.97 | 3.63 |
 | SACPO | 2.80 | 89.60 | 4.34 |
-| **SafeDPO** | **4.61** | **96.87** | **5.97** |
+| SafeDPO | 4.61 | 96.87 | 5.97 |
 
-**GPT-4 Figure 2(b)（Table 18）：** SafeDPO Helpfulness **8.14**、Harmless Ratio **100%**、Harmlessness **9.92**（同表 SafeRLHF 96.62% / 9.57）。正文强调：GPT 可能把「更安全」误读进「更有用」（附录 C/D）——人评 Table 2 中 SFT helpfulness **0.868** 高于 SafeDPO **0.499**，与 GPT 排序不一致，跟读必记。
+- **评判口径要分开读**：GPT-4 评判下 SafeDPO 有用性 8.14、无害比例 100%、无害性 9.92（SafeRLHF 为 96.62% / 9.57，Table 18）；但人评中 SFT 的有用性 0.868 高于 SafeDPO 的 0.499，与模型评判排序不一致。论文自己指出自动评判会把「更安全」读成「更有用」（附录 C、D）。人评安全性 SafeDPO 0.943、SafeRLHF 0.932，有用性两者接近（0.499 / 0.497，Table 2）。
+- **变换是主因**：$\Delta\in\{0,2,5,10,20\}$ 的扫描中，$\Delta=0$ 已有很高的无害比例；把同样的间隔加到普通 DPO 上达不到 SafeDPO 的安全水平（§5.1.3）。
+- **规模**：1.5B–13B 同超参，无害比例 95.50%–97.88%，13B 有用性 7.60（Table 1）。
+- **过度拒绝**：XSTest（GPT-5.1 评判）上 SafeDPO 无害比例 100%，过度拒绝 12.4%，高于 SafeRLHF 的 3.2%、SACPO 的 2.4%；DPO-HELPFUL 过度拒绝 0 但无害比例只有 14.5%（Table 3）。论文称这是硬约束结构带来的取舍：完全压住不安全回答，代价是对字面像有害的良性提示更保守。
 
-**人评 Table 2：** SafeDPO Safety **0.943** vs SafeRLHF **0.932**；Helpfulness 二者接近（0.499 / 0.497）。
+## 四、RePO：遗憾最小化的偏好学习
 
-**$\Delta$ 扫描（§5.1.3）：** $\Delta\in\{0,2,5,10,20\}$；$\Delta=0$（仅 $T$）已高 harmless ratio；主对比常用 $\Delta=10$。把同一 $\Delta$ 挂到普通 DPO **达不到** SafeDPO 安全水平 → **变换 $T$ 是主因，间隔是加强信号**。
+### 4.1 遗憾分解（§4.2、§5）
 
-**规模 Table 1（1.5B–13B，同超参）：** Harmless ratio 约 **95.5–97.9%**；13B Helpfulness **7.60**（表内最高）。
-
-**XSTest 过拒 Table 3（裁判 GPT-5.1）：**
-
-| Method | Over-refusal (%) | Harmless ratio (%) |
-|---|---|---|
-| DPO-HELPFUL | 0 | 14.5 |
-| SafeRLHF | 3.2 | 84.5 |
-| SACPO | 2.4 | 86 |
-| **SafeDPO** | **12.4** | **100** |
-
-文内自陈：硬约束换来 **完全压制不安全**，但边界良性提示（词面像有害）上更保守——这是目标函数结构 trade-off。
-
----
-
-## 四、站 2：RePO — 遗憾最小化偏好学习（2606.09124）
-
-### 4.1 动机：奖励最大化与人类判断的机制错位（§4.1）
-
-文内两刀（配合 Figure 1–3）：
-
-1. **前瞻（prospective）：** 人类对中间推理段的偏好依赖「想象中的未来续写」，不是「到目前为止已实现即时奖励」。奖励最大化把未完成段只按已实现 $r$ 计，会把「暂零奖但通向正确终态」的段判成与失败段无异。
-2. **反事实（counterfactual）：** 人类比较「若当初选另一动作会怎样」；实现收益更高的动作未必更接近最优策略。
-
-因此主张：偏好分数应是 **负遗憾**（相对最优的次优性），而非局部效用。
-
-### 4.2 遗憾定义与闭式（§4.2 / §5）
-
-在逐步 KL-正则 RL（式 1）下，定义行为策略 $\mu$ 相对 $\alpha$-最优 $\pi^*$ 的遗憾：
+在逐步 KL 正则的 RL 设定下，行为策略 $\mu$ 相对 $\alpha$-最优策略 $\pi^*$ 的遗憾为
 
 $$
-\mathrm{Reg}^\mu_{\pi^*}(q_{<t},o_t)
-:= V^{\pi^*}(q_{<t})-Q^\mu(q_{<t},o_t)
-= -\alpha\log\frac{\pi^*(o_t|q_{<t})}{\pi_{\mathrm{ref}}(o_t|q_{<t})}
--\bar D_{\mathrm{KL}}(\mu\|\pi^*;q_{<t},o_t)
+\mathrm{Reg}^{\mu}_{\pi^*}(q_{<t},o_t)=V^{\pi^*}(q_{<t})-Q^{\mu}(q_{<t},o_t)=-\alpha\log\frac{\pi^*(o_t|q_{<t})}{\pi_{\mathrm{ref}}(o_t|q_{<t})}-\bar D_{\mathrm{KL}}(\mu\|\pi^*;q_{<t},o_t)
 $$
 
-其中 $\bar D_{\mathrm{KL}}$ 为未来轨迹上的 **折扣序列前向 KL**（定理 5.4）。**引理 5.5**：该分解对 $(\alpha,\pi^*)$-等价奖励类中的状态塑形 $\beta(\cdot)$ **不变**——文称这是相对「奖励最大化需锚定 $\beta$」的结构优势。
+- **局部项**是与 DPO 同族的相对似然；
+- **长程项** $\bar D_{\mathrm{KL}}$ 是未来轨迹上的折扣序列前向 KL（定理 5.4），惩罚行为策略相对最优策略的未来偏离。DPO 在离线、异策略数据上隐式当作同策略处理，这一项正是它忽略的部分。
 
-直觉拆两项：
-- **局部项** $-\alpha\log(\pi^*/\pi_{\mathrm{ref}})$：与 DPO 同族的相对似然；
-- **长程项** $\bar D_{\mathrm{KL}}$：惩罚行为策略相对最优的未来偏离（离线/异策略时 DPO 隐式当作 on-policy 会失配；对照 PPL/Cho et al. 2025）。
+偏好分数取负遗憾，仍套 Bradley-Terry 成对外壳。引理 5.5 证明这一分解对等价奖励类中的状态塑形函数不变，论文称这是相对奖励最大化框架的结构优势。
 
-### 4.3 可实现估计（§6）
+### 4.2 可实现的估计（§6）
 
-精确 $\bar D_{\mathrm{KL}}$ 需从每步重 rollout → 用观察到的 $q^+,q^-$ 作单条 Monte Carlo，有限时域平均化，得经验遗憾分数 $S^{\mathrm{RePO}}$（含 $\mu$ 的 token logprob）。
-**RePO_det：** $\mu=\delta_{o_t}$（Dirac 伪标签），无行为策略元数据时仍可训；跨 tokenizer / 跨模型族时更实用。
+精确的 $\bar D_{\mathrm{KL}}$ 需要从每一步重新展开，论文改用观察到的偏好轨迹作单条蒙特卡洛估计，并截断到有限步，分数中要用到行为策略的 token 对数概率。没有行为策略信息时，用狄拉克分布代替 $\mu$，得到 **RePO_det**，跨模型族、跨分词器时更实用。
 
-**引理 6.1（归纳偏置）：** 在 $\epsilon\ge 0$（$\mu$ 更近 $\pi^*$ 而非 $\pi_{\mathrm{ref}}$）且终态 verifier-accepted 时，终态遗憾上界于中间上下文期望遗憾 → **截断成功轨迹会被系统性地判得更差**；文称此偏置使 RePO **无需**像 DPO 那样靠 mask 增广才学到「完整成功 > 截断成功」。
+引理 6.1 给出一个归纳偏置：在行为策略比参考策略更接近最优、终态被验证器接受时，终态遗憾不高于中间上下文的期望遗憾，因此截断的成功轨迹会被系统地判得更差。论文称 RePO 因此不必像 DPO 那样靠截断增广数据才学到「完整成功优于截断成功」。
 
-### 4.4 实验字段（§7）
+### 4.3 关键结果（§7）
 
-**人类偏好（UltraFeedback 协议合成，~16K 对，保留行为 logprob；Qwen3-1.7B/4B + LoRA）— Table 1 节选：**
+人类偏好（按 UltraFeedback 协议构造约 16K 对，Qwen3 + LoRA，Table 1）：
 
-| Method | Qwen3-1.7B AE2 LC / WR | Arena-Hard WR | Qwen3-4B AE2 LC / WR | Arena-Hard WR |
-|---|---|---|---|---|
+| 方法 | 1.7B AE2 LC / WR | 1.7B Arena-Hard | 4B AE2 LC / WR | 4B Arena-Hard |
+|---|---|---:|---|---:|
 | DPO | 23.90 / 25.84 | 23.4 | 32.89 / 33.92 | 44.5 |
 | KTO | 34.73 / 38.93 | 30.4 | 52.31 / 55.78 | 63.9 |
-| **RePO** | **36.61 / 43.66** | 27.1 | **55.08 / 60.12** | 60.1 |
+| RePO | 36.61 / 43.66 | 27.1 | 55.08 / 60.12 | 60.1 |
 | RePO_det | 34.95 / 41.42 | 26.6 | 51.66 / 55.53 | 59.9 |
 
-跟读：1.7B 上 RePO 相对 DPO 的 AE2 LC **+12.71**；Arena-Hard 上 KTO 有时更高（1.7B: 30.4 vs RePO 27.1；4B: KTO 63.9 vs RePO 60.1）——**勿报成全面碾压**。
+RePO 在 AlpacaEval 2 上领先，但 Arena-Hard 上 KTO 更高，不是全面胜出。
 
-**数学推理（Qwen2.5-7B-Math-Instruct 造对，~69K；正确≻错误）— Table 2 节选（Qwen3-1.7B-Base）：**
+数学推理（约 69K 对，正确回答优于错误回答，Table 2）：Qwen3-1.7B-Base 上 RePO / RePO_det 的 GSM8K 为 80.52 / 80.74，DPO 77.33、KTO 79.68；Minerva 上 RePO_det 25.74，DPO 16.91。4B 上 RePO_det 的 GSM8K 91.05 为最高，但 AMC23 上 KTO 55.00 高于 RePO 42.50。
 
-| Method | GSM8K | MATH | MATH500 | Minerva |
-|---|---|---|---|---|
-| DPO | 77.33 | 53.44 | 52.80 | 16.91 |
-| KTO | 79.68 | 54.42 | 56.60 | 17.28 |
-| **RePO** | 80.52 | **54.50** | **57.40** | 20.59 |
-| **RePO_det** | **80.74** | **54.84** | 54.40 | **25.74** |
+无行为策略的离线设定（Llama3.1-8B，Table 3）：Base 设定下 RePO_det 的 GSM8K 62.17，KTO 61.56、DPO 44.50；Instruct 设定下 RePO_det 在 MATH / MATH500 上领先（46.46 / 47.40），GSM8K 则 KTO 84.61 高于 RePO_det 80.44。
 
-4B 上 RePO_det GSM8K **91.05** 最高；KTO 在 AMC23 等个别榜更高（55.00 vs RePO 42.50）——单榜例外保留。
+样本效率（Table 4，Qwen3-1.7B GSM8K）：对成功轨迹做截断增广后，DPO 由 72.55 升到 77.71，RePO 基本持平（80.52 → 80.29）；DPO 分数与 RePO 诱导分数的均方误差由 0.073 降到 0.056。论文据此称遗憾目标已内化了 DPO 需要靠增广数据才能学到的偏置。
 
-**无行为策略离线（Table 3，Llama3.1-8B）：** Base 设定 RePO_det GSM8K **62.17** vs KTO 61.56、DPO 44.50；Instruct 设定 MATH/MATH500 上 RePO_det **46.46 / 47.40** 领先，但 GSM8K 上 KTO **84.61** > RePO_det **80.44**。
+## 五、两种方法对照
 
-**样本效率（§7.3 / Table 4 / Figure 5）：** 对成功轨迹 mask 末 {16…80} token 作增广时，DPO 吃增广（Qwen3-1.7B GSM8K 72.55→77.71）；RePO 几乎持平（80.52→80.29），且相对 RePO 诱导分数的 MSE：DPO 0.073→增广后 0.056（更靠近 RePO）。文称遗憾目标 **内化** 了 DPO 需靠数据学的「完整成功偏好」偏置。
-
----
-
-## 五、双刀对照（本卡主轴）
-
-| | **SafeDPO** | **RePO** |
+| | SafeDPO | RePO |
 |---|---|---|
-| **改的是什么** | 数据变换 $T$ + 可选 $\Delta$（外壳仍是 DPO） | 偏好分数语义：负遗憾 + 序列 KL |
-| **额外监督** | 二元安全指示 $h$ | 行为策略 logprob（或 Dirac 伪标签） |
-| **相对 DPO 的理论承诺** | 硬约束最优 / $T$ 无偏 / $\Delta$ 最优集不变 | 奖励塑形不变性；异策略未来偏离显式入账 |
-| **主战场** | 安全–有用权衡（PKU-SafeRLHF、XSTest） | 通用偏好榜 + 数学推理（AE2/Arena、GSM8K/MATH） |
-| **明确代价** | XSTest 过拒升高（12.4%） | 需估计未来 KL；Arena 等个别榜不总压过 KTO |
-| **不回答** | 护栏产品、合成数据、GRPO 在线环 | SimPO 式解码对齐 margin、安全硬约束 |
+| 改的是什么 | 数据变换 $T$ 加可选间隔，外壳仍是 DPO | 偏好分数的语义：负遗憾 = 局部相对似然 + 序列 KL |
+| 额外监督 | 二元安全指示 | 行为策略对数概率（或狄拉克伪标签） |
+| 理论承诺 | 硬约束最优；$T$ 无偏；$\Delta$ 不改最优集 | 对奖励塑形不变；异策略的未来偏离显式计入 |
+| 主要战场 | 安全与有用的权衡 | 通用偏好榜与数学推理 |
+| 明确代价 | 过度拒绝升高 | 需估计未来 KL；个别榜单不及 KTO |
 
-二者作者群有重叠（LG AI Research / Jang / Lee 线），但问题定义正交：**一个把安全标签焊进约束最优，一个把反馈语义从 reward 换成 regret**——禁止并成「同一方法的两个名字」。
+两篇作者有重叠（LG AI Research），但问题定义正交：一篇把安全标签写进约束最优，一篇把反馈语义从奖励换成遗憾，不是同一方法的两个名字。
 
----
+**AMaPO（索引）**：把 DPO 一族的间隔设计统一看待，指出现有间隔对已排对的样本仍给大梯度（过拟合），对排错的样本修正不足（欠拟合），提出经 Z 归一化与指数缩放的实例自适应间隔（摘要）。它不涉及安全约束，也不改奖励与遗憾的语义，归属上接近 [[SimPO与ORPO偏好优化]] 的目标间隔轴，故只作索引。
 
-## 六、相邻笔记与范围外
+## 六、意义
 
-| 笔记 | 本卡不写 |
-|---|---|
-| **[[对齐脉络RLHF与偏好优化]]** | InstructGPT 三阶段精读、DPO 最优策略推导全文、CAI |
-| **[[GRPO与DAPO算法族]]** | GRPO/DAPO/Clip-Higher、组相对优势公式、RLVR 训练菜谱 |
-| **[[SimPO与ORPO偏好优化]]** | SimPO $\frac{\beta}{\|y\|}\log\pi$、ORPO odds ratio、KTO 损失展开 |
-| **[[合成对齐数据Magpie]]** | Magpie 无种子合成、ActiveUF bandit 选对 |
-| **[[宪法分类器防御]] / [[审慎对齐与断路器]]** | Constitutional Classifiers、deliberative circuit breakers 机制与产品评测 |
-| **AMaPO** | 自适应 margin 主文级展开（→ 仅 §八补链） |
+SafeDPO 说明安全对齐不一定要多阶段 RL：在已有安全标注的离线数据上，一次数据变换加普通 DPO 就能逼近乃至超过 Safe RLHF 的安全水平，而且理论上对应硬约束而非期望松弛。RePO 则把「人类偏好到底在度量什么」重新提出来：当偏好针对中间步骤、数据来自别的策略时，按遗憾建模比按奖励建模更贴近人的判断方式，并在实验中自带「完整成功优于截断成功」的偏置。两者都保持了 DPO 的离线、单阶段实现形态。
 
----
+## 七、局限与待核实
 
-## 七、延伸阅读与误区
+- **SafeDPO**：只在 PKU-SafeRLHF 一个数据集、13B 及以下规模上验证；安全标签是二元的，不区分危害程度；过度拒绝 12.4% 是硬约束的直接代价，论文没有给出 $\Delta$ 以外的调节手段；模型评判与人评对有用性的排序不一致，有用性结论需以人评为准。
+- **RePO**：$\bar D_{\mathrm{KL}}$ 的单样本、截断估计会引入偏差；引理 6.1 的偏置依赖验证器接受的终态，在没有验证器的领域是否成立未验证；实验模型为 1.7B–8B。
+- 两篇主文均未见作者自发布的训练代码仓；AMaPO 代码见 [Shiroha-Offical/AMaPO](https://github.com/Shiroha-Offical/AMaPO)。
+- RePO 为 v1，后续版本若更新数字需复核。
 
-**建议阅读顺序：**
-1. SafeDPO Figure 1 + §3 $T$/式 (11)(12) + Table 17/18/3；
-2. RePO Figure 1–3 + 遗憾分解 + §6 估计器 + Table 1–4；
-3. 本卡 §五对照表；AMaPO 只扫 Abstract。
+## 八、与相邻笔记的分工
 
-**常见误区：**
-1. 把 SafeDPO 写成「DPO + 安全 RM」——文明确 **无** reward/cost model。
-2. 把 DPO-SAFEBETTER 当成 SafeDPO——过滤 ≠ 换序+惩罚不安全。
-3. 把 RePO 写成 GRPO/RLVR——RePO 是 **离线偏好目标语义**；数学实验只用 verifier **造偏好对**。
-4. 把 RePO 写成 KTO「又一个非 BT」——KTO 是二元标签+前景理论（[[SimPO与ORPO偏好优化]]）；RePO 仍用成对 BT 外壳，改的是 **score=负遗憾**。
-5. 只报 RePO 赢的榜、抹掉 Arena-Hard / AMC23 上 KTO 更高的行。
-6. 把 AMaPO 当第三主文——与 SimPO margin 轴过近，仅作补链。
-7. 误以为 SafeDPO/RePO 有官方 GitHub——官方 PDF **未见**；仅 AMaPO 有文首仓。
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[对齐脉络RLHF与偏好优化]] | 两种方法都建立在该篇第 2.3 节的 DPO 外壳上；该篇第 2.4 节把 SafeDPO 列为偏好优化的安全分支 | RLHF、DPO、CAI 通史与推导 |
+| [[GRPO与DAPO算法族]] | 对照：GRPO 一族是有验证器时的在线 RL，RePO 针对难以配验证器的任务、走离线偏好路线 | 组相对优势与 DAPO 配方 |
+| [[SimPO与ORPO偏好优化]] | KTO 是 RePO 的主要对照基线，二者都不按奖励最大化解释偏好；AMaPO 的间隔改进属于该篇 SimPO 的轴 | SimPO、ORPO、KTO 推导 |
+| [[合成对齐数据Magpie]] | 上游：偏好对怎样造、怎样挑由该篇负责，本篇两种方法只消费现成数据加标签 | 数据流水线 |
+| [[审慎对齐与断路器]] | 同属「训练期改权重」的安全做法，SafeDPO 走偏好损失，该篇走规范推理与表征重路由 | 审慎对齐与断路器机制 |
+| [[宪法分类器防御]] | 对照：该篇是推理期的输入输出分类器护栏，SafeDPO 把安全写进权重 | 分类器训练与红队评测 |
 
-**开放问题（文内已暗示）：** SafeDPO 数据集单一、≤13B；过拒–安全帕累托如何调 $\Delta$ 以外的机制；RePO 的 $\bar D_{\mathrm{KL}}$ 截断偏差与跨域 tokenizer；遗憾偏置在非 verifier 域是否仍成立。
+## 九、延伸阅读
 
----
-
-## 八、补链：AMaPO（2511.09385）— 仅索引
-
-- **一句话：** 统一 margin 框架诊断 DPO 族 **过拟合（已排对仍大梯度）/ 欠拟合（排错梯度不足）**；提出实例自适应 margin（Z-norm + 指数缩放；已排对则 margin→0）。
-- **为何仅作索引：** 与 **[[SimPO与ORPO偏好优化]] SimPO**（固定/目标间隔 $\gamma$）同属「改 margin 提排序准确率」轴；**过近 SimPO → 仅作索引**。
-- **文内指针：** 代码 `https://github.com/Shiroha-Offical/AMaPO`；Table 2 四设定 AE2/MT；相对 SimPO 的排序准确率/OOD 表（Table 4）——细节不展开。
-- **与 SafeDPO / RePO 的关系：** AMaPO 不引入安全约束，也不改「奖励 vs 遗憾」语义，归属上更接近 [[SimPO与ORPO偏好优化]]。
-
----
-
-**本卡主张锚点：**
-- SafeDPO $T$ 三分支与式 (11)(12)；命题 4.3/4.4；Table 17 harmless ratio **96.87%**；XSTest 过拒 **12.4%** / 无害 **100%**。
-- RePO 遗憾 = 局部 log-ratio + 序列 $\bar D_{\mathrm{KL}}$；RePO_det；Table 1 Qwen3-1.7B AE2 LC **36.61**；Table 4 mask 增广对 DPO vs RePO 的不对称增益。
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [SafeDPO](https://arxiv.org/abs/2505.20065) Figure 1、§3、Table 3 | 变换 $T$ 与间隔；过度拒绝的代价 |
+| 2 | [RePO](https://arxiv.org/abs/2606.09124) Figure 1–3、§5–§6、Table 1–4 | 遗憾分解、估计器与样本效率 |
+| 3 | [Safe RLHF](https://arxiv.org/abs/2310.12773)、[SACPO](https://arxiv.org/abs/2404.11049) | SafeDPO 所简化的约束 RL 基线 |
+| 4 | [CPL](https://arxiv.org/abs/2310.13639) | 遗憾式偏好模型的前身 |
+| 5 | [AMaPO](https://arxiv.org/abs/2511.09385) 摘要 | 自适应间隔 |

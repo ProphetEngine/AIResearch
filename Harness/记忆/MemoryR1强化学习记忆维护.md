@@ -46,6 +46,7 @@ archived: 2026-09-22
 | **[[GRPO与DAPO算法族]] GRPO/DAPO** | 组相对优势、无价值函数的稳定更新 | Clip-Higher / Dynamic Sampling / token-level loss |
 | **[[ToRL工具集成强化学习]] ToRL** | 「outcome RL + 可验证终答」同族思路 | 代码解释器进 rollout、Sandbox Fusion |
 | **[[检索增强与知识外挂]] RAG** | 「取回后仍可能噪声淹没」 | 索引工程 / 重排器通史 |
+| **[[AgenticRL景观与能力模块]]** | 定位：Agentic RL 综述在「记忆」能力格把本篇列为用 RL 学习 ADD / UPDATE / DELETE / NOOP 记忆操作的代表 | 综述的 POMDP 形式化与其余能力格 |
 
 ### 2.2 问题立轴（跟读）
 
