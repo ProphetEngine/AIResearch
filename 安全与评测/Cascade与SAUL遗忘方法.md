@@ -1,8 +1,8 @@
 ---
-title: "遗忘方法增量：Cascade + SAUL（≠ 遗忘综述 / OpenUnlearning 复读）"
+title: "遗忘方法增量：Cascade + SAUL"
 topic: Cascade与SAUL遗忘方法
 date: 2026-09-22
-lines: [方法接口, 遗忘—效用权衡, 评测字段]
+lines: [架构思想, 评测字段]
 status: archived
 sources:
  - https://arxiv.org/abs/2609.16890
@@ -10,281 +10,165 @@ sources:
  - https://arxiv.org/abs/2608.26743
 aux:
  - https://arxiv.org/abs/2609.16890
- - https://arxiv.org/pdf/2609.16890
  - https://arxiv.org/abs/2608.16249
- - https://arxiv.org/pdf/2608.16249
  - https://arxiv.org/abs/2608.26743
- - https://arxiv.org/pdf/2608.26743
  - https://github.com/Noryxen/Cascade
  - https://anonymous.4open.science/r/graphSU-35B4
 arxiv: ["2609.16890", "2608.16249", "2608.26743"]
-related: ["Cascade与SAUL遗忘方法", "对齐脉络RLHF与偏好优化", "LLM水印", "TEE机密推理"]
+related: ["隐私与机器遗忘"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# 遗忘方法增量：Cascade + SAUL（≠ 遗忘综述）
+# 遗忘方法增量：Cascade + SAUL
 
-> **定位**：**隐私/遗忘方法切片**——在 **[[隐私与机器遗忘]]** 已立「遗忘综述 + OpenUnlearning 元评测框架」之后，本卡只写 **2026 近窗两条正交方法增量**：
-> - **Cascade**（*Hierarchical Recoverability Control*，arXiv:**2609.16890**v1，页眉 **15 Sep 2026**）：把遗忘写成 **内部可辨识性（internal identifiability）最小化**，用 **路径 / 双曲表征 / 解码** 三级压低可恢复性。
-> - **SAUL**（*Sharpness-Aware Augmented-Lagrangian Unlearning*，arXiv:**2608.16249**v1，页眉 **17 Aug 2026**）：把遗忘写成 **显式约束**「忘够即可」，用 **增广拉格朗日控制器** 在满足阈值后 **关掉 forget 侧更新**，并配 **非对称锐度感知 + 双优化器状态**。
-> **补链**：**GRAPHSU**（*Graph-Guided Selective Unlearning*，arXiv:**2608.26743**v1，页眉 **27 Aug 2026**）——用多视图支持路径图扩展删除范围，超出 forget seed；**仅作索引**。
-> **研究线**：**方法接口 / 遗忘—效用权衡（主）** + **文内 TOFU / MUSE / WMDP（及 GRAPHSU 的 PISTOL）字段（辅）**。
+> **主要来源**：[Cascade: Hierarchical Recoverability Control for Large Language Model Unlearning](https://arxiv.org/abs/2609.16890)；[SAUL: Sharpness-Aware Augmented-Lagrangian Unlearning](https://arxiv.org/abs/2608.16249)；[Graph-Guided Selective Unlearning for Language Models: Controlling Support Routes Beyond Forget Seeds](https://arxiv.org/abs/2608.26743)（截至 2026-09-22）。下文「Cascade §x」「SAUL §x」「GRAPHSU」分别指三文。
+> **研究线**：方法接口与遗忘—效用权衡（主）；文内 TOFU / MUSE / WMDP（及 GRAPHSU 的 PISTOL）评测字段（辅）。
 > **范围与相邻笔记**：
-> - **≠ [[隐私与机器遗忘]]**：不重做 **180+ 篇通史**、流水线阶段地图、OpenUnlearning **13×16 元评测全文**。本卡 **不复读** OpenUnlearning 指标 Faithfulness/Robustness 元评测；仅在需要时把 TOFU/MUSE/WMDP 当 **评测协议入口**。
-> - **≠ [[对齐脉络RLHF与偏好优化]]**：不写成 RLHF / DPO / CAI 对齐通史。SAUL 的约束优化与偏好优化 **共享「拉格朗日/对偶」词汇**，但目标是 **forget-set 损失阈值**，不是人类偏好 BT/DPO。
-> - **≠ [[LLM水印]]**：不写成生成文本水印 / SynthID / 去水印。遗忘擦权重 ≠ 输出侧溯源水印。
-> - **≠ [[TEE机密推理]]**：不写成 GPU/CPU TEE 机密推理。擦 forget 集 ≠ data-in-use 加密隔离。
-> - **不写成 OpenUnlearning 复读**：不展开统一库算法枚举、450+ checkpoint、指标 meta-eval 主文；本卡是 **两条（+一条补链）方法深读**。
-> 文内未给出完整超参网格；本卡不写攻击复现步骤。
+> - ≠ [[隐私与机器遗忘]]：本篇不写 180+ 篇方法通史、流水线阶段地图与 OpenUnlearning 的指标元评测，只把 TOFU / MUSE / WMDP 当评测协议入口。
+> - 三文都讨论改写、提取与路由探针，本篇只转述评测结论，不写绕过遗忘的操作步骤。
+> **意义**：两篇 2026 年的方法从正交方向修改遗忘—效用接口：Cascade 指出「输出层降概率不等于内部不可恢复」，用路径、表征、解码三级一起压低可恢复性；SAUL 把「忘多少」写成显式约束，忘够即停，减少过忘对邻域知识的伤害。GRAPHSU 补上第三个问题：只删 forget seed 不够，还要控制支撑它的样本。
 
----
+## 一、问题背景
 
-## 一、材料元信息
+机器遗忘要在不重训全量的前提下，去掉 forget 集对模型的影响，同时保住 retain 集与通用能力；理想对照是只在 retain 集上重训的模型，但对 LLM 来说这通常不可行（见 [[隐私与机器遗忘]]）。常见基线（GradAscent、GradDiff、NPO、SimNPO 等）多在 forget 集上施加遗忘损失，再与 retain 项加权，防止效用塌缩。
 
-| 材料 | 标识 | 链接 / 页数 | 角色 |
-|---|---|---|---|
-| **主文 A · Cascade** | Yu, Duan, Li, Wang, Li, Zhou, Sun & Fan, *Cascade: Hierarchical Recoverability Control for Large Language Model Unlearning* | arXiv:**2609.16890v1** \[cs.CL\] **15 Sep 2026**；XMP MetadataDate 2026-09-16T00:58:14Z（→ **2026-09-16 08:58 CST**）；`https://arxiv.org/abs/2609.16890`（**27** 页 A4） | 主锚：三级可恢复性控制 |
-| **主文 B · SAUL** | Choi, Yang & Park, *SAUL: Sharpness-Aware Augmented-Lagrangian Unlearning* | arXiv:**2608.16249v1** \[cs.LG\] **17 Aug 2026**；XMP MetadataDate 2026-08-18T01:46:15Z（→ **2026-08-18 09:46 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2608.16249`（**29** 页 A4） | 主锚：显式 forget 约束 + ALM |
-| **补链 · GRAPHSU** | Khan, Sarwar, Cong, Yi & He, *Graph-Guided Selective Unlearning for Language Models: Controlling Support Routes Beyond Forget Seeds* | arXiv:**2608.26743v1** \[cs.AI\] **27 Aug 2026**；XMP MetadataDate 2026-08-28T00:39:19Z（→ **2026-08-28 08:39 CST**）；CC-BY-4.0；`https://arxiv.org/abs/2608.26743`（**17** 页 A4） | 补链：支持路径图扩 scope |
+三文各自指出这一范式的一个缺口：
 
-**代码入口（文内明示，2026-09-22 未做线上可用性核验）：**
-- Cascade：`github.com/Noryxen/Cascade`
-- GRAPHSU：`https://anonymous.4open.science/r/graphSU-35B4`（匿名仓；落地以作者正式发布为准）
-- SAUL：正文未给独立公开仓链接（以 PDF / 作者页为准）。
+- **Cascade §3.1**：输出层的拒答或降概率不等于内部不可恢复，改写、线索或提取提示仍能把知识挖出来。
+- **SAUL §3**：forget / retain 加权目标用系数隐式规定「忘多少」，容易过忘，伤及邻域知识。
+- **GRAPHSU**：只打显式 forget seed，别名、改写与邻接训练样本仍能重建目标知识；而删除范围扩得太大又伤 retain。
 
-**一句话抓手：**
-[[隐私与机器遗忘]] 回答「遗忘领域有哪些方法族、怎么统一评」；本卡回答「**2026 近窗两条具体算法如何改遗忘—效用接口**」——Cascade 攻 **内部仍可被改写/抽取提示恢复**；SAUL 攻 **加权目标隐式规定「忘多少」导致过忘**；GRAPHSU 补一句 **删 seed 不够、还要控支持路径**。
+## 二、脉络
 
----
+[[隐私与机器遗忘]] 记录了这一方向的地图与量尺：综述梳理自 2021 年起的 180+ 篇工作，OpenUnlearning（NeurIPS 2025）把 TOFU、MUSE、WMDP 三个主基准与多种算法、指标放进统一库，并指出评测难在「表面拒答不等于权重真被擦掉」。
 
-## 二、议题边界：近窗方法切片 ≠ 通史 / ≠ 对齐 / ≠ 水印 / ≠ TEE
+本篇三文都出自 2026 年 8–9 月，沿用同一套基准，但不再比较「哪种加权目标更好」，而是改动遗忘问题的形式：
 
-### 2.1 四向对照（跟读）
-
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| **遗忘综述 + OpenUnlearning** | 180+ 方法地图；统一基准与指标元评测 | **[[隐私与机器遗忘]]** | **否**（不复读通史 / 元评测） |
-| **RLHF / DPO / CAI** | 偏好对齐流水线 | **[[对齐脉络RLHF与偏好优化]]** | **否**（不写对齐通史） |
-| **LLM 水印** | 生成侧溯源 / SynthID | **[[LLM水印]]** | **否** |
-| **TEE 机密推理** | data-in-use 隔离与 CC tax | **[[TEE机密推理]]** | **否** |
-| **Cascade + SAUL（+ GRAPHSU 补链）** | 可恢复性控制 / 显式约束优化 / 支持路径扩 scope | **本篇** | **是** |
-
-跟读直觉：[[隐私与机器遗忘]] 是 **地图与量尺**；本卡是 **两把新扳手**（+一把扩 scope 的夹具）。共享 TOFU/MUSE/WMDP 词表，但本卡不写成「OpenUnlearning 第二张表」或「又一篇 GA/NPO 加权目标综述」。
-
-`
- 隐私 / 合规近窗
- │
- ┌─────────┼──────────┬────────────┐
- │ │ │ │
- [[隐私与机器遗忘]] [[对齐脉络RLHF与偏好优化]] [[LLM水印]] [[TEE机密推理]]
- 遗忘通史 对齐通史 水印 TEE 推理
- +OpenUnl. RLHF/DPO SynthID CC tax
- │ │ │ │
- └─────────┴────┬─────┴────────────┘
- │ 不复读
- ▼
- ★ [[Cascade与SAUL遗忘方法]] Cascade + SAUL
- 可恢复性三级控制 ‖ 「忘够即可」ALM
- （GRAPHSU = 支持路径补链）
-`
-
-### 2.2 两条主轴正交（本卡骨架）
-
-| | **Cascade** | **SAUL** |
+| 方法 | 日期（页眉） | 改动什么 |
 |---|---|---|
-| 核心不满 | 输出层拒答 / 降概率 ≠ 内部不可恢复（改写、线索、抽取仍漏） | 加权 forget/retain 用系数隐式规定「忘多少」→ 易过忘、伤邻域效用 |
-| 形式化 | $\min_\theta I_{\mathrm{id}}(K^-\!\mid Z_\theta)$ s.t. $U(\theta)\ge\gamma$；用路径/双曲/解码 **代理** | $\min_\theta L_r(\theta)$ s.t. $L_f(\theta)\ge\alpha$（forget loss **够大**） |
-| 控制旋钮 | $\lambda_{\mathrm{path}},\lambda_{\mathrm{hyp}},\lambda_{\mathrm{decode}},\alpha$ + 路由预算 $k$ | 阈值 $\alpha$、ALM $\mu/\lambda$、SAM 半径 $\rho_r,\rho_f$、双 AdamW 状态 |
-| 停忘机制 | 无「自动关 forget」；靠 retain 项与三级代理平衡 | **$\lambda^+=0$ 时 forget 更新整支关掉**（「忘够即可」） |
-| 主评测场 | TOFU Forget10（+01/05）；MUSE-News；WMDP-Cyber | TOFU 1%/5%/10%；WMDP-Bio/Cyber；MUSE Books（News 附录） |
+| SAUL | 2026-08-17 | 优化形式：从加权和改为带阈值的约束优化 |
+| GRAPHSU | 2026-08-27 | 删除范围：从 forget seed 扩到支撑路径 |
+| Cascade | 2026-09-15 | 遗忘目标：从输出概率改为内部可辨识性 |
 
----
+## 三、两条主线对照
 
-## 三、Cascade：层级可恢复性控制
+| | Cascade | SAUL |
+|---|---|---|
+| 核心不满 | 输出层拒答或降概率不等于内部不可恢复 | 加权目标隐式规定「忘多少」，易过忘、伤邻域效用 |
+| 形式化 | $\min_\theta I_{\mathrm{id}}(K^-\!\mid Z_\theta)$ s.t. $U(\theta)\ge\gamma$，用路径、双曲、解码三项代理 | $\min_\theta L_r(\theta)$ s.t. $L_f(\theta)\ge\alpha$（forget 损失足够大） |
+| 停忘机制 | 没有自动关闭 forget 的机制，靠 retain 项与三级代理平衡 | 对偶变量为 0 时整支 forget 更新关闭 |
+| 主评测场 | TOFU Forget10（附 01/05）；MUSE-News；WMDP-Cyber | TOFU 1%/5%/10%；WMDP-Bio/Cyber；MUSE Books |
 
-### 3.1 问题重述（§3.1）
+## 四、Cascade：层级可恢复性控制
 
-文内把失败模式钉成 **internal identifiability**：目标知识在中间状态上仍可被 **激活（路径）、分离（表征几何）、解码（输出分布）**。理想目标（文 Eq.2）：
+### 4.1 思想
 
-$$
-\min_\theta I_{\mathrm{id}}(K^-\mid Z_\theta)\quad\text{s.t.}\quad U(\theta)\ge\gamma.
-$$
-
-因真实恢复函数族 $\mathcal{A}$ 未知，改用可观测代理（Eq.3）：
-
-$$
-I_{\mathrm{id}}^{\mathrm{sur}}=\lambda_{\mathrm{path}}L_{\mathrm{path}}+\lambda_{\mathrm{hyp}}L_{\mathrm{hyp}}+\lambda_{\mathrm{decode}}L_{\mathrm{decode}}.
-$$
-
-### 3.2 三级控制（§3.2）
-
-**① 路径级路由（Path-level）**
-- 对候选模块比较 forget vs retain 激活范数，得路线分 $s_i=a_i^--a_i^+$；EMA 平滑后 **Top-$k$** 选隐私相关路由集 $R$。
-- 惩罚 forget 相对 retain 的过量激活（文式 softplus 边距形式；stop-gradient 挡住 retain 侧被拖垮）。
-- 设计意图：**选择性**压隐私路由，而非全局掐激活。
-
-**② 表征级双曲压缩（Representation-level）**
-- 在选中路由与答案 token 位上 mean-pool → 固定投影头映入 **Poincaré ball**；半径 $r_c$ 作「分辨力 / 可分性」代理。
-- $L_{\mathrm{hyp}}=\mathbb{E}_{x^-}\,\mathrm{softplus}(r_c(\tilde z_\theta^-)-\tau_h)$：把 forget 表征压向低半径区；**不对 retain 做同款收缩**（retain 靠 $L_{\mathrm{retain}}$）。
-
-**③ 解码级干预（Decoding-level）**
-- 抬高 forget 目标 NLL，并以 retain NLL 为参照边距：
- $L_{\mathrm{decode}}=-\ell^-+\mathrm{softplus}\big(m_d-(\ell^--\mathrm{sg}(\ell^+))\big)$。
-- 消融（Table 2）：**去掉 Decoding** 后 Forget ROUGE 回升到 **0.8297**、Ext. **0.7761**，CFI/BUS 崩到 **0.1458 / 0.2388**——文内据此强调「路径+表征削弱后，残差仍可能在解码冒头」。
-
-**总目标（Eq.16）：** $L_{\mathrm{Cascade}}=I_{\mathrm{id}}^{\mathrm{sur}}+\alpha L_{\mathrm{retain}}$。
-
-### 3.3 文内评测字段（Cascade）
-
-**协议骨架：** TOFU（主报 Forget10；附录 Forget01/05）、MUSE-News、WMDP-Cyber；骨干含 Llama-3.2-1B/3B-Instruct、Qwen3-1.7B/4B（附录 Gemma-3-4B-it）。基线含 GradAscent / GradDiff / NPO / SimNPO / PDU / RMU / UNDIAL / AltPO / WAGLE 等（同数据划分与评测管线）。
-
-**聚合指标（附录 C.2）：**
-- **CFI** $=\mathrm{HM}(1-\mathrm{FP},\,1-\mathrm{FR},\,\mathrm{TR})$（Truth Ratio 方向已校正，越高越好）
-- **BUS** $=\dfrac{2\cdot\mathrm{CFI}\cdot\mathrm{Utility}}{\mathrm{CFI}+\mathrm{Utility}}$（调和，惩罚「只忘不保用」或「只用忘不掉」）
-
-**Table 1（TOFU Forget10，摘主表）：**
-
-| 骨干 | 方法 | Forget Prob↓ | Forget ROUGE↓ | Ext. Strength↓ | Utility↑ | CFI↑ | BUS↑ |
-|---|---|---:|---:|---:|---:|---:|---:|
-| Llama-3.2-3B-Instruct | Original | 0.9510 | 0.9262 | 0.8904 | 0.6661 | 0.0832 | 0.1479 |
-| | Retrained | 0.1241 | 0.3860 | 0.0648 | 0.6498 | 0.6938 | 0.6711 |
-| | AltPO | 0.0948 | 0.3618 | 0.0587 | 0.6206 | 0.7114 | **0.6629** |
-| | **Cascade** | 0.1633 | **0.0180** | 0.1775 | 0.6145 | **0.7165** | 0.6616 |
-| Qwen3-4B | Original | 0.9659 | 0.9596 | 0.8327 | 0.4093 | 0.0534 | 0.0945 |
-| | RMU | 0.1417 | 0.3069 | 0.0659 | 0.4098 | 0.7171 | 0.5216 |
-| | **Cascade** | 0.0594 | 0.0492 | 0.4718 | 0.4021 | **0.7481** | **0.5231** |
-
-读表要点（文内表述，非外推）：Llama 上 Cascade **CFI 最高**、BUS **次高**（AltPO BUS 略高）；Qwen 上 Cascade **CFI 与 BUS 均最高**。优势不在单指标「压到零」，而在 **遗忘—保留平衡**。
-
-**MUSE-News / WMDP（文内）：**
-- MUSE-News：Cascade 报 **最低 Forget Verbatim 0.266**、**Extraction Strength 0.071**（完整表见附录 Table 6）。
-- WMDP-Cyber（Table 7）：Original **40.36** → Cascade **23.60**；MMLU **63.75**（Original **62.21**）。对照 PDU 可到更低 WMDP（**23.45**）但 MMLU 掉到 **26.89**——文强调 Cascade 的安全知识下降 **不是**靠通用能力塌缩。
-
-**提示鲁棒（Fig.5 / 文内）：** 五类改写（Original / Paraphrase / Indirect / Clue / Extraction）上 Cascade 平均 ASR **0.10%**、R-ROUGE **0.043**；抽取提示下 **0.25% / 0.070**。Targeted-IDK-SFT 可压 ROUGE，但 Forget Prob / Ext. 仍高（Table 9），说明 **拒答表面 ≠ 内部擦除**。
-
-**机制（§4.4）：** Top-$K$ 隐私路由跨采样稳定；forget–retain 激活差下降；forget 表征双曲半径分布内移，并与答案恢复关联减弱（Fig.6–7；细节读图标「待核实读图」若未抽到精确分位）。
-
----
-
-## 四、SAUL：锐度感知增广拉格朗日遗忘
-
-### 4.1 约束问题（§3）
-
-相对「$\lambda_f L_f+\lambda_r L_r$」标量加权，SAUL 写（Eq.1）：
+Cascade 把失败模式命名为**内部可辨识性**：目标知识在中间状态上仍能被激活（路径）、被分离（表征几何）、被解码（输出分布）。理想目标是在效用不低于 $\gamma$ 的约束下最小化可辨识性 $I_{\mathrm{id}}$；由于真实的恢复攻击族未知，改用三项可观测代理的加权和（Cascade §3.1）：
 
 $$
-\min_\theta L_r(\theta)\quad\text{s.t.}\quad L_f(\theta)\ge\alpha.
+I_{\mathrm{id}}^{\mathrm{sur}}=\lambda_{\mathrm{path}}L_{\mathrm{path}}+\lambda_{\mathrm{hyp}}L_{\mathrm{hyp}}+\lambda_{\mathrm{decode}}L_{\mathrm{decode}},
 $$
 
-$\alpha$ 是 **用户指定的 forget-side 满足水平**（交叉熵损失够大 = 忘得够）；retain 目标阻止 **超过必要** 的效用损伤。文内原则句：**forget enough, but no more than necessary**。
+总目标再加上 retain 项：$L_{\mathrm{Cascade}}=I_{\mathrm{id}}^{\mathrm{sur}}+\alpha L_{\mathrm{retain}}$。
 
-对照：Entesari et al. / Cheng et al. 等把硬约束放在 **retain 侧**，forget 目标仍持续开着；SAUL 把约束放在 **forget 侧**，满足后可关断。
+### 4.2 三级控制
 
-### 4.2 三件套（§4）
+- **路径级**：比较各候选模块在 forget 与 retain 数据上的激活范数，EMA 平滑后取 Top-$k$ 作为「隐私路由」，只惩罚这些路由上 forget 相对 retain 的过量激活。用意是有选择地压隐私路由，而不是全局掐激活。
+- **表征级**：把选中路由上答案位置的表征投影进双曲空间（Poincaré ball），以半径作为「可分性」的代理，把 forget 表征压向低半径区；retain 不做同样收缩。
+- **解码级**：抬高 forget 目标的 NLL，并以 retain 的 NLL 为参照边距。消融显示去掉这一级后 Forget ROUGE 回升到 0.8297，CFI / BUS 跌到 0.1458 / 0.2388（Cascade Table 2）：路径与表征被削弱后，残余知识仍可能在解码端冒头。
 
-**① ALM 控制器**
-- 对偶更新 $\lambda^+=[\lambda+\mu(\alpha-L_f(\theta))]_+$（$c_f=\alpha-L_f$）。
-- $\lambda^+>0$：带二次罚的 forget 压力；**$\lambda^+=0$：退化为纯 $\min L_r$**——forget 梯度门控关闭。
-- 可作 **drop-in**：对既有目标 $J(\theta)$ 与遗忘度量 $F(\theta)$ 施加 $F(\theta)\ge\alpha$（§4.4）；Fig.1–2 显示多条基线 +ALM 后 GPT-based / Model Utility 改善。
+### 4.3 证据
 
-**② 非对称锐度感知（SAM）**
-- Retain：$\max_{\|\delta_r\|\le\rho_r}L_r(\theta+\delta_r)$（最坏情形仍低 → 平坦保留）。
-- Forget：$\min_{\|\delta_f\|\le\rho_f}L_f(\theta+\delta_f)$（对「最易恢复」邻域仍保持高损失）。
-- 文明确限定：此鲁棒性是 **权重空间扰动**，**不**自动蕴含提示级对抗 / 恢复攻击免疫。
+文内定义两个聚合指标：CFI 为 $1-$Forget Prob、$1-$Forget ROUGE 与 Truth Ratio 的调和平均；BUS 为 CFI 与 Utility 的调和平均，惩罚「只忘不保用」或「保用但忘不掉」。TOFU Forget10 主表摘录（Cascade Table 1）：
 
-**③ 双优化器状态**
-- 同一 $\theta$，forget / retain 各维护 AdamW 矩（Zhong et al., 2025 思路）；先按 $\lambda^+$ 决定是否做 forget 步，再做 retain 步，降低异质梯度对共享矩的干扰。
+| 骨干 | 方法 | Forget ROUGE↓ | Utility↑ | CFI↑ | BUS↑ |
+|---|---|---:|---:|---:|---:|
+| Llama-3.2-3B-Instruct | Retrained | 0.3860 | 0.6498 | 0.6938 | 0.6711 |
+| | AltPO | 0.3618 | 0.6206 | 0.7114 | **0.6629** |
+| | Cascade | **0.0180** | 0.6145 | **0.7165** | 0.6616 |
+| Qwen3-4B | RMU | 0.3069 | 0.4098 | 0.7171 | 0.5216 |
+| | Cascade | 0.0492 | 0.4021 | **0.7481** | **0.5231** |
 
-### 4.3 文内评测字段（SAUL）
+- Llama 上 Cascade 的 CFI 最高、BUS 次高（AltPO 略高）；Qwen 上两项都最高。优势在遗忘与保留的平衡，而不是单项指标压到零。
+- **WMDP-Cyber**（Cascade Table 7）：从 40.36 降到 23.60，MMLU 为 63.75（原模型 62.21）；PDU 能把 WMDP 压到 23.45，但 MMLU 跌到 26.89。Cascade 的安全知识下降不是靠通用能力塌缩换来的。
+- **MUSE-News**：文内报告 Cascade 的 Forget Verbatim 最低（0.266），Extraction Strength 为 0.071（完整表见附录 Table 6）。
+- **提示鲁棒**（Cascade Fig.5）：五类改写提示上平均 ASR 0.10%、R-ROUGE 0.043，提取提示下为 0.25% / 0.070。对照的 Targeted-IDK-SFT 能压低 ROUGE，但 Forget Prob 与提取强度仍高（Table 9），说明表面拒答不等于内部擦除。
 
-**匹配遗忘协议：** 各方法调到相近遗忘水平再比效用（避免「忘得更狠所以效用差」的假对比）。
+## 五、SAUL：锐度感知增广拉格朗日遗忘
 
-**TOFU 1%（Table 1，匹配 $F_{\mathrm{ROUGE}}\le 0.03$ 当可能）：**
+### 5.1 思想
 
-| 方法 | MU↑ | $F_{\mathrm{ROUGE}}$↓ | Retain↑ | World Facts↑ | Real Authors↑ | HM↑ | Forget↓ |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Original | 0.60 | 0.87 | 90.0 | 80.3 | 81.4 | 81.9 | 82.5 |
-| Dual AdamW | 0.57±0.00 | 0.02±0.00 | 64.25±0.56 | 80.00±1.43 | 49.00±1.58 | 61.87±0.87 | 0.03±0.02 |
-| Dual AdamW+ALM | 0.57±0.00 | 0.01±0.00 | 63.20±0.27 | 82.56±1.43 | 54.40±1.14 | 64.76±0.68 | 0.01±0.01 |
-| Sharp Min–Max+ALM | 0.58±0.01 | 0.01±0.00 | 58.05±0.37 | 80.85±0.76 | 66.20±0.84 | 67.11±0.25 | 0.03±0.03 |
-| BLUR | 0.57±0.14 | **0.28±0.20**（红区） | 63.00±1.40 | 80.00±3.40 | 73.60±4.00 | 71.40±2.50 | 36.00±2.80 |
-| **SAUL** | **0.59±0.01** | 0.02±0.02 | **68.25±1.09** | 79.66±1.27 | **71.40±0.55** | **72.79±0.54** | **0.01±0.01** |
-| w/o ALM | 0.57±0.01 | 0.01±0.01 | 64.95±0.60 | 78.29±1.55 | 41.40±1.14 | 57.32±0.48 | 0.02±0.02 |
+SAUL 不再用 $\lambda_f L_f+\lambda_r L_r$ 的标量加权，而写成约束问题（SAUL §3）：
 
-读表要点：在 **满足** $F_{\mathrm{ROUGE}}$ 阈值的方法里，SAUL **GPT-based HM 最高（72.79）**，相对次优约束满足法 Sharp Min–Max+ALM（67.11）约 **+5.7**；BLUR HM 高但 $F_{\mathrm{ROUGE}}=0.28$ 被标为遗忘不足，文将其视为 **未进入严格答案级遗忘工况**。消融：**去 ALM** 后 Real Authors / HM 明显掉（邻域泛化），支持「过忘伤邻居」叙事。
+$$
+\min_\theta L_r(\theta)\quad\text{s.t.}\quad L_f(\theta)\ge\alpha .
+$$
 
-**改写问题（Table 2，1%，超参在原问题上选定后 **零额外调参** 迁移）：** SAUL HM **62.90±2.18**，Forget **1.50±1.37**；相对多数非 ALM 基线仍强，但 $F_{\mathrm{ROUGE}}$ 方差增大（0.13±0.22）——文称整体趋势在 5%/10% 与 3B 骨干附录中保持。
+$\alpha$ 是用户指定的 forget 侧满足水平（交叉熵损失足够大即算忘够），retain 目标阻止超出必要的效用损伤，原则是 *forget enough, but no more than necessary*。此前也有工作把硬约束放在 retain 侧，但 forget 目标始终开着；SAUL 把约束放在 forget 侧，满足后即可关断。
 
-**WMDP（Table 3，Zephyr-7B-β；匹配 Bio/Cyber≈随机 0.25）：**
-SAUL Bio **0.268±0.012**、Cyber **0.251±0.010**、MMLU **0.542±0.003**（≈BLUR 0.540；明显高于 Relearning-resilient 的 0.414）。
+### 5.2 三个组件
 
-**MUSE Books（Table 4，Llama-2-7B；与 BLUR 匹配 KnowMem $D_f\approx5$）：**
+- **增广拉格朗日控制器**：对偶变量按 $\lambda^+=[\lambda+\mu(\alpha-L_f(\theta))]_+$ 更新。$\lambda^+>0$ 时施加带二次罚的 forget 压力；$\lambda^+=0$ 时退化为只最小化 $L_r$，forget 梯度被门控关闭。它也可以作为插件，给已有方法加上 $F(\theta)\ge\alpha$ 约束（SAUL §4.4）。
+- **非对称锐度感知**：retain 侧在权重邻域的最坏情形下仍保持低损失（平坦保留），forget 侧在「最易恢复」的邻域里仍保持高损失。作者明确这只是权重空间扰动下的鲁棒性，不等于对提示级攻击或再学习攻击免疫。
+- **双优化器状态**：同一组参数为 forget 与 retain 分别维护 AdamW 矩，先按 $\lambda^+$ 决定是否做 forget 步，再做 retain 步，减少两类异质梯度对共享矩的干扰。
 
-| 方法 | VerbMem↓ | KnowMem $D_f$↓ | PrivLeak→0 | KnowMem $D_r$↑ |
-|---|---:|---:|---:|---:|
-| Original | 99.8 | 59.4 | −57.5 | 66.9 |
-| Retrain | 14.3 | 28.9 | 0.0 | 74.5 |
-| BLUR | 0.00±0.00 | 3.09±4.97 | −30.77±5.41 | 48.40±1.50 |
-| **SAUL** | **0.00±0.00** | **0.77±1.34** | **−16.66±2.90** | 48.25±5.82 |
+### 5.3 证据
 
-**局限（文 §7）：** $\alpha$ 依赖数据/模型/遗忘比例/度量，缺自动选阈；评测未覆盖全部对抗提示 / 再学习攻击的形式化保证。
+比较采用**匹配遗忘协议**：各方法先调到相近的遗忘水平再比效用，避免「忘得更狠所以效用更差」的假对比。TOFU 1% 摘录（SAUL Table 1，尽量匹配 $F_{\mathrm{ROUGE}}\le 0.03$）：
 
----
+| 方法 | $F_{\mathrm{ROUGE}}$↓ | Real Authors↑ | HM↑ |
+|---|---:|---:|---:|
+| Sharp Min–Max+ALM | 0.01±0.00 | 66.20±0.84 | 67.11±0.25 |
+| BLUR | 0.28±0.20 | 73.60±4.00 | 71.40±2.50 |
+| SAUL | 0.02±0.02 | 71.40±0.55 | **72.79±0.54** |
+| SAUL w/o ALM | 0.01±0.01 | 41.40±1.14 | 57.32±0.48 |
 
-## 五、补链 GRAPHSU：支持路径图扩展删除范围
+- 在满足 $F_{\mathrm{ROUGE}}$ 阈值的方法里，SAUL 的 GPT-based HM 最高（72.79），比次优的 Sharp Min–Max+ALM（67.11）高约 5.7；BLUR 的 HM 虽高，但 $F_{\mathrm{ROUGE}}=0.28$ 被视为遗忘不足。去掉 ALM 后 Real Authors 与 HM 明显下降，支持「过忘伤邻居」的判断。
+- **改写问题**（Table 2，零额外调参迁移）：HM 62.90±2.18，Forget 1.50±1.37，但 $F_{\mathrm{ROUGE}}$ 方差变大（0.13±0.22）。
+- **WMDP**（Table 3，Zephyr-7B-β）：Bio 0.268±0.012、Cyber 0.251±0.010，接近随机的 0.25；MMLU 0.542±0.003，与 BLUR（0.540）相当，明显高于 Relearning-resilient（0.414）。
+- **MUSE Books**（Table 4，Llama-2-7B）：VerbMem 0.00±0.00，KnowMem $D_f$ 0.77±1.34，PrivLeak −16.66±2.90（BLUR 为 −30.77±5.41），KnowMem $D_r$ 48.25±5.82。
 
-> **GRAPHSU / BLADE 仅作索引**。此处只讲 **scope 控制** 接口，GRAPHSU 不作为第三条主方法展开。
+## 六、GRAPHSU：用支持路径图扩展删除范围
 
-**不满：** 选择性遗忘若只打 **显式 forget seed**，别名 / 改写 / 邻接训练样本仍可重建目标知识；扩太大又伤 retain。文称这是与「选哪个遗忘目标函数」正交的 **scope-control** 问题。
+GRAPHSU 把「删哪些样本」当作与「用什么遗忘目标」正交的 scope 控制问题，这里只作补充索引：
 
-**做法（压缩）：**
-1. 多视图支持图：实体 / 关系 / tail 符号重叠 + 句向量语义 + 答案侧梯度对齐 → 边权。
-2. 自 seed 做个性化扩散（1–2 hop / PageRank 式），估支持闭包。
-3. 对高风险邻居赋 **分级遗忘强度** $\omega_i$，再套局部遗忘目标（seed 全压、邻居按相关性衰减）；控制器 **loss-agnostic**，可接不同局部目标。
+1. 用实体、关系与符号重叠、句向量语义和答案侧梯度对齐，构建多视图支持图；
+2. 从 forget seed 出发做个性化扩散（1–2 跳，PageRank 式），估计支持闭包；
+3. 给高风险邻居分配分级遗忘强度，seed 全压、邻居按相关性衰减；控制器与具体的局部遗忘目标无关。
 
-**文内主结果（GPT-2 Medium，Table 2；效用可行阈：retain PPL≤10）：**
+在 GPT-2 Medium、retain PPL ≤ 10 的效用可行条件下（GRAPHSU Table 2），TOFU Complete 的 soft leakage 从 Seed-Only 的 93.25% 降到 46.83%，PISTOL Complete 从 56.33% 降到 6.83%（−49.50 pp）。GRU 在 TOFU Complete 上 Leak 更低（38.13%），但 retain PPL 为 79.11，不满足效用约束。soft leakage 是固定探针族下的行为可恢复性，不是证明式擦除。
 
-| 数据集 | 设置 | Seed-Only Leak% / PPL | GRAPHSU Leak% / PPL | ∆Leak（文内） |
-|---|---|---|---|---|
-| TOFU | Complete | 93.25 / 2.61 | **46.83 / 3.27** | −46.42 pp |
-| TOFU | Entity | 96.25 / 4.40 | **54.60 / 4.94** | −41.65 pp |
-| TOFU | Partial | 100.00 / 7.90 | **81.67 / 1.91** | −18.33 pp |
-| PISTOL | Complete | 56.33 / 1.09 | **6.83 / 1.05** | **−49.50 pp**（摘要「up to 49.5」） |
-| PISTOL | Entity | 26.33 / 1.10 | **4.67 / 1.10** | −21.66 pp |
-| PISTOL | Partial | 41.39 / 1.22 | **29.17 / 1.19** | −12.22 pp |
+三者的分工：Cascade 管内部三级可恢复性，SAUL 管「忘多少」的显式停止条件，GRAPHSU 管「忘掉哪些支撑样本」。可以设想组合使用，但文内没有联合实验。
 
-文强调：GRU 等可在 TOFU Complete 上拿到更低 Leak（**38.13%**），但 retain PPL **79.11**，不满足效用可行；GRAPHSU 争的是 **utility-feasible soft leakage** 最低。Llama-3.2-3B-Instruct 结果在附录；soft leakage 是固定路由探针族下的 **行为可恢复性**，非证明式擦除。
+## 七、与相邻笔记的分工
 
-**与两主锚关系：** Cascade 管「内部三级可恢复性」；SAUL 管「忘多少的显式停条件」；GRAPHSU 管「**忘掉哪些支撑样本**」。三者可组合想象，但文内**未做联合实验**。
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[隐私与机器遗忘]] | 共用背景：机器遗忘的设定、TOFU / MUSE / WMDP 基准与「表面拒答不等于擦除」的评测难点；本篇是其后的方法增量 | 方法族通史、OpenUnlearning 元评测 |
 
----
-
-## 六、对照小结与可行动取舍
+## 八、意义
 
 | 问题 | 优先看 |
 |---|---|
-| 表面拒答后仍被改写/抽取挖出？ | **Cascade**（路径定位 + 双曲压缩 + 解码边距；盯 CFI/BUS 与改写 ASR） |
-| 加权遗忘总过打、Real Authors/邻域掉点？ | **SAUL**（设 $\alpha$，让 ALM 在满足后关 forget；可先把 ALM drop-in 到现有锐度基线） |
-| 企业删除请求只有 canonical seed、担心别名/邻接泄漏？ | **GRAPHSU 补链**（先扩 support closure，再套本地目标；盯 soft leakage @ PPL≤10） |
-| 需要方法族地图 / 统一元评测？ | 回 **[[隐私与机器遗忘]]**，不要在本卡重开 |
+| 表面拒答后仍能被改写或提取挖出 | Cascade：路径定位、双曲压缩与解码边距，关注 CFI / BUS 与改写 ASR |
+| 加权遗忘过打，邻域知识（如 Real Authors）掉点 | SAUL：设定 $\alpha$，让 ALM 在满足后关闭 forget；可先把 ALM 插到现有方法上 |
+| 删除请求只有 canonical seed，担心别名与邻接泄漏 | GRAPHSU：先扩支持闭包，再套局部目标，关注 PPL ≤ 10 下的 soft leakage |
+| 需要方法族地图或统一元评测 | [[隐私与机器遗忘]] |
 
-**工程提示（严格限文内已写）：**
-- Cascade 对 decoding 系数过强敏感（Fig.10：过压可不稳定）——调参应联合看 BUS，而非单看 Forget ROUGE。
-- SAUL 的 $\alpha$ 是产品旋钮也是负担；附录 F 提及 margin 证书式实例化，作 **事后检验** 而非本卡展开。
-- GRAPHSU 图构建含 GPT-4.1 抽事实三元组 + 离线构图成本（文称按语料摊销）；部分删除（partial）残余泄漏仍高——文归因于 span 级设定本身难，而非单点实现瑕疵。
+## 九、局限与待核实
 
----
+1. **跨文数字不可横向比较**：三文的骨干、匹配协议与指标定义不同（CFI 与 BUS、GPT-based HM、PPL ≤ 10 下的 soft leakage），不宜拼成一张「谁 SOTA」的总榜。
+2. **调参敏感**：Cascade 对解码项系数过强敏感（Fig.10，过压可能不稳定），调参应联合看 BUS 而不是只看 Forget ROUGE。SAUL 的 $\alpha$ 依赖数据、模型、遗忘比例与度量，缺少自动选阈方法（SAUL §7）。
+3. **鲁棒性的边界**：SAUL 的评测没有覆盖全部对抗提示，也没有针对再学习攻击的形式化保证；GRAPHSU 的 soft leakage 只是行为可恢复性；部分删除（partial）设定下残余泄漏仍高，文中归因于 span 级设定本身难。
+4. **成本**：GRAPHSU 的图构建要用 GPT-4.1 提取事实三元组并离线构图，文称成本可按语料摊销。
+5. **代码可用性**：Cascade 仓库（Noryxen/Cascade）与 GRAPHSU 匿名仓库只在文内声明，可用性未核验；SAUL 文内没有给公开实现链接。
+6. **读图项**：Cascade 机制分析（§4.4，Fig.6–7）中隐私路由稳定性与双曲半径内移的精确分位未从图中读出，待核实读图。
 
-## 七、局限与待核实
+## 十、延伸阅读
 
-1. **跨文数字不可横向总分：** Cascade / SAUL / GRAPHSU 骨干、匹配协议、指标定义不同（CFI·BUS vs GPT-HM vs soft leakage@PPL≤10）——不宜拼成「谁 SOTA」总榜。
-2. **Cascade 代码仓** `github.com/Noryxen/Cascade`、**GRAPHSU 匿名仓** 仅文内声明；2026-09-22 **未**做 clone/CI 核验。
-3. **SAUL** 无文内唯一公开实现 URL；复现依赖作者后续发布。
-4. **攻击面：** 三文均讨论改写/抽取/路由探针，但均 **不**提供「如何绕过遗忘」操作手册；本笔记只转述其 **评测结论**。
-5. **BLADE** 等近邻遗忘文本篇不展开。
-
----
-
-**摘要：**
-[[Cascade与SAUL遗忘方法]] 在 [[隐私与机器遗忘]] 通史/OpenUnlearning 之外，深读 2026 近窗两篇遗忘方法：Cascade（2609.16890）以路径—双曲—解码三级代理最小化内部可辨识性，TOFU Forget10 上 Llama-3.2-3B 达 CFI 0.7165 / BUS 0.6616，并保持改写下低 ASR；SAUL（2608.16249）以 forget-loss 约束 + ALM 在满足 $\alpha$ 后关闭 forget 更新，配合非对称 SAM 与双优化器，TOFU 1% 匹配遗忘下 GPT-HM 72.79。补链 GRAPHSU（2608.26743）用支持路径图扩展删除 scope，PISTOL Complete 上 soft leakage 相对 Seed-Only 降约 49.5 pp（PPL 仍 ≤10）。
+| 类型 | 标题 | 说明 | URL |
+|---|---|---|---|
+| 论文 | Cascade: Hierarchical Recoverability Control for Large Language Model Unlearning | Yu 等，2026-09；三级可恢复性控制 | https://arxiv.org/abs/2609.16890 |
+| 论文 | SAUL: Sharpness-Aware Augmented-Lagrangian Unlearning | Choi、Yang、Park，2026-08；显式 forget 约束与 ALM | https://arxiv.org/abs/2608.16249 |
+| 论文 | Graph-Guided Selective Unlearning for Language Models | Khan 等，2026-08；支持路径图扩展删除范围 | https://arxiv.org/abs/2608.26743 |

@@ -8,7 +8,7 @@ status: active
 
 # MOC · 智能体Harness
 
-工具使用、长程记忆、Computer-Use、多智能体协作与生产 Memory 层；评测基准按对象挂在本簇「评测」子节。气候政策 agent 见 [[MOC_专科基础模型]]（不在本簇）。
+工具使用、长程记忆、Computer-Use、多智能体协作与生产 Memory 层；评测基准按对象挂在本簇「评测」子节。气候政策 agent、辅导教学评测见 [[MOC_专科基础模型]]（不在本簇）。
 
 ## 时间线入口
 

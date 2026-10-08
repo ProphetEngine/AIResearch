@@ -2,293 +2,171 @@
 title: "Prompt injection 架构防御：CaMeL + StruQ（≠ 红队通史 / ≠ 多模态越狱）"
 topic: Prompt注入架构防御
 date: 2026-09-22
-lines: [架构思想, 系统接口, 安全—效用字段]
+lines: [架构思想, 评测字段]
 status: archived
 sources:
+ - https://arxiv.org/abs/2503.18813
  - https://arxiv.org/abs/2402.06363
+ - https://arxiv.org/abs/2503.00061
 aux:
  - https://arxiv.org/abs/2503.18813
- - https://arxiv.org/pdf/2503.18813
  - https://arxiv.org/abs/2402.06363
- - https://arxiv.org/pdf/2402.06363
  - https://arxiv.org/abs/2503.00061
- - https://arxiv.org/pdf/2503.00061
  - https://github.com/google-research/camel-prompt-injection
  - https://github.com/Sizhe-Chen/StruQ
  - https://github.com/uiuc-kang-lab/AdaptiveAttackAgent
 arxiv: ["2503.18813", "2402.06363", "2503.00061"]
-related: ["安全红队与对抗评测", "多模态越狱与OmniSafe", "审慎对齐与断路器", "宪法分类器防御", "SHADEArena隐瞒与监控", "智能体工具与长程任务"]
+related: ["安全红队与对抗评测", "多模态越狱与OmniSafe", "审慎对齐与断路器", "宪法分类器防御", "SHADEArena隐瞒与监控", "智能体工具与长程任务", "计算机使用智能体"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
 # Prompt injection 架构防御：CaMeL + StruQ（≠ 红队通史 / ≠ 多模态越狱）
 
-> **定位**：**横切**——仓库安全轴已有 **攻击/红队/越狱/分类器护栏/表征熔断/隐瞒评测**，缺的是「**即使底层模型可被注入，系统层仍可约束控制流与数据外泄**」的 **by-design 防御主文**。对照两条正交架构路线：
-> - **CaMeL**（*Defeating Prompt Injections by Design*，arXiv:**2503.18813**v2，页眉 **24 Jun 2025**）：能力标记 + 控制/数据流提取 + 自定义解释器策略强制——**系统层脚手架**，不改底层 LLM。
-> - **StruQ**（*StruQ: Defending Against Prompt Injection with Structured Queries*，arXiv:**2402.06363**v2，页眉 **25 Sep 2024**；USENIX Security 2025）：prompt/data **双通道结构化查询** + 安全前端 + **结构化指令微调**——**模型 API / 训练接口**改造。
-> **补链**：**Adaptive Attacks…**（arXiv:**2503.00061**v2，页眉 **4 Mar 2025**）——说明检测/提示/微调类防御在自适应评测下脆弱；**只作动机补链**，不立主轴。
-> **研究线**：**架构思想 / 系统接口（主）** + **文内 AgentDojo / AlpacaEval 等安全—效用汇总字段（辅）**。
+> **主要来源**：[Defeating Prompt Injections by Design](https://arxiv.org/abs/2503.18813)；[StruQ: Defending Against Prompt Injection with Structured Queries](https://arxiv.org/abs/2402.06363)；[Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents](https://arxiv.org/abs/2503.00061)（截至 2026-09-22）。下文「CaMeL §x」「StruQ §x」「Adaptive」分别指三文。
+> **研究线**：架构思想与系统接口（主）——把不可信数据从控制平面拆开；安全—效用字段（辅）——AgentDojo、AlpacaEval 与各攻击族的聚合 ASR。
 > **范围与相邻笔记**：
-> - **≠ [[安全红队与对抗评测]]**：不重写红队通史、众包协议、ASR 闭环与攻击面地图。
-> - **≠ [[多模态越狱与OmniSafe]]**：不写成多模态越狱 / MMJail / OmniSafe。
-> - **≠ [[审慎对齐与断路器]]**：不重写 Deliberative Alignment / Circuit Breakers 表征熔断对齐范式。
-> - **≠ [[宪法分类器防御]]**：不重写 Constitutional Classifiers 部署侧分类器护栏工程。
-> - **≠ [[SHADEArena隐瞒与监控]]**：不重写 SHADE-Arena sabotage×monitor 双角色评测（AgentDojo 在本篇只作 **CaMeL 评测入口**，不展开隐瞒/破坏剧本）。
-> - **不写成注入攻击百科**：不枚举攻击族配方、不侧写可复现注入/越狱步骤或载荷；评测轴只保留 **族名 + 聚合 ASR/效用数字**。
+> - ≠ [[安全红队与对抗评测]]：本篇不写红队通史、众包协议、ASR 闭环与攻击面地图。
+> - ≠ [[多模态越狱与OmniSafe]]：本篇不写多模态越狱。
+> - ≠ [[审慎对齐与断路器]]：本篇不写规范推理与表征熔断的对齐范式。
+> - ≠ [[宪法分类器防御]]：本篇不写部署侧分类器护栏。
+> - ≠ [[SHADEArena隐瞒与监控]]：本篇不写 sabotage × monitor 评测，AgentDojo 只作 CaMeL 的评测入口。
+> - 本篇不收注入攻击配方、可复现的注入或越狱步骤与载荷，评测只保留攻击族名与聚合数字。
+> **意义**：检测器、提示隔离与对抗微调在自适应攻击下都可被击穿，两文因此改从架构入手：StruQ 把指令与数据分成两个通道并训练模型只听指令通道，CaMeL 不改模型，用可信计划、隔离解析与工具调用点的策略检查，让不可信内容无法改写控制流或把数据外泄。代价是效用与开销，两文也都明确没有「完全解决」prompt injection。
 
----
+**一句话**：CaMeL 让只看可信查询的 P-LLM 写计划、无工具的 Q-LLM 解析不可信数据，再由解释器按 capability 在每次工具调用前检查策略；StruQ 用双通道结构化查询、过滤保留分隔符的前端，加上只服从 prompt 通道的指令微调。两者正交，可以叠加。
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 页数 | 角色 |
-|---|---|---|---|
-| **主文 A · CaMeL** | Debenedetti, Shumailov, Fan, Hayes, Carlini, Fabian, Kern, Shi, Terzis & Tramèr (Google / DeepMind / ETH Zurich), *Defeating Prompt Injections by Design* | arXiv:**2503.18813v2** \[cs.CR\] **24 Jun 2025**；XMP MetadataDate 2025-06-25T00:35:04Z（→ **2025-06-25 08:35 CST**）；CC-BY-4.0；官方 PDF：https://arxiv.org/pdf/2503.18813（**125** 页 A4） | 主锚：系统层控制/数据流 + capability 策略 |
-| **主文 B · StruQ** | Chen, Piet, Sitawarin & Wagner (UC Berkeley), *StruQ: Defending Against Prompt Injection with Structured Queries* | arXiv:**2402.06363v2** \[cs.CR\] **25 Sep 2024**；CreationDate **2024-09-27 08:08 CST**；`https://arxiv.org/abs/2402.06363`（**20** 页 letter）；USENIX Security 2025 | 主锚：结构化查询 API + 结构化指令微调 |
-| **补链 · Adaptive Attacks** | Zhan, Fang, Panchal & Kang, *Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents* | arXiv:**2503.00061v2** \[cs.CR\] **4 Mar 2025**；CreationDate **2025-03-05 09:28 CST**；官方 PDF：https://arxiv.org/pdf/2503.00061（**17** 页 A4） | 补链：启发式/检测类防御脆弱性 |
+LLM 应用把开发者的指令与外部数据（工具返回、文档、邮件、网页）拼进同一段输入，模型无法从格式上区分哪段是该执行的指令。攻击者只要能改写数据，就可能让模型服从藏在数据里的指令，或调用计划外的工具、外泄数据。两文共享的威胁设定如下：
 
-**代码入口（文内 / USENIX 明示，2026-09-22 未做线上可用性核验）：**
-- CaMeL：`https://github.com/google-research/camel-prompt-injection`
-- StruQ：`https://github.com/Sizhe-Chen/StruQ`（USENIX 页与作者仓）
-- Adaptive（补链）：`https://github.com/uiuc-kang-lab/AdaptiveAttackAgent`
-
-**一句话抓手：**
-[[安全红队与对抗评测]]/[[宪法分类器防御]]/[[审慎对齐与断路器]] 等回答「如何评攻击、如何在模型内或护栏层挡越狱」；本卡回答「**如何在架构上把不可信数据从控制平面拆开**」——CaMeL 用 **P-LLM 只见可信查询写计划 + Q-LLM 无工具解析不可信数据 + capability 在工具调用点强制策略**；StruQ 用 **双通道结构化查询 + 保留分隔符前端过滤 + 只服从 prompt 通道的指令微调**。二者正交、可叠加（CaMeL 文亦称可与使模型更鲁棒的方法联用）。
-
----
-
-## 二、议题边界：架构防御 ≠ 攻击通史 / ≠ 分类器 / ≠ 熔断 / ≠ 隐瞒评测
-
-### 2.1 五向对照（跟读）
-
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| **红队 / 对抗评测通史** | 流程、众包、ASR 闭环 | **[[安全红队与对抗评测]]** | **否** |
-| **多模态越狱** | MMJail / OmniSafe | **[[多模态越狱与OmniSafe]]** | **否** |
-| **对齐范式（规范推理 / 表征熔断）** | Deliberative + Circuit Breakers | **[[审慎对齐与断路器]]** | **否** |
-| **部署侧分类器护栏** | Constitutional Classifiers | **[[宪法分类器防御]]** | **否** |
-| **sabotage×monitor 评测** | SHADE-Arena | **[[SHADEArena隐瞒与监控]]** | **否**（AgentDojo 仅作 CaMeL 数字入口） |
-| **Agent 工具长程** | 工具环 / computer-use | **[[智能体工具与长程任务]] / [[计算机使用智能体]]** | **否**（只取「不可信工具结果」接口一句） |
-| **注入架构防御** | 系统层隔离 + 结构化查询 | **本篇** | **是** |
-
-跟读直觉：[[宪法分类器防御]] 问「**serving 旁路分类器如何挡**」；[[审慎对齐与断路器]] 问「**权重内嵌推理/表征如何阻有害轨迹**」；本卡问「**控制流与数据流如何在系统设计上不可被不可信内容劫持**」——共享「安全」词汇，但 **干预层是系统/API/解释器，不是攻击剧本或模型内对齐全文**。
-
-`
- 安全相关笔记
- │
- ┌─────────┼─────────┬──────────┬──────────┐
- │ │ │ │ │
- [[安全红队与对抗评测]] [[多模态越狱与OmniSafe]] [[审慎对齐与断路器]] [[宪法分类器防御]] [[SHADEArena隐瞒与监控]]
- 红队通史 多模态越狱 对齐范式 分类器护栏 隐瞒评测
- │ │ │ │ │
- └─────────┴────┬────┴──────────┴──────────┘
- │ 不复述
- ▼
- ★ [[Prompt注入架构防御]] 架构防御（CaMeL ⊕ StruQ）
- ▲
- │ 补链动机
- Adaptive Attacks（2503.00061）
-`
-
-### 2.2 威胁设定（只记接口，不记配方）
-
-两文共享的工程设定（意译压缩）：
-
-| 字段 | 含义（架构接口） |
+| 字段 | 含义 |
 |---|---|
-| **可信方** | 应用开发者给出的 **prompt / 用户查询**（CaMeL 另假定用户查询与未污染记忆可信） |
-| **不可信方** | 工具返回、文档、邮件、网页等 **data 通道** |
-| **攻击者能力（威胁模型摘要）** | 可任意改写 data；**不能**改写应用 prompt / 计划通道（CaMeL：不能改 P-LLM 所见查询） |
-| **成功判据（评测接口）** | 模型/agent **服从 data 中隐藏指令**或执行 **策略外工具调用 / 外泄**（各文用各自基准的聚合指标；本篇不展开判据细则） |
-| **与 jailbreak 的划界（StruQ §2）** | jailbreak：用户 vs 提供商安全规范；**prompt injection**：应用开发者意图 vs 不可信数据源——安全对齐过滤 **不能**直接当注入防御 |
+| 可信方 | 应用开发者给出的 prompt 与用户查询（CaMeL 另假定未被污染的记忆可信） |
+| 不可信方 | 工具返回、文档、邮件、网页等数据通道 |
+| 攻击者能力 | 可任意改写数据，但不能改写应用 prompt 或计划通道 |
+| 成功判据 | 模型服从数据中的隐藏指令，或执行策略外的工具调用与外泄 |
 
-**补链一句（Adaptive）：** 针对 **检测器 / 提示隔离 / sandwich / 对抗微调** 等八类防御，文称在自适应评测下 **ASR-adaptive 均可 >50%**（InjecAgent 子集；Vicuna-7B prompted agent 与 Llama3-8B finetuned agent）。结论接口：仅靠启发式与检测 **不足以** 充当唯一防线 → 抬升本卡「架构 by design」动机。**本篇不转述其攻击优化步骤。**
+StruQ §2 区分了它与越狱：越狱是用户对抗提供商的安全规范，prompt injection 是不可信数据对抗应用开发者的意图，所以安全对齐的过滤不能直接当作注入防御。
 
----
+## 二、脉络
 
-## 三、范式对照：系统层脚手架 vs 结构化查询 API
+- **经典类比**：StruQ 把问题比作 SQL 注入与电话信令混在话音里，经典修法是把控制与数据分开，如 SQL 的 prepared statement。
+- **Dual-LLM 模式**：Willison 提出让一个模型做规划、另一个无工具的模型只处理不可信数据；CaMeL 显式实现了这一模式并补上了它的漏洞。
+- **2024-02，StruQ**（UC Berkeley；USENIX Security 2025）：在模型 API 与训练层面实现通道分离。
+- **2025-02，Adaptive**：针对检测器、提示隔离、sandwich、对抗微调等八类防御，在自适应评测下 ASR 都能超过 50%（InjecAgent 子集，Vicuna-7B prompted agent 与 Llama3-8B finetuned agent）。结论是只靠启发式与检测不能作为唯一防线。
+- **2025-03，CaMeL**（Google、DeepMind 与 ETH Zurich）：在系统层实现「by design」的防御，用 AgentDojo 评测。
 
-| | **CaMeL** | **StruQ** |
+主线是从「让模型自己识别并拒绝注入」转向「在架构上让注入失去作用」：StruQ 改模型的输入接口，CaMeL 改模型外的运行时。
+
+## 三、两条路线对照
+
+| | CaMeL | StruQ |
 |---|---|---|
-| **干预层** | Agent **运行时**：P-LLM / Q-LLM / 解释器 / 工具策略 | LLM **输入 API + 微调**：前端编码 + 结构化指令微调 |
-| **是否改模型权重** | **否**（策略与解释器在外围） | **是**（从 base 模型做 structured instruction tuning） |
-| **控制流保护** | 仅从可信查询提取计划（代码）；不可信数据 **不得改写程序流** | 模型被训成 **只执行 prompt 通道指令** |
-| **数据流保护** | 每值带 **capability**（来源 / 允许读者）；工具调用前跑 **security policy** | 前端 **过滤保留分隔符**；data 通道指令在训练目标中被忽略 |
-| **Dual-LLM** | **显式实例化** Willison 模式（P 规划、Q 无工具解析） | 单模型；通道分离在编码格式中 |
-| **主要评测** | **AgentDojo**（效用 % + 成功攻击计数） | **AlpacaEval** 效用 + 多族 ASR（Llama/Mistral-7B） |
-| **provable / by-design 主张** | 策略违反路径可拦；文称 AgentDojo 安全评测 **by design** 解决（仍承认侧信道等非目标） | 手工族 ASR 大幅下降；对优化族 **未完全免疫** |
-| **局限（文内）** | 非目标含：无数据流后果的纯文本篡改、需人确认的歧义流；侧信道；策略编写与用户疲劳 | 不覆盖开放多轮聊天机器人；对强优化攻击仍有残差 ASR |
+| 干预层 | agent 运行时：P-LLM、Q-LLM、解释器、工具策略 | LLM 输入 API 与微调：前端编码、结构化指令微调 |
+| 是否改权重 | 否，策略与解释器在模型外 | 是，从 base 模型做结构化指令微调 |
+| 控制流保护 | 只从可信查询提取计划，不可信数据不能改写程序流 | 模型被训练成只执行 prompt 通道的指令 |
+| 数据流保护 | 每个值带 capability（来源与允许的读者），工具调用前执行安全策略 | 前端过滤保留分隔符，数据通道中的指令在训练目标里被忽略 |
+| 主要评测 | AgentDojo：效用与成功攻击计数 | AlpacaEval 效用与多族 ASR（Llama / Mistral-7B） |
+| 主张 | 违反策略的路径可拦截，AgentDojo 的安全评测「by design」解决，但承认侧信道等非目标 | 手工攻击族 ASR 大幅下降，对优化攻击未完全免疫 |
 
----
+## 四、CaMeL：系统层的能力与策略
 
-## 四、架构 A：CaMeL（2503.18813）
+### 4.1 机制
 
-### 4.1 核心主张（系统接口）
+CaMeL 在 agent 外围加一层不修改底层 LLM 的保护环境（CaMeL §5）：
 
-摘要 / §1 / §5：在 agent 外围加一层 **不修改底层 LLM** 的保护环境——
+1. **P-LLM（特权模型）**：只读可信的用户查询，输出受限 Python 子集写成的计划，即控制流与数据依赖；看不到工具返回的内容。
+2. **Q-LLM（隔离模型）**：被计划以函数形式调用，没有工具，只把不可信的非结构化数据解析成给定 schema 的结构化输出。信息不足时抛错，由 P-LLM 修改代码，但不把「缺什么信息」明文回传 P-LLM，以免成为新的注入通道。
+3. **解释器**：执行计划，维护数据依赖图，在每次工具调用前强制执行安全策略。
+4. **Capabilities**：挂在每个值上的元数据，记录来源（用户、CaMeL 或某个工具）与允许的读者（公开或特定邮箱集合等）。
+5. **安全策略**：以工具名与带 capability 的参数为输入、输出允许或拒绝的 Python 函数；违规时阻断或请用户确认。
 
-1. **P-LLM（Privileged）**：只读 **可信用户查询**，输出表达任务意图的 **受限 Python 子集代码**（计划 = 控制流 + 数据依赖）；**看不到**工具返回内容。
-2. **Q-LLM（Quarantined）**：以函数形式被计划调用；**无工具**；把不可信非结构化数据解析为给定 schema 的结构化输出（另含 `have_enough_information` 布尔；不足则抛错并由 P-LLM 修代码——**禁止**把「缺什么信息」明文回传 P-LLM，以免成注入向量）。
-3. **CaMeL 解释器**：执行计划、维护 **数据依赖图**、在工具调用前强制 **security policies**。
-4. **Capabilities**：挂在每个值上的元数据（来源：User / CaMeL / 某工具及 inner source；允许读者：`Public` 或邮箱集合等）；工具也可按语义标注（如云盘文档编辑者）。
-5. **Security policies**：Python 可调用函数；输入工具名与参数（含 capability）；输出 Allowed / Denied + 理由。违规 → 阻断或 **要求用户确认**（文述产品路径）。
+只做 Dual-LLM 隔离还不够：即使计划固定，Q-LLM 仍可能在不可信数据的影响下扭曲工具参数（类似「改查询参数」的注入）。capability 与策略挡住的正是这类沿未授权数据流发生的外泄与副作用。
 
-相对「只隔离 Dual-LLM」：即使计划固定，**工具参数仍可能被 Q-LLM 在不可信数据上扭曲**（类比「改查询参数的注入」）；capability + 策略挡住 **未授权数据流上的外泄/副作用工具**。
+解释器有 NORMAL 与 STRICT 两种模式（CaMeL §5.4）。STRICT 把控制流的条件与迭代对象也计入块内赋值的依赖，用来压低间接依赖造成的侧信道，代价是策略触发更频繁：良性设定下总体触发率 NORMAL 为 33.87%，STRICT 为 53.23%（附录 Table 8）。
 
-### 4.2 流水线（Fig.5 意译）
+### 4.2 证据（AgentDojo）
 
-`
-可信用户查询
- ↓
-P-LLM：生成受限 Python 计划（含对 Q-LLM / 工具的调用骨架与 schema）
- ↓
-CaMeL 解释器执行
- ├─ 工具返回值 → 写入变量并打上 capability / 依赖边
- ├─ Q-LLM(schema, 不可信片段) → 结构化字段（仍带依赖）
- └─ 每次 tool(args) 前：policies.check(tool, args, mem)
- ├─ Denied → 停 / 请用户确认
- └─ Allowed → 执行，更新 Trace 与 mem
-`
+摘要称 CaMeL 在可证明安全的前提下完成约 77% 的任务，无防御系统约 84%。
 
-**解释器模式（§5.4）：** `NORMAL` vs `STRICT`——STRICT 把控制流条件/迭代对象加入块内赋值依赖，用于压低 **间接依赖侧信道**（§7）；代价是策略触发更频（附录 Table 8：总体 NORMAL **33.87%** vs STRICT **53.23%**，良性设定下）。
+| 模型 | 良性效用：原生 → CaMeL | 成功攻击数：原生 → CaMeL（含策略） |
+|---|---|---|
+| Claude 4 Sonnet | 86.6% → 74.2% | 75 ± 58.6 → 11 ± 4.5 |
+| Gemini 2.5 Pro | 73.2% → 41.2% | 163 ± 140.1 → 0 |
+| o3 High | 84.5% → 77.3% | 11 ± 4.5 → 0 |
+| o4 Mini High | 79.4% → 76.3% | 2 → 1 |
 
-**显式非目标（§3.1，只记边界）：** 不声称防御「无控制/数据流后果」的纯展示层篡改；不追求零人介入全自主；侧信道（异常停机、时序等）文内单列讨论——**强化相对现状，而非宣称绝对无泄漏**。
+- 效用见 CaMeL Table 2，攻击计数见 Table 4（共 949 个攻击设定）。效用损失因模型而异，Gemini 2.5 Flash 从 55.7% 降到 35.1%；Travel 套件因工具输出文档不足，部分模型掉幅较大。Claude 4 Sonnet 配 Haiku 作 Q-LLM 时效用约 −1%，中位任务成本约 −12%（§6.1.3）。
+- 攻击下的效用（Table 3）：o3 High 从 79.0% 到 79.8%（+0.7%），Claude 4 Sonnet 从 80.1% 到 75.7%。
+- 残余的「成功攻击」中有一类并非 prompt injection：展示层把不可信的评论文本直接给用户看，即命中基准检查，这属于 CaMeL 声明的非目标，可用依赖图在界面上高亮来源。
+- **与启发式防御对照**（Claude 3.5 Sonnet，Table 5 / 7）：无防御效用 90.72%、成功攻击 44 ± 31.3；Spotlighting 为 92.78% / 5 ± 0.6；Tool Filter 为 73.20% / 8 ± 2.5；CaMeL 为 63.92% / 0。CaMeL 换来的是可验证的策略保证，而不是「压低 ASR 同时保住最大效用」；单独使用 instruction hierarchy 的 GPT-4o mini 仍有大量成功攻击，加上 CaMeL 后为 0。
+- **开销**（§6.5，Claude 3.5 Sonnet）：中位任务约 2.82 倍输入 token、2.73 倍输出 token；Spotlighting 约 1.06 倍输入，更便宜但没有同类保证。
 
-### 4.3 安全—效用字段（AgentDojo；只录表内汇总）
+### 4.3 失效模式
 
-**摘要句：** 在 AgentDojo 上，CaMeL 在 **可证明安全** 前提下完成约 **77%** 任务，对照无防御系统约 **84%**（摘要；与 Table 2 中 o3 High：Native **84.5%** → CaMeL **77.3%** 同量级）。
+失败归类（CaMeL Table 1）包括：行动取决于只有 Q-LLM 能看到的数据、Q-LLM 上下文不足、API 文档不足、P-LLM 的错误假设等。Dual-LLM 隔离会牺牲「计划必须读不可信内容才能决定分支」的任务，需要在更严格策略下的嵌套规划等新机制，而不是退回单通道。
 
-#### 4.3.1 效用（Table 2，良性；Overall）
+## 五、StruQ：结构化查询与指令微调
 
-| 模型 | Native Tool Calling | CaMeL | ∆ |
-|---|---:|---:|---:|
-| Claude 4 Sonnet | 86.6% ± 6.8 | 74.2% ± 8.7 | −12.4% |
-| Claude 4 Sonnet*（推理） | 83.5% ± 7.4 | 70.1% ± 9.1 | −13.4% |
-| Gemini 2.5 Flash | 55.7% ± 9.9 | 35.1% ± 9.5 | −20.6% |
-| Gemini 2.5 Pro | 73.2% ± 8.8 | 41.2% ± 9.8 | −32.0% |
-| **o3 High** | **84.5% ± 7.2** | **77.3% ± 8.3** | **−7.2%** |
-| o4 Mini High | 79.4% ± 8.1 | 76.3% ± 8.5 | −3.1% |
+### 5.1 机制
 
-文注：Travel 套件因工具输出文档不足，部分模型 CaMeL 效用掉幅大；较新模型更多用 Q-LLM 补解析。Claude 4 Sonnet + Haiku Q-LLM：效用约 **−1%**，中位任务成本约 **−12%**（§6.1.3）。
+StruQ §4 把 LLM API 从「单字符串混合控制与数据」改为结构化查询 (prompt, data) 两个参数，由两部分实现：
 
-#### 4.3.2 攻击下效用（Table 3，Overall 摘录）
+1. **安全前端**：用保留的特殊 token 编码分隔符，替代 Alpaca 式的文本分隔；过滤用户数据中仿造这些保留串的内容，使「伪分隔符」无法在 token 层冒充控制标记。新 token 的嵌入用对应文本 token 初始化，文中指出随机初始化会严重伤效用。
+2. **结构化指令微调**：从未经指令微调的 base 模型出发，训练集约 50% 为干净样本、25% 在数据通道中插入简单的错位指令、25% 为 Completion 类错位指令（算法见 StruQ Algorithm 1）；目标响应始终服从 prompt 通道、忽略数据通道中的指令。
 
-| 模型 | Native | CaMeL | ∆ |
-|---|---:|---:|---:|
-| Claude 4 Sonnet | 80.1% | 75.7% | −4.4% |
-| o3 High | 79.0% | 79.8% | **+0.7%** |
-| Gemini 2.5 Pro | 58.0% | 45.3% | −12.6% |
+### 5.2 证据
 
-#### 4.3.3 成功攻击计数（Table 4；文称共 **949** 次攻击设定）
+Llama-7B 与 Mistral-7B 全参微调 3 个 epoch。效用用 AlpacaEval 1.0：Llama 67.2% → 67.6%，Mistral 80.0% → 78.7%（StruQ Table 3）。安全用 208 条含数据的 AlpacaFarm 样本上的 ASR（Table 2）：
 
-| 模型 | Native（Overall） | CaMeL（no policies） | CaMeL（含策略） |
-|---|---:|---:|---:|
-| Claude 4 Sonnet | 75 ± 58.6 | 13 ± 6.0 | 11 ± 4.5 |
-| Gemini 2.5 Flash | 297 ± 268.7 | 1 | 1 |
-| Gemini 2.5 Pro | 163 ± 140.1 | **0** | **0** |
-| o3 High | 11 ± 4.5 | 1 | **0** |
-| o4 Mini High | 2 | 1 | 1 |
+| 攻击族 | Llama 无防御 → StruQ | Mistral 无防御 → StruQ |
+|---|---|---|
+| Naïve / Ignore / Escape 类 | 2–12% → 0% | 1–11% → 0% |
+| Completion 类 | 29–96% → 0–2% | 71–96% → 0–2% |
+| HackAPrompt | 52% → 0% | 38% → 0% |
+| Tree-of-Attack（TAP） | 97% → 9% | 100% → 36% |
+| GCG | 97% → 58% | 99% → 56% |
 
-文解释：残差「成功」中有一类 **并非 prompt injection**（展示层把不可信评论文本打给用户即命中基准检查），属 §3.1 非目标；可用依赖图在 UI 上 **高亮来源**。
+手工与 Completion 类攻击可压到极低，但任务相关的优化攻击仍有残余，结构化查询是方向而不是终点。对照 BIPIA（Table 7），StruQ 在效用与跨测试集泛化上更稳；BIPIA 在文内设定下 AlpacaEval 从 53.9% 降到 26.0%，GCG 仍可达 100% ASR。
 
-#### 4.3.4 与 AgentDojo 内启发式防御对照（Claude 3.5 Sonnet；Table 5 / 7）
+## 六、如何选择与组合
 
-| 防御 | 效用 Overall（Table 5） | 成功攻击数 Overall（Table 7） |
-|---|---:|---:|
-| Undefended | 90.72% | 44 ± 31.3 |
-| Spotlighting | 92.78% | 5 ± 0.6 |
-| Prompt Sandwiching | 89.69% | 24 ± 14.5 |
-| Tool Filter | 73.20% | 8 ± 2.5 |
-| **CaMeL** | 63.92% | **0 ± 0.0** |
-| CaMeL (no policies) | — | 1 ± 0.0 |
-
-文强调：CaMeL 换的是 **可验证策略保证**，不是单纯「压 ASR 同时保最大效用」；启发式在自适应提示下可能塌陷（文引 US-AISI 2025）。GPT-4o mini 的 instruction hierarchy **单独**仍在 AgentDojo 上有大量成功攻击；**加 CaMeL 后文称 0**。
-
-#### 4.3.5 开销（§6.5）
-
-相对原生 tool-calling（Claude 3.5 Sonnet 骨干；tiktoken 估）：中位任务约 **2.82×** 输入 token、**2.73×** 输出 token。Spotlighting 约 1.06× 输入——更便宜但无同类保证。
-
-### 4.4 失效模式接口（Table 1 类别名；不写任务剧本）
-
-文对 Claude 的失败归类（架构相关）：**Data requires action**（行动取决于仅 Q 可见的数据）、**Not enough context for Q-LLM**、**Underdocumented API**、P-LLM 错误假设等。含义：Dual-LLM 隔离会牺牲「计划必须读不可信内容才能分支」的任务——需更严策略下的嵌套规划工具等未来件，而非回到单通道。
-
----
-
-## 五、架构 B：StruQ（2402.06363）
-
-### 5.1 核心主张（API 接口）
-
-§4：把 LLM API 从「单字符串混控」改为 **structured query = (prompt, data)** 双参数——类比 SQL prepared statement / 电话信令与话音分离的经典修复模式（§2 注入史只作类比，**不展开攻击史**）。
-
-系统两件套：
-
-1. **Secure front-end**
- - 用 **保留特殊 token** 编码分隔（文：`[MARK]` / `[INST]` / `[INPT]` / `[RESP]` / `[COLN]` 等，替代 Alpaca 风格文本分隔）。
- - **过滤**用户 data 中对这些保留串（及文述额外模式）的仿造，使 Completion 类「伪分隔」无法在 token 层伪造成控制标记。
- - 新 token 嵌入 **用对应文本 token 初始化**再微调（文：随机初始化会严重伤效用）。
-
-2. **Structured instruction tuning**
- - 从 **非指令微调 base** 出发（文鼓励提供商开放 base）。
- - 训练集约 **50% 干净** + **25% Naive 位错指令** + **25% Completion-Other 风格位错**（算法级描述见文 Algorithm 1；**本篇不抄注入句模板**）。
- - 目标响应始终服从 **prompt 通道** 指令，忽略 data 通道指令。
-
-### 5.2 安全—效用字段（只录聚合）
-
-**模型：** Llama-7B、Mistral-7B；全参微调 3 epoch；效用 **AlpacaEval 1.0**（vs davinci003 win rate）；安全：对各攻击族在 208 条含 data 的 AlpacaFarm 样本上的 **ASR↓**（成功 = 把注入指令当新指令执行；人工排除假阳性）。
-
-#### 5.2.1 效用（Table 3）
-
-| | Llama Undef. | Llama StruQ | Mistral Undef. | Mistral StruQ |
-|---|---:|---:|---:|---:|
-| AlpacaEval (↑) | 67.2% | **67.6%** | 80.0% | 78.7% |
-
-#### 5.2.2 安全汇总（Table 2；ASR↓；摘关键手工族与优化族）
-
-| 攻击族（文内名称） | Llama Undef. | Llama StruQ | Mistral Undef. | Mistral StruQ |
-|---|---:|---:|---:|---:|
-| Naïve / Ignore / Escape-* | 2–12% | **0%** | 1–11% | **0%** |
-| Completion-Other / OtherCmb | 29–41% | **0%** | 71–77% | **0%** |
-| Completion-Real / RealCmb | 71–96% | **0–2%** | 83–96% | **0–2%** |
-| HackAPrompt | 52% | **0%** | 38% | **0%** |
-| Tree-of-Attack (TAP) | 97% | **9%** | 100% | **36%** |
-| GCG | 97% | **58%** | 99% | **56%** |
-
-文结论接口：手工与 Completion 族可压到极低；**任务相关的优化攻击**仍有残差 → 结构化查询是方向而非终点。与 BIPIA 对照（Table 7）：StruQ 在效用与跨测试集泛化上更稳；BIPIA 在文内设定下 AlpacaEval **53.9%→26.0%**，且 GCG 仍可达 **100%** ASR。
-
-**范围（§6）：** 面向 **程序化应用 API**；不适用于终端用户不愿标注「哪段是指令/数据」的开放多轮聊天；不声称防 jailbreak / 训练数据抽取等其它威胁。
-
----
-
-## 六、两条路线如何拼进工程栈（接口级）
-
-`
- 不可信工具/检索结果
- │
- ┌────────────────────┼────────────────────┐
- │ │ │
- ▼ ▼ ▼
- [可选] StruQ 式 CaMeL 解释器 [可选] [[宪法分类器防御]]
- 双通道编码+ P/Q + capability 分类器护栏
- 结构化指令模型 策略在 tool 边界 （部署旁路）
- │ │ │
- └────────────┬───────┴────────────────────┘
- ▼
- 应用副作用 / 外发通道
-`
-
-| 若你的约束是… | 更贴哪条 |
+| 约束 | 更贴近 |
 |---|---|
-| 不能改权重 / 要多模型热插拔 / 要策略可审计 | **CaMeL** |
-| 能从 base 微调、API 可改成双参数、要压应用内注入 ASR | **StruQ** |
-| 只要提示/检测器 | **不足**（见 Adaptive 补链；且 CaMeL Table 7 启发式仍有成功攻击） |
-| 要挡的是越狱违规内容而非应用控制流 | → **[[审慎对齐与断路器]] / [[宪法分类器防御]] / [[安全红队与对抗评测]]**，非本卡 |
+| 不能改权重、需要多模型热插拔、需要可审计的策略 | CaMeL |
+| 能从 base 模型微调、API 可改成双参数、要压低应用内注入 ASR | StruQ |
+| 只有提示工程或检测器 | 不足（见 Adaptive；CaMeL Table 7 中启发式防御仍有成功攻击） |
+| 要挡的是违规内容而不是应用控制流 | [[审慎对齐与断路器]]、[[宪法分类器防御]]、[[安全红队与对抗评测]] |
 
-**可组合性：** CaMeL §11 明确可与「提升模型自身鲁棒」的方法联用；StruQ 把 instruction hierarchy（Wallace et al.）视为多级推广。instruction hierarchy 本篇不展开。
+两者可以组合：CaMeL §11 明确可与提升模型自身鲁棒性的方法联用；StruQ 把 instruction hierarchy（Wallace 等）视为多级推广。
 
----
+## 七、与相邻笔记的分工
 
-## 七、开放问题（文内，非外推）
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[安全红队与对抗评测]] | 评测前提：攻击族与 ASR 的评测框架 | 红队通史、众包协议与攻击面地图 |
+| [[宪法分类器防御]] | 互补防线：分类器护栏在部署旁路挡违规内容，本篇在架构上隔离控制流，二者可叠加 | 分类器架构与指标 |
+| [[审慎对齐与断路器]] | 互补防线：在权重内用规范推理与表征熔断阻断有害轨迹，干预层不同 | 对齐范式本身 |
+| [[多模态越狱与OmniSafe]] | 威胁区分：越狱对抗提供商的安全规范，注入对抗开发者意图 | 多模态越狱攻防 |
+| [[SHADEArena隐瞒与监控]] | 共用环境：SHADE-Arena 以 AgentDojo 为脚手架起点，CaMeL 也在 AgentDojo 上评测 | 隐蔽破坏与监控评测 |
+| [[智能体工具与长程任务]] | 威胁来源：工具环把不可信的工具结果送进上下文，是注入的主要入口 | 工具环与长程任务全文 |
+| [[计算机使用智能体]] | 威胁来源：computer-use agent 读取网页与界面内容，面临同类不可信数据 | computer-use 方法与评测 |
 
-1. **优化攻击残差（StruQ）** 与 **侧信道 / 策略疲劳（CaMeL）** 仍开放；二者都把「完全解决 prompt injection」明确标为否。
-2. **形式化验证解释器与策略冲突消解**（CaMeL §10）；换用显式错误类型语言以减异常侧信道。
-3. **提供商开放 base 模型**（StruQ）以便结构化指令微调；系统提示进入多级 structured query（与 instruction hierarchy 对齐）。
+## 八、局限与待核实
+
+- **CaMeL 的非目标**（CaMeL §3.1、§7）：不防无控制流或数据流后果的纯展示层篡改；不追求零人工介入的全自主；侧信道（异常中止、时序等）只能减弱而非消除；策略编写成本与用户确认疲劳是现实负担。
+- **StruQ 的范围**（StruQ §6）：面向程序化的应用 API，不适用于终端用户不愿标注指令与数据的开放多轮聊天；对强优化攻击仍有残余 ASR；不声称防越狱或训练数据提取等其他威胁；需要提供商开放 base 模型。
+- **开放问题**：解释器与策略的形式化验证、策略冲突消解（CaMeL §10），以及换用显式错误类型的语言以减少异常侧信道；把系统提示纳入多级结构化查询（与 instruction hierarchy 对齐）。两文都明确没有「完全解决」prompt injection。
+- **数字口径**：CaMeL 的效用与攻击计数随骨干模型差异很大，摘要的 77% 对 84% 与 o3 High 一行同量级，不代表所有模型；Adaptive 的结论基于 InjecAgent 子集与两种 7–8B agent，外推到更强模型需另行验证。
+- **代码可用性**：三个代码仓库可以访问，但本篇没有核验其能否复现文中数字。
+
+## 九、延伸阅读
+
+| 类型 | 标题 | 说明 | URL |
+|---|---|---|---|
+| 论文 | Defeating Prompt Injections by Design | Debenedetti 等，2025-03（v2 2025-06）；CaMeL | https://arxiv.org/abs/2503.18813 |
+| 论文 | StruQ: Defending Against Prompt Injection with Structured Queries | Chen、Piet、Sitawarin、Wagner，2024-02；USENIX Security 2025 | https://arxiv.org/abs/2402.06363 |
+| 论文 | Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents | Zhan、Fang、Panchal、Kang，2025-02；防御脆弱性动机 | https://arxiv.org/abs/2503.00061 |
+| 代码 | google-research/camel-prompt-injection README | CaMeL 实现 | https://github.com/google-research/camel-prompt-injection |
+| 代码 | Sizhe-Chen/StruQ README | StruQ 官方实现 | https://github.com/Sizhe-Chen/StruQ |

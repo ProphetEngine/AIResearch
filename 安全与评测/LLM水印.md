@@ -1,5 +1,5 @@
 ---
-title: "LLM watermarking：SynthID-Text + 理论/鲁棒性复核"
+title: "LLM watermarking：SynthID-Text（Nature）+ 理论/鲁棒性复核"
 topic: LLM水印
 date: 2026-09-22
 lines: [数学原理, 评测字段]
@@ -16,201 +16,123 @@ archived: 2026-09-22
 
 # LLM watermarking：SynthID-Text（Nature）+ 理论/鲁棒性复核
 
-> **定位**：**生成文本水印 / 供给链溯源** 横切——相对 [[模型卡与SystemCard规范]]（Model/System Card 文档规范）与 [[训练数据污染检测]]（训练数据污染检测），本篇只写 **LLM 输出侧 generative watermarking**：Tournament 采样、检测统计、公开攻击面分类与检测指标。
-> **研究线**：**数学原理（主）**——Tournament / g-value / Mean Score vs Bayesian Score / TPR@FPR；**评测字段（辅）**——质量中性、延迟、意义保持变换下的 TPR/FPR/F1。
+> **主要来源**：[Scalable watermarking for identifying large language model outputs](https://doi.org/10.1038/s41586-024-08025-4)；[On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation](https://arxiv.org/abs/2603.03410)；[Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID](https://arxiv.org/abs/2508.20228)（截至 2026-09-22）。下文「Nature」指 SynthID-Text 主文，「理论复核」「鲁棒性复核」分别指后两篇。
+> **研究线**：数学原理（主）——Tournament 采样、g-value、Mean Score 与 Bayesian Score、TPR@FPR；评测字段（辅）——质量中性、延迟、意义保持变换下的 TPR / FPR / F1。
 > **范围与相邻笔记**：
-> - **相对 [[模型卡与SystemCard规范]]**：不重写卡字段谱系；水印可作为「溯源/披露」邻接字段一句交叉。
-> - **相对 [[训练数据污染检测]]**：不写 quiz / n-gram / canary 污染探针；本篇 = **生成后文本是否带水印**，≠ 训练语料是否见过评测集。
-> - 不写「如何彻底去水印」操作手册；鲁棒性章节 **只报告公开攻击面分类与检测指标**（不展开可复现 scrubbing 配方）。
-> **主要来源**：[Scalable watermarking for identifying large language model outputs](https://doi.org/10.1038/s41586-024-08025-4)（Nature 14 页正文 + Extended Data）；[On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation](https://arxiv.org/abs/2603.03410)；[Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID](https://arxiv.org/abs/2508.20228)（截至 2026-09-22）；两篇 arXiv 为理论 / 鲁棒性近窗复核。
+> - ≠ [[模型卡与SystemCard规范]]：本篇不写卡字段谱系，水印只作「溯源与披露」的邻接字段。
+> - ≠ [[训练数据污染检测]]：本篇不写 quiz、n-gram、canary 等污染探针；本篇问的是生成后的文本是否带水印，不是训练语料是否见过评测集。
+> - 本篇不写去水印的操作手册；鲁棒性部分只报告公开的攻击面分类与检测指标。
+> **意义**：SynthID-Text 把 LLM 文本水印推到了大规模生产部署：只改采样、不改训练，检测不需要原模型，约 2000 万条 Gemini 回应上用户反馈无显著差异。两篇复核随后表明，检测器选择（Mean 还是 Bayesian）决定它能否抵抗分数操纵，而稀释、释义与回译仍会显著削弱检测，水印更适合作为溯源工具之一，而不是单一判据。
 
----
+**一句话**：SynthID-Text 在采样层用密钥种子驱动多层 Tournament 偏置 token 选择，检测端用 Mean 或 Bayesian 分数读回偏置；理论上 Mean Score 的 TPR 随层数先升后降（可被层膨胀击穿），Bayesian Score 单调不减后饱和；公开评估显示同义替换相对稳，粘贴稀释、释义与回译明显伤 F1。
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主锚（一手）** | Dathathri, See, Ghaisas, Huang, McAdam et al. (Google DeepMind / Google), *Scalable watermarking for identifying large language model outputs* | **Nature** **634**, 818–823 (2024)；doi:**10.1038/s41586-024-08025-4**；Received 8 Apr 2024 / Accepted 5 Sep 2024 / Published **23 Oct 2024**；Open access；`https://doi.org/10.1038/s41586-024-08025-4`（**14** 页；CreationDate **2024-10-14** CST） | SynthID-Text：Tournament 采样、非失真/失真配置、检测分数、与 speculative sampling 结合、Gemini 直播质量实验、开源入口 |
-| **理论复核** | Omidi, Dong & Wang, *On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation* | arXiv:**2603.03410v2** \[cs.CR\] **15 Mar 2026**；`https://arxiv.org/abs/2603.03410`（**34** 页 letter） | MS/BS 的 TPR@FPR 闭式趋势；Bernoulli(0.5) 最优；layer inflation **攻击面**与 MS 脆弱性（本笔记只取分类+指标） |
-| **鲁棒性复核** | Han, Li, Ni & Zulkernine, *Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID* | arXiv:**2508.20228v2** \[cs.CR\] **21 Oct 2025**；`https://arxiv.org/abs/2508.20228`（**12** 页 letter） | 四类 **意义保持**变换下 SynthID 检测指标；SynGuard 混合增强（对比数字，非去水印手册） |
-| **代码/数据（文内）** | SynthID-Team | https://github.com/google-deepmind/synthid-text （Nature ref. 7，2024） | 生成/检测参考实现；本篇不展开工程细节 |
-| **产品披露（文内）** | DeepMind Blog | *Watermarking AI-generated text and video with SynthID*（Nature ref. 20） | Gemini / Gemini Advanced 生产化一句 |
+SynthID-Text 要解决的是识别 LLM 输出：事后判断一段文字是否出自服务方的模型。Nature 引言把水印（生成时嵌入可统计检测的信号）与检索（保存生成记录再比对）、事后分类器（训练模型判别）对照，认为三者互补。
 
-**一句话抓手：** SynthID-Text 在 **采样层** 用密钥种子的多层 Tournament 偏置选 token，检测端用 Mean / Bayesian 分数读回偏置——**不改训练、检测不用 LLM**；约 **2000 万** Gemini 回应上拇指差 **≤0.02%** 且不显著；理论证明 **Mean Score 的 TPR 对层数单峰**（可被 layer inflation 攻击面击穿），**Bayesian Score 对层数单调不减后饱和**；公开鲁棒性评估显示 **同义替换相对稳、粘贴稀释/释义/回译显著伤 F1**。
+生成式水印的难点在于三重约束：不能明显降低文本质量，检测要便宜、最好不需要原模型，还要扛住编辑与改写。SynthID-Text 的回答是只改采样算法：用密钥和上下文生成伪随机种子，偏置 token 选择；检测时只需分词后的文本、密钥和种子函数。
 
----
+## 二、脉络
 
-## 二、议题边界：输出水印溯源 ≠ 卡规范 ≠ 语料污染检测
+- **已有方案**：生成式水印此前已有 Soft Red List（失真类）与 Gumbel sampling（非失真类）等，Nature 把它们分别作为失真与非失真配置的对照基线。
+- **2024-10，SynthID-Text（Nature）**：Google DeepMind 提出 Tournament 采样，在 Gemini 与 Gemini Advanced 上线，并开源参考实现（google-deepmind/synthid-text）。
+- **2025-08，鲁棒性复核**：在四类意义保持的变换下测 SynthID 的检测指标，并提出语义增强的 SynGuard。
+- **2026-03，理论复核**：给出 Mean 与 Bayesian 两种分数的 TPR 随层数变化的闭式趋势，并报告利用 Mean Score 弱点的层膨胀攻击面。
 
-| 相邻笔记 | 本篇只取 | 本篇不写 |
-|---|---|---|
-| **[[模型卡与SystemCard规范]]** Model/System Card | 「披露与可信发布需要可核对接口」的邻接槽 | Mitchell/HF 字段全文、厂商卡数字重抄 |
-| **[[训练数据污染检测]]** 污染检测 | 「评测可信需要溯源工具」一句 | DCQ / Min-K% / canary / IFT oracle |
-| **[[评测与排行榜可靠性]]** 榜可靠性 | 「分数绑定未声明协议」——本篇把 FPR 标定、文本长度、温度写进评测字段 | 污染三分法通史 |
-| 检索/后验分类器文献（Nature 引言对照） | 水印与 retrieval / post-hoc classifier **互补** | DetectGPT 等后验检测全文 |
+主线是从「能部署」走向「检测器在什么条件下可靠」：Nature 证明了质量中性与可检测性，复核把边界补上。
 
-**跟读口诀（生成时嵌入 → 事后统计检测）：**
+## 三、SynthID-Text 的机制
 
-`
-密钥 k + 滑动窗上下文 (H=4) → 伪随机种子 rt
- │
- ▼
- 从 pLM 过采样候选 → m 层 Tournament（按 gℓ 决胜）→ 输出 xt
- │
- ▼
- 检测：对全文重算 gℓ，聚合成 Score（Mean / Weighted / Frequentist / Bayesian）
- │
- ▼
- 与阈值比 → 判「水印 / 非水印」；主报指标 TPR @ FPR = 1%
-`
+### 3.1 三件套框架
 
----
+Nature 沿用 Piet 等的生成式水印框架，把方案拆为三部分：
 
-## 三、SynthID-Text 数学原理（Nature 主锚）
+1. **随机种子生成器** $r_t = f_r(x_{<t}, k)$：默认用前 $H=4$ 个 token 与密钥 $k$ 做滑动窗哈希；配合 repeated context masking（实验多用 $K=1$），避免同一上下文窗反复施加偏置导致循环退化。
+2. **采样算法** $S(p_{\mathrm{LM}}(\cdot\mid x_{<t}), r_t)\to x_t$：Tournament 采样。
+3. **打分函数** $\mathrm{Score}(x; k)$：只需分词文本、密钥与 $f_r$，不需要原 LLM。
 
-### 3.1 三件套框架（与 Piet et al. 生成式水印框架对齐）
+### 3.2 Tournament 采样
 
-Nature 将生成式水印拆为：
+对每一层 $\ell=1,\ldots,m$，用伪随机函数 $g_\ell(x, r_t)$（g-value）给候选 token 打分。从 $p_{\mathrm{LM}}$ 抽出 $2^m$ 个候选，逐层两两淘汰，g-value 高者晋级，最后的赢家即输出 token。默认 $m=30$ 层，g-value 主用 Bernoulli(0.5) 分布。
 
-1. **Random seed generator** $r_t = f_r(x_{<t}, k)$
-2. **Sampling algorithm** $S(p_{\mathrm{LM}}(\cdot\mid x_{<t}), r_t)\to x_t$
-3. **Scoring function** $\mathrm{Score}(x; k)$（**只需分词文本 + 密钥 + $f_r$**，**不需要**原 LLM）
-
-实验默认：滑动窗哈希 $r_t = h(x_{t-H},\ldots,x_{t-1},k)$，**$H=4$**；**K-sequence repeated context masking**（实验多用 **$K=1$**）避免同一上下文窗重复偏置导致循环退化。
-
-### 3.2 Tournament sampling（核心新采样）
-
-直觉（Fig. 2）：对每一层 $\ell=1,\ldots,m$，用伪随机 $g_\ell(x, r_t)$（文称 **g-value**）给候选打分；从 $p_{\mathrm{LM}}$ 抽出 $M=2^m$（非失真配置下每场 **2** 名选手）个候选，按层做淘汰赛，最后赢家为 $x_t$。
-
-**Methods 默认实验超参：** $m=30$ 层；$g$-value 分布主用 **Bernoulli(0.5)**（也试 Uniform$[0,1]$）；检测默认 **Bayesian** 打分（Supplementary A.4）。
-
-**Mean score（正文式 (1)）：**
+检测时重算全文的 g-value 并聚合。最简单的是 Mean Score：
 
 $$
 \mathrm{Score}(x)=\frac{1}{mT}\sum_{t=1}^{T}\sum_{\ell=1}^{m} g_\ell(x_t,r_t).
 $$
 
-水印文本因采样偏好高 $g$，期望分数高于非水印文本。可检测性随 **文本长度**↑、随 **$p_{\mathrm{LM}}$ 熵**↑；低熵（低温、大模型更「确定」、RLHF mode collapse）时变弱——文中明确与其它生成式水印同构。
+水印文本因采样偏好高 g-value，期望分数高于非水印文本；默认检测用 Bayesian Score（Nature Supplementary A.4）。可检测性随文本变长、随模型输出熵变高而增强；低温、大模型更「确定」或 RLHF 后 mode collapse 等低熵情形下会变弱，这一点与其他生成式水印相同。
 
-### 3.3 非失真谱系（文内澄清术语）
+### 3.3 非失真与失真配置
 
-文中把 non-distortion 从弱到强定义（细节在 Suppl. G）：
-
-| 配置 | 机制要点（文内） | 质量/检测权衡 |
+| 配置 | 机制要点 | 权衡 |
 |---|---|---|
-| **Non-distortionary SynthID-Text**（默认所指） | 每场恰好 **2** 选手 → **single-token non-distortion**；再配合 repeated context masking → 实验用 **single-sequence non-distortionary** | 保质量；略损跨回应多样性 |
-| **Distortionary SynthID-Text** | 每场 **>2** 选手（Algorithm 2 一般 $N$） | 更强水印、更高可检测，付质量代价 |
+| 非失真（默认） | 每场恰好 2 名选手，单 token 不改变分布；加上 repeated context masking 后达到单序列非失真 | 保质量，略损跨回应多样性 |
+| 失真 | 每场多于 2 名选手 | 水印更强、更易检测，付出质量代价 |
 
-**基线对照（同 seed / 同 masking）：** 非失真对 **Gumbel sampling**；失真对 **Soft Red List**。文称两类下 SynthID-Text 均可检测性更优（Fig. 3；Extended Data Fig. 1–2）。
+两类配置下 SynthID-Text 的可检测性都优于对应基线（Nature Fig. 3）。理论复核引述的量级是：1,500 条水印文本、30 层、Bernoulli(0.5)、Bayesian 打分时，FPR = 1% 下 TPR 约 85%，基线约 73%。
 
-### 3.4 检测族与生产指标字段
+### 3.4 生产字段
 
-| 字段 | 文内取值 / 定义 |
-|---|---|
-| **主检测指标** | 经验 **TPR @ FPR = $x\%$**（非水印分数上取 top-$x\%$ 阈值，再算水印召回） |
-| **模型** | Gemma 2B/7B-IT；Mistral 7B-IT v0.2；top-$k=100$；温度 0.5 / 0.7 / 1.0 |
-| **提示** | ELI5；非失真实验各 10k 提示；失真测试 1.5k |
-| **延迟（Gemma 7B-IT @ 4×v5e TPU）** | 基线 **15.527** ms/token → $m=30$ Tournament **15.615**（**+0.57%**）；Gumbel **+0.26%**；Soft Red List **+0.28%** |
-| **Gemini 直播** | ≈**2000 万** 水印/非水印回应；thumbs-up 差 **0.01%**、thumbs-down 差 **0.02%**，文称不显著、落在 95% CI 内 → 已用于 Gemini / Gemini Advanced |
-| **小规模人工偏好** | Gemma 7B-IT × 3k ELI5；五维（语法连贯/相关/正确/有用/总体）无显著差异（Extended Data Table 1） |
-| **Speculative 结合** | **high-detectability**（保检测、可能损效率）vs **fast**（保接受率/延迟、可能损检测；可用学习贝叶斯分补回） |
+- **主指标**：TPR @ FPR = $x\%$，即在非水印分数上取 top-$x\%$ 作为阈值，再计算水印文本的召回。
+- **实验模型**：Gemma 2B / 7B-IT、Mistral 7B-IT v0.2，top-$k=100$，温度 0.5 / 0.7 / 1.0，ELI5 提示。
+- **延迟**（Gemma 7B-IT，4×v5e TPU）：基线 15.527 ms/token，30 层 Tournament 为 15.615（+0.57%）；Gumbel 为 +0.26%，Soft Red List 为 +0.28%。
+- **Gemini 线上实验**：约 2000 万条水印与非水印回应，点赞率差 0.01%、点踩率差 0.02%，落在 95% 置信区间内、不显著；小规模人工偏好评估（Gemma 7B-IT × 3k ELI5，五个维度）也无显著差异。
+- **与 speculative sampling 结合**：有「高可检测」与「快速」两种模式，前者保检测、可能损效率，后者保接受率与延迟、可能损检测（可用学习得到的贝叶斯分数补回）。
 
-### 3.5 局限（Nature Discussion，跟读边界）
+## 四、理论复核：检测器选择
 
-文内自述：需服务方协调嵌水印；难强制开源去中心化部署；对 **stealing / spoofing / scrubbing** 仍属开放研究；**编辑与 LLM 释义**会削弱信号（Suppl. C.6 有评估）。本篇 **不**据此展开去水印步骤。
+理论复核在中心极限定理下推导两种分数的期望 TPR@FPR 随层数 $m$ 的变化，并在公开实现上用 GPT-2B / Gemma-7B / Mistral-7B、约 100 token、FPR = 1% 做验证：
 
----
-
-## 四、理论复核（2603.03410）：TPR 对层数的行为 + 检测器选择
-
-### 4.1 设定对齐
-
-论文形式化 SynthID 的 MS / BS，在 **CLT** 下给出期望 **TPR@FPR=$\epsilon$** 对层数 $m$ 的闭式趋势；经验用公开实现 + Gemma-2B / Gemma-7B / Mistral-7B、约 100 token、**FPR=1%** 验证。引言复述 Nature 量级：约 **TPR=85% vs 基线 SOTA 73% @ FPR=1%**（1500 条水印文本、30 层、Bernoulli(0.5)、Bayesian；指向 Nature Fig. 3a）。
-
-### 4.2 主定理级结论（跟读）
-
-| 分数 | 对层数 $m$ 的 TPR@FPR 行为 | 实务含义 |
+| 分数 | TPR 随层数 $m$ 的行为 | 含义 |
 |---|---|---|
-| **Mean Score (MS)** | **单峰**：先升后降；$m\to\infty$ 时期望 TPR → $\epsilon$（=FPR） | 盲目加层 **不**单调变强；深部层信号弱、分布重叠增大 |
-| **Bayesian Score (BS)** | **单调不减**后饱和（碰撞概率 $\hat C_{m,t}=1$ 时饱和） | 加层通常有利，但计算更贵 |
-| **Bernoulli $g$** | 在 Bernoulli 族中 **$p=0.5$** 使固定 FPR 下 TPR 最大（Thm. 12，MS） | 与 Nature 默认一致 |
+| Mean Score | 单峰：先升后降，$m\to\infty$ 时期望 TPR 退化为 FPR | 盲目加层不会单调变强，深层信号弱、分布重叠增大 |
+| Bayesian Score | 单调不减，碰撞概率饱和后进入平台 | 加层通常有利，但计算更贵 |
+| Bernoulli g-value | 在 Bernoulli 族中 $p=0.5$ 使固定 FPR 下 TPR 最大（Mean Score） | 与 Nature 默认一致 |
 
-经验对齐（文 Fig. 2）：Gemma-7B 上 MS 的 TPR 约从层 1→28 升至 ~0.88，再降，**100 层**时可落到约 **TPR=1%**（=FPR）；BS 上升后平台。
+经验曲线上，Gemma-7B 的 Mean Score TPR 从第 1 层升到第 28 层约 0.88 后下降，100 层时可落到约 1%（即 FPR）；Bayesian Score 上升后进入平台。
 
-### 4.3 攻击面分类（仅分类 + 指标；不含操作手册）
+**层膨胀攻击面**：利用 Mean Score 对层数的单峰性，在黑盒水印模型外再叠加额外的 tournament 层，使分数均值越过阈值。额外 10 层后 TPR 降到 0.15（GPT-2B）、0.13（Gemma-7B）、0.16（Mistral-7B），攻击前 1k 条 ELI5 水印样本均能被正确检出；Mean Score 均值从 0.548 降到 0.494，阈值为 0.510（按 FPR = 1% 标定）。Bayesian Score 对层数单调，文中认为相对更抗这类操纵。这里只记攻击面的类别与指标，不转写构造细节；实务上应优先部署 Bayesian（或其他非 Mean）检测，并监控层数与分数分布的异常。
 
-| 攻击面（公开分类名） | 机制层级（一句话） | 公开检测指标（文内） |
-|---|---|---|
-| **Layer inflation（层膨胀）** | **分数侧 / 采样管线侧**：利用 MS 对 $m$ 的单峰性，在黑盒水印 LLM 外再叠额外 tournament 层，使 MS 期望下移越过阈值 | Table 1：额外 **10** 层后 TPR — GPT-2B **0.15** / Gemma-7B **0.13** / Mistral-7B **0.16**（攻击前 1k ELI5 水印样本均被正确检出）；Gemma 上 MS 均值 **0.548→0.494**，阈值 **0.510**（FPR=1% 标定） |
-| **BS 相对 MS** | 非「去水印配方」，而是 **检测器选择**：BS 对层数单调 → 文称相对更抗此类层操纵；代价是算力 | 定性结论 + §4.1 趋势验证 |
+## 五、鲁棒性复核：意义保持变换
 
-> **安全跟读：** 上表只固定「有人公开报告过这类攻击面及其 TPR 跌幅」；**不**转写论文中的逐步构造伪代码为可跟做 scrubbing 手册。实务上优先部署 **Bayesian（或非 MS）检测**、监控层数/分数分布异常。
+鲁棒性复核以 TPR、FPR、最优阈值下的 F1 与 ROC / AUC 为指标，考察四类意义保持的变换（鲁棒性复核 Table V 摘要）：
 
----
-
-## 五、鲁棒性复核（2508.20228）：意义保持变换下的指标
-
-### 5.1 评测字段
-
-| 字段 | 文内 |
-|---|---|
-| **对象** | SynthID-Text（及对比增强 **SynGuard** = SIR 语义对齐 + SynthID tournament） |
-| **指标** | TPR / FPR / 最优阈值下 **F1**；ROC / AUC |
-| **攻击面族（意义保持）** | ① 同义替换 ② copy-and-paste 稀释 ③ 释义（Dipper） ④ 回译（NLLB 等） |
-| **代码** | https://github.com/githshine/SynGuard |
-
-### 5.2 SynthID-Text 攻击面 × 检测指标（Table V 摘要）
-
-| 攻击面分类 | 代表设置 | TPR | FPR | F1 |
-|---|---|---|---|---|
+| 攻击面类别 | 代表设置 | TPR | FPR | F1 |
+|---|---|---:|---:|---:|
 | 无攻击 | — | 1.0 | 0.0 | 1.0 |
-| **同义替换（语境）** | Word-S(Context) $\epsilon=0.7$ | 0.82 | 0.035 | **0.884** |
-| **Copy-and-paste 稀释** | ratio = 10（插入自然文本为水印段 10×） | 0.995 | **0.53** | **0.788** |
-| **释义** | Dipper lex=10, order=5 | 0.895 | 0.23 | **0.842** |
-| **回译** | 中文枢纽 | 0.675 | 0.225 | **0.711** |
+| 语境同义替换 | Word-S(Context)，$\epsilon=0.7$ | 0.82 | 0.035 | 0.884 |
+| 粘贴稀释 | 插入自然文本为水印段的 10 倍 | 0.995 | 0.53 | 0.788 |
+| 释义 | Dipper，lex=10、order=5 | 0.895 | 0.23 | 0.842 |
+| 回译 | 中文为中间语 | 0.675 | 0.225 | 0.711 |
 
-补充（同文表）：同义 $\epsilon=0.3/0.5$ 时 F1 仍高（0.987 / 0.936）；粘贴 ratio≥20 时 AUC≈≤0.5（近随机）；回译枢纽间 F1：日 **0.819** > 意 **0.813** > 法 **0.738** > 中 **0.711**（Table IV）。文称回译伤害与 **翻译质量/工具**相关，不宜简化为「语系距离」单一轴。
+- 同义替换较轻时（$\epsilon=0.3 / 0.5$）F1 仍有 0.987 / 0.936；粘贴比例达到 20 倍及以上时 AUC 约不高于 0.5，接近随机。
+- 回译的伤害随中间语不同：日语 0.819、意大利语 0.813、法语 0.738、中文 0.711（Table IV）。作者认为这与翻译质量和工具有关，不宜简化成「语系距离」一条轴。
+- 结论：对轻度语境同义替换相对稳；对长上下文稀释、结构级释义与跨语回译，检测指标显著恶化，与 Nature 自述的「编辑与释义会削弱信号」同向。
+- **SynGuard**：把语义分量（SIR）与 SynthID 的 tournament 结合，语义分量抗同义与释义，token 侧保留密钥随机性；文称平均 F1 比 SynthID 高 11.1%，如中文回译下 F1 0.777 对 0.711、FPR 0.07 对 0.225。代码见 githshine/SynGuard。
 
-**分类结论（非步骤）：** 对 **轻度语境同义**相对稳；对 **长上下文稀释、结构级释义、跨语回译** 检测指标显著恶化——与 Nature「编辑/释义削弱」自述同向。
+## 六、与相邻笔记的分工
 
-### 5.3 SynGuard（增强对照，非本篇主线）
-
-文称相对 SynthID **平均 F1 +11.1%**；同设置攻击下 SynGuard 多保持更高 F1（如 NLLB 中文回译 F1 **0.777** vs SynthID Table V **0.711**；FPR **0.07** vs **0.225**）。机制一句话：语义 SIR 分量抗同义/释义，token 侧保留密钥随机性。本篇 **不**展开其嵌入算法实现细节为对抗手册。
-
----
-
-## 六、研究会可落字段（归档最小集）
-
-写 Model/System Card 或内部溯源页时，建议至少固定（交叉 [[模型卡与SystemCard规范]]）：
-
-1. **是否启用生成式水印**（方案名：SynthID-Text / 其它；non- vs distortionary）
-2. **检测器类型**（MS / BS / 其它）与 **FPR 操作点**（如 1%）
-3. **文本长度 / 温度 / top-$k$-$p$** 对 TPR 的依赖声明
-4. **已知公开攻击面覆盖**：编辑·释义·粘贴稀释·回译·（若用 MS）层膨胀类分数操纵——用 **TPR/FPR/F1** 表，不写清除步骤
-5. **与污染检测（[[训练数据污染检测]]）正交**：水印答「这段输出是否来自我方带钥采样」；污染答「训练是否见过该评测题」
-
----
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[模型卡与SystemCard规范]] | 披露接口：是否启用水印、检测器类型与 FPR 操作点、已知攻击面覆盖，可作为卡上的溯源字段 | 卡字段谱系与厂商卡数字 |
+| [[训练数据污染检测]] | 正交问题：水印回答「这段输出是否出自带钥采样」，污染检测回答「训练是否见过评测题」 | DCQ、Min-K%、canary 等探针 |
+| [[评测与排行榜可靠性]] | 评测原则：分数绑定协议；水印的检测结果须声明 FPR 标定、文本长度与温度 | 污染三分法通史 |
 
 ## 七、局限与待核实
 
-- Nature **Supplementary Information**（A–I：打分细节、复杂度、speculative 证明、C.6 编辑评估等）本篇仅据主 PDF 14 页正文 + Extended Data；补读 Suppl. 前相关细节标「待核实」。
-- 生产 Gemini 实际 $m$、密钥管理、对外检测 API 是否开放：主文未给可复现数字 → **待核实**。
-- 2603.03410 / 2508.20228 均为 arXiv；若日后正式出版以版本页为准。
+- **Nature 自述的边界**（Nature Discussion）：需要服务方配合嵌入水印，难以约束开源权重的去中心化部署；对 stealing、spoofing、scrubbing 仍是开放问题；编辑与 LLM 释义会削弱信号（Supplementary C.6 有评估）。
+- **低熵场景**：低温、确定性强的大模型或 mode collapse 后，可检测性下降，短文本也更难检测。
+- **未读部分**：Nature Supplementary Information（打分细节、复杂度、speculative 的证明、C.6 编辑评估等）本篇未补读，相关细节待核实。
+- **生产参数**：Gemini 实际使用的层数、密钥管理、是否对外开放检测 API，主文没有给出可复现的数字，待核实。
+- **版本**：两篇复核均为 arXiv 预印本，若日后正式出版以出版版本为准。
 
----
+## 八、延伸阅读
 
-## 八、交叉引用
-
-- [[模型卡与SystemCard规范]] — 披露字段接口（不重写）
-- [[训练数据污染检测]] — 语料污染检测（正交）
-- [[评测与排行榜可靠性]] — 评测协议规范
-- [[MOC_安全与评测]]
-
-## 相关笔记
-
-- [[恶意软件分析评测]]
-- [[LLM水印]]
-- [[持续学习]]
-- [[SelfRAG与CorrectiveRAG]]
-- [[MMMU多模态推理基准]]
-
+| 类型 | 标题 | 说明 | URL |
+|---|---|---|---|
+| 论文 | Scalable watermarking for identifying large language model outputs | Dathathri 等（Google DeepMind），Nature 634, 818–823，2024-10-23 | https://doi.org/10.1038/s41586-024-08025-4 |
+| 论文 | On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation | Omidi、Dong、Wang，2026-03；TPR 随层数的闭式趋势与层膨胀 | https://arxiv.org/abs/2603.03410 |
+| 论文 | Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID | Han、Li、Ni、Zulkernine，2025-08（v2 为 2025-10）；意义保持变换与 SynGuard | https://arxiv.org/abs/2508.20228 |
+| 代码 | google-deepmind/synthid-text README | 生成与检测的参考实现 | https://github.com/google-deepmind/synthid-text |
+| 代码 | githshine/SynGuard README | SynGuard 实现 | https://github.com/githshine/SynGuard |

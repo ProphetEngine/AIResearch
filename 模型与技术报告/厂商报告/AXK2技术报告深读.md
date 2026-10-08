@@ -267,6 +267,5 @@ A.X K2 = SKT 在韩国 Sovereign AI 叙事下从零训的 **688B / 33B-active Mo
 - [[Gemma4技术报告深读]]
 - [[AXK2技术报告深读]]
 - [[UIVenus2GUI智能体]]
-- [[宪法分类器防御]]
 - [[过程奖励模型PRM谱系]]
 

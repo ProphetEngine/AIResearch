@@ -2,254 +2,140 @@
 title: "可解释电路新方法：CircuitLasso + Anthropic Circuit Tracing（≠ RepE）"
 topic: CircuitLasso与电路追踪
 date: 2026-09-22
-lines: [架构思想, 方法接口, 干预 faithfulness 字段]
+lines: [架构思想, 评测字段]
 status: archived
 sources:
  - https://arxiv.org/abs/2606.16939
 urls:
  - https://arxiv.org/abs/2606.16939
- - https://arxiv.org/pdf/2606.16939
  - https://transformer-circuits.pub/2025/attribution-graphs/methods.html
  - https://transformer-circuits.pub/2025/attribution-graphs/biology.html
 arxiv: ["2606.16939"] # Anthropic 两篇为 HTML，无 arXiv 号
 related:
  - "机制可解释性入门"
- - "审慎对齐与断路器"
+ - "激活操控与表征工程"
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
 # 可解释电路新方法：CircuitLasso + Anthropic Circuit Tracing（≠ RepE）
 
-> **定位**：**可解释横切**——仓库已有 **[[机制可解释性入门]]**（特征→电路→归因图的 **MI 入门史**）与 **[[激活操控与表征工程]]**（**RepE / 推理期激活加向量**）。本卡立「**如何规模化发现与验证机制电路**」方法篇，两条正交接口：
-> - **CircuitLasso**（Yin, Wei, Gao, Dhurandhar, Natesan Ramamurthy, Yu；arXiv:**2606.16939v1**）：用 **观测式稀疏线性回归（Lasso）** 在神经元 / SAE 特征上恢复依赖骨架；宣称与干预式基线 **结构精度持平、算力更低**，并扩到高维 SAE。
-> - **Anthropic Circuit Tracing / attribution graphs**（Ameisen et al.，*Transformer Circuits Thread*，**2025-03-27**）：用 **cross-layer transcoder（CLT）→ replacement model → 逐提示归因图**，再以干预检验机理；**Biology** 同伴文把同套方法落到 Claude 3.5 Haiku 多行为案。
-> **研究线**：**架构思想 / 方法接口（主）**——观测稀疏回归 vs 可替换模型上的线性归因；**干预 faithfulness 字段（辅）**——InterpBench SHD/runtime、CoLA faithfulness/completeness、CLT 重构/L0、节点→logit / 特征→特征影响相关、局部替换模型扰动一致性。
+> **主要来源**：[Scalable Circuit Learning for Interpreting Large Language Models](https://arxiv.org/abs/2606.16939)；[Circuit Tracing: Revealing Computational Graphs in Language Models](https://transformer-circuits.pub/2025/attribution-graphs/methods.html)；[On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html)（截至 2026-09-22）。下文「CircuitLasso §x」指 Yin 等的论文，「Circuit Tracing」「Biology」指 Anthropic 的两篇 HTML 文章。
+> **研究线**：架构思想与方法接口（主）——观测式稀疏回归 vs 替换模型上的线性归因；干预 faithfulness 字段（辅）——InterpBench SHD 与墙钟、CoLA faithfulness / completeness、CLT 重构与 L0、影响–消融相关、扰动一致性。
 > **范围与相邻笔记**：
-> - **≠ [[激活操控与表征工程]]（RepE / Activation Steering）**：本卡 **不** 主写推理期「加/减概念向量」操控行为；只在对照句点出「读表征」与「发现电路」正交。不把 CircuitLasso / 归因图写成 ActAdd/CAA/ITI 续作。
-> - **≠ [[机制可解释性入门]]（MI 通史）**：不重写 polysemanticity → SAE → sparse feature circuits 的 **入门阶梯叙事**；[[机制可解释性入门]] 已立概念骨架与 Circuit Tracing **证据结构摘要**。本卡下沉到 **可扩展电路学习算法接口 + 归因图方法细节与 faithfulness 字段**。
-> - **≠ [[审慎对齐与断路器]]（Deliberative Alignment + Circuit Breakers）**：[[审慎对齐与断路器]] 的「circuit」是 **安全产品 / Representation Rerouting 熔断**；本卡「circuit」是 **机制可解释性子图**。不把熔断训练写成电路发现。
-> **主要来源**：[Scalable Circuit Learning for Interpreting Large Language Models](https://arxiv.org/abs/2606.16939)；[Circuit Tracing: Revealing Computational Graphs in Language Models](https://transformer-circuits.pub/2025/attribution-graphs/methods.html)；[On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html)（截至 2026-09-22）；Anthropic 两文无 arXiv PDF。
+> - ≠ [[机制可解释性入门]]：本篇不写 polysemanticity → SAE → 电路 → 归因图的概念阶梯，也不重复 CLT、局部替换模型与归因图的机制说明，只补可核对的定量字段。
+> - ≠ [[激活操控与表征工程]]：本篇不写推理期加减概念向量来操控行为。
+> - Biology 中拒答、越狱与隐藏目标等安全案例只保留「存在可归因的内部结构」这一结论，不复述攻击步骤或提示全文。
+> **意义**：电路发现长期依赖逐边干预，在高维 SAE 特征上算力不可承受；CircuitLasso 用只需观测激活的稀疏回归，在结构精度与干预式基线持平的同时快约 3 倍，让高维 SAE 上的数据集级电路学习变得可行。与 Anthropic 的逐提示归因图并读，可以看清两条路线在成本、粒度与因果保证上的取舍。
 
----
+**一句话**：CircuitLasso 在已知前馈计算序的约束下，对激活或 SAE 特征做块上三角 Lasso，直接得到依赖骨架；Circuit Tracing 先训练跨层 transcoder 把 MLP 换成可解释的替换模型，再在单条提示上画归因图，并用扰动检验图与真模型是否一致。
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标识 | 一手形态 | 链接 | 页数 / 日期 | 备注 |
-|---|---|---|---|---|---|
-| **主 A** | Yin et al., *Scalable Circuit Learning for Interpreting Large Language Models*（CircuitLasso） | arXiv:**2606.16939v1** \[cs.LG\] **Submitted 15 Jun 2026**；MI Workshop @ ICML 2026 | `https://arxiv.org/abs/2606.16939` | **19** 页 letter | **官方 HTTPS 外链** |
-| **主 B** | Ameisen, Lindsey, Pearce, Gurnee, Turner, Chen, Citro et al., *Circuit Tracing: Revealing Computational Graphs in Language Models* | **官方 HTML**（**无 arXiv PDF**）；Published **March 27, 2025** | https://transformer-circuits.pub/2025/attribution-graphs/methods.html | HTML 方法页 | **正式外链**；**无 arXiv 号** |
-| **补链 C** | Lindsey, Gurnee, Ameisen et al., *On the Biology of a Large Language Model* | **官方 HTML**；Published **March 27, 2025**（methods 同伴） | https://transformer-circuits.pub/2025/attribution-graphs/biology.html | Claude 3.5 Haiku 案 | **补链**；本篇不展开全案 |
+CircuitLasso §3.1 把电路发现的困境归为三点：
 
-**一手 URL（2026-09-22 CST 核对）：**
-- CircuitLasso：https://arxiv.org/abs/2606.16939 · PDF https://arxiv.org/pdf/2606.16939
-- Methods：https://transformer-circuits.pub/2025/attribution-graphs/methods.html
-- Biology：https://transformer-circuits.pub/2025/attribution-graphs/biology.html
+1. **神经元多义**：直接在原始神经元上学到的电路稠密、噪声大、难以解读。
+2. **SAE 特征维度高**：稀疏自编码器（SAE）把激活拆成更单义的特征，但特征维度 $D$ 远大于隐藏维度 $d$。causal mediation、causal tracing、attribution patching 一类干预式方法需要对候选边逐一干预或反传，在高维特征上算力爆炸。
+3. **作者的出路**：借鉴连续因果发现，用稀疏线性回归作为电路发现的代理，只用观测到的激活；由于 Transformer 的计算顺序已知，无环约束可以直接写成块上三角结构。
 
-**一句话抓手：**
-- **CircuitLasso**：别再对每个候选边做干预——在**计算序约束**下对激活/SAE 特征做 **block 上三角 Lasso**，拿依赖骨架；高维 SAE 上仍可跑。
-- **Circuit Tracing**：先训 **CLT** 把 MLP 换成可解释「替换模型」，再在**冻结注意力与归一化分母**后画 **逐提示归因图**，用扰动对齐「图说 vs 真模型」。
+## 二、脉络
 
----
+电路研究的主线是「先有可读的节点，再连成计算图」（见 [[机制可解释性入门]]）：组件级电路（如 induction head）→ 字典学习拆出单义特征（2023）→ 以特征为节点的稀疏特征电路与各类归因、patching 方法 → Anthropic 的 Circuit Tracing（2025-03-27）用跨层 transcoder（CLT）与局部替换模型在单条提示上画归因图，配套的 Biology 把方法用到 Claude 3.5 Haiku 的多种行为上。
 
-## 二、议题边界：规模化电路方法 ≠ 通史 / 操控 / 安全熔断
+CircuitLasso（2026-06，ICML 2026 MI Workshop）走的是另一条路：不训练新的字典，也不做逐边干预，而是在现成 SAE 特征上用回归直接学数据集级的依赖结构，对照基线是 EAP 与 EAP-ig 这类 attribution patching 方法。
 
-### 2.1 四向对照（跟读）
-
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| MI 概念阶梯（特征→电路→归因图史） | 为何要 SAE、电路节点如何进化 | **[[机制可解释性入门]]** | **否**（不重写通史） |
-| RepE / ActAdd / CAA / ITI | 推理期对激活加向量改行为 | **[[激活操控与表征工程]]** | **否**（≠ 操控主轴） |
-| Deliberative Alignment + Circuit Breakers（RR） | 规范 CoT / 表征熔断安全产品 | **[[审慎对齐与断路器]]** | **否**（「circuit」同名异物） |
-| **可扩展电路学习 + 归因图方法** | 如何高效发现/验证机制子图 | **本篇** | **是** |
-
-跟读直觉：[[机制可解释性入门]] 问「**思想阶梯怎么排**」；[[激活操控与表征工程]] 问「**已有方向时怎么拧旋钮**」；[[审慎对齐与断路器]] 问「**安全对齐新范式**」；本卡问「**电路怎么规模化找出来、怎么验证图不是幻觉**」。
-
-### 2.2 两方法正交轴
-
-| | CircuitLasso | Anthropic Circuit Tracing |
+| | CircuitLasso | Circuit Tracing |
 |---|---|---|
-| **数据接口** | **观测式**（收集激活 / SAE 特征，无 per-edge 干预） | 先付 **CLT 训练成本**，再对单提示建 **local replacement model** |
-| **图对象** | 跨提示/数据集级依赖骨架；可再做 prompt 特异重加权 | **逐提示** attribution graph（节点=活跃特征/嵌入/误差/logit） |
-| **线性从哪来** | 显式 $\ell_1$ 稀疏回归假设 | 冻结 attn 模式 + LN 分母 + transcoder「桥过」MLP 非线性 → 特征预激活对上游线性 |
-| **验证** | InterpBench **SHD**；CoLA **faithfulness/completeness**；DG 效用演示 | 扰动实验 vs 图预测；节点→logit / 特征→特征影响相关；mechanistic faithfulness |
-| **规模痛点** | 宣称相对 EAP-ig 等 **免 LLM 反传**，适合高维 SAE | CLT 字典可达 **10M（18L）/ 30M（Haiku）**；图边可至百万级 → 需剪枝+交互界面 |
+| 数据接口 | 观测式：收集激活或 SAE 特征，不做逐边干预 | 先付 CLT 训练成本，再对单条提示建局部替换模型 |
+| 图对象 | 跨提示、数据集级的依赖骨架，可再做提示特异的重加权 | 逐提示的归因图（节点为活跃特征、嵌入、误差项与 logit） |
+| 线性从哪来 | 显式的 $\ell_1$ 稀疏回归假设 | 冻结注意力模式与归一化分母，transcoder 桥接 MLP 非线性 |
+| 验证 | InterpBench SHD；CoLA faithfulness / completeness；下游效用演示 | 扰动实验对照图的预测；影响–消融相关；机制忠实性 |
+| 规模痛点 | 不需要对 LLM 反传，适合高维 SAE | CLT 字典可达 1000 万（18 层模型）/ 3000 万（Haiku）特征；图边可达百万级，需剪枝与交互界面 |
 
-`
- 机制电路「发现 / 验证」
- │
- ┌───────────┴───────────┐
- ▼ ▼
- CircuitLasso Circuit Tracing
- (观测 Lasso 骨架) (CLT 替换模型 + 归因图)
- 群体/层间稀疏回归 逐提示线性归因 + 干预
- 本篇 A 本篇 B（Biology=案）
-`
+## 三、CircuitLasso：稀疏回归作电路发现代理
 
----
+### 3.1 方法
 
-## 三、主文 A · CircuitLasso：稀疏回归作电路发现代理
+**神经元设定**（CircuitLasso §3.2）：收集 $L$ 个位点、宽度 $d$、$M$ 条输入的激活矩阵 $H$，按层序与「注意力先于 MLP」重排后求解
 
-### 3.1 问题诊断（文内）
-
-1. **原始神经元多义** → 学到的电路密、噪、难读（引 Elhage et al. 2022）。
-2. **SAE 特征更单义**，但维度 $D \gg d$ → 既有 **干预式** 电路学习（causal mediation / tracing / attribution patching 等）在高维上 **算力爆炸**。
-3. 作者主张：借鉴连续因果发现，用 **稀疏线性回归** 作电路发现代理；在 **已知前馈计算序** 下把无环约束收成 **block 上三角 Lasso**，只吃观测激活。
-
-### 3.2 方法接口（压缩跟读，非教程）
-
-**神经元设定（§3.2）：** 收集 $L$ 个位点、宽 $d$、$M$ 条输入的激活 $H$；按层序与「注意力先于 MLP」重排后，解形如
 $$
-\min_A \|H - A^\top H\|_F^2 + \lambda\|A\|_1
+\min_A \|H - A^\top H\|_F^2 + \lambda\|A\|_1 ,
 $$
-并 **固定下三角块为零**（建筑性无环）。结构图 $G$ 由 $\hat A$ 推断。
 
-**复杂度主张（Proposition 3.1）：** FISTA 达 $\epsilon$-次优时，CircuitLasso 总成本量级
-$O\!\big(M L(L-1)d^2 / \sqrt{\epsilon}\big)$；相对 EAP-ig「每观测约 2 前向 + 1 反传」的主导成本，作者给出何时回归更省的充分条件（Prop 3.2；细节见附录 A）。
+并把下三角块固定为零，用模型结构本身保证无环；电路图由估计出的 $\hat A$ 的非零模式给出。直觉是：在计算序上，一个位点的激活若能被少数上游位点线性解释，这些上游位点就是它的候选父节点，$\ell_1$ 罚负责把其余边压成零。
 
-**SAE 特征设定（§3.3）：** 对计算序上位点 $i \prec j$，解
-$$
-\hat A_{i,j}=\arg\min_{A_{i,j}} \|Z_j - A_{i,j}^\top Z_i\|_F^2 + \lambda\|A_{i,j}\|_1,\quad A_{i,j}\in\mathbb{R}^{D\times D}
-$$
-代价 $O(M D^2/\sqrt{\epsilon})$。另可选把下游标签 $y$ 纳入
-$\min L_{\mathrm{pred}}(y, A_{i,y}^\top Z_i)+\lambda\|A_{i,y}\|_1$，用于解释预测并做下游编辑。
+**SAE 特征设定**（CircuitLasso §3.3）：对计算序上的每对位点 $i \prec j$，用 $Z_i$ 回归 $Z_j$ 并加 $\ell_1$ 罚，得到 $D\times D$ 的稀疏连接；还可以把下游标签 $y$ 作为回归目标，用于解释预测并做下游编辑。
 
-**非线性扩展：** Appendix B；主结果称拓扑骨架相近、成本更高，主文以线性为主。
+**复杂度**：用 FISTA 求解到 $\epsilon$-次优时，神经元设定的总成本量级为 $O\!\big(M L(L-1)d^2 / \sqrt{\epsilon}\big)$，SAE 设定每对位点为 $O(M D^2/\sqrt{\epsilon})$；作者给出相对 EAP-ig（每个观测约两次前向加一次反传）何时更省的充分条件（Prop 3.1–3.2，细节见附录 A）。非线性扩展见附录 B，拓扑骨架相近但成本更高，主文以线性为主；SAE 直接用预训练版本（附录 D.1）。
 
-**刻意不写：** SAE 训练配方（文称直接用预训练 SAE，细节 Appendix D.1）；本卡不复刻超参表。
+### 3.2 证据
 
-### 3.3 实验字段（官方 PDF 数字）
+- **InterpBench 结构精度与墙钟**（CircuitLasso §4.1，Figure 2）：16 个合成案例加真实 IOI 任务，单卡 A100、三次平均。线性版平均 SHD 3.16，与 EAP-ig 的 2.98 接近、优于 EAP 的 3.61；平均每案 16.3 s，比 EAP-ig（49.1 s）快约 3.0 倍、比 EAP（33.7 s）快约 2.1 倍。非线性版 SHD 最低（2.84），但耗时约为线性版的 3.7 倍，多数案例慢于 EAP-ig。作者的主张是「精度持平下的效率」。
+- **SAE 电路**（CircuitLasso §4.2.1，Figure 3–4）：在 GPT-2 small 上用 OpenAI 预训练 SAE、CoLA 公开训练句 8,551 条（作者称 MI 文献中此前没用过 CoLA）。图上可读出特征跨层延续、合并与消失，也有伪相关（如「-self」与「hunger / thirst」）；方向被强制对齐计算序，因此会出现「反常识因果」边，文中自承。节点消融下的 faithfulness / completeness 与干预式的 SHIFT 相当，且回归显式给出边权，还能做 SHIFT 不支持的边消融。
+- **下游效用演示**（CircuitLasso §4.2.2，Table 1–2）：在 Bias-in-Bios 上按回归系数排名单层 SAE 特征，人工标出性别相关特征并置零。耗时（不含人工解释）Pythia-70M 上 SHIFT 257.6 s、CircuitLasso 36.5 s，Gemma-2-9b 上 908.4 s 对 107.4 s，差距随模型增大；精度与最强非 ORACLE 基线可比或略优（如 Pythia-70M Profession 上 CircuitLasso-retrain 94.2 对 SHIFT-retrain 93.1）。作者把精度优势归于解缠 SAE 特征的细粒度操作，而不是电路学习本身。
 
-#### （1）InterpBench：结构精度 × 墙钟（Figure 2 / §4.1）
+## 四、Circuit Tracing：可核对的定量字段
 
-- **设定：** Gupta et al. (2024) *InterpBench*；跟协议评 **16** 个主合成案 + 真实 **IOI**；基线 **EAP**（Syed et al. 2024）、**EAP-ig**（Hanna et al. 2024）；指标 **SHD**（↓）与 runtime（秒，↓）；单卡 A100，三试平均。
-- **结果（文称）：**
- - CircuitLasso-**linear** 均值 SHD **3.16** ≈ EAP-ig **2.98**，优于 EAP **3.61**；
- - 均值 runtime **16.3 s/案**，相对 EAP-ig **49.1 s** 约 **3.0×** 快，相对 EAP **33.7 s** 约 **2.1×** 快；
- - CircuitLasso-**nonlinear** 均值 SHD 最低 **2.84**，但 runtime 约线性的 **3.7×**，多数案甚至慢于 EAP-ig。
-- **主张句：** 「efficiency at parity of accuracy」。
+CLT、局部替换模型、归因图的节点与边、global weights 与局限清单的机制说明见 [[机制可解释性入门]] 第六节，这里只补可核对的数字与本篇对照所需的要点。
 
-#### （2）SAE 电路：CoLA + GPT-2 small（§4.2.1 / Figure 3）
+### 4.1 CLT 规模与重构
 
-- **数据：** CoLA（Warstadt et al. 2019）公开训练句 **8,551**（全文称数据集共 10,657）；作者称 **MI 文献中未见用 CoLA**。
-- **特征：** OpenAI 预训练 SAE（Gao et al. 2025）于 GPT-2 small。
-- **电路粒度：** 数据集级 $|A_{L,y}|$（群体依赖）vs 单提示 $s=|A_{L,y}|\odot|z_L|$；主图用 prompt averaging。
-- **可读观察（Figure 3 叙述）：** Persistence（如 “-self” 跨层）、Merging / Dropping、Cause–Effect 与 **伪相关**（如 “-self” 与 “hunger/thirst”）；方向强制对齐计算序 → 可出现「反常识因果」边——文内自承。
-- **Faithfulness / Completeness（Figure 4，Marks et al. 2025 指标）：** 节点消融下与干预式 **SHIFT** 匹配，且无需 per-edge 干预；因回归显式给边权，额外做 **edge ablation**（SHIFT 不支持）。理想 faithfulness=1、completeness=0。
-
-#### （3）下游效用：Bias-in-Bios（BiB）域泛化（§4.2.2 / Table 1–2）
-
-- **定位：** 文称 **utility demonstration**，非多层电路主实验；精度优势归因于 **解缠 SAE 特征的细粒度操作**，非「电路学习效应」本身。
-- **做法：** 按 $|\hat A_{i,y}|$ 排名单层 SAE 特征，人工标出性别相关特征并置零 → 原分类器或重训分类器。
-- **Table 1 runtime（不含人工解释）：** 例 Pythia-70M：SHIFT **257.6 s** / CircuitLasso **36.5 s**；Gemma-2-9b：SHIFT **908.4 s** / CircuitLasso **107.4 s**（差距随模型增大）。
-- **Table 2：** CircuitLasso / CircuitLasso-retrain 与最强非-ORACLE 基线 **可比或略优**（列内粗体为非-ORACLE 最优）。例 Pythia-70M Profession：CircuitLasso-retrain **94.2** vs SHIFT-retrain **93.1**；Gender 近 50% 为目标。
-
-### 3.4 局限与未来（§5，跟读）
-
-- 线性系数 **≠** 底层非线性精确因果效应；何时定量 faithful 仍开放。
-- 层内反馈 / 非严格前馈架构 → 三角无环假设失效。
-- 本卡不展开附录证明与全部特征表（Tables 3–7）。
-
----
-
-## 四、主文 B · Anthropic Circuit Tracing：CLT → 归因图 → 干预
-
-> **形态声明：** 一手为 **https://transformer-circuits.pub** HTML（Published **2025-03-27**）。**无** 对应 arXiv PDF。[[机制可解释性入门]] 已写概念阶梯；本节写 **方法接口与可核对字段**。
-
-### 4.1 流水线（methods 开篇主张）
-
-1. **稀疏编码部件：** 选用 **transcoder** 族（相对只重构激活的 SAE，更直接逼近 MLP 输入→输出），并采用 **cross-layer transcoder（CLT）**：特征在层 $\ell$ 读 residual，可写到 **后续所有** MLP 输出。
-2. **Replacement model：** 用 CLT 重构替换各层 MLP 输出；注意力仍按原模型跑。最大 **18L** CLT（总特征至 **10M**）在多样预训练风格提示上，与底层模型 **next-token 最可能 token 一致率约 50%**（相对 per-layer transcoder / 阈值神经元基线更优）。
-3. **Local replacement model（对固定提示 $p$）：** 再 **冻结注意力模式与归一化分母**，并在每（token, layer）加 **CLT 相对真 MLP 的误差校正** → 激活与 logit **局部精确匹配**底层；但机制未必相同 → 需 **mechanistic faithfulness**。
-4. **Attribution graph：** 节点：活跃 CLT 特征、提示 token 嵌入、**error nodes**、输出 logit；边：冻结非线性后的 **线性直接效应**（预激活 = 入边之和，至阈值）。捕获 **OV** 信息流，**忽略 QK**（为何注意该位置）。
-5. **剪枝 + 交互界面：** 短提示边亦可至百万级；剪枝后仍可达数百节点 / 数万边 → 交互「tracing」界面。
-6. **干预验证：** 改特征激活并注入其解码；CLT 跨层写出 → 需选择干预层范围；验证「图假说」对下游特征与 logit 的预测。
-
-### 4.2 规模与 CLT 定量字段（§ Evaluations）
-
-| 模型 | 字典规模（跨层总特征） | 归一化均值重构误差 | 平均 L0（活跃特征/token） |
+| 模型 | 跨层总特征 | 归一化均值重构误差 | 平均 L0（每 token 活跃特征） |
 |---|---|---|---|
-| 18L 最大 run | **10M** | **~11.5%**（归一化均值重构误差） | **88** |
-| Claude 3.5 Haiku（Haiku 3.5）最大 run | **30M** | **21.7%** | **235** |
+| 18 层模型最大 run | 10M | ~11.5% | 88 |
+| Claude 3.5 Haiku 最大 run | 30M | 21.7% | 235 |
 
-文称：相对 **per-layer transcoder（PLT）** 与阈值神经元，CLT 在重构–稀疏–自动可解释性上呈 **Pareto 改进**；跨层的关键定性收益是 **缩短归因路径**（例：Zagreb:Croatia::Copenhagen: 上 PLT 长度 7 的 Copenhagen 链可塌到层 1），但也可能 **抹去** 底层「互相放大」的因果动力学 → 增加机制不忠实风险。
+- 最大的 18 层 CLT 作为替换模型时，在多样的预训练风格提示上，与原模型的下一 token 一致率约 50%，优于逐层 transcoder 与阈值神经元基线。
+- 跨层写出的主要收益是缩短归因路径（例如 Zagreb:Croatia::Copenhagen: 一例中，逐层 transcoder 上长度 7 的链可塌缩到第 1 层），代价是可能抹去底层「互相放大」的因果动力学，增加机制不忠实的风险。
 
-**图充分性相关：** unpruned 图上 embedding 影响归一化因子即 **replacement score**；另报 completeness（特征节点 vs error nodes 影响占比）等——具体曲线以 HTML 图为准，未列表格的逐点读数从略。
+### 4.2 影响与干预的一致性
 
-**影响 vs 干预：** 节点 logit influence 优于「仅直接边 / 仅激活幅度」基线；特征对影响与消融相对效应 **Spearman 0.72**（文内）。整体局部替换模型扰动：干预后 **一层** 约 **0.8 cosine / 0.4 NMSE**，跨层误差 **累积**；幅度偏差可能与冻结 LN 分母有关；方向相关但字典越大幅度 faithfulness 可更差。
+- 节点对 logit 的影响度量优于「只看直接边」或「只看激活幅度」的基线；特征对之间的影响与消融相对效应的 Spearman 相关为 0.72。
+- 对整个局部替换模型做扰动，干预后一层内约为 0.8 cosine / 0.4 NMSE，跨层误差会累积；幅度偏差可能与冻结 LN 分母有关，方向相关但字典越大幅度忠实性可能越差。
+- 方法案例（18 层模型）：缩写补全（The National Digital Analytics Group (N → DAG）、事实回忆（Michael Jordan plays the sport of → basketball，约 65% 置信）、两位数加法（模型多用中间启发式而非单一程序）；缩写一例中「National」对 logit 影响弱，作者推测主贡献走注意力模式，正是归因图看不到 QK 的盲区。
+- 原文 Limitations 列了七条：缺注意力（QK）电路、重构误差与「暗物质」、未激活特征与抑制回路、图复杂度、特征抽象层级错位、全局电路难、机制忠实性。归因图因此是假说生成器，结论须靠干预确认。
 
-### 4.3 方法案（18L，跟读抓手，不写操作手册）
+### 4.3 Biology（索引）
 
-- **缩写补全：** `The National Digital Analytics Group (N` → `DAG`；图上可见 acronym / “say _A” / “say DA_” 等超节点路径；“National” 对 logit 影响弱——作者假设主贡献走 **注意力模式**（方法盲区）。
-- **事实回忆：** `Michael Jordan plays the sport of` → basketball（约 65% 置信）。
-- **两位数加法：** operand / lookup-table / 启发式特征；CLT 视角下模型多用 **中间启发式** 而非单一程序；与 Kantamneni & Tegmark 表征「时钟」工作互补。干预抑制超节点结果与图 **大体一致**。
+Biology 与方法篇同日发布，用同一套方法考察 Claude 3.5 Haiku 的多种行为，包括多步推理、诗歌规划、多语电路、加法、医疗诊断、实体识别与幻觉、拒答、越狱、思维链忠实性、隐藏目标等。与方法接口直接相关的几点：
 
-### 4.4 局限清单（methods § Limitations，必录）
+- **思维链忠实性**：归因结构能区分「真在计算」、「随口编」与「从人类暗示倒推」（例如 $\sqrt{0.64}$ 与 $\cos(23423)$ 的对比）。
+- **诗歌规划**：模型在换行 token 上提前激活候选韵脚特征，抑制该计划可改写后续诗行。
+- **幻觉与实体识别**：「无法回答」等抑制回路，是方法篇「未激活特征与抑制回路」这条局限的正面例证。
 
-文内高亮七条（标题级）：
-
-1. **Missing Attention Circuits**（QK；induction / 选择题可「跳过故事」）
-2. **Reconstruction Errors & Dark Matter**
-3. **Inactive Features & Inhibitory Circuits**（「未激活」本身可能是机制）
-4. **Graph Complexity**
-5. **Features at Wrong Abstraction**（splitting / absorption）
-6. **Difficulty of Global Circuits**（虚拟权重干扰；抑制边难靠共现过滤）
-7. **Mechanistic Faithfulness**（替换模型机制 ≠ 原 MLP）
-
-**跟读含义：** 归因图是 **假说生成器**，不是终审；干预与忠实性字段是本卡辅线的理由。
-
-### 4.5 Global weights（辅）
-
-残差直达虚拟权重 + 期望残差归因（ERA）/ **TWERA**（按目标激活加权）减轻干扰；在加法全局连接与 Biology 拒答上游等处有用，但 **非** 本卡主战场。
-
----
-
-## 五、补链 C · Biology（Claude 3.5 Haiku 案索引）
-
-> **角色：** methods 的 **应用同伴**（同日 **2025-03-27**；methods 自述 *nine behavioral case studies*）；本篇不展开九案全文，只列索引与和 faithfulness 相关的方法消费点。
-
-**文首主张：** 用同一套 circuit tracing 考察 Claude 3.5 Haiku 多情境内部机制。
-
-**案目录（HTML Contents，名称级）：** Multi-step Reasoning；Planning in Poems；Multilingual Circuits；Addition；Medical Diagnoses；Entity Recognition and Hallucinations；Refusals；Life of a Jailbreak；Chain-of-thought Faithfulness；Uncovering Hidden Goals in a Misaligned Model；另有 Commonly Observed Circuit Components / Limitations。
-
-**与方法接口直接相关的消费点（摘要，不含 jailbreak 步骤）：**
-- **CoT Faithfulness：** 可区分「真在算」vs「bullshit」vs「从人类暗示倒推」的归因结构（例 $\sqrt{0.64}$ vs $\cos(23423)$）。
-- **诗歌规划：** 在换行 token 上提前激活候选韵脚特征；抑制偏好计划可改写后续行。
-- **多语 / 加法：** 语言无关抽象与跨情境复用加法电路；相对更小模型更显著。
-- **幻觉 / 实体：** “can’t answer” 等抑制回路——对应 methods 对 **inactive / inhibitory** 局限的正面例。
-
-**安全相关案（拒答 / jailbreak / 隐藏目标）：** 本卡只保留「存在可归因内部结构」的索引级结论；不复述可复用攻击步骤或提示全文（与 [[审慎对齐与断路器]] / [[激活操控与表征工程]] 的安全范围一致）。
-
----
-
-## 六、对照综合：何时用哪把刀
+## 五、何时用哪种方法
 
 | 需求 | 更贴近 |
 |---|---|
-| 无 CLT 预训练预算；要在 **SAE 已有** 时快速拿 **群体级** 稀疏依赖 / 下游剪特征 | **CircuitLasso** |
-| 需要 **单条提示上的逐步计算故事** + 交互图 + 定点干预叙事 | **Circuit Tracing** |
-| 只要 MI 词汇与思想史 | → 回 **[[机制可解释性入门]]** |
-| 要改行为的推理期向量 | → 回 **[[激活操控与表征工程]]** |
-| 要对齐安全熔断产品 | → 回 **[[审慎对齐与断路器]]** |
+| 没有 CLT 训练预算，已有 SAE，想快速拿到数据集级的稀疏依赖或做下游特征剪除 | CircuitLasso |
+| 需要单条提示上的逐步计算故事、交互图与定点干预 | Circuit Tracing |
+| 只需要 MI 的概念与思想史 | [[机制可解释性入门]] |
+| 想在推理期用向量改变行为 | [[激活操控与表征工程]] |
 
-**共同点：** 都以「可读特征（SAE/CLT）为节点」；都强调 **验证**（消融 / 扰动）而不止可视化。
-**分歧点：** 观测回归骨架（便宜、偏群体、边权非精确因果）vs 替换模型线性归因（贵在 CLT、偏单例、明确 OV/QK 分工与失败模式）。
+共同点：都以可读特征（SAE 或 CLT）为节点，都强调用消融或扰动做验证，而不只是可视化。分歧在于：观测回归便宜、偏群体级，但边权不是精确的因果效应；替换模型上的线性归因贵在 CLT 训练、偏单例，但明确了 OV / QK 的分工与已知失败模式。
 
----
+## 六、与相邻笔记的分工
 
-## 七、延伸阅读
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[机制可解释性入门]] | 共用背景：特征 → 电路 → 归因图的概念阶梯，以及 CLT 与归因图的机制说明；本篇在其上补 CircuitLasso 增量与 Circuit Tracing 的定量字段 | 概念阶梯与归因图机制的重复叙述 |
+| [[激活操控与表征工程]] | 方法对照：两者都读模型内部表征，那篇用表征方向改行为，本篇用表征之间的依赖发现电路 | ActAdd、CAA、ITI 等操控方法 |
 
-1. 本卡 §二划界表（确认不是 [[机制可解释性入门]]/[[激活操控与表征工程]]/[[审慎对齐与断路器]]）。
-2. CircuitLasso：摘要 + §3 框架 + Figure 2 / Table 1–2。
-3. Circuit Tracing methods：Introduction → Building Replacement Model → Attribution Graphs → Validating… → Limitations（官方 HTML）。
-4. Biology：只读 Contents + 与自身问题相关的一案。
-5. 需要概念阶梯时跳转 **[[机制可解释性入门]]**。
+## 七、意义
 
----
+CircuitLasso 把电路发现的主要成本从「逐边干预或反传」换成「一次性的稀疏回归」，让高维 SAE 上的数据集级电路学习变得可行；Circuit Tracing 则在单条提示上给出了最细的计算故事和一组可核对的忠实性字段。两者的共同教训是：画出来的图只是假说，必须用消融或扰动验证。
 
-## 九、局限与待核实
+## 八、局限与待核实
 
-- CircuitLasso 附录 Table 3–7 逐特征标签与 $\lambda$ 消融曲线点：未全表抄录。
-- Anthropic HTML 内嵌交互图 / 曲线的精确像素读数：以官方页为准，本卡只用正文明确写出的聚合数。
-- CLT / SAE 训练算力美元级估计：methods 提及「open-weights cost estimates」链出，本卡不二次估算。
-- Biology 九案机制细节：本篇未展开，仅作补链。
+- **CircuitLasso 的边界**（CircuitLasso §5）：线性系数不等于底层非线性的精确因果效应，何时定量忠实仍是开放问题；层内反馈或非严格前馈的架构会让三角无环假设失效。
+- **Circuit Tracing 的边界**：见 4.2 的七条局限；跨层 CLT 缩短路径的同时可能掩盖真实的因果动力学。
+- **未抄录的内容**：CircuitLasso 附录 Table 3–7 的逐特征标签与 $\lambda$ 消融曲线；Anthropic 页面内交互图与曲线的精确读数（本篇只用正文明确写出的聚合数）；CLT / SAE 训练算力的美元级估计（方法篇链出的 open-weights 成本估计，本篇不二次估算）。
+- **Biology 案例**：机制细节未展开，只作索引。
+
+## 九、延伸阅读
+
+| 类型 | 标题 | 说明 | URL |
+|---|---|---|---|
+| 论文 | Scalable Circuit Learning for Interpreting Large Language Models | Yin、Wei、Gao、Dhurandhar、Natesan Ramamurthy、Yu；先读摘要、§3 框架与 Figure 2、Table 1–2 | https://arxiv.org/abs/2606.16939 |
+| 方法篇 | Circuit Tracing: Revealing Computational Graphs in Language Models | Ameisen 等，Transformer Circuits Thread，2025-03-27；按 Introduction → Replacement Model → Attribution Graphs → Validating → Limitations 读 | https://transformer-circuits.pub/2025/attribution-graphs/methods.html |
+| 案例篇 | On the Biology of a Large Language Model | Lindsey 等，2025-03-27；读目录与自己关心的一案 | https://transformer-circuits.pub/2025/attribution-graphs/biology.html |
