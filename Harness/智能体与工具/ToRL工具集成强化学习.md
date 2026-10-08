@@ -7,241 +7,120 @@ status: archived
 sources:
  - https://arxiv.org/abs/2503.23383
 arxiv: ["2503.23383"]
-related: ["GRPO与DAPO算法族", "代码智能体Harness史线", "智能体工具与长程任务", "DeepSeekR1推理训练深读", "推理时扩展TestTimeScaling"]
+related: ["GRPO与DAPO算法族", "DeepSeekR1推理训练深读", "AgenticRL景观与能力模块", "RL算力缩放与环境扩展", "代码智能体Harness史线", "智能体工具与长程任务", "推理时扩展TestTimeScaling", "MixtureOfAgents与TUMIX", "ToolLoop工具数据合成", "MemoryR1强化学习记忆维护", "MiMoV26智能体强化学习短报"]
 archived: 2026-09-22
 ---
 
 # Tool-use RL：ToRL——从基座模型缩放工具集成 RL
 
-> **定位**：工具集成强化学习主题轴——仓库内 **「把代码解释器嵌进 RL 环境、从 base 直接探索工具策略」** 专篇。相对纯 CoT 的 outcome RL（R1 / SimpleRL 等）与蒸馏轨迹再 SFT 的 TIR（ToRA / MathCoder 等），ToRL 证明：**工具调用本身可以当探索动作**，不必先模仿人类/更强模型的工具脚本。
-> **研究线**：**架构思想（主）**——TIR rollout 环、沙箱选择、观测 mask、工具次数 $C$；**评测字段（辅）**——AIME/MATH 等相对「无工具 RL」与「Instruct-TIR」的增益、训练中 code ratio / pass ratio。
+> **主要来源**：[ToRL: Scaling Tool-Integrated RL](https://arxiv.org/abs/2503.23383)（Li、Zou、Liu，SJTU / SII / GAIR，简称 ToRL，v1 2025-03-30）；[GAIR-NLP/ToRL README](https://github.com/GAIR-NLP/ToRL)（代码、28k 训练题与权重）（截至 2026-09-22）。
+> **研究线**：架构思想（把代码解释器放进 RL rollout、沙箱与观测掩码、工具调用次数上限，主）· 评测字段（AIME、MATH 等相对无工具 RL 与 Instruct-TIR 的增益，辅）
 > **范围与相邻笔记**：
-> - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单（Clip-Higher / Dynamic Sampling / token-level loss / Overlong 等）。本篇只用到「**用 GRPO 做组相对 RL**」这一抽象槽位；超参见 §3.1，不展开目标函数变体。
-> - **不重写** [[代码智能体Harness史线]] 的 SWE-agent ACI / OpenHands SDK（编辑器命令面、lint guardrail、生产 harness）。本篇沙箱是 **数学题上的 Python 解释器（Sandbox Fusion）**，不是软件工程 ACI。
-> - **不重写** [[智能体工具与长程任务]] 旗舰工具环 / MCP / System Card 长程；[[DeepSeekR1推理训练深读]] 多阶段管线表；[[推理时扩展TestTimeScaling]] TTS 通史。
-> **主要来源**：[ToRL: Scaling Tool-Integrated RL](https://arxiv.org/abs/2503.23383)；[GAIR-NLP/ToRL README](https://github.com/GAIR-NLP/ToRL)（截至 2026-09-22）。
+> - ≠ [[GRPO与DAPO算法族]]：本篇只用到「GRPO 做组相对 RL」这一槽位，不写目标函数与 DAPO 技巧。
+> - ≠ [[代码智能体Harness史线]]：本篇的沙箱是数学题上的 Python 解释器，不是软件工程智能体的 ACI 与生产 harness。
+> - ≠ [[RL算力缩放与环境扩展]]：本篇不写 RL 算力曲线与环境合成总论，只写解释器这一种环境的接法。
+>
+> **意义**：此前的工具集成推理（TIR）先用更强模型的工具轨迹做监督微调，工具用法被示范数据锁定；ToRL 把解释器调用当作 RL 中的探索动作，从未经后训练的基座直接训练，7B 模型 AIME24 达 43.3%，并自发出现「读报错改代码」「用代码验算推翻自然语言推理」等行为，说明工具策略可以靠结果奖励学出来。
+
+**一句话**：生成中一遇到代码块就暂停、交给隔离沙箱执行、把结果写回上下文再继续；只用答案对错作奖励，从 Qwen2.5-Math 基座起训，模型自己学会何时写代码、写什么、出错怎么办。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文** | Li, Zou & Liu (SJTU / SII / GAIR), *ToRL: Scaling Tool-Integrated RL* | arXiv:**2503.23383v1** \[cs.CL\] **30 Mar 2025**；`https://arxiv.org/abs/2503.23383`（**10** 页 A4；CreationDate **2025-04-01** CST） | 从 **base** 做 Tool-Integrated RL；TIR 进 rollout；涌现工具策略与认知行为 |
-| **辅·代码/数据/模型** | `https://github.com/GAIR-NLP/ToRL`（README；数据集 `data/torl_data`；HF `GAIR/ToRL` / `GAIR/ToRL-7B`） | 仓库自报：训练管线、**28k** 题、模型权重；依赖 **veRL** + **SandboxFusion** | 复现入口；与正文数字交叉核对 |
+纯思维链的结果奖励 RL（如 R1-Zero、SimpleRL-Zero）让模型在精确计算、穷举与验算上只能「硬推」。工具集成推理把推理与代码执行交替进行，可以弥补这一点，但主流做法先蒸馏强模型的工具轨迹做监督微调，再视情况加 RL；作者指出（§1），这样学到的工具模式受示范数据限制，而且「工具如何嵌入 RL 框架」在已有工作中并不透明。ToRL 的问题是：去掉这层监督微调，直接让 RL 探索能否学出更好的工具策略。
 
-**一句话抓手：** 把 **代码解释器** 放进 RL 的 env 交互环（检测到 code fence → 暂停生成 → 执行 → 把 `output` 写回上下文 → 继续推理），并从 **未后训练的 Qwen2.5-Math base** 起训；ToRL-7B 在 AIME24 达 **43.3%**，相对同设置无工具 RL 约 **+14** 点、相对 Qwen2.5-Math-Instruct-TIR 约 **+17** 点（Abstract / Table 3）。
+## 二、脉络
 
----
+| 时间 | 工作 | 关键一步 |
+|---|---|---|
+| 2022-11 | [PAL](https://arxiv.org/abs/2211.10435) | 让模型写程序、交给解释器算出答案，推理与计算分离 |
+| 2023-09 | [ToRA](https://arxiv.org/abs/2309.17452) | 自然语言推理与代码执行交替的 TIR 轨迹，用强模型标注轨迹做模仿学习 |
+| 2025-01 | [DeepSeek-R1](https://arxiv.org/abs/2501.12948)（R1-Zero） | 从基座直接做大规模结果奖励 RL，长思维链自发出现；不含工具 |
+| 2025-03 | ToRL | 把解释器放进 RL rollout，从基座起训 TIR |
+| 2025-04 | [ReTool](https://arxiv.org/abs/2504.11536) | 先用合成的代码增强长推理轨迹冷启动微调，再做多轮实时执行代码的 RL，走「监督微调 + RL」的另一条路 |
 
-## 二、议题边界：工具进 RL 环，不是又一部 DAPO / ACI 专线
+## 三、方法
 
-### 2.1 与相邻笔记的分工
+### 3.1 数据（§2.1）
+
+从 NuminaMATH、MATH、DeepScaleR 等收集竞赛题，去掉证明题与验证标准模糊的题，得到 75,149 道可验证题，再用 LIMR 做难度平衡，最终 28,740 道。
+
+### 3.2 TIR 轨迹（§2.2）
+
+给定模型 $M$、解释器 $I$、问题 $Q$，第 $k$ 步：$(r_k,c_k)=M(Q\oplus s_{k-1})$，$o_k=I(c_k)$，$s_k=s_{k-1}\oplus r_k\oplus c_k\oplus o_k$。其中 $r$ 是自然语言推理，$c$ 是代码，$o$ 是执行结果，循环到给出终答。与纯思维链相比，中间步骤可以被执行结果校正。
+
+### 3.3 解释器进 rollout（§2.3.1）
+
+模型正常采样；检测到代码块结束标记时暂停生成，取出最新代码块交给解释器执行，把结果以 OBSERVATION 形式插回上下文，再继续生成。执行失败时照样回传报错，作者假设这能帮助模型学会写出可执行代码。超参数 $C$ 限制一次回答内的工具调用次数，超过后忽略后续执行请求、迫使模型回到纯文本推理；主实验 $C=1$。
+
+### 3.4 四项工程选择（§2.3.2）
+
+| 选择 | 做法与理由 |
+|---|---|
+| 调用次数 $C$ | 调用越多，GPU 等待执行的空闲越长；$C$ 用吞吐换性能 |
+| 执行环境 | 先试 qwen-agent 的 Python 执行器，延迟低但与训练进程不隔离，出错可能拖垮训练；改用隔离的 Sandbox Fusion |
+| 报错裁剪 | 冗长的 traceback 只保留最后一行，控制上下文长度 |
+| 观测掩码 | 计算损失时屏蔽 OBSERVATION，避免模型去背执行输出 |
+
+### 3.5 奖励（§2.3.3）
+
+答案正确 $+1$、错误 $-1$。另设计了代码可执行性奖励（含不可执行代码 $-0.5$），主实验不用；消融显示它不提升效果，作者猜测惩罚会让模型写过于简单的代码来避错。训练用 veRL 框架与 GRPO，基座为 Qwen2.5-Math 1.5B / 7B Base；为加强探索去掉了 KL 损失。
+
+## 四、主结果（Table 3）
+
+评测 Instruct-TIR 时同样把工具调用上限设为 1。
+
+| 模型 | 工具 | AIME24 | AIME25 | MATH500 | Olympiad | AMC23 | 平均 |
+|---|:---:|---:|---:|---:|---:|---:|---:|
+| Qwen2.5-Math-1.5B-Instruct-TIR | ✓ | 13.3 | 13.3 | 73.8 | 41.3 | 55.0 | 41.3 |
+| ToRL-1.5B | ✓ | 26.7 | 26.7 | 77.8 | 44.0 | 67.5 | 48.5 |
+| Qwen2.5-Math-7B-Instruct-TIR | ✓ | 26.7 | 16.7 | 78.8 | 45.0 | 70.0 | 47.4 |
+| SimpleRL-Zero（7B，无工具 RL） | ✗ | 33.3 | 6.7 | 77.2 | 37.6 | 62.5 | 43.5 |
+| ToRL-7B | ✓ | 43.3 | 30.0 | 82.2 | 49.9 | 75.0 | 62.1 |
+
+ToRL-7B 平均比同基座最强基线高 14.7 个百分点。摘要称其 AIME24 比无工具 RL 高 14%、比最佳已有 TIR 模型高 17%；作者认为它的 AIME 表现可与部分 32B 的 RL 模型相比（§1）。
+
+## 五、分析：工具行为如何被训练出来（§3.3）
+
+- **代码使用（Takeaway-I）**：前 100 步内写代码解题的比例从 40% 升到 80%，可执行比例同步上升；正确轨迹的代码通过率高于错误轨迹；模型还学会减少无效代码，没有任何显式指令。
+- **调用次数与可执行性奖励（Takeaway-II）**：$C$ 从 1 加到 2，平均准确率约提高 2%，但 8 卡 A800 上每步时间从 $C=0$ 的 118 秒、$C=1$ 的 237 秒升到 $C=2$ 的 288 秒；可执行性惩罚无益。
+- **涌现行为（Takeaway-III）**：读报错后修代码（Table 5）；代码验算结果与自然语言推理不一致时改掉答案（Table 6）；在计算型与分析型推理之间自适应切换。
+
+## 六、意义
+
+ToRL 把「工具是评测时开关的外挂」改成「工具是训练环境的一部分」：解释器调用和文本 token 一起被策略梯度优化。它与 R1-Zero 的思路一致，即去掉示范数据、靠可验证奖励让行为自发出现，只是把动作空间扩到了外部执行。这一接法（暂停—执行—回填—掩码观测）在其他笔记中还能看到后续：[[MiMoV26智能体强化学习短报]] 把它扩到多环境、多 harness 的生产规模。
+
+## 七、局限与待核实
+
+- **任务窄**：只在数学竞赛题与单一 Python 解释器上验证，且主实验每次回答只允许调用一次工具，多轮、多工具场景未覆盖。
+- **吞吐代价**：解释器调用使每步训练时间约翻倍（118 → 237 秒），文中没有给出异步执行等缓解方案。
+- **增量口径**：Table 3 中的增量是相对同组各列最强基线，AIME24 的 +10.0 对应 SimpleRL-Zero；摘要中的「+14%」相对作者训练曲线里的无工具基线（Fig. 1、Fig. 4），两处口径不同。
+- **对照不完全同配置**：SimpleRL-Zero、Eurus-2-7B-PRIME 等基线来自各自论文，训练数据与预算不同。
+- **训练曲线**：Fig. 4 显示 ToRL-7B 全程高于两条基线，具体数值只在图中，本篇不引。
+
+## 八、与相邻笔记的分工
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **[[GRPO与DAPO算法族]] GRPO/DAPO** | 「有可验证终答就能做组相对 RL」；实验用 GRPO | Clip-Higher、动态采样、token-level loss、Dr.GRPO 去偏公式 |
-| **[[代码智能体Harness史线]] ACI/harness** | 「隔离执行环境很重要」这一工程直觉 | SWE-agent 命令面 / OpenHands 四包 SDK / 生产失败率 |
-| **[[智能体工具与长程任务]]** | 工具增强推理是产品能力切片 | MCP 协议史、旗舰 System Card 工具环 |
-| **[[DeepSeekR1推理训练深读]] / 纯 CoT RL** | 无工具 baseline 对照（SimpleRL-Zero 等点名） | R1 冷启动→拒绝采样阶段表 |
-| **经典 TIR（ToRA 等）** | SFT/蒸馏轨迹是「预定工具模式」反面教材 | 各家 TIR 数据集构造全文 |
-| **[[AgenticRL景观与能力模块]]** | 定位：Agentic RL 综述在「工具」能力格把本篇列为工具集成推理 RL 的代表 | 综述其余能力格与环境、框架盘点 |
+| [[GRPO与DAPO算法族]] | 方法槽位：ToRL 用 GRPO 训练、去掉 KL 损失 | 目标函数与 DAPO 技巧 |
+| [[DeepSeekR1推理训练深读]] | 上游：R1-Zero 表明从基座做结果奖励 RL 可行，ToRL 把它扩到工具调用 | R1 多阶段管线 |
+| [[AgenticRL景观与能力模块]] | 定位：Agentic RL 综述在「工具」能力格把本篇列为工具集成推理 RL 的代表 | 综述其余能力格与环境、框架盘点 |
+| [[RL算力缩放与环境扩展]] | 下游总论：解释器是 RL 环境的一种，环境扩展与 RL 算力缩放在该篇；该篇把工具接入 RL 环境的具体做法指向本篇 | 算力曲线与环境合成 |
+| [[代码智能体Harness史线]] | 共同直觉：隔离执行环境是稳定训练的前提 | 软件工程 ACI 与生产 harness |
+| [[智能体工具与长程任务]] | 背景：工具增强推理是智能体能力的一个切片 | MCP 与长程任务 |
+| [[推理时扩展TestTimeScaling]] | 对照：本篇在训练时把计算交给工具，该篇在推理时加采样与搜索 | 测试时扩展通史 |
+| [[MixtureOfAgents与TUMIX]] | 互补：两者都说明代码解释器能提升推理；本篇在训练时学工具策略，TUMIX 在推理时混合多种工具策略 | MoA、TUMIX 机制 |
+| [[ToolLoop工具数据合成]] | 对照：本篇是在线交互 RL，ToolLoop 是离线合成函数调用数据做监督训练 | 数据合成管线与 BFCL |
+| [[MemoryR1强化学习记忆维护]] | 同法异用：都用结果奖励 RL 学一类操作，本篇学工具调用，那篇学记忆增删改 | 记忆操作与评测 |
+| [[MiMoV26智能体强化学习短报]] | 下游实例：那篇把工具进 rollout 的做法扩到多环境、多 harness 的生产规模 | 生产 RL 基础设施 |
 
-### 2.2 问题立轴（跟读）
+## 九、延伸阅读
 
-`
-旧路 A：纯 CoT + outcome RL → 算不清 / 枚举不完时硬推
-旧路 B：强模型蒸馏 TIR 轨迹 + SFT → 工具用法被锁死，难探索
-新路 ：Code Interpreter ⊂ RL env → 从 base 用奖励自己学「何时写码、写什么、错了怎么办」
-`
-
-作者批评点（§1）：多数 TIR 靠蒸馏 + SFT；即便 Qwen-Math 等在 SFT 后再 RL，**工具如何嵌进 RL 框架**也不透明。ToRL 的主张是：**去掉先验 SFT 约束，让探索本身发现工具策略**。
-
----
-
-## 三、方法骨架：TIR 轨迹形式 + ToRL 设计选择
-
-### 3.1 数据集（§2.1）
-
-- 源：NuminaMATH、MATH、DeepScaleR 等竞赛可验证题。
-- 过滤证明题与验证标准模糊题 → **75,149** 可验证题。
-- 再用 **LIMR**（Li et al., 2025）做 RL 数据蒸馏 / 难度平衡 → 最终 **28,740** 题（仓库称「28k」，与正文一致）。
-
-### 3.2 TIR 形式化（§2.2）
-
-给定模型 $M$、解释器 $I$、问题 $Q$，第 $k$ 步轨迹：
-
-$$
-s_k=\{r_1,c_1,o_1,\ldots,r_k,c_k,o_k\}
-$$
-$$
-(r_k,c_k)=M(Q\oplus s_{k-1}),\quad o_k=I(c_k),\quad s_k=s_{k-1}\oplus r_k\oplus c_k\oplus o_k
-$$
-其中 $r$=自然语言推理，$c$=代码，$o$=执行结果。循环直到给出终答。相对纯 CoT：中间步可被 **可执行反馈** 校正（Fig.2 CoT vs TIR 对照题）。
-
-### 3.3 TIR Rollout 进 RL 环（§2.3.1）——本篇核心
-
-**提示模板（Fig.3，文内原文要点）：** User/Assistant 对话；要求「integrate natural language reasoning with programs」，终答放 `\boxed{}`。
-
-**交互协议（跟读）：**
-
-1. 模型正常采样文本。
-2. 检测到代码终止标识（文述  `output  检测；即写完 code fence 后准备要输出）→ **暂停生成**。
-3. 抽出最新 code block → 解释器执行。
-4. 把结果以  `output\nOBSERVATION\n` 形式 **插入上下文**。
-5. 继续生成 NL 推理或下一段代码；失败时 **故意回传错误信息**（作者假设错误诊断能促进后续写出可执行码）。
-
-**效率闸门 $C$：** 单次回复允许的最大工具调用次数。超过后 **忽略后续执行请求**，强迫切回纯文本推理。默认实验 $C=1$（§3.1）。
-
-### 3.4 四项工程设计选择（§2.3.2）——只记「工具进 env」相关
-
-| # | 选择 | 文内结论 |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| 1 | **Tool call 频率 $C$** | 调用越多 GPU idle 越重；$C$ 换性能但换吞吐 |
-| 2 | **执行环境** | 先试 qwen-agent Python executor（低延迟但与训练进程 **不隔离**，segfault 可拖垮训练）→ 改用 **Sandbox Fusion**（隔离稳，延迟略高） |
-| 3 | **错误信息裁剪** | Sandbox 冗长 traceback 只保留 **最后一行**（如 `NameError: ...`），控上下文长度 |
-| 4 | **Sandbox Output Masking** | **loss 计算时 mask 掉 OBSERVATION**，避免模型背诵具体输出、促可泛化推理 |
-
-> **与 [[代码智能体Harness史线]] 划界：** 这里的「沙箱」是 RL rollout 里的 **数值/符号计算解释器**；不是 SWE-agent 的 LM-友好文件系统 ACI。只借用「隔离执行很关键」一句，不展开 harness 史。
-
-### 3.5 奖励设计（§2.3.3）
-
-| 信号 | 值 |
-|---|---|
-| 答案正确 | $+1$ |
-| 答案错误 | $-1$ |
-| 代码可执行 | $0$（附加项） |
-| 含不可执行代码 | $-0.5$（Code Executability Reward） |
-
-**默认实验只保留答案正确性奖励**；可执行性惩罚在 §3.3.2 消融——**未提升**最终表现（作者猜测：惩罚会诱使模型写过简代码以避错，反而伤解题）。
-
-### 3.6 训练/评测设置（§3.1）——算法槽位点到为止
-
-- 框架：**veRL**；解释器：Sandbox Fusion。
-- 算法：**GRPO**（rollout batch **128**，每题 **16** 条样本）。
-- 为增强探索：**省略 KL loss**；temperature **1**。
-- 基座：**Qwen2.5-Math** 1.5B / 7B **Base**（非 Instruct 起训）。
-- 默认 $C=1$；评测 greedy（temp **0**）。
-- 基准：AIME24、AIME25、MATH500、OlympiadBench、AMC23。
-
-> **不在此复述** GRPO 目标式 / DAPO 四技——见 [[GRPO与DAPO算法族]]。
-
----
-
-## 四、主结果（Table 3 / Fig.4）
-
-公平对照：Instruct-TIR 评测也限制 **最大工具调用 = 1**。
-
-### 4.1 1.5B 族（同 Qwen2.5-Math-1.5B-Base 线）
-
-| Model | Tool | AIME24 | AIME25 | MATH500 | Olympiad | AMC23 | Avg |
-|---|:---:|---:|---:|---:|---:|---:|---:|
-| Qwen2.5-Math-1.5B-Instruct | ✗ | 10.0 | 10.0 | 66.0 | 31.0 | 62.5 | 35.9 |
-| Qwen2.5-Math-1.5B-Instruct-TIR | ✓ | 13.3 | 13.3 | 73.8 | 41.3 | 55.0 | 41.3 |
-| **ToRL-1.5B** | ✓ | **26.7** | **26.7** | **77.8** | **44.0** | **67.5** | **48.5** |
-
-相对 Instruct-TIR：Avg **+7.2**；AIME24/25 各 **+13.3**。
-
-### 4.2 7B 族
-
-| Model | SFT/RL | Tool | AIME24 | AIME25 | MATH500 | Olympiad | AMC23 | Avg |
-|---|---|:---:|---:|---:|---:|---:|---:|---:|
-| Qwen2.5-Math-7B-Instruct | RL | ✗ | 10.0 | 16.7 | 74.8 | 32.4 | 65.0 | 39.8 |
-| Qwen2.5-Math-7B-Instruct-TIR | RL | ✓ | 26.7 | 16.7 | 78.8 | 45.0 | 70.0 | 47.4 |
-| SimpleRL-Zero | RL | ✗ | 33.3 | 6.7 | 77.2 | 37.6 | 62.5 | 43.5 |
-| rStar-Math-7B | SFT | ✗ | 26.7 | — | 78.4 | 47.1 | 47.5 | — |
-| Eurus-2-7B-PRIME | RL | ✗ | 26.7 | 13.3 | 79.2 | 42.1 | 57.4 | 43.1 |
-| **ToRL-7B** | RL | ✓ | **43.3** | **30.0** | **82.2** | **49.9** | **75.0** | **62.1** |
-
-- Abstract：相对「无工具 RL」约 **+14**（AIME24 口径）；相对「最佳既有 TIR」约 **+17**。
-- Table 3 脚注式增量：相对 Instruct-TIR，AIME24 **+10.0**、Avg **+14.7**。
-- 文述 ToRL-7B AIME 表现可与部分 **32B** RL 模型相比（§1，引 Hu et al. 2025 Open-Reasoner-Zero）。
-- Fig.4：五基准训练曲线上 ToRL-7B 持续高于无工具 baseline 与 Instruct-TIR（细点 **待核实读图**）。
-
-**跟读口诀：** 同样「能调代码」，**从 base 用 RL 自己探索** 显著强于「Instruct 再塞进 TIR 环境」；工具不是外挂评测模式，而是 **训练动力学的一部分**。
-
----
-
-## 五、分析：工具行为如何被 RL「养」出来
-
-### 5.1 Part I · 训练中的代码行为（§3.3.1 / Fig.5）
-
-前约 100 step 量级观察（文述）：
-
-| 指标 | 趋势 | 含义 |
-|---|---|---|
-| **Code Ratio** | ~40% → ~80% | 越来越多题选择写码 |
-| **Pass Ratio** | 持续上升 | 可执行语法/语义变好 |
-| **Correct vs Incorrect 的 Pass** | 正解轨迹 pass 更高 | 执行成败与终答相关 |
-| **Effective Code Ratio** | 上升 | 计入：实际被解释器跑到的码；以及 **终答前** 的码（排除答完后只做校验的码） |
-
-**Takeaway-I（文内）：** 训练步数增加 → 用码解题比例↑、可执行比例↑；同时模型学会 **识别并减少无效代码**（自我调节，无显式指令）。
-
-### 5.2 Part II · $C$ 与可执行性惩罚（§3.3.2 / Table 4 / Fig.6）
-
-| 设置 | 效果 |
-|---|---|
-| $C: 1\to 2$ | 平均准确率约 **+2%**；但单步时间：$C=0$ **118s** → $C=1$ **237s** → $C=2$ **288s**（8×A800） |
-| Code Executability Reward（−0.5） | **不提升**表现（Fig.6c–d） |
-
-**Takeaway-II：** 提高 $C$ 换性能、重创吞吐；可执行性 shaping 在此设置下无效甚至可能诱发「写太简单的码」。
-
-### 5.3 Part III · 涌现认知行为（§3.3.3 / Table 5–6 / Fig.1 bottom）
-
-文内定性案例（后期训练）：
-
-1. **执行错误 → 自修代码**（Table 5）：Horner 法实现先触发 `TypeError: 'int' object is not subscriptable`，读错误后改返回值结构，再跑通。
-2. **NL 推理错 → 用代码验算翻案**（Table 6）：自然语言先给出错误球号组合，代码验证输出不同结果后改 boxed 答案。
-3. **交叉验证 / 反思**（Fig.1 bottom）：工具输出与解析推理不一致时，再反思并用工具复验（抛物线交点 $k+m$ 例：解析得 −9、代码得 16，最终以代码侧为准并 boxed 16）。
-
-**Takeaway-III：** 奖励驱动下出现「吃解释器反馈、代码⇄自然语言交叉核对、自适应选计算或分析路径」——**不是**模仿人工 TIR 模板抄来的。
-
----
-
-## 六、仓库复现要点（辅，README）
-
-- 先按 [SandboxFusion](https://github.com/bytedance/SandboxFusion) 起在线沙箱；conda env 名需为 `sandbox-runtime`。
-- 改 veRL rollout 文件中 `sandbox_url`（README 指 `vllm_rollout_spmd.py` 约 L109）。
-- `bash scripts/torl_1.5b` 启动训练；依赖含 `math-verify`、`qwen-agent[code_interpreter]` 等。
-- 致谢栈：DeepSeek R1 / Kimi-k1.5 报告、Qwen2.5-Math、veRL、vLLM、Qwen-Agent、Sandbox Fusion。
-
----
-
-## 七、可迁移清单（写进自己实验前）
-
-1. **工具是 env，不是后处理：** 在 rollout 中途插入 OBSERVATION，而不是只在评测时开 TIR。
-2. **从 base 探索：** 若目标是发现新工具策略，先验 SFT 轨迹可能锁死模式。
-3. **mask 工具观测：** 防背诵执行串；保留错误最后一行作反馈。
-4. **隔离沙箱优先于极致低延迟：** 训练进程与解释器共址的 segfault 成本 > 几毫秒延迟。
-5. **$C$ 是性能–吞吐旋钮：** 默认 1 可训；2 有增益但步时近翻倍量级。
-6. **答案正确性优先：** 额外「跑不通就扣分」未必帮——至少 ToRL 消融如此。
-7. **观测学什么：** 不只看终表，盯 code ratio / pass ratio / 「终答前有效码」是否在涨。
-
----
-
-## 八、与邻篇交叉索引
-
-| 邻篇 | 交叉一句 | 分界 |
-|---|---|---|
-| [[GRPO与DAPO算法族]] | ToRL 用 GRPO + 去 KL + temp=1 | 不写 DAPO 技巧清单 |
-| [[RL算力缩放与环境扩展]] | 解释器是 RL 环境的一种；环境扩展与 RL 算力曲线的总论在那篇 | 不写 ScaleRL 曲线与环境合成 |
-| [[代码智能体Harness史线]] | 「隔离执行」同属 harness 直觉 | 本篇是数学解释器，不是 SWE ACI |
-| [[智能体工具与长程任务]] | 工具增强推理产品能力 | 不写 MCP / 旗舰工具环 |
-| [[DeepSeekR1推理训练深读]] / SimpleRL | 无工具 RL 对照 | 不写 R1 阶段表 |
-| [[GPToss模型卡深读]] gpt-oss | developer terminal tool **评测** | 不是 tool-use RL 算法 |
-
----
-
-## 九、来源与版本钉死
-
-- PDF：`https://arxiv.org/abs/2503.23383`（arXiv **2503.23383v1**，2025-03-30；CreationDate 2025-04-01 CST）。
-- 辅：`https://github.com/GAIR-NLP/ToRL`（README 表与 Table 3 一致；stargazers 等元数据随时间变，**不以星数为科学主张**）。
-
-## 相关笔记
-
-- [[多智能体辩论]]
-- [[形式化验证与LLM]]
-- [[GPToss模型卡深读]]
-- [[计算机使用智能体]]
-- [[ToRL工具集成强化学习]]
-
+| 1 | [ToRL](https://arxiv.org/abs/2503.23383) §2.3、Table 3、§3.3 | rollout 接法、主结果与三条 Takeaway |
+| 2 | [ToRA](https://arxiv.org/abs/2309.17452) | 监督微调式 TIR 的代表 |
+| 3 | [ReTool](https://arxiv.org/abs/2504.11536) | 冷启动 + 工具 RL 的另一种配方 |
+| 4 | [GAIR-NLP/ToRL README](https://github.com/GAIR-NLP/ToRL)、[bytedance/SandboxFusion README](https://github.com/bytedance/SandboxFusion) | 训练脚本与沙箱部署 |
+| 5 | [[RL算力缩放与环境扩展]] | 工具环境在 RL 算力缩放中的位置 |

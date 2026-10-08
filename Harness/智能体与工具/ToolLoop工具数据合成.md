@@ -1,5 +1,5 @@
 ---
-title: "Toolformer 谱系新变体：ToolLoop 闭环工具数据合成（≠ ToRL / 旗舰工具环 / ACI）"
+title: "Toolformer 谱系新变体：ToolLoop 闭环工具数据合成"
 topic: ToolLoop工具数据合成
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -8,244 +8,126 @@ sources:
  - https://arxiv.org/abs/2609.09072
  - https://arxiv.org/abs/2609.01736
 arxiv: ["2609.09072", "2609.01736"]
-related: ["ToRL工具集成强化学习", "智能体工具与长程任务", "代码智能体Harness史线"]
-retrieval_cutoff: 2026-09-22
+related: ["ToRL工具集成强化学习", "RL算力缩放与环境扩展", "合成数据与教科书式数据", "MCP协议与大规模工具导航评测", "智能体工具与长程任务", "代码智能体Harness史线"]
+retrieval_cutoff: 2026-09-08
 timezone: Asia/Shanghai (CST)
 ---
 
-# Toolformer 谱系新变体：ToolLoop 闭环工具数据合成（≠ ToRL / 旗舰工具环 / ACI）
+# Toolformer 谱系新变体：ToolLoop 闭环工具数据合成
 
-> **定位**：工具数据合成主题轴——在「Toolformer 式：为工具调用**合成训练对**」谱系上，补近窗一刀 **ToolLoop**：把 generate-then-filter 改成 **generate–verify–refine**，用三阶段分解（ground truth → 反向造 query → 正向造 tool calls）+ 每阶段 **dynamic self-feedback**，用 **11K** 合成样本把 4B 非推理模式推到 BFCL **86.40%**。
-> **研究线**：**架构思想（主）**——候选函数聚类、三阶段分解、阶段局部校验与重写；**评测字段（辅）**——BFCL non-live/live、ACEBench 五维、消融「无反馈 / 终滤 / 全闭环」、合成重试分布。
+> **主要来源**：[ToolLoop: Closed-Loop Tool-Use Data Synthesis via Decomposed Generation and Dynamic Self-Feedback](https://arxiv.org/abs/2609.09072)（Zeng 等，vivo AI Lab，简称 ToolLoop，v1 2026-09-08）；[Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives](https://arxiv.org/abs/2609.01736)（Jin 等，UIUC，简称 HEART，v1 2026-09-01，仅作对照）（截至 2026-09-08）。
+> **研究线**：架构思想（候选函数聚类、三阶段分解、逐阶段校验与重写，主）· 评测字段（BFCL、ACEBench、消融与重试分布，辅）
 > **范围与相邻笔记**：
-> - **≠ [[ToRL工具集成强化学习]] ToRL**：不重写「代码解释器 ⊂ RL env、从 base 探索工具策略」。ToRL = **训练期交互 RL**（Sandbox Fusion + GRPO）；本篇 = **离线合成 function-calling 数据 → SFT**，评测是 BFCL/ACEBench **静态 schema 命中**，不是 AIME 解释器环。
-> - **≠ [[智能体工具与长程任务]]**：不重写旗舰 System Card / MCP / Extended thinking with tools / 长程产品叙事；本篇只谈 **训练数据怎么造**。
-> - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 生产沙箱 harness；本篇沙箱感止于「AST/规则查 JSON 合法性」，不是编码智能体命令面。
-> **补链**：**HEART**（arXiv:2609.01736）= Tool Primitives + ToolFace + Planner/Router/Verifier **推理期 harness**，与 ToolLoop「合成训练数据」正交 → **仅索引**。
-> **谱系口径（笔记编辑位，非文内自号）**：文 Related Work 主对照 Self-Instruct / APIGen / APIGen-MT / ToolMind 等「合成→过滤」线；本卡用「**Toolformer 谱系**」指仓库横切的 **工具调用合成监督数据** 桶（学何时/调何工具），**不**声称正文自称 Toolformer 后继。
+> - ≠ [[ToRL工具集成强化学习]]：本篇不写解释器进 RL rollout 的在线训练；ToolLoop 是离线合成函数调用数据再做监督微调。
+> - ≠ [[RL算力缩放与环境扩展]]：本篇不写在线 RL 所需的可交互环境。
+> - ≠ [[智能体工具与长程任务]]：本篇不写 MCP、旗舰工具环与长程任务，只写训练数据怎么造。
+>
+> **意义**：函数调用数据的主流合成法是「一次生成、事后过滤」，坏样本只能整条丢弃；ToolLoop 把生成拆成「定函数组合 → 反推问句 → 正推调用」三步，每步校验不过就带着具体问题重写，用约 11K 条样本让 4B 模型在 BFCL 上达到 86.40%，高于用 60K 条 APIGen 数据训练的同基座模型，作者据此认为，价值主要来自样本内部的一致性，而不是监督数据的规模。
+
+**一句话**：先定下「该调哪些函数」作为标准答案，再反推用户会怎么问，最后正推带参调用；每一步用 LLM 语义检查、规则与 AST 校验，失败就带着具体问题重写，最多 3 次。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主** | *ToolLoop: Closed-Loop Tool-Use Data Synthesis via Decomposed Generation and Dynamic Self-Feedback* | arXiv:**2609.09072v1** \[cs.CL\]（**8 Sep 2026**）；作者 Zeng, Liu, Cao, Chen, Li, Liu, Wen, Chen（**vivo AI Lab**） | `https://arxiv.org/abs/2609.09072` | **15** A4 |
-| **补链** | *Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives*（HEART / Tool Primitives / ToolFace） | arXiv:**2609.01736v1** \[cs.SE\]（**1 Sep 2026**）；作者 Jin, Wang, Yu, Luo, Wang（UIUC / Starc） | `https://arxiv.org/abs/2609.01736` | **21** letter |
+训练模型调用函数需要大量「用户问句—函数调用」配对数据。现有合成法让 LLM 一次生成完整样本，再用格式、执行或语义检查过滤。作者指出三处问题（§1）：候选函数多、场景杂时一次生成难以选对工具；终点过滤是二值丢弃，不给修正信号，保留下来的数据偏向简单样本；生成过程中没有中间监督，问句与调用是否一致无人检查。
 
-| 材料 | 文内设置 / 入口（本篇不展开实现） |
-|---|---|
-| ToolLoop 基座 | **Qwen3-4B-Instruct-2507**（非 deliberative / non-reasoning 评测） |
-| 嵌入 / 聚类 | **Qwen3-Embedding-8B**；**K=26**（约每簇 200 API） |
-| 语义校验器 | **Qwen-Max**（三阶段共用 LLM judge） |
-| API 池 | ToolBench + BFCL 子集，共 **5,281** 可执行 API；训练框架 **swift**；节点 **4× L40s 48GB**；seq **16k**；**2 epochs** |
-| 合成规模 | 保留 **11,024** 例（文称 **11K**）；Isolate 去 BFCL 重叠候选后约 **10K** |
-| HEART（补链） | ToolFace **25,519** 函数；Planner–Router–Verifier；**不**作本卡方法主写 |
+## 二、脉络
 
-**一句话抓手：**
-- **ToolLoop**：先抽「该调哪些函数名」当地真 → **反向**造自然 query → **正向**造 OpenAI 格式 tool calls；每步用 **LLM 语义 + 规则 + AST** 验不过就带 issue 重写（最多 3 次），从「造完再滤」改成「边造边修」。
-- **相对 APIGen 类基线**：11K 例上 4B 达 BFCL **86.40%**（Isolate **86.07%**），超过 60K APIGen-4B 的 **83.11%**；ACEBench overall **72.1%**，数据量约为 APIGen 的 **18.3%**。
-- **HEART**：推理期自然语言 Tool Primitive + 大库检索 harness——**补链正交**，不抢主轴。
-
----
-
-## 二、议题边界：只写「闭环合成 FC 数据」，不写 RL 工具环 / 产品长程 / ACI
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[ToRL工具集成强化学习]] ToRL** | 「工具调用可以是可学习策略」这一直觉相邻 | 解释器进 RL rollout、code ratio、AIME 无工具 vs 有工具对照全文 |
-| **[[RL算力缩放与环境扩展]]** | 对照：本篇离线合成轨迹供 SFT，那篇写在线可交互的 RL 环境扩展 | RL 算力曲线与环境合成规模 |
-| **[[智能体工具与长程任务]]** | BFCL / 工具增强是产品能力切片的上游数据问题 | MCP 史、System Card 长程、extended thinking with tools |
-| **[[代码智能体Harness史线]]** | 「格式/执行失败要被看见」的工程直觉 | SWE-agent 命令面、OpenHands 四包 SDK、生产失败率 |
-| **经典合成（Self-Instruct / APIGen）** | generate-then-filter 是文内反面教材与 Table 对照 | 各家数据集构造通史 |
+| 2023-02 | [Toolformer](https://arxiv.org/abs/2302.04761) | 模型用少量示范自行标注何时调用哪个 API，再用这些数据微调，开启「为工具调用合成训练数据」的路线 |
+| 2023-07 | [ToolLLM](https://arxiv.org/abs/2307.16789) | 收集 16000 多个真实 API 构建 ToolBench，ToolLoop 的 API 池部分来自这里 |
+| 2024-06 | [APIGen](https://arxiv.org/abs/2406.18518) | 可执行 API 上自动生成函数调用数据，经格式、执行、语义三级校验过滤 |
+| 2025-04 | [APIGen-MT](https://arxiv.org/abs/2504.03601) | 两阶段生成可验证的多轮智能体数据 |
+| 2026-09 | ToolLoop | 生成—校验—修正的闭环，替代生成后过滤 |
 
-### 2.2 本卡主轴 vs 范围外
+## 三、方法
 
-| 写 | 不写 |
-|---|---|
-| 三阶段分解 + 阶段局部 self-feedback；候选 K-means；OpenAI FC schema | ToRL 式「env 里探索何时写码」；多轮 agent 轨迹 RL |
-| BFCL / ACEBench 表数字；消融；重试分布；Isolate 防泄漏 | 旗舰并行 tool call 产品叙事；SWE-bench resolve harness |
-| HEART 一行：推理 harness / Tool Primitive（补链） | HEART Planner–Router–Verifier 全文、ToolFace 检索算法 |
+### 3.1 场景与候选函数（§3.1–3.2）
 
-跟读口诀：
+覆盖与 BFCL 对齐的四类单轮场景：Simple（给定单个函数调用一次）、Multiple（多个候选里选一个）、Parallel（同一函数多次并行调用）、Parallel Multiple（多个候选中选若干、可并行）。候选函数的构造是把函数描述向量化后 K-means 分簇，簇内由 LLM 采样出每次合成用的候选；实验中 ToolBench 与 BFCL 子集共 5,281 个可执行 API，分为 26 簇。
 
-`
-[[ToRL工具集成强化学习]] ToRL = 训练期：工具 ⊂ RL 环境（数学解释器）
-[[代码智能体Harness史线]] = 运行期：编码 ACI / 生产 SDK
-[[智能体工具与长程任务]] = 产品期：旗舰工具环 / 长程叙述
-[[ToolLoop工具数据合成]] = 数据期：单轮 FC 合成 — generate–verify–refine
-HEART(补) = 运行期：NL Tool Primitive + harness（≠ 数据合成）
-`
+### 3.2 三阶段分解（§3.3）
 
-### 2.3 文内问题立轴（跟读）
-
-作者批评现有合成（§1）三病：
-
-1. **一次生成难选对工具**：候选多、场景杂，单次出完整样本易错。
-2. **静态终滤 = 二值丢弃**：坏样本直接扔，不给修正信号 → 保留集特征偏斜。
-3. **缺中间监督**：query 与 tool call 是否逻辑一致，生成过程中无人管。
-
-范式迁移（Figure 1）：
-
-`
-旧：LLM 一次造 Query+Calls → Filter → 丢弃 / 保留
-新：Sample GT → Backward Query → Forward Calls
- 每步 Self-Feedback（验不过 → 带 issue 重写，≤3）
-`
-
----
-
-## 三、方法：候选构造 + 三阶段闭环
-
-### 3.1 场景覆盖（§3.1）
-
-单轮四类（与 BFCL 切分对齐）：
-
-| 场景 | 含义 |
-|---|---|
-| **Simple** | 给定单函数，调一次 |
-| **Multiple** | 多候选，只需选对一个 |
-| **Parallel** | 同一函数多次独立并行调用 |
-| **Parallel Multiple** | 多候选里选若干，可并行多次 |
-
-### 3.2 候选函数构造（§3.2）
-
-1. 函数描述 → 向量嵌入；
-2. **K-means** 分簇（同域 / 同用法）；
-3. 簇内再由 LLM 采样出该次合成的 **candidate functions**。
-
-实验设定（§4.1）：5,281 API → **K=26**；Figure 3 给域分布饼图（Data Query / Travel / Code 等；精确扇区百分比 **待核实读图**）。
-
-### 3.3 三阶段分解（§3.3）
-
-| 阶段 | 输入 → 输出 | 约束要点（文内） | 校验组合 |
+| 阶段 | 输入 → 输出 | 约束 | 校验 |
 |---|---|---|---|
-| **1 Ground Truth Sampling** | 候选 → **函数名序列**（将调用谁） | 可并行无依赖；场景连贯；并行类 **2–4** 次调用（可同名重复）；Simple/Multiple 单目标 | LLM 语义 + 规则格式 |
-| **2 Backward Query** | GT + 候选 → **自然语言 query** | 意图与 GT **精确对齐**（不多不少）；参数与签名一致；信息完备；自然口语 | LLM 语义 |
-| **3 Forward Tool Calls** | query + 候选 → **带参 tool calls** | Schema 合规；功能准确；**OpenAI function-calling** 格式 | LLM 语义 + 规则 + **AST** |
+| 1 标准答案采样 | 候选 → 要调用的函数名序列 | 并行类 2–4 次调用；场景连贯 | LLM 语义 + 规则 |
+| 2 反推问句 | 标准答案 + 候选 → 自然语言问句 | 意图与标准答案不多不少；参数信息完备 | LLM 语义 |
+| 3 正推调用 | 问句 + 候选 → 带参数的调用 | 符合 schema 与 OpenAI 函数调用格式 | LLM 语义 + 规则 + AST |
 
-跟读：Stage 1 钉「**答什么工具组合**」；Stage 2 反推「**用户会怎么问**」；Stage 3 前推「**调用串怎么填参**」——中间态显式，错误可归阶段。
+中间状态显式化后，错误可以归到具体阶段。
 
-非并行场景 Stage 1 可 **随机采样** 目标函数；并行场景由 LLM 选可并行组合。
+### 3.3 动态自反馈（§3.3.4）
 
-### 3.4 Dynamic Self-Feedback（§3.3.4）
+校验失败时，重写提示包含原提示、失败输出与具体问题（如 AST 报「参数括号不匹配」），而不是笼统的「无效」。初次生成加最多 3 次重写，全部通过才进入下一阶段，仍失败则丢弃。作者的理由是：终点过滤会扔掉「难但可修」的样本；闭环在标准答案已定的前提下只修问句或调用，不必整条重来。
 
-- **失败时重写提示**含：原生成提示 + 失败输出（负例）+ **具体 issue**（例：AST「arguments 括号不匹配」），而非笼统 invalid。
-- **迭代**：初始生成 + 最多 **3** 次反馈重生；全过 → 进下一阶段；满次仍挂 → **丢弃**。
-- 设计动机：终滤易扔掉「难但可修」样本，偏向短 query / 简单 schema；闭环则在 GT 已定后**修** query/calls，而不是整段重掷。
+## 四、实验（§4）
 
----
+基座为 Qwen3-4B-Instruct-2507，以不输出额外思维链的非推理模式评测；数据基线为同基座上用 60K 条 APIGen 数据与 55K 条 ToolMind 数据训练的模型。为排除记住评测函数的可能，ToolLoop-4B-Isolate 在合成前去掉与 BFCL 评测候选重叠的函数，剩约 10K 条。
 
-## 四、实验与评测字段
+### 4.1 BFCL v4（Table 1）
 
-### 4.1 设置摘要（§4.1）
-
-| 项 | 文内 |
-|---|---|
-| 基座 | Qwen3-4B-Instruct-2507 |
-| 对照 | 商用（GPT-5.2 / Gemini-3-Pro / Grok-4.1 / Claude-Opus-4.5 / Nova-2 等）、开源（Qwen3-32B、Llama-4-Scout、Gemma-3-27B、GLM-4.6）、数据中心（**APIGen-4B 60K**、**ToolMind-4B 55K**） |
-| 泄漏控制 | **ToolLoop-4B-Isolate**：合成前滤掉与 BFCL 评测候选重叠的函数 → **10K** |
-| 推理设定 | **non-reasoning**：直接输出 benchmark 兼容 FC 格式，**禁止**额外 CoT 救场 |
-| BFCL | v4；文称 last updated **2025-12-16**；2,501 测例；Simple / Multiple / Parallel / Parallel Multiple × non-live / live |
-
-### 4.2 主结果 BFCL（Table 1）
-
-| 模型（数据量） | Non-Live | Live | **Overall** |
+| 模型（数据量） | Non-Live | Live | 总分 |
 |---|---:|---:|---:|
 | Qwen3-4B-Instruct-2507（基座） | 87.88 | 76.39 | 82.14 |
 | APIGen-4B（60K） | 89.90 | 76.31 | 83.11 |
 | ToolMind-4B（55K） | 89.48 | 77.57 | 83.53 |
-| **ToolLoop-4B-Isolate（10K）** | **91.08** | **81.05** | **86.07** |
-| **ToolLoop-4B（11K）** | **91.29** | **81.50** | **86.40** |
+| ToolLoop-4B-Isolate（10K） | 91.08 | 81.05 | 86.07 |
+| ToolLoop-4B（11K） | 91.29 | 81.50 | 86.40 |
 
-要点（§4.2，跟读）：
+总分比 APIGen-4B 高 3.29，比 ToolMind-4B 高 2.87；Isolate 只低 0.33，增益不像来自记住评测 schema。唯一落后的是 Live Parallel Multiple（79.17% 对 APIGen 的 83.33%），作者注明该子集只有 24 例，差距约为 1 个样本。
 
-- 相对 APIGen-4B **+3.29**、相对 ToolMind-4B **+2.87** overall；数据量约 **1/5–1/6**。
-- Non-live Multiple **96.50%**、Parallel_Multiple **94.50%**；Isolate 在 Multiple 甚至 **97.00%**。
-- Isolate 仅低全量 **0.33** 点 → 增益不像「背 BFCL 候选 schema」。
-- Live-Parallel_Multiple：ToolLoop **79.17%** vs APIGen **83.33%**——文自注该 split 仅 **24** 例，差 **1** 个样本量级，**不宜做强类别结论**。
+### 4.2 消融：过滤不等于修正（Table 2）
 
-### 4.3 消融：过滤 ≠ 精炼（Table 2）
+| 变体 | 总分 |
+|---|---:|
+| 基座 | 82.14 |
+| 不做反馈与过滤 | 79.97 |
+| 只做终点过滤 | 82.56 |
+| 逐阶段反馈（ToolLoop） | 86.40 |
 
-| 变体 | Non-Live | Live | Overall |
-|---|---:|---:|---:|
-| Base | 87.88 | 76.39 | 82.14 |
-| w/o Feedback | 85.02 | 74.97 | **79.97**（相对 base **−2.17**，噪声有害） |
-| w/ Final Filtering | 88.81 | 76.31 | 82.56 |
-| **w/ Feedback（ToolLoop）** | **91.29** | **81.50** | **86.40** |
+不加控制的合成数据反而比基座低 2.17；终点过滤能剔除畸形样本，却修不了「问句、标准答案、参数各自看似合理、彼此却不一致」的情况。
 
-文内区分：终滤能扔掉畸形，但救不了「query / GT / 参数各自看似合理却互不一致」；阶段反馈在错误传播前纠偏。
+### 4.3 ACEBench（Table 3）
 
-### 4.4 ACEBench 泛化（Table 3）
+ToolLoop-4B 总分 72.1，比 APIGen-4B 的 67.0 高 5.1（数据量约为其 18.3%），比 ToolMind-4B 的 70.2 高 1.9。弱项是 Single Turn（66.5，低于 ToolMind 的 69.5）；Profile 一项所有微调模型都低于基座的 64.0，ToolLoop 的 60.0 仍高于两组数据基线的 54.0，作者归因于合成时没有建模个性化偏好。
 
-| 模型 | Overall | Atom | Single Turn | Similar API | Profile |
-|---|---:|---:|---:|---:|---:|
-| Base | 64.9 | 68.0 | 59.5 | 68.0 | 64.0 |
-| APIGen-4B（60K） | 67.0 | 76.0 | 62.0 | 76.0 | 54.0 |
-| ToolMind-4B（55K） | 70.2 | 83.3 | **69.5** | 74.0 | 54.0 |
-| **ToolLoop-4B（11K）** | **72.1** | **84.0** | 66.5 | **78.0** | 60.0 |
+## 五、合成效率与校验器（§5）
 
-- overall 相对 APIGen **+5.1**，数据量约其 **18.3%**；相对 ToolMind **+1.9**、约其 **1/5**。
-- 弱项：Single Turn 落后 ToolMind；Profile 上所有微调都低于 base（文释：合成未显式建模个性化偏好），ToolLoop **60.0** 仍高于两数据基线的 **54.0**。
+- **重写主要发生在第二阶段**（Table 4）：约 18.1% 的保留样本在反推问句时至少重写一次，常见问题是漏参数、暗示多余工具或场景漂移；第三阶段在问句对齐后相对容易。
+- **丢弃很少**：重写 3 次仍失败的有 280 例（语义失败 192、规则失败 83、两者皆失败 5），相对 11,024 条保留样本很小。
+- **成本**：输入 26.13M token、输出 7.28M，共 33.41M（Qwen 分词器计）。
+- **数据构成**（附录 A）：Simple 40.4%、Parallel 33.0%、Multiple 16.2%、Parallel Multiple 10.5%。
+- **校验器可信度**：三阶段语义校验都用 Qwen-Max；人工抽查 100 例，一致率 94%，作者称这只是合理性检查；分歧多是类型约束（schema 要整数却给了浮点数）与少量语义落地问题。
 
----
+## 六、意义
 
-## 五、合成效率与校验器可信度（§5）
+ToolLoop 把工具数据合成的瓶颈从「多造再滤」转到「每一步都能修」：标准答案先定、问句反推、调用正推，使问句与调用的一致性在生成过程中得到保证。BFCL 与 ACEBench 上用约五分之一的数据量超过 APIGen 与 ToolMind 基线，消融又显示「只过滤」几乎不提升，与作者「一致性比规模更重要」的结论相符。对照 HEART：后者在推理时用自然语言工具原语与 Planner / Router / Verifier 编排大规模工具库，与 ToolLoop 处理的「训练数据怎么造」是同一问题的两端。
 
-### 5.1 重试分布（Table 4）与成本
+## 七、局限与待核实
 
-在保留的 **11,024** 例上（各阶段计数之和）：
+- **没有真实执行反馈**（文内 Limitations）：超时、异常返回、级联失败都没有进入合成与评测，只覆盖单轮静态的 schema 匹配。
+- **单一语义裁判**：Qwen-Max 可能带有模型相关偏差，作者建议引入独立裁判与阶段级校准。
+- **对照范围**：数据基线只有 APIGen 与 ToolMind 两组，都在同一 4B 基座上；更大模型与多轮场景未测。
+- **BFCL 版本**：文称所用 BFCL v4 的最后更新为 2025-12-16，与其他论文的 BFCL 分数未必可比。
 
-| 阶段 | 0 retry | 1 | 2 | 3 |
-|---|---:|---:|---:|---:|
-| Stage 1 GT | 10720 | 114 | 161 | 29 |
-| Stage 2 Query | 9029 | 1108 | 530 | 357 |
-| Stage 3 Calls | 10257 | 299 | 298 | 170 |
+## 八、与相邻笔记的分工
 
-- Stage 2 最难：约 **18.1%** 至少重试一次——「符号计划 → 自然语言」最易漏参 / 多暗示工具 / 场景漂移。
-- Stage 3 相对轻：query 对齐后，规则+AST 护栏下 schema 落地更容易。
-- 满 3 次仍废：**280** 例（192 语义反复挂、83 规则挂、5 双挂）—相对 11K 保留集很小。
-- Token 账（Qwen tokenizer）：输入 **26.13M** + 输出 **7.28M** = **33.41M**；并行类因 LLM 造链、组合更长而最贵。
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[ToRL工具集成强化学习]] | 对照：两者都把工具调用当作可学习的能力；ToRL 在线 RL 探索，本篇离线合成监督数据 | 解释器进 rollout 与 AIME 结果 |
+| [[RL算力缩放与环境扩展]] | 对照：该篇讨论在线 RL 需要的可交互、可验证环境，并把本篇列为离线合成一侧 | RL 算力曲线与环境合成规模 |
+| [[合成数据与教科书式数据]] | 上游：ToolLoop 在相关工作中把 Self-Instruct 的「生成后过滤」作为起点，该范式与合成数据通论在该篇；本篇是函数调用数据上的改法 | 指令与教科书式数据合成 |
+| [[MCP协议与大规模工具导航评测]] | 对照：HEART 面对的大工具库检索问题，在该篇以 MCP 工具海导航评测的形式展开 | MCP 协议与导航基准 |
+| [[智能体工具与长程任务]] | 背景：函数调用是智能体工具能力的基础 | 旗舰工具环与长程任务 |
+| [[代码智能体Harness史线]] | 共同直觉：格式与执行失败要显式暴露给生成方 | 编码智能体 ACI 与生产 SDK |
 
-### 5.2 数据类别分布（Appendix A / Figure 4）
+## 九、延伸阅读
 
-| 类别 | 数量 | 占比 |
-|---|---:|---:|
-| Simple | 4,453 | 40.4% |
-| Parallel | 3,634 | 33.0% |
-| Multiple | 1,783 | 16.2% |
-| Parallel Multiple | 1,154 | 10.5% |
-| **合计** | **11,024** | 100% |
-
-### 5.3 Verifier（§5.2）
-
-- 三阶段语义裁判均为 **Qwen-Max**。
-- 人工抽 **100** 例比对：**94%** 一致——文自定位为 **sanity check**，非全错误类型标定。
-- 分歧多为类型约束（schema 要 int、生成给了带小数 float）与少量语义落地（地名粒度）；前者可靠规则/AST 补，后者 AST 不够。
-
----
-
-## 六、局限（文内 Limitations）
-
-1. **无真实环境反馈**：超时、畸形 API 回包、ground-truth 级联失败等 **未**进合成与静态评测；真实工具用常依赖执行结果迭代——当前协议未测。
-2. **单一语义裁判**：Qwen-Max 可能有模型相关 / 相关偏置；需独立裁判对比、阶段级校准，并接入可执行环境。
-
-Ethics：合成数据、不采 PII；人工标只标合成例；API 规格与基准公开。
-
----
-
-## 七、补链 HEART（2609.01736）——仅索引
-
-| 项 | 一文摘要（非本卡主方法） |
-|---|---|
-| 问题 | 多步/多轮工具因 **异构 schema / 输出类型** 易脆；大工具目录塞进上下文掉点 |
-| 组件 | **Tool Primitives**（NL 接口包住 schema 解析与执行）；**ToolFace**（**25,519** 函数库，动态检索）；**HEART** harness（Planner / Router / Verifier） |
-| 与 ToolLoop | ToolLoop = **训练数据闭环合成**；HEART = **推理期编排与接口抽象** → 正交；同属「工具」近窗，**划界为补链** |
-
----
-
-## 八、一句话收束
-
-**结论句：** ToolLoop 把 Toolformer 谱系里「造 FC 监督数据」的瓶颈，从「多造再滤」拧到「**先钉函数组合、再反向问句、再正向填参，且每步可修**」——用更少样本换更高 BFCL/ACEBench 一致性；它解决的是 **数据对齐**，不是 [[ToRL工具集成强化学习]] 的 **RL 探索**，也不是 [[代码智能体Harness史线]]/[[智能体工具与长程任务]] 的 **运行时 harness / 产品长程**。
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [ToolLoop](https://arxiv.org/abs/2609.09072) §3.3、Table 1–2、§5 | 三阶段分解、主结果与消融、重写分布 |
+| 2 | [APIGen](https://arxiv.org/abs/2406.18518) | 三级校验过滤的代表 |
+| 3 | [Toolformer](https://arxiv.org/abs/2302.04761) | 自监督合成工具调用数据的起点 |
+| 4 | [HEART](https://arxiv.org/abs/2609.01736) | 推理时的工具原语与编排 |
