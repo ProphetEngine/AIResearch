@@ -1,5 +1,5 @@
 ---
-title: "开源前沿旗舰：Kimi K3 Technical Report（≠ Nemotron/OLMo/Coder-Next/DeepSeek-V4）"
+title: Kimi K3 Technical Report 深读
 topic: KimiK3技术报告
 date: 2026-09-22
 lines: [架构思想, AI Infra, 评测字段]
@@ -8,297 +8,165 @@ sources:
  - https://arxiv.org/abs/2607.24653
 aux:
  - https://arxiv.org/abs/2607.24653
- - https://arxiv.org/pdf/2607.24653
- - https://www.kimi.com/blog/kimi-k3
  - https://huggingface.co/moonshotai/Kimi-K3
  - https://github.com/MoonshotAI/MoonEP
  - https://github.com/kvcache-ai/AgentENV
 arxiv: ["2607.24653"]
-related: ["KimiK2技术报告深读", "Kimik15技术报告深读", "DeepSeekV4技术报告深读", "Nemotron3Ultra技术报告深读", "OLMo3全栈开放配方", "Qwen3CoderNext技术报告深读", "开源与闭源前沿模型谱系", "混合专家架构", "推理时扩展TestTimeScaling"]
-retrieval_cutoff: 2026-09-22
+related: ["KimiK2技术报告深读", "Kimik15技术报告深读", "线性注意力与状态空间模型谱系", "混合Mamba与注意力架构设计菜谱", "注意力效率族MQA到MLA", "混合专家架构", "MoE路由与负载均衡", "优化器与训练稳定性", "OnPolicy蒸馏OPD范式", "RL算力缩放与环境扩展", "EAGLE3投机解码", "开源与闭源前沿模型谱系", "Nemotron3Ultra技术报告深读"]
+retrieval_cutoff: 2026-08-07
 timezone: Asia/Shanghai (CST)
 ---
 
-# 开源前沿旗舰：Kimi K3 Technical Report（≠ Nemotron / OLMo / Coder-Next / DeepSeek-V4）
+# Kimi K3 Technical Report 深读
 
-> **定位**：开源前沿旗舰主题轴——Kimi Team *Kimi K3: Open Frontier Intelligence*（arXiv:**2607.24653**v2，页眉 **7 Aug 2026**；XMP identifier `…/2607.24653v2`）。立「**开源 3T 级原生多模态 MoE 旗舰 TR**」：在 **预训练规模轴（≈2.8T / 104B 激活）** 与 **1M 上下文 test-time / agentic RL 轴** 上同时推进，公开全权重。
-> **研究线**：**架构思想（主）**——Hybrid KDA–MLA、AttnRes、Stable LatentMoE（SiTU-GLU / Quantile Balancing）、MoonViT-V2、Per-Head Muon；**AI Infra（辅）**——FlashKDA / KCP、MoonEP、1M agentic RL + AgentENV、KDA-aware prefix cache / QAT 服务；**评测字段（文内表，辅）**——Table 2/3 与 Fig.1 主结果转述。
+> **主要来源**：[Kimi K3: Open Frontier Intelligence](https://arxiv.org/abs/2607.24653)（Kimi Team，v2，2026-08-07；首次提交 2026-07-27）；[Kimi-K3 权重页](https://huggingface.co/moonshotai/Kimi-K3)（报告所附权重地址，仅用于核对型号名）；[MoonEP](https://github.com/MoonshotAI/MoonEP) 与 [AgentENV](https://github.com/kvcache-ai/AgentENV)（报告脚注所附代码地址）（截至 2026-08-07）。三个仓库页不引事实，不计入截至。
+> **研究线**：架构思想（主：混合 KDA–MLA、注意力残差、Stable LatentMoE、从零训练的视觉编码器、逐头 Muon）；AI Infra（辅：KDA 内核与上下文并行、MoonEP、1M 上下文智能体 RL 与 AgentENV、在线服务）；评测字段（辅：§6 正文给出的主结果）
 > **范围与相邻笔记**：
-> - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Attention + LatentMoE / NVIDIA 开源旗舰）配方复述。本卡只写 **Moonshot Kimi K3** 本体；Nemotron 数字若不在本 PDF → 不出现。
-> - **≠ [[OLMo3全栈开放配方]]**：不写成 **OLMo 3** 全开放数据/配方旗舰对照全文。
-> - **≠ [[Qwen3CoderNext技术报告深读]]**：不写成 **Qwen3-Coder-Next**「代码专用小激活脚印 + 可执行反馈中训」轴。K3 的编码能力只作为 **文内 coding / agent 评测与 RL 域之一**，不立「Coder 专用旗舰」主轴。
-> - **≠ [[DeepSeekV4技术报告深读]]**：不写成 **DeepSeek-V4**（CSA+HCA / mHC / 百万上下文）配方复述。本 PDF 虽保留 **Gated MLA** 与 **MoonEP↔DeepEP** 对照句，但 **主注意力是 KDA 混合栈**，残差是 **AttnRes**——不是「又一篇 DeepSeek 百万上下文 TR」。
-> - **≠ [[开源与闭源前沿模型谱系]]**：不写成开闭源谱系通史 / 代际叙事；本卡是 **单篇 TR 深读**，他厂型号只出现在 **文内 Table 2/3 数字转述**。
-> - **≠ [[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]**：K2 的 MuonClip / MLA-only / 1.04T 表、K1.5 的 RL 通史不重开；本篇只列 **相对 K2 的 ∆（Table 1）** 与 K3 新增件。
-> **主要来源**：[Kimi K3: Open Frontier Intelligence](https://arxiv.org/abs/2607.24653)；[Kimi K3 Tech Blog: Open Frontier Intelligence](https://www.kimi.com/blog/kimi-k3)（辅）（截至 2026-09-22）。
-> 文内未给出精确总 token 账本 / GPU 小时 / 完整层宽公式推导。
+> - ≠ [[KimiK2技术报告深读]]：K2 的 MuonClip 与 MLA-MoE 配置在那篇，本篇只记 K3 相对 K2 的改动。
+> - ≠ [[线性注意力与状态空间模型谱系]]：线性注意力的通史在那篇，本篇只写 KDA 在 K3 里的用法与改动。
+> - ≠ [[MoE路由与负载均衡]]：路由方法的演进在那篇，本篇只写 Quantile Balancing 在 K3 中的设定。
+>
+> **意义**：Kimi K3 是 2.8T 总参、104B 激活、上下文最长 1M token 的原生多模态 MoE（摘要），报告自称是全球首个开放的 3T 级模型（§8）。它沿序列、深度、宽度三个方向同时改架构：3:1 的 KDA–MLA 混合注意力、跨层选择性读取的注意力残差、896 选 16 的 Stable LatentMoE，报告称这些改动连同数据与训练配方使整体缩放效率比 K2 提升约 2.5 倍（摘要、§3.2）。后训练以「三域 × 三档推理强度」九个专家加多教师 on-policy 蒸馏合并为主。报告的总体结论是：K3 仍落后 Claude Fable 5 与 GPT-5.6 Sol，并在所评测的其余开放与闭源模型中持续领先（摘要、§1）。
 
----
+## 一、问题背景
 
-## 一、材料元信息与 PDF 体积
+K2 表明更稀疏的 MLA-MoE 加 Muon 可以稳定训练到万亿参数，但标准注意力的 KV 缓存随上下文线性增长，标准残差把所有前层信息压进同一个状态，传统 MoE 每选一个专家就要传一份完整宽度的 token 表示。K3 要把规模推到 3T 级、上下文推到 1M，并让模型在同一上下文里写代码、看渲染结果、再迭代修改（§2.4），这三处瓶颈都要处理。报告把架构组织为三个维度上的信息流扩展：序列长度、网络深度和模型宽度（§2）。
 
-| 项 | 报告原文 / 元数据 | 出处 |
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| 标题 | Kimi K3: Open Frontier Intelligence（页内另标 *Technical Report of Kimi K3*） | 封面； Title |
-| 作者 | Kimi Team（XMP `dc:creator` 另列大量具名贡献者） | 封面；XMP |
-| arXiv | **arXiv:2607.24653v2** \[cs.CL\] **7 Aug 2026** | PDF 页眉 |
-| XMP identifier | `https://arxiv.org/abs/2607.24653v2` | XMP |
-| XMP MetadataDate | 2026-08-10T00:33:42+00:00（→ 用户时区 **2026-08-10 08:33 CST**） | XMP |
-| 权利 | `http://creativecommons.org/licenses/by-nc-nd/4.0/` | XMP |
-| 产品字段（摘要） | **2.8T** MoE；**104B** activated；原生视觉；**1M** 上下文；相对 K2 约 **2.5×** scaling efficiency | Abstract |
-| 权重入口 | https://huggingface.co/moonshotai/Kimi-K3 | Abstract 脚注 1 |
-| PDF 页数 / 尺寸 | **47** 页 letter | |
-| Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:8def8d8) | XMP |
+| 2025-01 | [Kimi k1.5](https://arxiv.org/abs/2501.12599) | Kimi 系列的同步 RL 框架与 partial rollout，K3 在此基础上扩展（§4.1.2） |
+| 2025-07 | [Kimi K2](https://arxiv.org/abs/2507.20534) | MLA-MoE、Muon 与权重裁剪，K3 的直接前代 |
+| 2025-10 | [Kimi Linear](https://arxiv.org/abs/2510.26692) | 提出 KDA 与 KDA–MLA 混合、MLA 层不用位置编码，K3 沿用其混合设计 |
+| 2026-01 | [LatentMoE](https://arxiv.org/abs/2601.18089) | 把路由专家放进窄的潜空间，K3 的 Stable LatentMoE 以此为基础 |
+| 2026-02 | [Kimi K2.5](https://arxiv.org/abs/2602.02276) | 视觉通路、RL 算法与生成式奖励模型，K3 后训练沿用 |
+| 2026-07 | [Kimi K3](https://arxiv.org/abs/2607.24653) | 3T 级原生多模态、1M 上下文、九专家 RL 加多教师蒸馏 |
 
-| 文件 | 链接 | 页数 | 备注 |
-|---|---|---|---|
-| **主 PDF（arXiv）** | `https://arxiv.org/abs/2607.24653` | **47** | — |
-| **辅博文** | https://www.kimi.com/blog/kimi-k3 | — | 产品案例 / 可用性 / 局限；**不替代** TR 数字源 |
+## 三、核心机制：架构（§2）
 
-**一句话抓手：**
-把开源预训练规模推到 **3T 级（Table 1：2.78T / 104.2B 激活）**，用 **KDA+AttnRes+Stable LatentMoE** 换约 **2.5×** 相对 K2 的 scaling efficiency，再在 **1M 上下文**上做多域多努力度 RL → **MOPD** 合并，公开全权重；整体仍落后 Claude Fable 5 / GPT-5.6 Sol，但文内套件上 consistently 领先其余对照（含 GLM-5.2）。
+### 3.1 与 K2 的配置对照
 
-**辅博文（产品层，非 TR 权威数字源）要点（2026-09-22）：**
-- 自称「world's first open 3T-class model」；权重计划 **July 27, 2026** 全量释放（博文句；与 TR Abstract「we release」并存——以落地 HF 为准）。
-- 产品入口：Kimi.ai / Work / Code / API（`kimi-k3`）；launch 默认 **max thinking**；low/high 后续。
-- API 价（博文）：cache-hit input **$0.30**/MTok、cache-miss **$3.00**/MTok、output **$15.00**/MTok；称 Mooncake 分离推理、coding 场景 cache hit >90%。
-- 局限（博文）：thinking history 敏感；过度主动；相对 Fable 5 / GPT-5.6 Sol 仍有 UX 差距。
+下表摘自 Table 1（v2）。
 
----
-
-## 二、议题边界：Kimi 开源 3T 旗舰 ≠ 他厂配方 / ≠ 谱系通史 / ≠ 代码专用卡
-
-### 2.1 五向对照（跟读）
-
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| **Nemotron 3 Ultra** | Hybrid Mamba–Attn + LatentMoE 开源旗舰 | **[[Nemotron3Ultra技术报告深读]]** | **否** |
-| **OLMo 3** | 全开放数据/配方旗舰 | **[[OLMo3全栈开放配方]]** | **否** |
-| **Qwen3-Coder-Next** | 代码专用 80A3 + 可执行反馈中训 | **[[Qwen3CoderNext技术报告深读]]** | **否**（不滑成 Coder 卡） |
-| **DeepSeek-V4** | CSA+HCA / mHC / 1M 上下文 | **[[DeepSeekV4技术报告深读]]** | **否**（不复述 DeepSeek 配方） |
-| **开闭源谱系** | 代际 / thinking 产品化通史 | **[[开源与闭源前沿模型谱系]]** | **否** |
-| **Kimi K2 / K1.5** | 前代 TR 全文 | **[[KimiK2技术报告深读]] / [[Kimik15技术报告深读]]** | **否**（仅 ∆） |
-| **Kimi K3 开源前沿旗舰** | 3T 架构 + 1M agentic RL + Infra + 文内评测 | **本篇** | **是** |
-
-跟读直觉：[[DeepSeekV4技术报告深读]] 问「**DeepSeek 如何压百万上下文 KV/算力**」；[[Nemotron3Ultra技术报告深读]] 问「**NVIDIA 开源旗舰 Hybrid+LatentMoE**」；[[Qwen3CoderNext技术报告深读]] 问「**小激活脚印上的代码 agent 反馈栈**」；本卡问「**Moonshot 如何同时推开源预训练规模到 3T 类、并用 KDA/AttnRes/Stable LatentMoE + 1M RL 立开源前沿**」。共享「MoE / 长上下文 / agent RL」词汇，但 **厂商栈与主杠杆不同**——不写成「DeepSeek/Nemotron 配方换皮」。
-
-`
- 开源「旗舰 TR」近窗
- │
- ┌─────────┼─────────┬──────────────┐
- │ │ │ │
- [[Nemotron3Ultra技术报告深读]] [[OLMo3全栈开放配方]] [[Qwen3CoderNext技术报告深读]] [[DeepSeekV4技术报告深读]]
- Nemotron OLMo3 Coder-Next DeepSeek-V4
- Ultra (CSA/HCA)
- │ │ │ │
- └─────────┴────┬────┴──────────────┘
- │ 不复述
- ▼
- ★ [[KimiK3技术报告]] Kimi K3
- KDA+AttnRes+Stable LatentMoE
- 2.78T/104.2B · 1M · 开权
-`
-
-### 2.2 本卡故意不写什么
-
-| 不写 | 原因 |
-|---|---|
-| DeepSeek MoE/MLA/DeepEP 通史与 V4 CSA 配方 | → [[DeepSeekV4技术报告深读]] / DeepSeek 系列技术报告；本 PDF 仅借用 MLA 周期层与 DeepEP 对照句 |
-| Nemotron LatentMoE / Mamba hybrid 全文 | → [[Nemotron3Ultra技术报告深读]]；名称「LatentMoE」同源引用 ≠ 同一配方卡 |
-| OLMo 开放数据账本 | → [[OLMo3全栈开放配方]] |
-| Qwen Coder MegaFlow / 80A3 训练栈 | → [[Qwen3CoderNext技术报告深读]] |
-| [[开源与闭源前沿模型谱系]] 开闭源谱系长表 | 本卡单篇深读 |
-| K2 MuonClip / 15.5T token 账本全文 | → [[KimiK2技术报告深读]]；本篇只列相对 ∆ |
-| 博文案例的「芯片设计 / MiniTriton」完整复现步骤 | 辅材料；以 §7 Case Studies 提纲为准，文内无指标 |
-
----
-
-## 三、模型规模与架构（相对 K2 的 ∆）
-
-### 3.1 Table 1：K2 → K3（报告明文）
-
-| 项 | Kimi K2 | Kimi K3 | ∆ |
-|---|---|---|---|
-| Architecture | MoE | MoE | – |
-| #Layers | 61 | **93** | ↑ 52% |
-| Total Parameters | 1.04T | **2.78T** | ↑ 167% |
-| Activated Parameters | 32.6B | **104.2B** | ↑ 220% |
-| Hidden Dimension | 7,168 | 7,168 | = |
-| Latent MoE Dimension | – | **3584 (0.5×)** | – |
-| MoE Hidden Dim / Expert | 2,048 | **3,072** | ↑ 50% |
-| Routed Experts | 384 | **896** | ↑ 133% |
-| Experts Active / Token | 8 | **16** | ↑ 100% |
-| Shared Experts | 1 | **2** | ↑ 100% |
-| Attention Heads | 64 | **96** | ↑ 50% |
-| Dense Layers | 1 | 1 | = |
-| Vocabulary | 160K | 160K | = |
-| Training Context | 128K | **1M** | 8× |
-| Attention | MLA | **Hybrid KDA–MLA** | – |
-| Activation | SwiGLU | **SiTU-GLU** | – |
-| Attention-Layer Composition | 61 MLA | **69 KDA + 24 MLA** | – |
-| MTP Layers | 1 | 1 | = |
-| ViT | – | **401M**；27 layers；patch 14；12 heads | – |
-
-> 摘要口语写「2.8T / 104 billion activated」；对表以 **Table 1：2.78T / 104.2B** 为准。稀疏度口径：16/896 routed ≈ **56**（正文 §2.3）。
-
-### 3.2 三维信息流（§2 总览）
-
-| 维 | 机制 | 本卡一句话 |
+| 项 | Kimi K2 | Kimi K3 |
 |---|---|---|
-| **序列** | Hybrid Attention：每 block **3× KDA + 1× Gated MLA**；骨干末再加一层 Gated MLA | 线性态长序列 + 周期全局交互；MLA 层 **NoPE** |
-| **深度** | **Attention Residuals (AttnRes)**：伪 query 对前层/块表示做注意力残差；K3 划 **8 块 × 约 12 层**（含 embedding 计 9 块级源） | 突破「单状态累加」深度瓶颈；Block AttnRes 降内存/通信 |
-| **宽度** | **Stable LatentMoE**：共享专家全宽 + 路由专家在 latent 宽 $\ell$；**16/896** | 极端稀疏下用 RMSNorm↑、**SiTU-GLU**、**Quantile Balancing** 稳住 |
+| 层数 | 61 | 93 |
+| 总参数 / 激活参数 | 1.04T / 32.6B | 2.78T / 104.2B |
+| 隐藏维度 | 7,168 | 7,168 |
+| Latent MoE 维度 | – | 3584 (0.5×) |
+| 路由专家 / 每 token 激活 / 共享专家 | 384 / 8 / 1 | 896 / 16 / 2 |
+| 注意力头 | 64 | 96 |
+| 训练上下文 | 128K | 1M |
+| 注意力层构成 | 61 MLA | 69 KDA + 24 MLA |
+| 激活函数 | SwiGLU | SiTU-GLU |
+| ViT | - | 401M，27 层 |
 
-### 3.3 Kimi Delta Attention：相对 Kimi Linear 的 K3 增量（§2.1.1）
+摘要与 §8 写作 2.8T、104B，Table 1 写作 2.78T、104.2B，两处照录。
 
-| 增量 | 报告主张 |
+### 3.2 序列维：混合注意力（§2.1）
+
+1. **3:1 混合**：每个块含 3 层 KDA 加 1 层 Gated MLA，骨干末尾再加一层 Gated MLA，保证最后一层总是全局注意力。
+2. **KDA 的改动**：把 Kimi Linear 无界的负 Softplus 衰减映射换成有界的缩放 sigmoid，取 g_min = −5。报告说明，有界后 16-token 小块内的累计对数衰减落在 (−80, 0)，倒数缩放因子仍在 BF16 范围内，对角块与非对角块都能用稠密 Tensor Core 矩阵乘，省掉逐位置对的对角路径。KDA 的输出门由低秩改为全秩。
+3. **Gated MLA**：沿用 Kimi Linear 的做法，所有 MLA 层不用位置编码（NoPE），位置与近因信息由 KDA 层提供，扩展上下文时不必调 RoPE 基频或用 YaRN；输出加一个依赖输入、逐通道的全秩 sigmoid 门。训练时注意力输出保持 FP32，以纠正 flash attention 中的有偏舍入误差。
+
+### 3.3 深度维：注意力残差（§2.2）
+
+标准残差把前面所有信息压进单个状态，报告把它比作 RNN 在时间维上的瓶颈。AttnRes 给每层一个可学习的伪查询，对嵌入和前面各层输出做 softmax 加权读取。全量形式要保留所有层输出，显存与流水线通信开销大，因此 K3 用分块形式：块内求和，块间做注意力。报告称 N 约为 8 时可在各规模上拿回大部分收益；K3 分为 8 个、每块 12 层的块，最后一块不满，连同嵌入层共 9 个块。
+
+### 3.4 宽度维：Stable LatentMoE（§2.3）
+
+1. **LatentMoE**：共享专家走全宽路径，路由专家在宽度为 ℓ 的紧凑潜空间里计算，使 K3 能扩到 896 个路由专家、每 token 激活 16 个，报告称对应稀疏度 56。
+2. **两种失效**：路由路径近乎四次连续矩阵乘、条件数差，加上 2.8T 规模，内部激活会爆炸；近千个专家的负载均衡超出现有无辅助损失偏置更新的稳定范围。
+3. **对策**：上投影前加 RMSNorm，并用 SiTU-GLU 抑制激活爆炸；用 Quantile Balancing（QB）做负载均衡，按与目标负载对应的路由分数分位数直接设定每个专家的偏置；分位数用直方图估计，偏置在推理时冻结（§2.3.3）。
+
+### 3.5 原生视觉与逐头 Muon（§2.4–2.5）
+
+1. **MoonViT-V2 从零训练**：K2.5 等此前做法用 SigLIP 等对比预训练模型初始化视觉编码器。K3 改用下一个 token 预测从零训练，报告称 SigLIP 初始化的 MoonViT-3D 梯度范数持续偏高、尖峰频繁，从零训练的 MoonViT-V2 全程稳定，且在各视觉评测上与 SigLIP 初始化基线持平。
+2. **规格**：27 层、约 0.4B 参数，去掉线性与注意力投影中的全部偏置；2×2 pixel-shuffle 把视觉 token 数按 4 倍缩减，使最大 3584 × 3584 像素的输入能放进 1M 上下文。
+3. **逐头 Muon**：对 Q、K、V 投影的动量矩阵按头切分，逐头做 Newton–Schulz 正交化，使各头更新尺度一致，避免大尺度头主导整个矩阵的更新方向。
+
+## 四、核心机制：预训练与后训练（§3–§4）
+
+### 4.1 预训练
+
+1. **数据**：文本按域做规则、分类器质量打分与去重，知识与数学语料沿用 K2 的改写配方；视觉语料沿用 K2.5 的分类体系，并大幅扩充代码与渲染结果配对的程序化多模态数据（SVG、3D、网页、游戏、CAD）。
+2. **缩放律**：针对新架构重新调批大小、学习率、每参数 token 数与模型形状；独立调参后 cosine 衰减优于 WSD（§3.2）。
+3. **配方**：逐头 Muon 加 K2 的权重裁剪，QB 负载均衡，cosine 学习率加 1% 线性预热，权重衰减 0.1；语言与视觉从一开始联合训练（§3.3）。
+4. **长上下文**：四阶段课程，预训练中 8K 到 64K，cooldown 中 256K 到 1M；因为不用显式位置编码，模型无需改位置编码即可直接外推到 1M。长文与视频做专门清洗并上采样，另把多模态文档与子任务置换拼接，合成只有读遍整个 1M 上下文才能解的任务，防止注意力退化为局部模式（§3.4）。
+
+### 4.2 后训练：SFT → 九专家 RL → 多教师蒸馏
+
+1. **SFT**：扩充复杂智能体轨迹，统一用基于 XTML 的对话模板序列化；从 SFT 起做量化感知训练（§4.1.1）。
+2. **RL**：三个大域各训一个专家，分别是通用任务、通用智能体、编码智能体；与 low、high、max 三档推理强度交叉，共九个专家模型。partial rollout 在一定比例轨迹完成后即进入策略优化，未完成的轨迹下一轮优先恢复；长轨迹因此跨多轮迭代，靠逐 token 正则容忍高度过时的数据（§4.1.2）。
+3. **推理强度控制**：每题按冷启动模型估一个初始 token 预算，超过缩放阈值的轨迹奖励改为 −1；先训 max 档，再退火阈值得到 high 与 low 档。不可验证任务用智能体式生成奖励模型，按强制协议先生成评分细则再逐项打分，并对冗长输出做预算式控制。
+4. **合并**：用多教师 on-policy 蒸馏（MOPD）把各域、各推理强度的专家能力合进一个模型（§4.1.3）。
+5. **环境**：统一的白盒 RL 环境，知识图谱引导的任务合成，以及可验证问题、内核优化、个人助理、自主执行、网页开发等任务类（§4.2）。
+
+### 4.3 部署感知的后训练（§4.1.4）
+
+MoE 专家权重量化为 MXFP4、激活用 MXFP8，注意力投影、潜空间投影、共享专家和路由器保持更高精度；QAT 覆盖 SFT 与 RL 全程，rollout 与训练共用同一量化方案，消除训推不一致。预训练时带的 MTP 层被微调成 EAGLE-3 式草稿模型，输入融合第 1、第 4 和最后一个 AttnRes 块的输出。草稿模型用 LK loss 直接优化接受率（§4.1.4）。
+
+## 五、核心机制：基础设施（§5）
+
+| 子系统 | 报告要点 |
 |---|---|
-| **Lower-bounded decay** | $g = g_{\min}\mathrm{Sigmoid}(e^{A}z)$，$g_{\min}=-5$；避免负 Softplus 无界导致 chunk 对角 tile 只能走 position-pair；使对角/非对角均可走 Tensor Core 稠密 matmul |
-| **Full-rank output gate** | 相对 Kimi Linear 低秩门 → 输入依赖全秩 $\mathrm{Sigmoid}(W_g x)$ 门控 RMSNorm 后的循环输出 |
-| **Chunkwise** | 块内并行、块间递归；FlashKDA（§5）服务训练与 prefill |
+| KDA 内核与并行（§5.1） | FlashKDA 是基于 CUTLASS 的分块内核，块内计算与跨块状态传递重叠；单卡内用 SM 级上下文并行，跨卡用 KCP 把每段的影响拆成作用于输入状态的累积转移和从零生成的本地状态 |
+| 3T 级预训练（§5.2） | PP 加虚拟流水、EP、ZeRO-1、流水线 ZeRO-2 与 CP；MoonEP 让每个 rank 恰好收到相同数量的 token，报告证明每 rank 至多 E/R 个冗余专家即总能找到均衡方案；激活统一存储抽象，重算、量化、卸载可按张量自由组合 |
+| 1M 智能体 RL（§5.3） | 长上下文 RL 基础设施；AgentENV 用 Firecracker 跑隔离 microVM，报告称其隔离性与保真度是容器方案达不到的；真实负载下内存超分比最高 6.5×；K3 训练与评测期间共创建 51,219,741 个沙箱，涉及 1,505,678 个镜像 |
+| 在线服务（§5.4） | 面向 KDA 的前缀缓存管理、专用高性能内核、集群级调度 |
 
-### 3.4 Gated MLA（§2.1.2）
+## 六、主要结果（§6）
 
-- 继承 DeepSeek-V2 MLA 的 KV 压缩思路（**引用关系，非本卡主写 DeepSeek**）。
-- 相对 K2/K2.5：**全部 MLA 层 NoPE**；位置感由穿插 KDA 承担 → 扩上下文时不改 RoPE/YaRN。
-- 同样加 **全秩输出门**；训练时 attention 输出保持 FP32 以纠正 flash attention 偏置舍入（报告称）。
+评测设置：K3 全部用 max 推理强度、温度 1.0；单步任务 top-p 0.95，智能体任务 top-p 1.0（§6.1.3）。以下数字取自 §6.1.4 正文。
 
-### 3.5 Stable LatentMoE 三件套（§2.3）
+1. **推理**：GPQA Diamond 93.5%；HLE-Full 不用工具与用工具分别为 43.5% 与 56.0%，落后 Claude Fable 5 与 GPT-5.6 Sol；CritPt 23.4%。报告认为研究级推理仍是主要改进方向。
+2. **编码**：SWE-Marathon 42.0%，比 Claude Fable 5 高 7 个点；Terminal-Bench 2.1 为 88.3%，GPT-5.6 Sol 为 88.8%；FrontierSWE 81.2%，截至 2026 年 7 月 16 日排第二，仅次于 Claude Fable 5 的 86.6%。
+3. **智能体**：BrowseComp 91.2%、DeepSearchQA 95.0%（F1）、MCPMark-Verified 94.5%、AutomationBench 30.8%；Elo 计分的知识工作类基准由 Claude Fable 5 领先，K3 在 GDPval-AA v2 排第三（1,686），在 AA-Briefcase 排第二（1,548）。
+4. **视觉**：Math-Vision 94.3%，用 Python 工具时 97.8%；OmniDocBench 91.1%，为最高分。
+5. **成本**（§6.4）：Kimi Code Bench 2.0 上 K3 落后 Claude Fable 5 4.0 分，成本为后者的 38%，high 档已追平 Claude Opus 4.8 的最高推理强度分数，成本约为其三分之一；BrowseComp 上 K3 以每任务 $2.03 拿到最高分 91.2%，成本为 GPT-5.6 Sol（90.4%）的一半，比最高推理强度下的 Claude 各模型便宜一个数量级；GDPval-AA v2 上与 GPT-5.6 Sol 相差不到 50 Elo，成本低 13%，比 Claude Fable 5 便宜 2.6×；AA-Briefcase 上分数仅次于 Claude Fable 5，成本约为其一半。
 
-| 组件 | 作用（报告） |
-|---|---|
-| **Normalized LatentMoE** | 路由聚合 $u$ 后 **RMSNorm** 再 $W^\uparrow$；抑尺度敏感、改善 val/下游 |
-| **SiTU-GLU** | 对 SwiGLU 两支做 softcap：$\beta_1=4,\beta_2=25$；近原点近似 SwiGLU，大正输入有界 $\lvert f\rvert\le\beta_1\beta_2=100$ |
-| **Quantile Balancing (QB)** | 无辅助损失路由；用 margin 分位数设 expert bias，histogram 估计全局 batch 分位；推理冻结 bias |
+## 七、意义
 
-### 3.6 原生视觉 MoonViT-V2（§2.4）
+1. **混合线性注意力进入 3T 级旗舰**：K3 把 Kimi Linear 的 KDA–MLA 混合放大到 93 层、2.78T 参数，并靠 NoPE 与有界衰减让 1M 上下文的训练和外推不依赖位置编码改参。
+2. **残差连接成为可学习的读取**：注意力残差把深度方向的信息流也做成选择性读取，分块形式把显存与通信开销控制在块数级别。
+3. **极端稀疏的稳定性问题被单独处理**：896 选 16 时，报告把激活爆炸与负载均衡列为两种失效，分别用归一化加 SiTU-GLU 和分位数偏置解决。
+4. **后训练从按任务训模型转向按域训专家再蒸馏**：三域三档的九个专家经 MOPD 合并，推理强度通过 token 预算奖励来控制。
 
-- **从零** next-token 训视觉塔（相对 K2.5 SigLIP 初始化）；报告称梯度更稳、视觉评测可匹配 SigLIP init。
-- ~**0.4B / 401M**，27 层；图/视频共享；空间+时间分解注意力 + 时间池化；$2\times2$ pixel-shuffle → 视觉 token ÷4；支持至 **3584×3584** 像素输入（在 1M 上下文预算内）。
+## 八、局限与待核实
 
-### 3.7 Per-Head Muon（§2.5）
+1. **训练账本**：报告未给出 K3 预训练的总 token 数与算力。
+2. **图中数据未录**：缩放律曲线（Fig. 7）与成本效率散点（Fig. 13）的数据点只有图，本篇只录 §6.4 正文写出的数，不读图取数。
+3. **BrowseComp 口径**：主结果默认在 300K token 时触发上下文压缩；不做上下文管理、用满 1M 窗口时报告写作 90.4%（§6.1.3），与主结果 91.2% 口径不同。
+4. **第三方分数的时点**：GDPval-AA v2 等分数引自 Artificial Analysis 截至 2026 年 7 月 23 日的结果，FrontierSWE 名次截至 7 月 16 日（§6.1.3–6.1.4）。
+5. **对照模型的设置**：SWE-Marathon 上 Claude Fable 5 有 35% 的任务触发回退（§6.1.3），对照分数不能当作各家最佳设置。
+6. **版本差异**：v1（2026-07-27）与 v2（2026-08-07）的数字与结论一致；v2 增补了 Fig. 1 的说明、QB、逐头 Muon 与 ViT 相关引注，改写了 FP32 flash attention 的表述与 RL 基础设施的引言。本篇按 v2。
 
-- 矩阵参数用 Muon；注意力 Q/K/V 对 **逐 head** 做 Newton–Schulz 正交化，避免大尺度 head 主导整矩阵更新。
+## 九、与相邻笔记的分工
 
----
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[KimiK2技术报告深读]] | K2 是 K3 的直接前代，本篇 3.1 节列出 Table 1 的配置对照 | K2 的 MuonClip 与训练细节 |
+| [[Kimik15技术报告深读]] | K3 在 k1.5 以来的同步 RL 框架上扩展 partial rollout | k1.5 的长上下文 RL 配方 |
+| [[线性注意力与状态空间模型谱系]] | KDA 在 K3 中的有界衰减与全秩输出门，是那篇谱系里的一个工业节点 | 线性注意力通史 |
+| [[混合Mamba与注意力架构设计菜谱]] | K3 的 KDA 与 MLA 混合是那篇所说新原语情形的一例；那篇结论只在 Mamba 上得出，能否迁移待验证。 | 混合比例的系统消融 |
+| [[注意力效率族MQA到MLA]] | K3 在周期性全局层保留 MLA 并去掉位置编码 | MLA 的原理与谱系 |
+| [[混合专家架构]] | K3 的 896 专家、潜空间路由专家配置 | MoE 通史 |
+| [[MoE路由与负载均衡]] | Quantile Balancing 的设定，可放进那篇无辅助损失偏置的演进中 | 路由方法对比 |
+| [[优化器与训练稳定性]] | 逐头 Muon 与 SiTU-GLU 等稳定性设计 | 优化器谱系 |
+| [[OnPolicy蒸馏OPD范式]] | 九专家经 MOPD 合并，归入多教师 on-policy 蒸馏 | OPD 的目标函数与训练动态 |
+| [[RL算力缩放与环境扩展]] | K3 的任务合成与 AgentENV 沙箱，是环境扩展的工业案例 | RL 算力缩放的整体脉络 |
+| [[EAGLE3投机解码]] | K3 把 MTP 层微调成 EAGLE-3 式草稿模型 | EAGLE-3 的方法本身 |
+| [[开源与闭源前沿模型谱系]] | K3 在那篇中作为开放权重模型的一个节点 | 各厂代际坐标 |
+| [[Nemotron3Ultra技术报告深读]] | 两篇同属 2026 年开放权重的混合注意力 MoE 旗舰报告，本篇不比较两者配方 | Nemotron 3 Ultra 的配方与结果 |
 
-## 四、预训练与长上下文（§3）
+## 十、延伸阅读
 
-| 项 | 报告设定 |
-|---|---|
-| 数据域 | Web / Code / Math / Knowledge + 大规模视觉（caption、交错图文、OCR、感知、视频、视觉编码等）；知识/数学延续 K2 **改写**配方 |
-| Scaling | 相对 K2 约 **2.5×** overall scaling efficiency（Fig.7；OOD val） |
-| LR 日程 | 独立搜参后 **cosine** 优于 WSD（同最小 LR、各自最优峰 LR/BS） |
-| 优化 | Per-Head Muon + K2 **weight-clipping**；QB 负载均衡；WD **0.1**；cosine + **1%** warmup |
-| 多模态策略 | **原生联合** NTP（非后置对齐） |
-| 上下文课程 | PT：**8K→64K**；cooldown：**256K→1M**（四阶段） |
-| 位置编码 | **NoPE**；位置由 KDA 门控/衰减隐式编码 → 宣称可直接外推 1M、无需 RoPE 改参 |
-| 长文数据 | 清洗+上采样真长文/视频；并 **置换拼接** 合成「必须跨全上下文」任务，防注意力塌成局部模式 |
-
-> **待核实**：本 PDF **未**给出与 K2「15.5T tokens」同口径的 K3 总 token 账本。
-
----
-
-## 五、后训练：SFT → 九专家 RL → MOPD（§4）
-
-### 5.1 三阶段范式
-
-1. **SFT**：扩 agentic 轨迹；XTML chat template（§F）；自 SFT 起 **QAT**（专家权重 **MXFP4**、激活 **MXFP8**；非专家更高精度）。
-2. **RL**：三大域 × 三努力度 `{low, high, max}` → **9** 个专家：
- - general（经验/视觉/推理/忠实/搜索/知识工作）
- - general agents（长程助手、深度研究、段落写作）
- - coding agents（SWE、编码体验、kernel、webdev）
-3. **MOPD**：多教师 on-policy 蒸馏合并为统一模型（per-token OPD reward + clip）。
-
-### 5.2 RL 算法与努力度（报告骨架）
-
-- 延续同步 RL + **partial rollout**（完成比例 $\lambda$ 即进入优化；长轨迹跨迭代 → 依赖 per-token 正则容忍 stale）。
-- **Reasoning Effort RL**：按题初始预算 $b_0(x)$，超 $\tau\cdot b_0$ 则 reward 置 **-1**；先训 max 再退火得 high/low。
-- 非可验证任务：**Agentic GRM**（锦标赛二元比较 + 强制 rubric 协议 + 冗长度惩罚）。
-
-### 5.3 任务/环境合成（只列品类，不抄环境实现通史）
-
-统一 **white-box** harness 配置空间（可实例化 Kimi Code / Claude Code / Codex 等）；知识图谱引导任务合成；可验证搜索/专业工作/视觉工具环；**kernel 优化**（正确性+性能，反 hacking）；个人助理 mock app 跨日任务；**AET** verify-in-the-loop；webdev 确定性检查 + 模型评判。
-
-### 5.4 部署感知：QAT + EAGLE-3 式 draft（§4.1.4）
-
-- 专家 MXFP4 / 激活 MXFP8；RL rollout 与训练同量化方案。
-- 预训练 MTP 层微调为 EAGLE-3 风格 draft；融合 AttnRes **第 1 / 4 / 末**块特征；直接优化 **LK loss**（接受率负对数）而非仅 KL。
-
----
-
-## 六、基础设施要点（§5，跟读字段）
-
-| 子系统 | 关键词（报告） |
-|---|---|
-| **KDA 系统** | FlashKDA（CUTLASS chunkwise）；设备内 SM 级 CP；跨设备 **KCP**（固定大小 all-gather 状态片段 + prefix scan） |
-| **3T 预训练** | PP+VP、EP、ZeRO-1、Pipeline ZeRO-2、CP；**MoonEP**（完美负载、冗余专家 ≤E/R、静态 shape、零拷贝 permute）；统一 activation manager（FP8 量化/offload/重算）；Block AttnRes 通信下界；P2P Muon 正交化；ViT 动态 CP + PP bubble 藏算 |
-| **1M Agentic RL** | 同置训练；外置 KV/KDA 状态池；rollout auto-throttle；梯度 buffer 复用非策略前向；**AgentENV** microVM（Firecracker；pause/fork/snapshot；文称共创建 **51,219,741** sandboxes / **1,505,678** images） |
-| **在线服务** | KDA–MLA 统一分页前缀缓存；细粒度 hash block vs 稀疏 KDA checkpoint；专用 decode/AttnRes/稀疏 LatentMoE kernel；cache-aware 调度 + budget admission |
-
-开源入口（文内脚注）：MoonEP `github.com/MoonshotAI/MoonEP`；AgentENV `github.com/kvcache-ai/AgentENV`。
-
----
-
-## 七、评测字段（§6；文内表转述）
-
-### 7.1 评测协议（跟读约束）
-
-- K3：**reasoning effort = max**，temperature **1.0**；单步知识/推理 top-p **0.95**，agentic top-p **1.0**。
-- 对照：Claude Fable 5（**含 potential fallbacks**）、GPT-5.6 Sol（**含 potential cyberguards**）、Opus 4.8、GPT-5.5（**xhigh**）、开源对照 **GLM-5.2**。
-- Coding harness：Kimi Code / Claude Code / Codex 分任务选用（脚注级细节见原文 §6.1.3）。
-- BrowseComp：默认 300K 触发 compaction；**无管理 1M** 时文称 **90.4%**（主表 BrowseComp 为 **91.2%**——口径见原文，勿混）。
-
-### 7.2 Table 2 精选（K3 max；完整表见 PDF）
-
-| 轴 | 基准 | K3 | Fable 5 | GPT-5.6 Sol | 备注 |
-|---|---|---|---|---|---|
-| 知识/推理 | GPQA Diamond | **93.5** | 92.6 | **94.1** | 接近前沿 |
-| | CritPt | 23.4 | 28.6 | **32.3** | 报告自承研究级差距 |
-| | HLE-Full (w/o / w tool) | 43.5 / 56.0 | **53.3 / 63.0** | 44.5 / 58.0 | |
-| Coding | DeepSWE | 67.5 | 70.0 | **73.0** | |
-| | ProgramBench | **77.8** | 76.8 | 77.6 | K3 文内最优 |
-| | Terminal-Bench 2.1 | 88.3 | 88.0 | **88.8** | 近并列 |
-| | FrontierSWE | 81.2 | **86.6** | 71.3 | 次优、远超其余 |
-| | SWE-Marathon | **42.0** | 35.0 | 39.0 | GPU kernel 向 |
-| Agentic | BrowseComp | **91.2** | 88.0 | 90.4 | |
-| | AutomationBench | **30.8** | 29.1 | 29.7 | |
-| | GDPval-AA v2 Elo | 1686 | **1747** | 1736 | 第三方至 2026-07-23 |
-| Vision | OmniDocBench | **91.1** | 89.8 | 85.8 | |
-| | ZeroBench pass@5 (w/o / w Py) | 23.0 / 41.0 | 23.0 / **46.0** | 17.0 / 35.0 | |
-
-**报告级结论句（§6.1.4）：** 整体紧追 Fable 5 / GPT-5.6 Sol，并 consistently 优于 Opus 4.8、GPT-5.5、GLM-5.2。
-
-### 7.3 成本效率（Fig.13；定性）
-
-文称在 KCB 2.0 / BrowseComp / GDPval-AA v2 / AA-Briefcase 上，K3 落在或靠近 **score–cost 前沿**，相对 Fable 5 成本更低（精确曲线点 → **待核实读图**）。
-
----
-
-## 八、结论与延伸阅读
-
-**结论（§8 转述）：** K3 是开源 **2.8T** 级原生视觉 MoE、**1M** 上下文，基于 KDA 与 AttnRes；自称首个开源 **3T-class** 模型；在长程编码 / agentic / 知识 / 推理 / 视觉上达 frontier-level，与最强闭源仍有差距，但立新的开源前沿并公开权重。
-
-**建议阅读顺序：**
-
-1. Abstract + Fig.1 + Table 1（规模与主结果）
-2. §2.1–2.3（KDA lower-bound / AttnRes / SiTU+QB）—架构主杠杆
-3. §4.1（SFT→9专家 RL→MOPD + QAT）—后训练主杠杆
-4. §5.1–5.3（FlashKDA/KCP、MoonEP、AgentENV）—Infra 可迁移字段
-5. Table 2/3—评测口径与 harness 脚注
-6. 辅博文：产品可用、案例、局限（与 TR 交叉，不以博文覆盖 Table）
-
-**相关专题：** [[线性注意力与状态空间模型谱系]] 把 KDA 放进线性注意力与状态空间模型的谱系，并与 Qwen、MiniMax 的混合比例对照；[[MoE路由与负载均衡]] 把 Quantile Balancing 放进从 Switch 到无辅助损失偏置的路由演进中；[[OnPolicy蒸馏OPD范式]] 把本篇第五节「九专家 RL → MOPD」归入多教师 on-policy 蒸馏，OPD 的目标函数、信号来源与训练动态见那篇。
-
----
-
-## 九、局限与待核实
-
-| 项 | 状态 |
-|---|---|
-| K3 预训练总 token / GPU-小时精确账本 | 本 PDF 未给 |
-| Fig.7 / Fig.13 曲线精确坐标 | 需读图；已标 **待核实读图** |
-| 权重实际落地日 vs 博文「July 27, 2026」 | 以 HF `moonshotai/Kimi-K3` 为准复核 |
-| §F XTML 模板全文、附录 B–E 证明细节 | 本卡未展开；需要时回 PDF |
-| 与 Nemotron LatentMoE / DeepSeek MLA 的「同名组件」细对比实验 | 本卡不展开（范围外） |
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [Kimi K3 arXiv（v2）](https://arxiv.org/abs/2607.24653v2) | §2 架构、§4.1 后训练、§5 基础设施、Table 2 完整评测 |
+| 2 | [Kimi Linear](https://arxiv.org/abs/2510.26692) | KDA 与混合设计的来源 |
+| 3 | [LatentMoE](https://arxiv.org/abs/2601.18089) | 潜空间路由专家的来源 |
+| 4 | [MoonEP](https://github.com/MoonshotAI/MoonEP) | 均衡专家并行的实现 |
+| 5 | [AgentENV](https://github.com/kvcache-ai/AgentENV) | microVM 沙箱的实现 |
+| 6 | [Kimi-K3](https://huggingface.co/moonshotai/Kimi-K3) | 报告所附权重地址，仅用于核对型号名 |

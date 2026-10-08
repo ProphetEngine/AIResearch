@@ -1,201 +1,124 @@
 ---
-title: MiniMax-M1 Technical Report 专项深读卡
+title: MiniMax-M1 Technical Report 深读
 topic: MiniMaxM1技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
 source_url: https://arxiv.org/abs/2506.13585
+related: ["推理时扩展TestTimeScaling", "长上下文位置编码与系统侧", "注意力效率族MQA到MLA", "线性注意力与状态空间模型谱系", "混合Mamba与注意力架构设计菜谱", "混合专家架构", "DeepSeekR1推理训练深读", "Qwen3技术报告深读", "Gemini25技术报告深读", "开源与闭源前沿模型谱系"]
 archived: 2026-09-22
 ---
 
-# MiniMax-M1 Technical Report 专项深读卡
+# MiniMax-M1 Technical Report 深读
 
-> 研究线：**架构思想（主）** + **AI Infra（辅）**
-> 锚点：MiniMax, *MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention*（arXiv:2506.13585）
-> 官方 PDF：`https://arxiv.org/abs/2506.13585`（**22** 页 A4）
-> 本卡边界：数字与机制一律取自本 PDF 正文/表，不补 Text-01 未在本报告复述的层宽/隐层维等细节。对照增量旁及 **[[推理时扩展TestTimeScaling]]**（test-time scaling）、**[[长上下文位置编码与系统侧]]**（长上下文）、**[[AI基础设施总览]]**（AI Infra）、**[[注意力效率族MQA到MLA]]**（attention efficiency）。
+> **主要来源**：[MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention](https://arxiv.org/abs/2506.13585)（MiniMax，v1，2025-06-16）（截至 2025-06-16）
+> **研究线**：架构思想（主：混合注意力使推理时算力近线性扩展、CISPO）；AI Infra（辅：混合注意力下的 RL 训练稳定性与算力账本）
+> **范围与相邻笔记**：
+> - ≠ [[推理时扩展TestTimeScaling]]：推理时扩展的通论在那篇，本篇只写 M1 用混合注意力降低长生成的计算量。
+> - ≠ [[线性注意力与状态空间模型谱系]]：线性注意力的通史在那篇，本篇只写 Lightning Attention 在 M1 里的 7:1 混合。
+> - ≠ [[DeepSeekR1推理训练深读]]：R1 的推理训练在那篇，本篇只在对照处引用 R1 的上下文与 FLOPs。
+>
+> **意义**：MiniMax-M1 是基于 MiniMax-Text-01 的开放权重混合注意力推理模型，报告自称是全球首个大规模开放权重的混合注意力推理模型（摘要）。它继承 456B 总参、45.9B 激活、32 个专家的底座，原生支持 1M token 上下文，用 CISPO 做大规模 RL，放出 40K 与 80K 两档思考预算。报告称全部 RL 在 512 张 H800 上约三周完成，租金 534,700 美元（摘要）。
 
----
+## 一、问题背景
 
-## 一、报告元信息
+长思维链推理把生成长度推到数万 token，而标准 softmax 注意力的计算随长度二次增长，推理时算力扩不上去（§1）。M1 的回答是用线性注意力与 softmax 注意力混合：大部分层换成 Lightning Attention，只留少量全局注意力层。混合注意力又给 RL 训练带来新问题：重要性采样权重的裁剪会丢掉低概率的「反思分叉」token，训练与推理的 token 概率会漂移，默认优化器超参不收敛，超长重复输出会打爆梯度（§3）。
 
-| 字段 | 核实值 | 出处 |
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| 标题 | MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention | 封面 |
-| 作者 | MiniMax（PDF 元数据 Author 字段列完整贡献者名单；附录 A. Contributors） | 封面；§A |
-| 通信 | model@minimax.io | 封面脚注 |
-| arXiv 页眉 | **arXiv:2506.13585v1** \[cs.CL\] **16 Jun 2025** | PDF 第 1 页页眉 |
-| PDF 页数 | **22** | |
-| Producer / Creator | pikepdf 8.15.1；arXiv GenPDF (tex2pdf:) | |
-| HTML / PDF | https://arxiv.org/abs/2506.13585 ；https://arxiv.org/pdf/2506.13585 | arXiv |
-| 权重 / 代码 | https://github.com/MiniMax-AI/MiniMax-M1 ；正文称亦上 Hugging Face；已支持 **vLLM** 与 **Transformers**；商业 API：minimax.io | Abstract；§1 末 |
-| 系列定位 | 自称「world’s first **open-weight, large-scale hybrid-attention reasoning model**」；基于前作 **MiniMax-Text-01**（MiniMax et al., 2025）做 continual pretrain + SFT + 大规模 RL | Abstract；§1 |
-| 发布变体 | **MiniMax-M1-40k** 与 **MiniMax-M1-80k**（thinking budget / 最大生成长度）；40k 为 80k 训练的中间阶段 | Abstract；§1；§5 |
-| 版权行 | © 2025 MiniMax. All rights reserved | 封面 |
+| 2025-01 | [MiniMax-Text-01](https://arxiv.org/abs/2501.08313) | M1 的底座：混合注意力 MoE 与 1M 上下文 |
+| 2025-06 | [MiniMax-M1](https://arxiv.org/abs/2506.13585) | 在底座上做持续预训练、长思维链 SFT 与 CISPO 强化学习 |
 
-**摘要级一句话（不外推）：**
-MiniMax-M1 = **hybrid MoE + Lightning Attention**（继承 Text-01：456B 总参 / 45.9B 激活 / 32 experts）+ 原生 **1M** 上下文 + **CISPO** RL，在 **512×H800、约三周、$534,700** 租金下完成全量 RL，并放出 40K / 80K thinking budget 两档开源权重。
+## 三、核心机制：架构与训练流水线（§1–§2）
 
----
+### 3.1 架构
 
-## 二、架构 / 规模 / 训练对照表（仅报告数字）
+1. **继承底座**：总参 456B、每 token 激活 45.9B、32 个专家，报告写明这些数字来自 MiniMax-Text-01（摘要、§1）。
+2. **7:1 混合**：每 7 个带 Lightning Attention 的 TransNormer 块之后接 1 个带 softmax 注意力的 transformer 块。报告称 Lightning Attention 是线性注意力的 I/O 感知实现。
+3. **长度**：输入最长 1M token，报告称是 DeepSeek R1 上下文的 8 倍；生成上限分 40K（中间阶段）与 80K（最终档）两档。
+4. **理论推理 FLOPs**（Figure 1 右）：生成 64K 时不到 DeepSeek R1 的 50%，生成 100K 时约 25%。报告注明这是理论值。
 
-### 2.1 规模与注意力结构（Abstract；§1）
+Table 1 的输入与输出上限对照：o3 为 200K / 100K，Gemini 2.5 Pro 为 1M / 64K，Claude 4（表注为 Claude-4-Opus）为 200K / 32K，DeepSeek-R1-0528 为 128K / 64K，Qwen3-235B 为 128K / 32K，MiniMax-M1-80k 为 1M / 80K。
 
-| 项 | 报告值 |
-|---|---|
-| 总参数 | **456B**（继承 MiniMax-Text-01） |
-| 每 token 激活参 | **45.9B** |
-| MoE 专家数 | **32** experts |
-| 注意力混合比 | 每 **7** 个带 lightning attention 的 **TransNormer** block（Qin et al., 2022a）后接 **1** 个带 **softmax attention** 的 transformer block |
-| Lightning Attention | Qin et al., 2024b；正文称其为 linear attention 变体（Qin et al., 2022a）的 **I/O-aware** 实现 |
-| 原生上下文 | 输入最长 **1M** tokens（相对 DeepSeek R1 称 **8×**） |
-| 最大生成 / thinking budget | **40K**（中间阶段）与 **80K**（最终发布档） |
-| 相对 DS-R1 推理 FLOPs（理论，Figure 1 Right） | 生成长 **64K**：**<50%** FLOPs；**100K**：约 **25%** FLOPs |
+### 3.2 持续预训练与 SFT（§2）
 
-> 本报告**未**另列 hidden dim、层数、GQA/MLA、专家 intermediate 等细表；上述规模字段均写为「developed based on MiniMax-Text-01」。细结构需回查 Text-01 报告 → 见第四节待核实。
+1. **数据**：额外 7.5T token，偏向推理密集内容，报告强调严格避免合成数据、优先提取自然问答并做语义去重；STEM、代码、书籍与推理相关数据的占比提到 70%。
+2. **优化**：降低 MoE 辅助损失系数，调整并行策略以增大 micro batch；学习率先以 8e-5 恒定训练 2.5T token，再在 5T token 上衰减到 8e-6。
+3. **长上下文四阶段**：从 32K 平滑扩到 1M。报告称混合 Lightning 架构过激进地拉长时容易梯度爆炸，原因是靠前层衰减慢、偏向局部，跟不上靠后层。
+4. **SFT**：注入基于反思的长思维链，覆盖数学、编程、STEM、写作、问答与多轮对话，数学与编程约占 60%。
 
-### 2.2 输入/输出长度对照（Table 1）
+## 四、核心机制：CISPO 与 RL 稳定性（§3–§5）
 
-| 模型 | Max Input | Max Output |
-|---|---:|---:|
-| o3 | 200K | 100K |
-| Gemini 2.5 Pro | 1M | 64K |
-| Claude 4（表注：Claude-4-Opus） | 200K | 32K |
-| DS-R1（表注：DeepSeek-R1-0528） | 128K | 64K |
-| Qwen3-235B | 128K | 32K |
-| **MiniMax-M1-80k** | **1M** | **80K** |
+### 4.1 CISPO（§3.1）
 
-### 2.3 训练流水线总览（§2–§5；Abstract）
+CISPO（Clipped IS-weight Policy Optimization）裁剪的是重要性采样权重，而不是 PPO 与 GRPO 那样裁剪 token 更新，从而保留全部 token 的梯度；优势估计沿用 GRPO 的组内相对优势，损失在 token 级别计算。受控消融在 Qwen2.5-32B-base 上用 Yu 等（2025）的数学数据：同等步数下优于 GRPO 与 DAPO，达到 DAPO 同等表现约用 50% 的步数，报告称相对 DAPO 有 2 倍加速（§3.1、Figure 2）。
 
-`
-MiniMax-Text-01 base
- → Continual Pretraining（+7.5T tokens；STEM/code/book/reasoning 占比提至 ~70%；四阶段上下文 32K→1M）
- → SFT cold-start（长 CoT；math+coding ≈60%）
- → RL（CISPO + hybrid-attention 配方；先 40K 输出上限，再分阶段扩到 80K）
-`
+### 4.2 混合注意力下的训练问题（§3.2）
 
-| 阶段 | 报告要点 | 出处 |
+1. **优化器**：AdamW 取 β₁ = 0.9、β₂ = 0.95、eps = 1e-15。报告称 M1 的梯度量级跨 1e-18 到 1e-5、多数小于 1e-14，VeRL 默认的 β₂ = 0.999、eps = 1e-8 不收敛。
+2. **训推对齐**：把语言模型输出头提到 FP32，训练与推理的 token 概率相关从约 0.9x 升到 0.99x（Figure 3）。
+3. **重复截断**：连续 3,000 个 token 的概率都超过 0.99 时提前截断。
+
+### 4.3 数据与课程（§4）
+
+| 类别 | 规模 | 奖励 |
 |---|---|---|
-| Continual PT 数据量 | 额外 **7.5T** tokens；reasoning-intensive、精心筛选；**严格避免 synthetic data**；优先抽取自然 QA；QA 做 semantic dedup | §2.1 |
-| Continual PT 配比 | STEM / code / book / reasoning-related 提升至 **70%** | §2.1 |
-| Continual PT 优化 | 降低 MoE auxiliary loss 系数；调整并行策略以增大 micro batch；**constant LR 8e-5 × 2.5T**，再 **decay 5T → 8e-6** | §2.1 |
-| 长上下文扩展 | **四阶段**平滑扩展：自 **32K** 起最终训到 **1M**；动机：hybrid-lightning 过激进拉长易梯度爆炸（早层 decay 慢、偏局部，赶不上后层） | §2.1 |
-| SFT | 注入 reflection-based 长 CoT；域：math / coding / STEM / writing / QA / multi-turn chat；math+coding ≈ **60%** | §2.2 |
-| RL 算力与成本 | **512 H800**；完整 RL 周期 **3 weeks**；租金约 **$534,700**（正文亦写 ≈ **$0.53M**） | Abstract；§1；§3 开篇 |
-| RL 算法 | **CISPO**（Clipped IS-weight Policy Optimization）：clip **importance sampling weight**，而非 PPO/GRPO 式 token update clip；采用 GRPO 式 group-relative advantage + token-level loss | §3.1 |
-| CISPO 受控消融 | 在 **Qwen2.5-32B-base** + Yu et al. (2025) 数学数据上：同 step 优于 GRPO/DAPO；达 DAPO 同等表现约用 **50%** steps（正文亦称相对 DAPO **2×** speedup） | §3.1；Figure 2 |
-| RL 优化器 | **AdamW**：$\beta_1=0.9$, $\beta_2=0.95$, **eps=1e-15**（相对 VeRL 默认 0.999 / 1e-8；因梯度量级跨 1e-18～1e-5、多数 \<1e-14） | §3.2 |
-| Train/Infer 对齐 | LM output head 提到 **FP32**，使 train/infer token 概率相关从约 0.9x → **0.99x**（Figure 3） | §3.2 |
-| 病理重复截断 | 连续 **3,000** 个 token 概率均 **>0.99** → early truncation | §3.2 |
-| 40K→80K 扩窗 | 分阶段：**40→48→56→64→72→80K**；用 40K 模型滤难例、下调 synthetic、监控 PPL / P99 长度再升窗；并加 sample-level loss + token-level norm、降低 grad clip 与 $\epsilon^{IS}_{high}$ | §5 |
+| 数学推理 | 近 50K | 规则正确性加格式奖励；只保留 pass@10 介于 0 与 0.9 之间的样本 |
+| 逻辑推理 | 约 53K，41 类任务 | SynLogic 的任务专用规则验证器 |
+| 竞赛编程 | 30K | 规则与测试套件 |
+| 软件工程 | 数千 | 沙箱执行的通过与否 |
+| 通用领域 | 25K | 生成式奖励模型：有标准答案时分五档，无标准答案时两两比较取 −1、0、1 |
 
-### 2.4 RL 数据规模（§4）
+课程上先只训练基于规则的推理，再逐步混入通用领域，避免专长被灾难性遗忘（§4.3）。报告发现生成式奖励模型会偏好更长的思维链，纯离线的长度偏见缓解在 RL 中经常失效，因此改为在线监控长度偏见并重新标定（§4.2.2）。
 
-| 类别 | 规模（报告） | 奖励 | 备注 |
-|---|---|---|---|
-| Mathematical Reasoning | 近 **50K** | 规则正确性 + format | 去重、与 SFT/基准防泄漏；pass@10 ∈ (0, 0.9) |
-| Logical Reasoning | 约 **53K**；**41** 类任务 | SynLogic 任务专用规则 verifier | 难度上下界用强模型 / Text-01 的 pass@10 约束 |
-| Competitive Programming | **30K** | 规则 / 测试套件 | 缺测例时用 Text-01 工作流合成 |
-| Software Engineering | **several thousand** | sandbox 执行 pass/fail | 自 GitHub issues/PRs；容器化执行 |
-| General domain | **25K** | GenRM（有 GT：五档；无 GT：pairwise −1/0/1） | STEM/事实 + IF/创意写作等；在线监控长度偏见 |
+### 4.4 输出窗口扩展（§5）
 
-**课程（§4.3）：** 先只训 rule-based reasoning，再逐步混入 general-domain，避免专长灾难性遗忘。
+从 40K 分阶段扩到 48K、56K、64K、72K，最终 80K。每升一档前用 40K 模型过滤难题、下调合成数据、监控困惑度与长度的第 99 百分位；同时加入样本级损失与 token 级归一化，降低梯度裁剪与重要性采样权重的上界。
 
----
+## 五、主要结果（§6、Table 2）
 
-## 三、公开亮点（长上下文 / 推理 / Agent，据报告）
+以下取 MiniMax-M1-80k，除非注明。
 
-### 3.1 长上下文（Table 1–2；§6.1）
+1. **长上下文**：OpenAI-MRCR（128k）上 40k 档 76.1、80k 档 73.4（同表 o3 为 56.5、Claude 4 Opus 为 48.9、Gemini 2.5 Pro 为 76.8）；OpenAI-MRCR（1M）上 40k 档 58.6、80k 档 56.2（同表只有 Gemini 2.5 Pro 有 58.8）；LongBench-v2 上 40k 档 61.0、80k 档 61.5（Gemini 2.5 Pro 为 65.0）。报告自评长上下文理解超过 o3 与 Claude 4 Opus，全球第二，仅略逊 Gemini 2.5 Pro（§6.1）。
+2. **推理**：AIME 2024 为 86.0、AIME 2025 为 76.9、MATH-500 为 96.8、LiveCodeBench（24/8 至 25/5）为 65.0、GPQA Diamond 为 70.0、ZebraLogic 为 86.8。报告称 AIME 2024 在开放权重模型中排第二，仅次于 DeepSeek-R1-0528。
+3. **软件工程与工具**：SWE-bench Verified（Agentless 脚手架、两阶段定位、无嵌入检索）上 40k 档 55.6、80k 档 56.0（DeepSeek-R1-0528 为 57.6）；TAU-bench 的 airline 上 80k 档 62.0，retail 上 40k 档 67.8、80k 档 63.5。
+4. **训练曲线**（Figure 4 的文字叙述）：AIME 与 LiveCodeBench 的平均响应长度可超过 20,000 token，AIME 2024 准确率从 68% 升到 80%。
 
-- 原生 **1M** 输入 + **80K** 输出（开源 LRM 中自称领先一档）。
-- **OpenAI-MRCR (128k)**：M1-40k **76.1** / M1-80k **73.4**（同表 o3 56.5；Claude 4 Opus 48.9；Gemini 2.5 Pro 76.8）。
-- **OpenAI-MRCR (1M)**：M1-40k **58.6** / M1-80k **56.2**（同表仅 Gemini 2.5 Pro 有 **58.8**；多数对照为 —）。
-- **LongBench-v2**：M1-40k **61.0** / M1-80k **61.5**（相对多数开源对照更高；Gemini 2.5 Pro 65.0）。
-- 作者自评：长上下文理解超过 o3 / Claude 4 Opus，全球第二、仅略逊 Gemini 2.5 Pro（§6.1 Highlights）。
+## 六、意义
 
-### 3.2 推理与 test-time scaling（Abstract；§5–§6.2；Figure 4）
+1. **混合注意力被用来降低长生成的成本**：7:1 的线性与 softmax 混合让报告能给出相对 DeepSeek R1 的理论 FLOPs 对比，并把 RL 的输出上限扩到 80K。
+2. **裁剪对象从更新改成权重**：CISPO 保留低概率 token 的梯度，报告把它与「反思分叉」token 被 PPO、GRPO 裁掉联系起来。
+3. **给出了一份可核对的 RL 成本账本**：512 张 H800、三周、534,700 美元，是少数把租金写进摘要的报告。
 
-- 产品叙事：hybrid-attention 使 test-time compute **近线性**扩展（Figure 1 Right）。
-- 两档 thinking budget：**40K** → **80K**；80k 在多数复杂数学/编码上优于 40k。
-- Table 2 摘录（M1-80k）：AIME 2024 **86.0**；AIME 2025 **76.9**；MATH-500 **96.8**；LiveCodeBench (24/8∼25/5) **65.0**；GPQA Diamond **70.0**；ZebraLogic **86.8**。
-- Figure 4：RL 过程中 AIME / LiveCodeBench 准确率与平均生成长度同步上升；AIME/LiveCodeBench 平均响应长度可超 **20K**；文中示例 AIME 2024 从约 **68%→80%**（训练曲线叙述）。
+## 七、局限与待核实
 
-### 3.3 软件工程 / 工具使用（§4.1；§6.1；Table 2）
+1. **结构细节在前作**：层数、隐藏维度、专家中间维度、路由 top-k 等本报告未列，只写明基于 MiniMax-Text-01。
+2. **CISPO 消融不在 M1 本体上**：2 倍加速来自 Qwen2.5-32B 的受控实验，M1 本体的重要性采样上下界、组大小等没有完整超参表。
+3. **FLOPs 是理论值**：Figure 1 右未量化内核与显存带宽的实现侧开销。
+4. **评测脚手架**：SWE-bench 的两阶段定位、TAU-bench 的用户模型等细节在脚注，复现需要对照原文。
+5. **版本**：本篇按 v1（2025-06-16），arXiv 上未见更新版本。
 
-- RL 含 SWE-bench 风格 **execution-based sandbox**。
-- **SWE-bench Verified**（Agentless scaffold + 两阶段定位、无 embedding 检索）：M1-40k **55.6** / M1-80k **56.0**（DS-R1-0528 57.6；显著高于其他多数开源列）。
-- **TAU-bench**：airline M1-80k **62.0**；retail M1-40k **67.8** / M1-80k **63.5**。作者称 M1-40k 在 agentic tool-use 上超过所有开源对照乃至 Gemini 2.5 Pro（airline/retail 需分列阅读 Table 2）。
+## 八、与相邻笔记的分工
 
-### 3.4 Infra / RL 可复用配方要点（架构思想 × AI Infra 交汇）
-
-| 问题 | 报告解法 | 出处 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| Softmax 二次代价阻碍长 thinking | Hybrid：**7× lightning (linear) + 1× softmax** | §1 |
-| GRPO/PPO clip 掉低概率「反思 fork」token | **CISPO**：clip IS weight，保留全部 token 梯度 | §3.1 |
-| Train/infer 概率漂移导致 reward 不涨 | LM head **FP32** | §3.2 |
-| Adam 默认超参不收敛 | $\beta_2=0.95$, **eps=1e-15** | §3.2 |
-| 长重复响应炸梯度 | 连续 3k token p>0.99 截断 | §3.2 |
-| 扩窗后期 pattern collapse / 负样本偏长 | 早停重复 + sample-level loss & token-level norm + 降 clip/$\epsilon^{IS}_{high}$ | §5 |
-| GenRM 偏好更长 CoT | 在线监控长度偏见并重标定 GenRM；辅以 reward shaping / value clip / 归一化 | §4.2.2 |
+| [[推理时扩展TestTimeScaling]] | M1 用混合注意力让长生成的计算量下降，是推理时算力扩展的一个工业案例 | 推理时扩展通论 |
+| [[长上下文位置编码与系统侧]] | M1 的 1M 输入与四阶段扩窗，放在那篇长上下文方法谱系里对照 | 位置编码方法 |
+| [[注意力效率族MQA到MLA]] | Lightning Attention 属于那篇的线性注意力一支 | 注意力效率谱系 |
+| [[线性注意力与状态空间模型谱系]] | M1 的 7:1 混合是那篇工业混合表的一例 | 线性注意力通史 |
+| [[混合Mamba与注意力架构设计菜谱]] | M1 的 lightning attention 与 softmax 注意力 7:1 混合，与那篇低注意力比例的结论同向，但原语不同。 | 混合比例的系统消融 |
+| [[混合专家架构]] | M1 继承的 32 专家 MoE 配置 | MoE 通史 |
+| [[DeepSeekR1推理训练深读]] | 本篇以 R1 为上下文与 FLOPs 的对照 | R1 的训练配方 |
+| [[Qwen3技术报告深读]] | Table 1 与 Table 2 把 Qwen3-235B 列为开放权重对照 | Qwen3 的配方 |
+| [[Gemini25技术报告深读]] | Table 1 与 Table 2 把 Gemini 2.5 Pro 列为闭源对照，长上下文上报告只排在它之后 | Gemini 的报告内容 |
+| [[开源与闭源前沿模型谱系]] | M1 在那篇中作为开放权重推理模型的一个节点 | 各厂代际坐标 |
 
----
+## 九、延伸阅读
 
-## 四、局限、待核实与引用
-
-### 4.1 本 PDF 未给出 / 需外查
-
-| 缺口 | 说明 |
-|---|---|
-| Text-01 细结构 | 层数、hidden、专家 intermediate、共享专家与否、路由 top-k、归一化等——本报告只给 456B / 45.9B / 32 experts / 7:1 hybrid 比 |
-| 预训练至 Text-01 的原始 token 量与集群 | 本报告只覆盖 **continual** +7.5T 与 RL 段 512×H800 |
-| CISPO 在 M1 本体上的完整超参表 | $\epsilon^{IS}_{high/low}$、group size $G$、off-policy 轮数等仅有叙述与 Qwen2.5-32B 消融，无 M1 全表 |
-| FLOPs 曲线假设 | Figure 1 Right 为 **theoretical inference FLOPs**；实现侧 kernel / 显存带宽未在本报告量化 |
-| 评测脚手架细节 | SWE-bench 两阶段定位、TAU-bench 系统 prompt / GPT-4.1 user model、HLE 标 `*` 为 text-only subset——复现需对照原文脚注与外部仓库 |
-| 许可 SPDX | 封面 © 2025 MiniMax；具体权重 license 以 GitHub/HF 页面为准（本 PDF 未写 SPDX 字符串） |
-| arXiv 后续版本 | 本卡仅跟读 **v1 / 16 Jun 2025**；若有 v2+ 需重抽 |
-
-### 4.2 关键引用（报告内）
-
-- Qin et al., 2022a / 2024b — TransNormer / Lightning Attention
-- Shao et al., 2024 — GRPO
-- Yu et al., 2025 — DAPO（及 CISPO 消融所用数学数据）
-- Schulman et al., 2017 — PPO
-- Jimenez et al., 2024 — SWE-bench
-- Liu et al., 2025a — SynLogic
-- Yao et al., 2025 — TAU-bench
-- OpenAI, 2024b — OpenAI-MRCR
-- Bai et al., 2024 — LongBench-v2
-- MiniMax et al., 2025 — MiniMax-Text-01（底座）
-
-### 4.3 延伸阅读
-
-- **[[推理时扩展TestTimeScaling]]** test-time scaling / LRM 叙事
-- **[[长上下文位置编码与系统侧]]** 长上下文方法谱系（与 1M 窗口对照）
-- **[[注意力效率族MQA到MLA]]** attention efficiency（linear / sparse / hybrid）
-- **[[AI基础设施总览]]** AI Infra（并行、RL 训练栈；本报告点名 VeRL 默认超参作反例）
-- **[[DeepSeekR1推理训练深读]]** / **[[Qwen3技术报告深读]]** — 同档开源推理模型配方对照
-
----
-
-## 相关笔记
-
-### 技术报告专项
-- [[DeepSeekV3训练与MoE基建]]
-- [[DeepSeekV32技术报告深读]]
-- [[Qwen3技术报告深读]]
-- [[DeepSeekR1推理训练深读]]
-- [[GPT5系统卡深读]]
-- [[Gemini25技术报告深读]]
-- [[ClaudeOpus45系统卡深读]]
-- [[KimiK2技术报告深读]]
-- [[GLM45技术报告深读]]
-- [[MiniMaxM1技术报告深读]]
-- [[MOC_模型与技术报告]]
-
-### 相关深度笔记
-- [[混合专家架构]]
-- [[开源与闭源前沿模型谱系]]
-- [[AI基础设施总览]]
-- [[线性注意力与状态空间模型谱系]]：本篇的 Lightning Attention 7:1 混合是那篇工业混合表的一例；那篇还记录了 MiniMax-M2 回到全注意力的反方案例。
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [MiniMax-M1 arXiv（v1）](https://arxiv.org/abs/2506.13585v1) | §3 CISPO、§4 数据、Table 2 完整评测 |
+| 2 | [MiniMax-Text-01](https://arxiv.org/abs/2501.08313) | M1 未复述的底座结构 |
+| 3 | [MiniMax-M1 代码与权重](https://github.com/MiniMax-AI/MiniMax-M1) | 权重、vLLM 与 Transformers 支持 |

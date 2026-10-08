@@ -145,7 +145,7 @@ Hinton 等、MiniLLM、GKD 三行据各自论文；MiniLLM 的 arXiv 现行题�
 | [[合成对齐数据Magpie]] | 分界：那篇回答对齐数据从哪来，本篇回答已有教师时学生在什么分布上学 | Magpie 与 ActiveUltraFeedback 流水线 |
 | [[GRPO与DAPO算法族]] | OPD 可写成稠密 KL 约束 RL，实现上复用策略梯度框架，只把结果奖励换成逐 token 的负反向 KL | GRPO 损失推导 |
 | [[RL算力缩放与环境扩展]] | 那篇写 RL 后训练的算力怎样外推，本篇给出另一条路：已有强教师时，用稠密信号以约十分之一甚至更少的算力达到 RL 的效果 | RL 缩放曲线与环境构建 |
-| [[Qwen3技术报告深读]] | 那篇 Strong-to-Weak Distillation 一节是 OPD 「约 RL 十分之一 GPU 时」结论的出处，博文即以复现它为起点 | Qwen3 四阶段后训练全流程 |
+| [[Qwen3技术报告深读]] | 那篇 5.3 节 Strong-to-Weak Distillation 是 OPD 「约 RL 十分之一 GPU 时」结论的出处，博文即以复现它为起点 | Qwen3 四阶段后训练全流程 |
 | [[Nemotron3Ultra技术报告深读]] | 多教师 OPD 的工业实例：那篇的后训练在 RLVR 之后做两轮 MOPD | Nemotron 后训练全文 |
 | [[DeepSeekV4技术报告深读]] | 工业实例：V4 先按领域 SFT → GRPO 训出专家，再让学生在自身采样上以反向 KL 对齐超过 10 个教师，做多教师 OPD 合并，取代 V3.2 的混合 RL 合并阶段 | V4 架构与后训练全文 |
 | [[KimiK3技术报告]] | 多教师 OPD 的工业实例：那篇在九个专家 RL 之后用 MOPD 合并为统一模型 | K3 架构与预训练 |

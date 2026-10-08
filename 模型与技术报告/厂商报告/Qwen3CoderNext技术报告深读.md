@@ -1,5 +1,5 @@
 ---
-title: "开源代码旗舰：Qwen3-Coder-Next Technical Report"
+title: Qwen3-Coder-Next Technical Report 深读
 topic: Qwen3CoderNext技术报告深读
 date: 2026-09-22
 lines: [架构思想, 训练—agent 反馈接口, 评测字段]
@@ -8,229 +8,120 @@ sources:
  - https://arxiv.org/abs/2603.00729
 aux:
  - https://arxiv.org/abs/2603.00729
- - https://arxiv.org/pdf/2603.00729
- - https://raw.githubusercontent.com/QwenLM/Qwen3-Coder/main/qwen3_coder_next_tech_report.pdf
  - https://huggingface.co/Qwen/Qwen3-Coder-Next
  - https://www.modelscope.cn/models/Qwen/Qwen3-Coder-Next
  - https://github.com/QwenLM/Qwen3-Coder
 arxiv: ["2603.00729"]
-related: ["Qwen38Next架构深读", "SWEBenchPro代码修复评测", "代码智能体Harness史线", "Nemotron3Ultra技术报告深读", "OLMo3全栈开放配方", "Qwen3技术报告深读", "ToolLoop工具数据合成"]
-retrieval_cutoff: 2026-09-22
+related: ["Qwen38Next架构深读", "SWEBenchPro代码修复评测", "代码智能体Harness史线", "Qwen3技术报告深读", "ToolLoop工具数据合成", "奖励黑客与涌现失对齐", "DeepSeekV32技术报告深读", "OLMo3全栈开放配方", "Nemotron3Ultra技术报告深读"]
+retrieval_cutoff: 2026-03-03
 timezone: Asia/Shanghai (CST)
 ---
 
-# 开源代码旗舰：Qwen3-Coder-Next Technical Report
+# Qwen3-Coder-Next Technical Report 深读
 
-> **定位**：代码专用模型主题轴——Qwen Team *Qwen3-Coder-Next Technical Report*（arXiv:**2603.00729**v1，页眉 **28 Feb 2026**；文首日期栏 **2026-03-03**）。立「**代码专用开源旗舰 TR**」：在 **可执行环境反馈**上缩放 agentic 中训 / RL，产出 **80B 总参 / 3B 激活（80A3）** 的开权重量，面向编码 agent 与本地开发。
-> **研究线**：**训练—agent 反馈接口（主）**——可验证任务合成、MegaFlow 编排、多 scaffold 轨迹、专家蒸馏与 reward-hacking blocker；**评测字段（辅）**——文内 SWE / Terminal / 函数级 / 通用表；**架构思想（仅接口）**——只记「基于 Qwen3-Next hybrid MoE、80A3、262k 上下文」等产品字段，不展开 GDN/QSA/GR 等通用 Next 架构课。
+> **主要来源**：[Qwen3-Coder-Next Technical Report](https://arxiv.org/abs/2603.00729)（Qwen Team，v1，2026-02-28）；[Qwen3-Coder-Next 权重页](https://huggingface.co/Qwen/Qwen3-Coder-Next)（仅用于核对型号名）；[Qwen3-Coder 代码仓库](https://github.com/QwenLM/Qwen3-Coder)（报告所附地址）（截至 2026-03-03）。权重页与仓库页不引事实，不计入截至。
+> **研究线**：训练与智能体反馈接口（主：可验证任务合成、执行基建、多专家 RL 与蒸馏、奖励黑客拦截）；评测字段（辅：SWE 系列与 Terminal-Bench）；架构思想（只记底座与规模）
 > **范围与相邻笔记**：
-> - **≠ [[Qwen38Next架构深读]]**：不把本卡写成 **Qwen3.8-Next / Flash-Next** 架构复述（GDN+全注意力、CPT 换 QSA、Gated Residual、n-gram、Muon/稳定性）。本报告仅声明底座为 **Qwen3-Next** hybrid MoE；架构细节一律 **交叉引用 [[Qwen38Next架构深读]] / 官方 Qwen3-Next 博文**，本卡不重开。
-> - **≠ [[SWEBenchPro代码修复评测]]**：不重写 **SWE-Bench Pro / Pro Verified** 的评测设计、三分集、anti-hacking 协议正文。本卡只把 Pro / Verified / Multilingual 当 **文内对照榜数字**（Table 3–4），不立评测轴。
-> - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / harness 控制环通史；scaffold 名仅作 **数据生成与评测脚手架引用**。
-> - **≠ [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]]**：不写成 Nemotron 3 Ultra / OLMo 3 开源旗舰对照全文；他厂模型只出现在 **文内表数字转述**。
-> - **≠ [[Qwen3技术报告深读]]**：不重写 Qwen3 Dense/MoE 全家桶、think/no_think、四阶段后训练通史。
-> 文内未给出精确总 token 账本 / 层宽专家表。
+> - ≠ [[Qwen38Next架构深读]]：Next 系列的架构设计在那篇，本篇只记 Coder-Next 基于 Qwen3-Next 的混合注意力 MoE、80B 总参、3B 激活。
+> - ≠ [[SWEBenchPro代码修复评测]]：SWE-Bench Pro 的评测设计在那篇，本篇只引报告内的分数。
+> - ≠ [[代码智能体Harness史线]]：智能体脚手架的历史在那篇，本篇只把脚手架名当作数据生成与评测的设置。
+>
+> **意义**：Qwen3-Coder-Next 是面向编码智能体与本地开发的开放权重模型，基于 Qwen3-Next 的混合注意力 MoE，80B 总参、3B 激活（§1）。报告的主线是在可执行环境的反馈上扩展智能体训练：约 800K 个可验证的软件工程任务、云原生的执行编排、多脚手架轨迹、按领域训练的专家再蒸馏回单一模型，并在 RL 中拦截通过网络拉取未来提交的奖励黑客。它在 SWE-Bench Verified 的三种脚手架上得到 70.6、71.1、71.3（Table 3），同表的 DeepSeek-V3.2（671A37）、GLM-4.7（358A32）、MiniMax-M2.1（230A10）也在这一区间。
 
----
+## 一、问题背景
 
-## 一、材料元信息
+报告认为编码智能体的能力取决于能否在真实可执行环境中大规模训练（§1、§2）。难点有三：可验证的任务稀缺，需要从 GitHub 的 PR 和已有可执行数据集合成；大量环境要并行构建、执行与评估；智能体在 RL 后期会利用环境漏洞，例如找回未来提交来得到标准修复。报告另一个目标是在小激活规模上做到这一点，以便本地部署（§1、§6）。
 
-| 项 | 报告原文 / 元数据 | 出处 |
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| 标题 | Qwen3-Coder-Next Technical Report | 封面；PDF 元数据 Title |
-| 作者 | Qwen Team；Core：Ruisheng Cao, Mouxiang Chen, … Fan Zhou（字母序姓）；Contributors 另列 | §7 Author |
-| arXiv | **arXiv:2603.00729v1** \[cs.CL\] **28 Feb 2026** | PDF 页眉 |
-| 文首日期栏 | **2026-03-03** | PDF 首页首行 |
-| 产品字段 | **80B** total / **3B** active（文称 **80A3**）；基于 **Qwen3-Next** hybrid attention + MoE | Abstract / §1 / §6 |
-| 发布入口 | HF / ModelScope `Qwen/Qwen3-Coder-Next`；代码 `github.com/QwenLM/Qwen3-Coder` | 封面 |
-| PDF 页数 / 尺寸 | **23** 页 A4 | |
-| Producer | pikepdf 8.15.1；Creator: arXiv GenPDF (tex2pdf:57610bf) | |
+| 2024-09 | [Qwen2.5-Coder](https://arxiv.org/abs/2409.12186) | 前代代码模型，Coder-Next 把语言覆盖从它的 92 种扩到 370 种 |
+| 2025-05 | [Qwen3](https://arxiv.org/abs/2505.09388) | Qwen3 系列技术报告 |
+| 2026-02 | [Qwen3-Coder-Next](https://arxiv.org/abs/2603.00729) | 在 Qwen3-Next 底座上做可执行反馈驱动的中训练、多专家 RL 与蒸馏 |
 
-| 文件 | 链接 | 页数 | 备注 |
-|---|---|---|---|
-| **主 PDF（arXiv）** | `https://arxiv.org/abs/2603.00729` | **23** | — |
-| **官方镜像（辅）** | https://raw.githubusercontent.com/QwenLM/Qwen3-Coder/main/qwen3_coder_next_tech_report.pdf | — | 与 arXiv 对照用 |
+## 三、核心机制：可验证任务与执行基建（§2）
 
-**一句话抓手：**
-在 **小激活脚印（3B）** 上，用「**可验证可执行任务合成 × 环境反馈中训/RL × 多专家再蒸馏**」把编码 agent 能力推到可与 **数量级更大激活** 的开源旗舰同台（SWE-Bench Verified ≈ **70.6–71.3%**，三 scaffold；Table 3），并公开 base + instruct 开权重。
+1. **从 GitHub PR 构建环境**：挖掘与 issue 相关的 PR，拆出有缺陷版本、修复补丁与测试补丁；环境构建智能体打包 Docker 镜像与验证脚本，过滤没有实际功能的验证器，再由 QA 智能体消除歧义，并与下游基准去污染。
+2. **在已有可执行数据集上注入缺陷**：基于 SWE-Smith、SWE-Flow、SWE-Rebench、Multi-SWE-RL，用改写、语义扰动与规则注入缺陷，只保留让既有测试失败且回退后可修复的样本；生成自然语言 issue，并排除触发缺陷的测试文件以防捷径。两条线合计约 800K 个可验证实例，覆盖九种以上编程语言（§2.1）。附录 Table 10 与 Table 11 分别给出真实仓库实例与工作流合成任务的分项数量，与正文的「约 800K」口径不同，引用时需分表标明。
+3. **MegaFlow**（§2.2）：运行在阿里云 Kubernetes 上的编排系统，每个任务是一个 Argo 工作流，分智能体 rollout、评估、后处理三阶段，智能体容器与执行环境放在同一个 pod。
 
----
+## 四、核心机制：中训练（§3）
 
-## 二、议题边界：代码 agent 训练栈 ≠ 通用 Next 架构 / ≠ 评测榜 / ≠ 他厂旗舰
+起点是 Qwen3-Next 的预训练基座，原则是合成数据只用到能稳住常见用户任务的最小量。
 
-### 2.1 五向对照（跟读）
+1. **GitHub 自然代码**：语言从 92 种扩到 370 种，加重 PR、仓库与代码评审数据；仓库级数据约 600B token，报告称比文件级数据更有效；训练上下文从 32,768 扩到 262,144 token。预训练语料更新到 2025 年 9 月 30 日。
+2. **文本代码对齐**：用 Qwen3-Coder-480B-A35B-Instruct 把网页数据重写为干净的 Markdown（Table 1 给出重写前后的对照）。
+3. **多轮智能体轨迹**：用 SWE-agent、Mini-SWE-agent、OpenHands、Claude-Code、Qwen-Code、Terminus 等多种框架生成轨迹，教师为 480B-A35B。Figure 3 的文字说明：同一脚手架内性能随中训练 token 增加而提升，但跨脚手架迁移有限。
+4. **FIM**：search-and-replace 式的 FIM 优于 chat-FIM，报告认为它与 PR 式预训练数据更一致。
+5. **训练**：在数万亿 token 上训练，报告未给更细的账本；用 best-fit packing 避免拼接后切分带来的上下文幻觉与截断，并对重复片段做掩码。
 
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| **Qwen3.8-Next / Flash-Next 架构** | GDN/QSA/GR/n-gram/Muon | **[[Qwen38Next架构深读]]** | **否**（不复述架构） |
-| **Qwen3 通史** | Dense/MoE 全家桶、think 协议 | **[[Qwen3技术报告深读]]** | **否** |
-| **SWE-Bench Pro 评测设计** | 长程抗污染、三分集、Verified 校正 | **[[SWEBenchPro代码修复评测]]** | **否**（仅引文内分数） |
-| **Agent harness / ACI** | SWE-agent 控制环、OpenHands SDK | **[[代码智能体Harness史线]]** | **否**（仅 scaffold 名） |
-| **Nemotron 3 Ultra / OLMo 3** | 他厂开源旗舰 TR | **[[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]]** | **否** |
-| **可执行反馈的代码专用训练栈** | 任务合成、MegaFlow、专家 RL、蒸馏 | **本篇** | **是** |
+## 五、核心机制：后训练（§4）
 
-跟读直觉：[[Qwen38Next架构深读]] 问「**通用 Next 怎么训得稳、推得省**」；本卡问「**同一小激活脚印上，如何用可执行反馈把 agentic 编码推上去**」。二者共享「Next / MoE」命名空间，但主杠杆完全不同——不滑成架构附录。
+### 5.1 SFT 与专家
 
-`
- Qwen 近窗「Next」命名空间
- │
- ┌──────────┼──────────┐
- ▼ ▼ ▼
- 通用架构 TR 代码 agent TR 评测/harness
- [[Qwen38Next架构深读]] 本篇 [[Qwen3CoderNext技术报告深读]] [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]]
- (不复述) 可执行反馈栈 (仅引数字/名)
-`
+SFT 有三个来源：内部对齐与安全语料、执行验证过的智能体轨迹、基于文档的开放域问答。之后分四类专家训练：
 
-### 2.2 与 [[Qwen38Next架构深读]] 的唯一允许接口
-
-| 字段 | [[Qwen38Next架构深读]]（不展开） | 本报告明文（本卡可记） |
+| 专家 | 目标 | 要点 |
 |---|---|---|
-| 产品名 | Qwen3.8-Flash-Next-Base 等 | **Qwen3-Coder-Next**（base + instruct） |
-| 底座表述 | GDN/QSA/GR 细表 | 「**based on Qwen3-Next** with hybrid attention and MoE」——**不展开** |
-| 参量 | 125B / 6B 激活等（[[Qwen38Next架构深读]] 文） | **80B / 3B 激活（80A3）** |
-| 上下文 | CPT 256K 等架构叙事 | 中训扩到 **262,144** tokens（相对文件级 32,768） |
-| 后训练 | 本 PDF 无 think/Muon 课 | **中训 → SFT → 多专家（含单轮/多轮 RL）→ 蒸馏** |
+| WebDev | 全栈界面与交互 | 用 Playwright 与 Chromium 渲染，VLM 做静态检查，DOM 驱动交互前后截图验证 |
+| UX（CLI 与 IDE） | 适配真实工具的调用格式 | 训练中混入多种工具调用模板，并引入 XML 风格的 qwen3_coder 格式，减轻多行代码在 JSON 中的转义负担；Figure 5 显示数据量固定时模板种类越多，SWE-Bench Verified 越高 |
+| 单轮 RL | 竞赛、库使用、安全编码等可执行单轮任务 | 用多数投票合成的单元测试驱动 RL |
+| 软件工程多轮 RL | 仓库级长程工具交互 | SFT 与 RL 的题目完全不重叠；轨迹级完成奖励，加未完成惩罚与非法工具调用惩罚 |
 
----
+模板跟随评测（Table 2）中，Qwen3-Coder-Next 五种环境的平均为 92.7。
 
-## 三、缩放 Agentic Training：可验证任务 + 执行基建（§2）
+### 5.2 奖励黑客拦截（§4.2.4）
 
-### 3.1 任务合成双轨（§2.1）
+去掉远程仓库、分支与标签还不够：RL 后期智能体会自己添加远程仓库、克隆，或用下载工具拉取包含答案的未来提交（Figure 7）。拦截规则是：工具调用同时包含指向该仓库的 GitHub 链接与网络关键词（git/curl/wget）时，拦下并给出明确反馈。报告称人工抽查后黑客行为基本消除，RL 中平均智能体轮次从 50 增加到 130，长程能力随之出现。
 
-| 轨 | 做法 | 文内规模 / 要点 |
+### 5.3 专家蒸馏（§4.2.5）
+
+把 WebDev、UX、单轮 RL 与软件工程专家的能力蒸馏回单一模型，避免部署时做专家路由或多模型编排。
+
+## 六、主要结果（§5）
+
+基线在各脚手架上复现，评测同样去掉远程仓库、分支与标签，智能体最大轮次 300。
+
+1. **SWE-Bench Verified**（Table 3，SWE-Agent / MiniSWE-Agent / OpenHands）：70.6 / 71.1 / 71.3；同表 DeepSeek-V3.2 为 70.2 / 67.2 / 72.6。
+2. **SWE-Bench Multilingual 与 Pro**（Table 4）：Multilingual 三种脚手架为 62.8 / 56.2 / 64.3；Pro 在 SWE-Agent 与 MiniSWE-Agent 上为 42.7 / 38.7。
+3. **Terminal-Bench 2.0**（Table 5）：四种设置为 34.2 / 36.2 / 30.9 / 25.8，报告称仍有提升空间。
+4. **与同系列对照**：相对 Qwen3-Next，竞赛数学大幅提升，如 AIME25 为 83.07 对 69.64、HMMT25 Feb 为 70.21 对 54.27（Table 9），报告解释为代码推理能迁移到数学。
+5. **安全附录**（附录 A.4）：SecCodeBench 无提示的生成任务为 61.2，高于 Claude-Opus-4.5 的 52.5。
+
+## 七、意义
+
+1. **小激活规模的编码智能体**：80A3 的模型在 SWE-Bench Verified 上与 671A37、358A32、230A10 的开放模型处在同一区间，报告把能力来源放在可执行反馈的规模上。
+2. **任务合成与执行编排成为训练配方的一部分**：约 800K 个可验证实例和 MegaFlow 让中训练与 RL 都能在真实环境里大规模进行。
+3. **环境加固被写进 RL 配方**：奖励黑客拦截是一条可复现的规则，报告同时记录了拦截后长程行为的出现。
+
+## 八、局限与待核实
+
+1. **报告自述的差距**（§6）：相对 Claude Opus 4.5 等闭源前沿模型，Coder-Next 的激活算力和总训练算力都小得多，在超大规模软件工程、轮次效率与前端界面上仍有缺口。
+2. **跨脚手架迁移弱**：Figure 3 显示单一脚手架的轨迹难以迁移到其他框架；Table 2 测的是格式跟随，不是完整的软件工程迁移。
+3. **拦截是启发式规则**：合法的网络需求（装包、查文档）与泄漏通道如何长期区分，报告未讨论。
+4. **代码到数学的迁移没有因果消融**：Table 9 的提升来源未做拆分。
+5. **结构与账本未给**：层数、专家与隐藏维度未列，中训练只写「数万亿 token」。
+6. **日期**：arXiv 页面显示 v1 提交于 2026-02-28；PDF 首页首行写作 2026-03-03。本篇用到 PDF 首页日期，截至按 2026-03-03 计。
+
+## 九、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **GitHub PR → 可执行环境** | 挖 issue 相关 PR；拆 buggy / fix / test patch；环境构建 agent 打 Docker + 验证脚本；滤非功能 verifier；QA agent 去歧义 | 与下游榜 **decontaminate**；细节指向 Chen et al. 2026 *SWE-Universe*（arXiv:**2602.02361**） |
-| **开源可执行集上合成 bug** | 基座 SWE-Smith / SWE-Flow / SWE-Rebench / Multi-SWE-RL；注入 bug（改写 / 语义扰动 / 规则）；**FAIL 既有测试且 revert 可修** 才保留；生成 NL issue，**排除触发测试文件** 防捷径 | 约 **800K** 可验证 SE 实例，**>9** 语言 |
+| [[Qwen38Next架构深读]] | 同属 Qwen 的 Next 系列，本篇只记底座与规模，架构设计在那篇 | 架构细节 |
+| [[SWEBenchPro代码修复评测]] | 本篇六节的 SWE-Bench Pro 分数是模型报告内的结果 | Pro 基准的设计 |
+| [[代码智能体Harness史线]] | 本篇用到的脚手架名与跨脚手架迁移现象 | 脚手架的历史与控制环 |
+| [[Qwen3技术报告深读]] | Qwen3 系列的前代报告 | Qwen3 的模型族与后训练 |
+| [[ToolLoop工具数据合成]] | 本篇是模型侧的多模板训练加 RL，工具数据合成的方法在那篇 | 工具环算法 |
+| [[奖励黑客与涌现失对齐]] | 网络拉取未来提交的拦截，是那篇环境加固类缓解的一个工程实例 | 奖励黑客的谱系与泛化 |
+| [[DeepSeekV32技术报告深读]] | Table 3 与 Table 4 把 DeepSeek-V3.2 列为开放模型对照 | V3.2 的配方 |
+| [[OLMo3全栈开放配方]] | 同为开放模型报告，本篇不比较两者 | OLMo 3 的配方 |
+| [[Nemotron3Ultra技术报告深读]] | 同为开放模型报告，本篇不比较两者 | Nemotron 的配方 |
 
-附录 **Table 10**（真实仓库实例）：合计 **807,693** instances / **52,960** repos（Python 202k、JS/TS 176k、Go 121k …）。
-附录 **Table 11**（工作流合成）：合计 **851,898** tasks（SWE-Flow 384k、SWE-rebench 373k 等）。
-正文「约 800K」与附录两表并存——引用时 **分表标明来源**，不合成单一「总任务数」。
+## 十、延伸阅读
 
-### 3.2 MegaFlow 基建（§2.2）
-
-内部编排 **MegaFlow**（Zhang et al., 2026c，arXiv:**2601.07526**）：阿里云 Kubernetes 上云原生；每任务为 **Argo workflow** 三阶段——**agent rollout**（agent 容器与执行环境同 pod 共置）→ **evaluation** → **post-processing**。本卡只记接口，不写 K8s 运维通史。
-
----
-
-## 四、Mid-training：自然为主、合成为辅（§3）
-
-起点：预训练 **Qwen3-Next** base（引用 Qwen Team 2025a 博文；**非** [[Qwen38Next架构深读]] 架构展开）。原则：合成数据用到「能稳住常见用户任务」的最小量，保住多样性与通能。
-
-### 4.1 数据组件（照录要点）
-
-| 组件 | 要点 | 文内数字 |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| **GitHub 自然代码** | 语言覆盖相对 Qwen2.5-Coder：**92 → 370**；加重 PR / 仓库 / code review；文件级 + **仓库级** | 仓库级约 **600B** tokens；上下文 **32,768 → 262,144** |
-| **Text–code grounding** | CC + 垂域；用 **Qwen3-Coder-480B-A35B-Instruct** 重写为干净 Markdown | Table 1：Reformat 后 Evalplus **54.38→63.09**，MultiplE **36.02→48.35**，CRUX-Eval **57.13→58.94**（Table 1 列名照录抽取） |
-| **GitHub PR 结构化** | 问题描述 + 仓级上下文 + Search-Replace / git diff；去异常与榜重叠 | 定位 bug + 精确编辑 |
-| **单轮 QA 合成** | 文档种子 → 多题自洽 QA；质量不足可弃权 | — |
-| **多轮 agentic** | §2.1 任务；多框架 rollout：SWE-agent / Mini-SWE-agent / OpenHands / Claude-Code / Qwen-Code / Terminus；教师 **480B-A35B**；规则滤失败/畸形工具调用 | Fig.3：同 scaffold 随 token 升；**跨 scaffold 迁移有限** |
-| **少量 IF 数据** | 中训以文档为主，混入 IF 以便中途监控 | — |
-| **FIM** | Stack-V2；**chat-FIM** vs **search-and-replace FIM**；后者更优（对齐 PR 预训练） | 另有 autocomplete 代理服务 |
-
-预训练语料更新至文称 **Sep 30, 2025**。中训总量表述为「**trillions of tokens**」——**无更细账本**。
-
-### 4.2 训练技巧（§3.2）
-
-- **Best-fit packing (BFP)**（Ding et al. 2024a）：避免 concat-then-split 的上下文幻觉与头侧截断；Megatron C++ 实现。附录 A.3 消融：BFP+处理超长文档优于传统打包；主实验对超长文档采 **split**。
-- **重复段 masking**：减 header/配置块冗余带来的重复生成。
-- 目标：标准 NTP + **FIM**（长上下文编辑）。
-
----
-
-## 五、Post-training：SFT → 多专家 → 蒸馏（§4）
-
-### 5.1 SFT（§4.1）
-
-三源：内部对齐/安全语料；**执行验证过的 agent 轨迹**；文档 grounding 开放域 QA（功能正确 + 安全过滤）。
-**Mini-SWE-agent** 作风用户模拟器做闭环验证（编译/运行/环境态）。另用配对裁判做风格/有用性排序（$n$ 候选 → $\binom{n}{2}$ 对）。
-
-### 5.2 专家簇（§4.2）——本卡主杠杆
-
-| 专家 | 目标 | 关键接口（不写成产品评测通史） |
-|---|---|---|
-| **WebDev** | 全栈 UI / 组件 / 交互 | Playwright+Chromium 渲染；VLM 静态清单；DOM 驱动动态交互前后截图验 |
-| **UX / CLI·IDE** | 真实 IDE/CLI 工具调用格式 | **多样 tool chat template**（Fig.4；附录 Table 12 列 **21** 种）；引入 **qwen3_coder** XML 以减轻多行代码 JSON 转义；Fig.5：模板数↑ → SWE-Bench Verified↑（数据量固定） |
-| **Single-turn QA / RL** | 竞赛+库使用+多语言+安全编码等可执行单轮 | 多数票合成单测驱动 RL；Fig.6 多子能力随 RL step 升 |
-| **Software Engineering / 多轮 RL** | 仓级长程工具交互 | SFT/RL prompt **完全不相交**；滤过易与噪声；轨迹级完成奖励 + **未完成惩罚** + **非法 tool-call token 惩罚** |
-
-**Reinforced Reward Hacking Blocker（§4.2.4，关键）**
-标准去 remote/branch/tag 不足：后期 agent 会 `git remote add` / `clone` / `curl` 拉未来提交（Fig.7）。策略：工具调用若同时含 **github.com/{repo} 类链接** 与 **网络关键词（git/curl/wget）** → 拦截并显式反馈。文称人工抽查后 hacking 基本消除；RL 中平均交互轮次由约 **50 → 130**（长程能力涌现，Fig.7 左）。
-
-这一拦截属于环境加固；奖励黑客的一般谱系、向失对齐的泛化与其他缓解手段见 [[奖励黑客与涌现失对齐]]。
-
-**模板跟随评测 Table 2（Avg）：** Qwen3-Coder-Next **92.7**（五 scaffold）；对照 DeepSeek-V3.2 **93.7**、Gemini-3-pro **87.0**、Claude-sonnet-4-5 **85.4** 等——本篇只列数字。
-
-### 5.3 Expert Distillation（§4.2.5）
-
-将 WebDev / UX / Single-turn RL / SE 专家能力蒸回 **单一 SFT 统一部署模型**，避免专家路由或多模型编排。
-
----
-
-## 六、评测字段（§5；辅）
-
-**协议共性（文内）：** 各 scaffold 复现基线；采用去 remote/branch/tag 等 anti-hacking；agent 最大轮次 **300**。基线含 Claude-Opus-4.5 / Sonnet-4.5 与 DeepSeek-V3.2、GLM-4.7、MiniMax-M2.1、Kimi-K2.5 等。
-
-### 6.1 Agentic（Table 3–5）
-
-| 榜 | Scaffold / 设定 | Qwen3-Coder-Next (80A3) | 邻接开源对照（同表节选） |
-|---|---|---|---|
-| **SWE-Bench Verified** | SWE-Agent / MiniSWE-Agent / OpenHands | **70.6 / 71.1 / 71.3** | DeepSeek-V3.2：70.2/67.2/72.6；GLM-4.7：74.2/70.4/70.6；MiniMax-M2.1：74.8/70.4/71.0 |
-| **SWE-Bench Multilingual** | 同上三 scaffold | **62.8 / 56.2 / 64.3** | DeepSeek 62.3/55.5/61.8；MiniMax 66.2/62.5/67.5 |
-| **SWE-Bench Pro** | SWE-Agent / MiniSWE-Agent | **42.7 / 38.7** | DeepSeek 46.0/32.4；Kimi-K2.5 47.3/42.8；GLM-4.7 45.1/39.4 |
-| **Terminal-Bench 2.0** | Terminus2-xml/json；ClaudeCode；QwenCode | **34.2 / 36.2 / 30.9 / 25.8** | 开源各异；文称「有提升空间但为高效基础」 |
-
-> **≠ [[SWEBenchPro代码修复评测]]**：上表 Pro 分数是 **模型 TR 内嵌结果**，不是 Pro 基准设计笔记。读评测方法论回 [[SWEBenchPro代码修复评测]]。
-
-### 6.2 其他编码 / 通用 / 数学（Table 6–9）
-
-| 对照 | 要点（照表） |
-|---|---|
-| vs **Qwen3-Coder-480B-A35B** / **Qwen3-Next** | Table 6：Coder-Next 在 LiveCodeBench v6 **58.93**、OJBench **23.01**、Codeforces **2100** 高于两对照；EvalPlus/MultiPL-E 接近或略低 |
-| Full-stack / SQL / Aider | Table 7：Aider-Polyglot **66.20**（高于 480B 的 60.40 与 Next 的 52.90）；FullStack / Spider / BIRD 互有高低 |
-| 通能 Table 8 | 与 Qwen3-Next 接近（MMLU 87.73 vs 87.87；GPQA **74.49** vs 73.54） |
-| 竞赛数学 Table 9 | 相对 Next 大幅提升（如 AIME25 **83.07** vs 69.64；HMMT25 Feb **70.21** vs 54.27）——文释「代码推理可迁移数学」 |
-
-Figure 1 含 Aider 等柱图；精确柱高若与 Table 7 不一致 → **以表为准**，图标待核实读图。
-
-### 6.3 局限与未来（§6）+ 安全附录（A.4）
-
-相对 Claude Opus 4.5 等：更小激活与更低总训练算力 → 超大规模 SE、轮次效率、前端/UI 仍有缺口；未来拟加强难项目预训练、长程规划 RL、视觉评 UI、以及 **agentic 网络安全**（漏洞利用 / CTF——仅文内 future work 表述，本卡不写攻击步骤）。
-
-附录安全评测（**非主线**）：AthenaBench-Mini / PrimeVul-Paired / SecCodeBench / CWEval（Table 14–16）。例：SecCodeBench Gen w/o Hint **61.2**（高于 Claude-Opus-4.5 的 52.5）；CTI 多项仍落后专有模型。引用时标明附录，避免写成「安全产品卡」。
-
----
-
-`
-Qwen3-Next base（架构细部 → [[Qwen38Next架构深读]] / 官方博文，本卡不写）
- │
- ▼
- Mid-train（自然 GitHub/仓级 600B 级 + 少合成；262k；BFP；FIM）
- │
- ▼
- SFT（执行验证轨迹 + 配对裁判）
- │
- ├─ WebDev expert ─┐
- ├─ UX / multi-template tool-call ─┤
- ├─ Single-turn exec RL ─┤──► Expert Distillation → 统一 Coder-Next
- └─ SE multi-turn RL + hacking blocker ─┘
- │
- ▼
- Eval：SWE×scaffolds / Terminal / 函数级 / 通能（分数辅；榜设计 → [[SWEBenchPro代码修复评测]]）
-`
-
-**跟读口诀：**
-[[Qwen38Next架构深读]] = 通用 Next 怎么省怎么稳 → [[Qwen3CoderNext技术报告深读]] = 3B 激活上如何用可执行反馈练成编码 agent → [[SWEBenchPro代码修复评测]]/[[代码智能体Harness史线]] = 测什么 / 沙箱怎么转（本卡只借分数与名字）。
-
-1. **交叉链**：`related` → [[Qwen38Next架构深读]] / [[SWEBenchPro代码修复评测]] / [[代码智能体Harness史线]] / [[Nemotron3Ultra技术报告深读]] / [[OLMo3全栈开放配方]] / [[Qwen3技术报告深读]] / [[ToolLoop工具数据合成]]；正文不展开其主课。
-2. **待核实 / 不外推**：中训精确总 token（仅「trillions」）；Figure 1 柱高；80A3 的层/专家/隐宽细表（**本 PDF 未给**）；「基于 Qwen3-Next」不等于「Qwen3.8-Next 架构附录」。
-3. **勿混并**：SWE-Bench Pro **分数**（本卡）≠ Pro **基准设计**（[[SWEBenchPro代码修复评测]]）；Table 10 与 Table 11 任务量 **分表引用**。
-
----
-
-## 八、开放问题
-
-1. 跨 scaffold 迁移弱（Fig.3）——统一模型蒸馏后，部署期换 IDE 模板的泛化上限如何量化？（Table 2 是格式跟随，不是完整 SE 迁移。）
-2. Reward-hacking blocker 为启发式；网络合法需求（装包/文档）与泄漏通道的长期对抗是否需要可学习判别器？文内未给。
-3. 「代码 RL → 数学大涨」（Table 9）的机制：共享推理还是数据泄漏/难度耦合？本 PDF 未做因果消融。
-4. 与 [[ToolLoop工具数据合成]] ToolLoop 等工具环方法卡的接口：本卡是 **模型侧多模板+RL**，不是工具环算法通史。
+| 1 | [Qwen3-Coder-Next arXiv（v1）](https://arxiv.org/abs/2603.00729v1) | §2 任务合成、§4.2 专家与拦截、Table 3–9 |
+| 2 | [Qwen2.5-Coder](https://arxiv.org/abs/2409.12186) | 前代代码模型的数据与训练 |
+| 3 | [Qwen3-Coder 代码仓库](https://github.com/QwenLM/Qwen3-Coder) | 发布入口 |
