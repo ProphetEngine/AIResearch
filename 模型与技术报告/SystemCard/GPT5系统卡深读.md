@@ -12,7 +12,6 @@ sources:
   - https://deploymentsafety.openai.com/gpt-5-sensitive-conversations
   - https://deploymentsafety.openai.com/gpt-5-1
 related: ["开源与闭源前沿模型谱系", "智能体工具与长程任务", "评测与排行榜可靠性", "模型卡与SystemCard规范", "SystemCard谱系时间线", "GPT52SystemCard更新", "GPT56系统卡深读", "GPToss模型卡深读", "ClaudeOpus41系统卡附录深读", "ClaudeOpus45系统卡深读", "Gemini25技术报告深读", "Gemini3Pro模型卡深读", "Qwen3技术报告深读", "DeepSeekR1推理训练深读", "安全红队与对抗评测"]
-timezone: Asia/Shanghai (CST)
 ---
 
 # GPT-5 System Card 深读（含 GPT-5.1 增补）

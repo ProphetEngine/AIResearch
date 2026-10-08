@@ -17,7 +17,6 @@ sources:
   - https://ai.meta.com/blog/meta-llama-3-1/
   - https://arxiv.org/abs/2601.11659
 related: ["开源与闭源前沿模型谱系", "DecoderOnly与GPT路线", "注意力与Transformer核心思想", "规模定律与预训练范式", "长上下文位置编码与系统侧", "注意力效率族MQA到MLA", "混合专家架构", "多模态架构脉络", "对齐脉络RLHF与偏好优化", "推理时扩展TestTimeScaling", "AI基础设施总览"]
-timezone: Asia/Shanghai (CST)
 ---
 
 # 开源生态里程碑：LLaMA 系如何改变复现与竞赛格局
