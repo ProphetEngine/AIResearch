@@ -6,11 +6,10 @@ lines: [评测字段, 架构思想]
 status: archived
 sources:
  - https://arxiv.org/abs/2410.07869
- - https://arxiv.org/abs/2410.07869
+ - https://proceedings.iclr.cc/paper_files/paper/2025/hash/adbe936993aa7cf41e45054d8b72f183-Abstract-Conference.html
 arxiv: ["2410.07869"]
-related: ["智能体工具与长程任务", "代码智能体Harness史线", "计算机使用智能体", "多智能体辩论", "VendingBench经营长程评测", "评测与排行榜可靠性"]
+related: ["智能体工具与长程任务", "代码智能体Harness史线", "VendingBench经营长程评测", "评测与排行榜可靠性", "OrchBench多智能体编排评测", "浏览与深研Agent基准", "Inspect评测Harness"]
 github: "https://github.com/zjunlp/WorfBench"
-iclr_pdf: "https://proceedings.iclr.cc/paper_files/paper/2025/file/adbe936993aa7cf41e45054d8b72f183-Paper-Conference.pdf"
 hf_collection: "https://huggingface.co/collections/zjunlp/worfbench-66fc28b8ac1c8e2672192ea1"
 project: "https://zjunlp.github.io/project/WorFBench/"
 archived: 2026-09-22
@@ -18,216 +17,119 @@ archived: 2026-09-22
 
 # Agentic workflow 生成基准：WorfBench + WorFEval
 
-> **定位**：工作流评测主题轴——相对 **[[智能体工具与长程任务]]**（旗舰工具环 / 长程产品叙述）与 **[[代码智能体Harness史线]]**（编码 ACI / 沙箱 harness），补仓库缺失的 **「把复杂任务分解为可执行 DAG 工作流」生成质量** 评测轴。锚点是浙大 / 阿里 *Benchmarking Agentic Workflow Generation*（arXiv **2410.07869v3**，**ICLR 2025**）：基准 **WorfBench** + 协议 **WorFEval**（子序列 / 子图匹配）。
-> **研究线**：**评测字段（主）**——$f1_{\mathrm{chain}}$ vs $f1_{\mathrm{graph}}$、四场景、held-out、端到端增益与并行耗时；**架构思想（辅）**——节点链 → DAG、工作流作先验 / CoT 增强 / 并行缩短路径。
+> **主要来源**：[Benchmarking Agentic Workflow Generation（Qiao et al., ZJU / Alibaba, ICLR 2025；arXiv v3）](https://arxiv.org/abs/2410.07869)；[ICLR 2025 论文页](https://proceedings.iclr.cc/paper_files/paper/2025/hash/adbe936993aa7cf41e45054d8b72f183-Abstract-Conference.html)；[代码与数据](https://github.com/zjunlp/WorfBench)（截至 2026-09-22）
+> **研究线**：评测字段（主）——把 agent 的任务规划写成 DAG 工作流并定量评分；架构思想（辅）——工作流作为下游任务的结构化先验。
 > **范围与相邻笔记**：
-> - **≠ [[智能体工具与长程任务]]**：不写 MCP / ReAct / System Card 长程产品通史；本卡测的是 **规划图是否对**，不是工具环上能否跑完。
-> - **≠ [[代码智能体Harness史线]]**：不写 SWE-agent ACI / OpenHands SDK / Docker 沙箱；本卡无「改仓库执行」闭环。
-> - **≠ [[计算机使用智能体]]**：不是桌面 GUI / OSWorld / Operator；embodied 源（ALFWorld 等）只作 **工作流图构造数据源**。
-> - **≠ [[多智能体辩论]]**：不是多代理辩论协议；文中 multi-agent 仅作「可能改进生成」的一句相关工作。
-> - **≠ [[VendingBench经营长程评测]]**：不是经营净值 / meltdown 长程连贯。
-> §3.1「共 18 模型」与 Table 1 行数不一致处 **以表为准并标注**。
+> - ≠ [[智能体工具与长程任务]]：本篇不写工具环与长程产品叙事，只评规划图对不对，不评能否跑完。
+> - ≠ [[代码智能体Harness史线]]：本篇不写编码 ACI 与沙箱执行闭环。
+>
+> **意义**：WorfBench 把「会不会规划」从端到端成功率中拆出来，分成「顺序对不对」和「依赖对不对」两个可复现分数，显示即使 GPT-4 也存在约 15 个百分点的系统性图规划缺口；同时证明小模型生成的工作流可以作为先验提升更强模型的执行（weak-guide-strong）。
+
+**一句话**：给定任务和可用动作表，让模型生成一张以最小可执行子任务为节点、含并行分支的 DAG；WorFEval 先做语义节点匹配，再用最长递增子序列评链序、用最大公共诱导子图评图结构。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文** | Qiao, Fang, Qiu, Wang, Zhang, Jiang, Xie, Huang, Chen（ZJU / Alibaba）, *Benchmarking Agentic Workflow Generation* | arXiv:**2410.07869v3** \[cs.CL\] **23 Feb 2025**；页眉 *Published as a conference paper at ICLR 2025*；`https://arxiv.org/abs/2410.07869`（**25** 页 letter；CreationDate **2025-02-25** CST） | 一手：任务形式、构造与质控、WorFEval、主表、下游作用 |
-| **备·ICLR** | 同题会议 PDF | https://proceedings.iclr.cc/paper_files/paper/2025/file/adbe936993aa7cf41e45054d8b72f183-Paper-Conference.pdf | 备用链接；本笔记数字以 arXiv 官方 PDF 为准 |
-| **代码 / 数据** | zjunlp/**WorfBench** | https://github.com/zjunlp/WorfBench ；HF collection `zjunlp/worfbench-…`；项目页 https://zjunlp.github.io/project/WorFBench/ | `gen_workflow` / `eval_workflow`；训练参考 LLaMA-Factory |
+agent 解复杂任务通常先把任务分解成子任务再逐个执行，分解质量直接决定后续执行。论文指出已有规划评测有三个缺陷（§1）：
 
-**一句话抓手：** 现有 agent 评测多看 **端到端成败** 或 **线性分解**；WorfBench 把「子任务 + 依赖」建成 **DAG（含并行）**，WorFEval 用 **语义匹配 + LIS（链）+ MCIS（图）** 给出可复现的 $f1_{\mathrm{chain}}$ / $f1_{\mathrm{graph}}$——主发现是 **图规划系统性地难于线性规划**（闭源里 GPT-4 平均约 **67.32% → 52.47%**，差距约 **15%**）。
+1. **场景窄**：多局限于 function calling 或纯推理；
+2. **只看线性结构**：现实任务常有可以并行的分支，线性步骤列表表达不了；
+3. **评分松**：过度依赖 GPT-3.5/4 判分，评审本身会幻觉。
 
----
+另一方面，只看端到端成功率又无法区分「规划错」与「执行错」。
 
-## 二、议题边界：测「规划图质量」，不是执行闭环
+## 二、脉络
 
-### 2.1 与相邻笔记的分工
+WorfBench 处在「工具使用数据集 → 结构化规划评测 → 编排计划评测」这条线的中段：
 
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 阶段 | 代表 | 评测对象 |
 |---|---|---|
-| **[[智能体工具与长程任务]]** 工具 / 长程 | 「多步任务需分解与依赖」的抽象动机；文中 ReAct 仅作构造管线格式 | MCP、旗舰 System Card、产品 SLA |
-| **[[代码智能体Harness史线]]** harness | 「可执行粒度」与环境反馈存在 | ACI 命令面、沙箱 SDK、SWE-bench resolve |
-| **[[计算机使用智能体]]** CUA | embodied 源名（ALFWorld / WebShop / OS） | 截图键鼠、OSWorld 2.0 长程桌面分 |
-| **[[多智能体辩论]]** MAD | （无接口；仅划界） | 辩论轮次 / 去共识 |
-| **[[VendingBench经营长程评测]]** Vending | （无接口；仅划界） | 净值、销售停滞、meltdown |
+| 工具与具身 agent 数据集 | ToolBench、ToolAlpaca、ALFWorld、WebShop、WikiHow 等 | 单步工具调用或端到端轨迹成败 |
+| 工作流结构评测 | WorfBench（2024-10 首发，ICLR 2025） | 生成的 DAG 工作流是否与金标一致 |
+| 编排计划评测 | [[OrchBench多智能体编排评测]]（2026） | 依赖图给定后，子任务分配与跨 agent 信息转移是否合理 |
 
-### 2.2 文内对立轴（跟读 §1）
+WorfBench 直接把前一阶段的数据集改造成工作流金标；OrchBench 则在相关工作中把 WorfBench 归为「只测结构正确性、不仿真分配后执行后果」的一类，在其之上再评编排。
 
-既有评测三缺陷（文原文压缩）：
+## 三、核心机制
 
-1. **场景窄**：多限 function calling 或纯推理。
-2. **只看线性依赖**：现实常有 **并行** 的图结构（Fig.1）。
-3. **评分解松**：过度依赖 GPT-3.5/4 判分，自身也有幻觉。
+### 3.1 任务形式：节点链 → DAG
 
-WorfBench 四特征（§1 bullet）：多场景；DAG 工作流；节点链中介 + 拓扑排序质控 + 人工核验；WorFEval 定量匹配。
+模型输入任务描述 q 与候选动作表 A（API、工具、具身动作或其混合），输出 DAG：节点是最小可执行粒度的子任务，边表示执行先后依赖，另加 START / END。
 
----
+直接生成图对语言模型不友好，所以分两步：先生成**节点链**（图的一条拓扑序），再给节点编号并生成边。
 
-## 三、架构思想（辅）：节点链 → DAG，再当下游先验
+### 3.2 数据构造与质控
 
-### 3.1 任务形式（§2.1）
-
-给定任务描述 $q$、候选动作表 $A$（API / 工具 / embodied 动作或其混合）与模型 $M_\theta$：
-
-$$
-G(V,E) \leftarrow M_\theta(q,A)
-$$
-$G$ 为 **DAG**：节点 $V$ 是 **最小可执行粒度** 的子任务；边 $(v_i,v_j)$ 表示 $v_j$ 须在 $v_i$ 之后执行。另加 **START / END**。
-
-直接生成图对 LM 不友好，故引入 **节点链** $C(V)$（图的一条拓扑序）：
-
-$$
-G(V,E) \leftarrow C(V) \leftarrow M_\theta(q,A)
-$$
-即先产节点序列，再为节点编号后产边。
-
-### 3.2 构造管线（§2.2）
-
-| 场景族 | held-in 源 | 节点链怎么来 | 备注 |
-|---|---|---|---|
-| **Function Call** | ToolBench、ToolAlpaca | 金标 function call → GPT-4 反推 thought → 执行得 observation → few-shot 产每步 node | held-out：**Seal-Tools** |
-| **Embodied** | ALFWorld、WebShop、OS（轨迹自 ETO / AgentInstruct） | 按任务类人工设计 few-shot，GPT-4 据金标轨迹合成链（非「一动作一节点」） | held-out：**InterCodeSQL** |
-| **Problem-Solving** | LUMOS-O（数学 / 常识 / 多模态推理） | 已有规划链 → 统一格式 | — |
-| **Open-Grounded** | WikiHow | 已有过程链；无动作表则从公开动作库检索相似项作干扰 + 金标动作混合 | 提高选动作难度 |
-
-边：对链中节点编号后由 GPT-4 生成边集。
-
-### 3.3 质控（§2.3 · 可核数字）
-
-| 阶段 | 做法 | 过滤比例（文） |
+| 场景 | 训练内数据源 | 留出测试源 |
 |---|---|---|
-| **节点链**（主攻 function call） | 用节点检索函数列表；与金标不对齐则丢 | **15.36%** |
-| **工作流图** | 对 GPT-4 图做拓扑排序（入度 0 时按节点号升序打破平局）；与节点链不一致则丢 | **29.77%** |
-| 复杂度 | 丢仅 1 节点或 1 边的样本；过量场景随机下采样后划分 train/test；**测试集人工核验**（App. A.2：粒度 / 逻辑 / 任务质量） | — |
+| Function Call | ToolBench、ToolAlpaca | Seal-Tools |
+| Embodied | ALFWorld、WebShop、OS | InterCodeSQL |
+| Problem-Solving | LUMOS-O（数学、常识、多模态推理） | — |
+| Open-Grounded | WikiHow（混入检索到的相似干扰动作） | — |
 
-### 3.4 下游：工作流能干什么（§4 · 辅线）
+节点链与边由 GPT-4 基于金标轨迹生成，再经两道过滤：节点链与金标函数不对齐的丢弃（过滤 15.36%）；对图做拓扑排序、与节点链不一致的丢弃（过滤 29.77%）。测试集再经人工核验。最终训练集 18,679 条、测试集 2,146 条（其中 33.69% 为留出场景），平均每个工作流 4.17 个节点。
 
-1. **结构化先验**：把生成工作流塞进提示，引导规划（Table 3）。ALFWorld 上 GPT-4 seen **27.14→40.71**（↑13.57）、unseen **28.36→47.01**（↑18.65）；WebShop 增益较小（**55.62→56.49**）。工作流由 **微调后的 Qwen-2-7B** 生成，仍能抬更高参数模型——文称 **weak-guide-strong**。
-2. **CoT 增强（function call）**：逐步按节点产 CoT，并用节点检索最相似 API，再决定如何调用；StableToolBench 上相对 ToolLlama / one-shot GPT-4 / Qwen-2-72B 有相对准确率优势（Fig.5）。
-3. **并行减耗时**：无依赖节点可并行；以关键路径（Critical Path）估完成时间，相对逐步 ToolLlama，平均耗时约减 **1/5～1/3**（Fig.6 文述）。
-4. **缩短规划步数**：先验减少盲目试错（Table 4：如 GPT-4 ALFWorld seen **17.19→15.64**）。
+### 3.3 WorFEval
 
----
+1. **节点匹配**：用 Sentence-BERT（all-mpnet-base-v2）算预测节点与金标节点的语义相似度，低于 β = 0.6 视为不匹配，再做最大权二分图匹配得到一一对应。
+2. **链分 f1_chain**：把匹配上的预测节点映射到金标序号，在金标图的（最多 20 条）拓扑序上求最长递增子序列，以其长度算精确率与召回率。衡量「顺序对不对」，允许多插或漏掉节点。
+3. **图分 f1_graph**：在匹配节点上求预测图与金标图的最大公共诱导子图，以其节点数算 F1。衡量「依赖边对不对」。
 
-## 四、评测字段（主）：WorFEval
+## 四、主要发现
 
-### 4.1 匹配前处理（§2.4）
+### 4.1 图规划系统性地难于链规划
 
-- 节点语义：Sentence-BERT **`all-mpnet-base-v2`**，余弦相似度 $\sigma$。
-- 阈值 $\beta=\mathbf{0.6}$（§3.1）：$\sigma<\beta$ 视为不匹配。
-- 相似度矩阵上做 **最大权二分图匹配**，得到一一对应的匹配节点集 $V^{g\prime}$、$V^{p\prime}$。
-
-### 4.2 节点链分：$f1_{\mathrm{chain}}$（最长递增子序列）
-
-- 金标图取最多 **20** 条拓扑序（复杂度控制；理由见 App. A.9）。
-- 将预测匹配节点映射回金标序号，对每条金标拓扑序算 **LIS** 长度，取最大 $l$。
-- $p_{\mathrm{chain}}=l/|V^p|$，$r_{\mathrm{chain}}=l/|V^g|$，再合成 **F1**。
-
-跟读口诀：**「顺序对不对」**——允许预测多插/漏节点，但匹配上的相对序要落在某条合法拓扑序里。
-
-### 4.3 工作流图分：$f1_{\mathrm{graph}}$（最大公共诱导子图）
-
-- 在匹配节点诱导出的预测子图与金标图上做 **MCIS**，得共同诱导子图节点数 $k$。
-- $p_{\mathrm{graph}}=k/|V^p|$，$r_{\mathrm{graph}}=k/|V^g|$，再合成 **F1**。
-
-跟读口诀：**「边依赖对不对」**——节点语义对上还不够，诱导结构要对。
-
-### 4.4 基准规模（App. A.3）
-
-| 集合 | 规模 | 备注 |
-|---|---|---|
-| Train | **18,679** | 四类大致均衡（Fig.7） |
-| Test | **2,146** | 其中 **33.69%** 为 held-out |
-| 步数 | 多数 **2–10**；少量 10–20；全库平均节点数 **4.17** | Fig.8 |
-
----
-
-## 五、主结果跟读（Table 1 / Q1–Q4）
-
-### 5.1 实验设定（§3.1）
-
-- 提示：统一精心设计指令 + **two-shot**；解码默认超参，**temperature = 0.5**。
-- 框架：LlamaFactory；≥70B 用 vLLM。
-- Table 1 列：**闭源 4**（Claude-3.5 / GPT-3.5 / GPT-4 / O1-preview）+ **开源 15**（7B–72B 各系列）。文 §3.1 写「共 **18** 模型」，与 4+15=19 不一致——**跟读以 Table 1 为准**。
-
-### 5.2 闭源平均与「约 15% 差距」（摘要 / Table 1）
-
-| 模型 | $f1_{\mathrm{chain}}$ Avg | $f1_{\mathrm{graph}}$ Avg | 差（百分点） |
+| 模型 | f1_chain 均值 | f1_graph 均值 | 差 |
 |---|---:|---:|---:|
-| Claude-3.5 | 66.70 | **52.53** | 14.17 |
-| GPT-3.5 | 63.86 | 48.02 | 15.84 |
-| **GPT-4** | **67.32** | 52.47 | **14.85**（摘要「约 15%」） |
+| GPT-4 | 67.32 | 52.47 | 14.85 |
+| Claude-3.5 | 66.70 | 52.53 | 14.17 |
 | O1-preview | 66.70 | 51.63 | 15.07 |
+| Qwen-2-72B | 67.24 | 50.46 | 16.78 |
 
-开源顶栏（同表）：Qwen-2-72B Avg **67.24 / 50.46**；Llama-3.1-70B **64.60 / 49.59**。
-文 Q1：图分全面低于链分；平均差最大 **GLM-4-9B 20.05%**，最小 **Llama-3.1-70B 15.01%**。
+（论文 Table 1 节选，单位 %）所有模型的图分都低于链分；开源模型中差距最大的 GLM-4-9B 为 20.05 个百分点，最小的 Llama-3.1-70B 也有 15.01。Open-Grounded 场景最难。
 
-**场景难度（跟读）：** Open-Grounded 最难——Claude-3.5 仍仅 **61.33 / 42.88**；Function Call 上 GPT-4 链分最高 **74.87**，图分 **62.11**。O1-preview 在 Problem-Solving 上图分领跑闭源 **59.25**，但 Function Call / Embodied / Open-Grounded 不占优（文：缺环境知识）。
+### 4.2 规模与微调都不足以解决
 
-### 5.3 Scaling 与「距专家还远」（Q2–Q3）
+- **放大参数有帮助但有限**：Qwen-2 72B 相对 7B 图分 +6.77，Llama-3.1 70B 相对 8B 图分 +11.51。
+- **微调在训练分布内很强**：全参微调的 Qwen-2-7B 训练内场景达到 79.35 / 70.38，超过 GPT-4；但在更复杂的留出场景 InterCodeSQL 上未能稳定超过 GPT-4（Table 2）。论文结论：结构化规划不能只靠拟合大量数据获得强泛化。
+- **依赖关系本身难**：直接给出金标节点链、只让模型预测边，GPT-4 图分从 52.47 升到 74.63，仍远未满分（Table 5）。
 
-- 同系列放大：Qwen-2 **72B vs 7B** 图分 **+6.77%**；Llama-3.1 **70B vs 8B** 图分 **+11.51%**。
-- 部分新 7B 超过多数旧 13B：文归因数据质量 / 世代，而非否定参数规模。
-- 即便金标由图由 GPT-4 合成，**直接生成**时 GPT-4 平均仍只 **67.32 / 52.47**；节点边数增多时性能趋势下降（Fig.3，读图）。
+### 4.3 错误类型
 
-**微调泛化（Table 2）：** 全参微调 Qwen-2-7B / InternLM-2.5-7B（App. A.5：cutoff 4096、3 epoch、lr $1\mathrm{e}{-5}$、3×A100-80G 等）。
+对 GPT-4 低分样本人工归类为四种：粒度不符合最小可执行要求、子任务描述过于空泛、节点对但边错、输出格式错误。论文认为多数与环境知识不足有关（Fig. 4）。
 
-| 模型 | Held-in Avg $f_{\mathrm{chain}}/f_{\mathrm{graph}}$ | Seal-Tools | InterCodeSQL |
-|---|---|---|---|
-| GPT-4 | 67.32 / 52.47 | 96.58 / 80.25 | 66.35 / 54.36 |
-| Qwen-2-7B+FT | **79.35 / 70.38** | **96.49 / 82.82** | 62.37 / 48.72 |
-| InternLM-2.5-7B+FT | 78.98 / 69.33 | 95.83 / **83.72** | 63.78 / 50.97 |
+### 4.4 工作流作为下游先验
 
-跟读：held-in 可大幅超过 GPT-4；Seal-Tools（平均约 2–3 节点，文述较简单）图分略超 GPT-4；**更复杂的 InterCodeSQL 上 FT 未稳定超越 GPT-4**——文结论：结构化工作流规划 **不能只靠拟合大量数据** 学到强泛化。
+- **weak-guide-strong**：把微调后 Qwen-2-7B 生成的工作流放进提示，GPT-4 在 ALFWorld 已见任务上从 27.14 升到 40.71、未见任务从 28.36 升到 47.01（Table 3）；WebShop 上增益很小。
+- **并行缩短耗时**：无依赖的节点可并行执行，按关键路径估算，相对逐步执行的 ToolLlama 平均耗时减少约 1/5 到 1/3（Fig. 6）。
+- **减少试错步数**：有工作流先验时规划步数下降（Table 4）。
 
-### 5.4 给金标链只预测边（Table 5 · 消融）
+## 五、与相邻笔记的分工
 
-缓解粒度 / 显式性错误后，平均 $f1_{\mathrm{graph}}$ 仍大幅上升但未「解决」：如 GPT-4 **52.47→74.63**，Claude-3.5 **52.53→75.72**，Qwen-2-72B **50.46→69.21**。文判断：**依赖关系本身仍难**。
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[OrchBench多智能体编排评测]] | OrchBench 把本篇归为结构正确性评测，并在依赖图给定后进一步评分配与信息转移；两篇前后衔接 | 编排仿真与评分 |
+| [[智能体工具与长程任务]] | 本篇评的是工具环执行前的规划图；ReAct 格式只用于数据构造 | 工具协议与长程产品叙事 |
+| [[代码智能体Harness史线]] | 两者都依赖「可执行粒度」的概念；该篇负责执行与环境反馈，本篇只评规划 | ACI 与沙箱 SDK |
+| [[VendingBench经营长程评测]] | 两者都评 agent 规划：本篇评单次任务分解的结构，该篇评极长时程中的决策连贯 | 经营仿真与净值 |
+| [[浏览与深研Agent基准]] | 同属 agent 评测；该篇评浏览问答结果，本篇评工作流图 | 浏览基准 |
+| [[评测与排行榜可靠性]] | 本篇用匹配算法替代 LLM 判分，是对「评审不可靠」问题的一种回应 | 榜单可靠性通史 |
+| [[Inspect评测Harness]] | 本篇这类 agent 基准可由该篇的评测运行时承载 | 评测框架原语 |
 
-### 5.5 错误类型（Q4 / Fig.4）
+## 六、局限与待核实
 
-人工归类 GPT-4 低分（$f1_{\mathrm{graph}}<0.5$）样本四类：**Granularity**（粒度不符最小可执行）、**Explicitness**（子任务过空泛）、**Graph**（节点对但边错）、**Format**（输出格式不合）。文归因多与 **环境知识不足** 相关，并指向 world knowledge / world model 集成（不在本卡展开）。
+1. **金标由 GPT-4 合成**：节点链与边都由 GPT-4 生成再过滤，金标本身可能带有 GPT-4 的分解偏好；人工核验只覆盖测试集。
+2. **模型数口径不一**：§3.1 写共 18 个模型，Table 1 列出 4 个闭源 + 15 个开源 = 19 个，以表为准。
+3. **图上数字未读点**：节点数与性能的趋势（Fig. 3）、错误分布（Fig. 4）、CoT 增强与并行耗时（Fig. 5–6）只用正文给出的数字与区间。
+4. **只评规划不评执行**：WorFEval 判的是与金标图的一致程度，同一任务可能存在金标之外的合理分解；端到端收益只在 ALFWorld、WebShop、StableToolBench 上验证过。
 
----
+## 七、延伸阅读
 
-## 六、开源仓怎么用（跟读 README，非 walkthrough）
-
-仓库任务名：`wikihow` / `toolbench` / `toolalpaca` / `lumos` / `alfworld` / `webshop` / `os`。
-
-- **生成：** `python node_eval.py --task gen_workflow … --few_shot`
-- **评测：** `--task eval_workflow --eval_type node`（另有 graph 模式）`--eval_model all-mpnet-base-v2`
-- 训练模块改编自 LLaMA-Factory；端到端评测参考 IPR / StableToolBench。
-
-数据入口：HF collection（README 链）；本卡不下载全量、不复跑分数。
-
----
-
-## 七、可带走的结论（三句）
-
-1. **评测字段**：agent「会不会规划」应拆成 **链序（LIS-F1）** 与 **图依赖（MCIS-F1）**；只报端到端成功率会掩盖 **系统性的图规划缺口（约 15+ 百分点）**。
-2. **架构思想**：工作流 = **可并行 DAG 先验**——既能抬 embodied / tool 端到端，又能用关键路径砍推理墙钟时间，也能当逐步 CoT / 检索查询。
-3. **上限意识**：合成金标 + 强提示下 GPT-4 图分仍约半成；微调抬 held-in 不等于抬复杂 held-out——下一步更像 **环境/世界知识**，而非更大 few-shot。
-
----
-
-## 八、局限与待核实
-
-| 项 | 处理 |
-|---|---|
-| Fig.3 / 4 / 5 / 6 精确点位 | 未列表格化数字处 **不读点**；仅用文内已写百分数 / 区间 |
-| §3.1「18 models」 | 与 Table 1 行数冲突 → 标注，以表为准 |
-| 训练 loss 曲线、全量逐模型逐格复述 | 主表已给闭源全行列 + 开源 Avg；细格按需回 PDF |
-| 与 PlanBench / ToolBench 端到端榜的横向对齐 | → 需要时交叉 **[[评测与排行榜可靠性]]**；本卡不重写榜可靠性通史 |
-| World model 文献深读 | 文仅作改进方向指针 → 另卡 |
-
-## 相关笔记
-
-- [[DiffusionForcing族]]
-- [[WorfBench工作流基准]]
-- [[合成对齐数据Magpie]]
-- [[EntMTP熵引导投机解码]]
-- [[DuoAttention与KVzip]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [论文](https://arxiv.org/abs/2410.07869) §1–§2 | 问题陈述、节点链到 DAG、数据构造与 WorFEval |
+| 2 | 同上 §3 与 Table 1、2、5 | 主结果、微调泛化与给定节点链消融 |
+| 3 | 同上 §4 与 Table 3–4 | 工作流作为下游先验与并行收益 |
+| 4 | [代码与数据](https://github.com/zjunlp/WorfBench) | 生成与评测脚本、数据格式 |
+| 5 | [[OrchBench多智能体编排评测]] | 依赖图给定之后的编排评测 |

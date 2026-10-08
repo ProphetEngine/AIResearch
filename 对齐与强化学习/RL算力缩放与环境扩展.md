@@ -18,7 +18,7 @@ sources:
   - https://arxiv.org/abs/2505.03335
   - https://arxiv.org/abs/2505.24864
   - https://arxiv.org/abs/2510.01180
-related: ["AgenticRL景观与能力模块", "ToRL工具集成强化学习", "ToolLoop工具数据合成", "GRPO与DAPO算法族", "MiniMaxM1技术报告深读", "规模定律与预训练范式", "DeepSeekR1推理训练深读", "DeepSeekV32技术报告深读", "MiMoV26智能体强化学习短报", "KimiK2技术报告深读", "KimiK3技术报告", "GLM45技术报告深读", "Nemotron3Ultra技术报告深读", "Qwen3CoderNext技术报告深读", "代码智能体Harness史线", "奖励黑客与涌现失对齐"]
+related: ["AgenticRL景观与能力模块", "ToRL工具集成强化学习", "ToolLoop工具数据合成", "GRPO与DAPO算法族", "MiniMaxM1技术报告深读", "规模定律与预训练范式", "DeepSeekR1推理训练深读", "DeepSeekV32技术报告深读", "MiMoV26智能体强化学习短报", "KimiK2技术报告深读", "KimiK3技术报告", "GLM45技术报告深读", "Nemotron3Ultra技术报告深读", "Qwen3CoderNext技术报告深读", "代码智能体Harness史线", "奖励黑客与涌现失对齐", "SWEBenchPro代码修复评测"]
 retrieval_cutoff: 2026-10-08
 timezone: Asia/Shanghai (CST)
 ---
@@ -180,6 +180,7 @@ Absolute Zero 让同一个模型既出题又解题，用代码执行器同时校
 | [[DeepSeekV32技术报告深读]] / [[MiMoV26智能体强化学习短报]] | 案例：RL 算力占比、成本拆分与合成环境规模 | 架构与评测章节 |
 | [[KimiK2技术报告深读]] / [[KimiK3技术报告]] / [[GLM45技术报告深读]] / [[Nemotron3Ultra技术报告深读]] | 案例：工具环境合成、沙箱与 RL 框架 | 模型架构与预训练 |
 | [[Qwen3CoderNext技术报告深读]] / [[代码智能体Harness史线]] | 案例：可执行软件环境的批量构建与可复现 harness | 代码模型训练与 harness 通史 |
+| [[SWEBenchPro代码修复评测]] | 对照：第四节软件环境的效果多以 SWE-bench Verified 报告，该篇说明 Verified 的琐碎题与评测时泄漏问题，以及 Pro 的抗污染构造与反泄漏环境，是读这些数字的评测端参照 | 题目构造与反泄漏环境细节 |
 
 ## 七、意义
 

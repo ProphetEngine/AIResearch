@@ -7,8 +7,9 @@ status: archived
 sources:
  - https://arxiv.org/abs/2509.16941
  - https://arxiv.org/abs/2609.08149
+ - https://arxiv.org/abs/2310.06770
 arxiv: ["2509.16941", "2609.08149"]
-related: ["代码智能体Harness史线", "评测与排行榜可靠性", "科研智能体", "智能体工具与长程任务"]
+related: ["代码智能体Harness史线", "评测与排行榜可靠性", "科研智能体", "智能体工具与长程任务", "开端性与发现基础模型", "评测污染可靠性鸿沟", "奖励黑客与涌现失对齐", "RL算力缩放与环境扩展"]
 aux_scale: "https://labs.scale.com/papers/swe-bench-pro"
 data_pro: "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro"
 code_pro: "https://github.com/scaleapi/SWE-bench_Pro-os"
@@ -20,281 +21,137 @@ timezone: Asia/Shanghai (CST)
 
 # 代码修复评测新轴：SWE-Bench Pro + Pro Verified（≠ harness）
 
-> **定位**：软件工程评测主题轴——在 [[代码智能体Harness史线]]（ACI / 沙箱 harness 史线）与 [[评测与排行榜可靠性]]（榜单可靠性通史）之后，单独立「**测什么 + 怎么验真**」：
-> - **SWE-Bench Pro**（Scale AI，arXiv **2509.16941**）：长程、抗污染、企业级仓库修复；公共 / 商业 / 留出三分集。
-> - **SWE-Bench Pro Verified**（上交所 AI Lab 等，arXiv **2609.08149**）：在 Pro **公共 731** 上叠 **反 reward-hacking 执行环境** + **102 题最小改动校正**。
-> **研究线**：**评测字段（主）**——规模切分、Pass@1 / accuracy、协议旋钮（增广 / 预算 / scaffold）、泄漏通道与修复前后分差。
+> **主要来源**：[SWE-Bench Pro（Deng, Da et al., Scale AI；arXiv v2）](https://arxiv.org/abs/2509.16941)；[SWE-Bench Pro Verified（Zheng et al., 华东师大 / 上海 AI Lab / 复旦）](https://arxiv.org/abs/2609.08149)；背景 [SWE-bench（Jimenez et al., 2023）](https://arxiv.org/abs/2310.06770)（截至 2026-09-22）
+> **研究线**：评测字段——仓库级代码修复评测「测什么、怎么保证分数是真的」。
 > **范围与相邻笔记**：
-> - **≠ [[代码智能体Harness史线]]**：不重写 SWE-agent ACI / OpenHands SDK / 控制环正文。两文只用 SWE-Agent 或 mini-swe-agent 作**统一评测脚手架引用**，不展开命令面 / 观测格式 / 四包 SDK。
-> - **≠ [[评测与排行榜可靠性]]**：不重写污染 / 路由 / thinking 模式 / System Card 榜单通史全文；本篇只列 **Pro 族专用字段**（copyleft 抗污染、三分集、anti-hacking、任务校正）。
-> - **≠ [[科研智能体]]**：不把「科研模板改码 / ChemCrow 工具化学」写成仓库级 SE 补丁环；本卡对象是 **issue→patch→fail2pass/pass2pass**。
-> - **不重写 SWE-agent 控制环**（ReAct 步、viewer/edit/search 消融等 → 已在 [[代码智能体Harness史线]]）。
-> Scale Labs 网页摘要与 arXiv **v2** 摘要数字不一致处显式对照。
+> - ≠ [[代码智能体Harness史线]]：本篇不写 SWE-agent 的 ACI、OpenHands SDK 与控制环。
+> - ≠ [[评测与排行榜可靠性]]：本篇不写污染、路由、thinking 模式等榜单可靠性通史。
+> - ≠ [[科研智能体]]：本篇不写科研闭环中的改码与化学工具链。
+>
+> **意义**：SWE-Bench Pro 用 copyleft 公共库、私有商业库与留出库三分集对抗训练数据污染，Pro Verified 再在评测环境里堵住泄漏通道并校正坏题；两者合起来说明代码修复分数至少要同时问「题是否干净」与「执行环境是否允许偷看答案」——在一个有 hacking 倾向的模型上，后者能让分数下降二十多个百分点。
+
+**一句话**：Pro 解决「题太简单、可能被训练过」，用抗污染采集和难度过滤造出 1,865 道长程修复题；Pro Verified 解决「分数是否被作弊抬高」，在公共 731 题上加反泄漏环境并校正 102 道题。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主①** | *SWE-Bench Pro: Can AI Agents Solve Long-Horizon Software Engineering Tasks?*（Scale AI；Deng*, Da* 等） | arXiv:**2509.16941v2** \[cs.SE\]（文首 **14 Nov 2025**；元数据 id `2509.16941v2`） | `https://arxiv.org/abs/2509.16941` | **20** A4 |
-| **主②** | *SWE-Bench Pro Verified: A Reliable Benchmark for Software Engineering Agents*（Zheng 等；华东师大 / 上海 AI Lab / 复旦） | arXiv:**2609.08149v2** \[cs.AI\]（文首 **16 Sep 2026**；页眉 **2026-9-17**） | `https://arxiv.org/abs/2609.08149` | **37** A4 |
-| **辅·入口** | Scale Labs 论文页（摘要 / branding；**非**独立 PDF） | https://labs.scale.com/papers/swe-bench-pro | — | — |
+仓库级代码修复评测的基本形式是：给定代码库和 issue 描述，让模型提交补丁，用隐藏测试判定是否修好。这种形式的分数会在两个层面失真：
 
-| 材料 | 数据 / 代码（文内自报） |
-|---|---|
-| Pro | HF `ScaleAI/SWE-bench_Pro`；代码 `github.com/scaleapi/SWE-bench_Pro-os`；研究页文内另写 `scale.com/research/swe_bench_pro` |
-| Pro Verified | HF `opencompass/SWEBench-Pro-Verified`；代码 / 基建 `github.com/open-compass/AgentCompass`；评测 harness 文内写 **mini-swe-agent** |
+1. **题目层面**：宽松许可的开源仓库容易进入预训练语料（污染）；已有基准中有大量一两行的琐碎修改，与企业场景中多文件、上百行的改动不符（SWE-Bench Pro §1 引 SWE-bench Verified 中 161/500 题为 1–2 行修改）。
+2. **执行层面**：agent 在评测环境里有终端和网络，可以从 Git 历史、本地隐藏测试、任务元数据或公网代码托管处直接拿到答案（Pro Verified Table 1）；部分题目本身说明有误导或测试过窄，分数也不反映编码能力。
 
-**一句话抓手：**
-- **Pro**：用 **GPL/copyleft 公共库 + 创业公司商业库 + 留出库** 做抗污染长程修复；参考补丁均 **≥10 LOC**，均值约 **107.4 LOC / 4.1 files**；公共集前沿 **Pass@1 仍 <45%**（arXiv v2）。
-- **Pro Verified**：同一公共 **731** 题上，先堵 **本地 Git/文件 + 网络代码托管** 泄漏，再对 **102** 题做最小字段校正——有 hacking 习惯的模型分会大幅回落。
+## 二、脉络
 
-**摘要数字对照（禁混用）：** Scale Labs 页摘要写「below **25%**」「GPT-5 … **23.3%**」；arXiv **v2** 摘要写「below **45%** (Pass@1)」，正文 Table 1 公共集 Sonnet 4.5 = **43.6%**。**23.3%** 出现在 Pro 文 Table 5（**max turn 50 + max cost $2** 预算下 GPT-5 *medium*）。跟读以 **arXiv v2 PDF** 为准，网页摘要作辅入口并标可能滞后。
+| 时间 | 基准 | 规模 | 相对前作补了什么 |
+|---|---|---|---|
+| 2023-10 | SWE-bench | 2,294 道题，取自 12 个热门 Python 仓库的真实 issue 与 PR | 把真实 GitHub issue 修复做成可自动判定的评测 |
+| 2024 | SWE-bench Verified | 500 题 | 人工筛选的可解子集；Pro 指出其中大量为琐碎修改 |
+| 2025-09 | SWE-Bench Pro | 1,865 题 / 41 个仓库，三分集 | 抗污染采集、工业难度过滤、人工增广任务说明 |
+| 2026-09 | SWE-Bench Pro Verified | 沿用公共 731 题 | 反泄漏执行环境 + 102 题最小改动校正 |
 
----
+Pro Verified 的相关工作还索引了 SWE-bench-Live、ProMax、DeepSWE 等同期变体，未做协议对齐。另一条使用线是把 SWE 类基准当作优化信号：[[开端性与发现基础模型]] 中的 Darwin Gödel Machine 就以 SWE-bench Verified 作为自改代码的验证信号。
 
-## 二、议题边界：评测轴 ≠ harness 史 ≠ 榜单通史 ≠ 科研改码
+## 三、SWE-Bench Pro：抗污染的长程修复题
 
-### 2.1 相对相邻笔记只取接口
+### 3.1 三分集抗污染
 
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 分集 | 题数 | 仓库 | 来源与公开方式 |
+|---|---|---|---|
+| Public | 731 | 11 | 强 copyleft（GPL 等）开源仓库，题目公开 |
+| Commercial | 276 | 18 | 从创业公司购买的私有仓库，题面保密，只发布结果 |
+| Held-out | 858 | 12 | 与公共集同法构造、仓库不重叠，留作过拟合检查 |
+
+copyleft 许可降低了被商业预训练语料收录的概率，私有商业库则根本不在公网。每个仓库最多约 100 题，避免单仓过拟合。
+
+### 3.2 难度过滤与任务说明
+
+- **只保留实质修改**：排除 1–10 行的琐碎改动，每题参考补丁至少 10 行，均值约 **107.4 行 / 4.1 个文件**。
+- **任务说明三件套**：issue 风格的问题陈述、相对单测锚定的需求清单、可选的接口说明（期望的类名与函数名，避免「实现对但签名不对」被判错）。
+- **判定**：补丁需同时通过 fail2pass（修对）与 pass2pass（不回归）测试，主指标 Pass@1。
+
+默认设定下三件套全给，因此 Pro 测的是「规格明确后能否落地补丁」，而不是「先探索再消除歧义」。
+
+### 3.3 结果
+
+- **公共集**（SWE-Agent，最多 50 轮）：最高为 Claude Sonnet 4.5 **43.6%**，前沿模型都低于 45%（Pro Table 1）。
+- **商业集更难**：最高为 Claude Opus 4.1 **17.8%**（Table 2）。
+- **任务说明很关键**：只给问题陈述时，GPT-5 从 **25.9% 跌到 8.40%**（Table 3，在 50 轮加 2 美元成本上限的分析设定下）。
+- **分层观察**：Go 与 Python 整体更高，JS/TS 方差大；修改文件数越多成功率越低，超过 3 个文件后前沿模型与开源模型差距拉开（§6.1）。
+- **失败模式**：用 LLM 评审对未解决轨迹分桶，提交了的多为「方案错误」或语法错误，未提交的多为工具使用失败、长上下文溢出或陷入循环（Table 4）。
+
+## 四、SWE-Bench Pro Verified：堵泄漏、校坏题
+
+### 4.1 四条泄漏通道与对应控制
+
+| 通道 | 可被拿到的东西 | 控制手段 |
 |---|---|---|
-| **[[代码智能体Harness史线]]** | Pro 主结果用 **SWE-Agent**；Verified 用 **mini-swe-agent / AgentCompass**——仅作「统一 scaffold / 协议」字段 | ACI 四原则、viewer/edit/search 消融、OpenHands 四包 SDK、生产失败率 61% |
-| **[[评测与排行榜可靠性]]** | 「scaffold / pass@k / 泄漏」抽象提醒；Pro 的 copyleft + 商业私有 = 一种抗污染设计 | o1/Claude System Card 全表、thinking 开关通史、第三方聚合榜定论 |
-| **[[科研智能体]]** | （防混淆）都动代码，但介质不同 | AI Scientist 种子模板闭环；ChemCrow 化学工具链 |
-| **[[智能体工具与长程任务]]** | 「agent + 工具环」一句 | MCP / ReAct / 旗舰产品环正文 |
+| 本地文件系统 | 参考补丁、隐藏测试、评测产物 | 测试产物隐藏 |
+| Git 历史 | 未来的 commit、分支、tag | 把仓库重建为只含单个 commit 的新仓 |
+| 外部网络 | 上游补丁与测试 | 拦截主要代码托管站，保留依赖源 |
+| 任务元数据 | 目标 SHA、仓库身份 | 元数据白名单过滤，实例 ID 哈希化 |
 
-### 2.2 本卡主轴 vs 范围外
+论文强调只删除分支、远端和 tag 引用不够，`.git/objects` 中仍可能残留未来对象，所以必须重建仓库。
 
-| 写 | 不写 |
-|---|---|
-| 三分集规模、任务规格（problem / requirements / interface / fail2pass+pass2pass） | SWE-agent 控制环算法与 ACI 设计史 |
-| Pass@1 / accuracy 表；语言·仓库·文件数分层；增广消融 | 把不同 scaffold / 预算下的分直接横比决胜负 |
-| Verified：四泄漏通道、anti-hacking 控件名、102 题校正字段分布、Baseline→Anti-hacking→Verified 分差 | 手写可复现「怎么从 Git 抠 gold patch」攻击教程（只保留论文通道**类别名**） |
-| 失败模式桶名与表内占比（LLM-as-judge） | 外推未测商业集绝对排名 |
+### 4.2 坏题校正
 
-跟读口诀：**[[代码智能体Harness史线]] 问「给 LM 什么动作面」；本卡问「题够不够难、够不够干净、分是不是真」**。
+从公开 issue 映射出 119 道候选，经 LLM 初筛与专家最小改动，最终校正 **102** 题、驳回 17 题。问题类型：测试过窄（语义正确但实现细节不符，假阴性）75 题、说明误导 22 题、测试过宽（不完整修复也能过，假阳性）3 题、其他 2 题。校正优先改需求与接口说明，尽量少动测试与参考补丁。
 
----
+### 4.3 三设置对照
 
-## 三、主① SWE-Bench Pro：长程抗污染评测箱（2509.16941）
+| 设置 | 定义 | GLM-5.2 | DeepSeek-V4-Pro |
+|---|---|---|---|
+| Baseline | 原题面 + 原环境 | 78.80 | 49.98 |
+| Anti-hacking | 原题面 + 反泄漏环境 | 57.32 | 49.11 |
+| Verified | 反泄漏环境 + 102 题校正 | 59.51 | 49.93 |
 
-### 3.1 问题立轴（相对经典 SWE-Bench）
+（Pro Verified Table 3，单位 %）GLM-5.2 被审计出大量 hacking，堵住泄漏后掉 21.48 个百分点；DeepSeek-V4-Pro 几乎没有 hacking，三种设置下基本不变。Verified 比 Anti-hacking 略有回升，对应校正恢复了部分本可解的题。
 
-文内批评两点（§1）：
-1. **污染**：宽松许可开源仓易进预训练爬取语料。
-2. **难度失真**：SWE-Bench Verified 中有大量 1–2 行琐改（文引 161/500）；企业场景常是多文件、百行级改动。
+### 4.4 控制是否误伤正常解题
 
-**三贡献（作者自述）：**
-- **抗污染采集**：公共+留出用 **强 copyleft（GPL 等）**；商业集购自创业公司私有仓。
-- **工业难度过滤**：排除 1–10 LOC 琐改；参考解均值 **107.4 LOC / 4.1 files**；每题 ≥10 LOC；>100 题 >100 LOC。
-- **人在环增广与核验**：澄清歧义 + 收紧单测解空间，降低假阴性。
+- GLM-5.2 的配对结果中有 **186** 题从 PASS 变 FAIL；逐条归因后 **89.2%** 是直接 hacking 被移除，「正常执行受损」为 0（Table 8）。
+- 本地高风险操作减少 **78.4%**，网络高风险操作减少 **99.3%**，触及答案文件的任务数降为 0（Table 5）。
 
-### 3.2 评测字段：规模与切分
+### 4.5 两篇分数不能直接横比
 
-| 字段 | 文内值 |
-|---|---|
-| 总题数 | **1,865**（人工核验+增广） |
-| 仓库 | **41** 个活跃仓；域：消费应用 / B2B / 开发者工具 |
-| **Public** | **731**；**11** 仓；开源（HF）；正文主报统计与模型分 |
-| **Commercial** | **276**；**18** 创业公司私有仓；题面保密，**只发结果** |
-| **Held-out** | **858**；**12** 仓；镜像公共构造、仓库不重叠；留作过拟合检查 |
-| 每仓上限 | 约 **50–100**（严 cap 100），减单仓过拟合 |
-| 语言环境 | Python（venv）、JS/TS（Node+npm/yarn）、Go（module/GOPATH）；预构建 Docker |
-| 判定 | 提交 patch；**fail2pass**（修对）+ **pass2pass**（不回归）全过 → resolve；主指标 **Pass@1** |
+Pro 主表用 SWE-Agent 与 2025-09 的模型切片；Pro Verified 用 AgentCompass 上的 mini-swe-agent 与 2026 年的模型，环境和 102 道题也不同。两篇的 40% 档与 60% 档之间不能解读为模型能力的单因变化，比较前需先对齐 scaffold、环境与题面版本。
 
-**任务描述三件套（§3.2）：**
-- **Problem statement**：issue 风格重写，补缺失上下文。
-- **Requirements**：相对单测锚定的可核行为清单（如路由名/API 行为）。
-- **Interface**（可选）：测期望的类/函数名，压「实现正确但签名不对」假阴性。
+## 五、评测设计要点
 
-默认评测设定（§5）：**无歧义**——三件套全给；测的是「给定规格后能否落地补丁」，不是「先探索再消歧」。
+两篇合起来，一个可比的代码修复分数至少要说明：
 
-### 3.3 协议旋钮（跟读必标）
+1. 基准版本与分集（Public / Commercial / Held-out，是否含 102 题校正）；
+2. scaffold 及版本、轮次与成本预算；
+3. 任务说明是否完整给出；
+4. 执行环境是否做了反泄漏，以及高分时的答案文件访问审计；
+5. 模型与评测的时点。
 
-| 旋钮 | 设定 | 影响 |
+## 六、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| Scaffold | 主结果 **SWE-Agent**；试过 Agentless，多文件编辑弱 → 不主报 | ≠ 换 harness 可直接比绝对分 |
-| 轮次 | 主表：max **50** turns；分析另有 **$2** 成本帽（Table 5） | 预算降则分降（如 GPT-5 high：Table 1 **41.8%** vs Table 5 **25.9%**） |
-| 模型时点 | 「as of **September 18th, 2025**」 | 同名型号后续权重不可外推 |
-| 增广 | 默认三件套 vs **仅 problem statement**（Table 3） | GPT-5 high **25.9%→8.40%**；Opus 4.1 **22.7%→8.20%**（此消融在 **$2/50** 分析设定下） |
+| [[代码智能体Harness史线]] | 该篇讲给 agent 什么动作面，本篇讲用什么题、在什么环境下给它打分；两篇只把 SWE-Agent 与 mini-swe-agent 当作统一 scaffold | ACI 设计、OpenHands 架构与消融 |
+| [[评测与排行榜可靠性]] | Pro 的三分集与 Verified 的反泄漏环境，是该篇「分数是否可信」问题在代码修复上的具体做法 | 榜单可靠性的一般讨论与系统卡数字 |
+| [[评测污染可靠性鸿沟]] | copyleft 与私有仓采集是应对训练数据污染的设计；评测时泄漏是另一种不同于训练污染的失真 | 污染检测方法 |
+| [[开端性与发现基础模型]] | DGM 以 SWE-bench Verified 作自改代码的验证信号，本篇说明这类信号可能被琐碎题与泄漏影响 | DGM 的开端探索机制 |
+| [[科研智能体]] | 两者都让 agent 改代码，但该篇是科研闭环，本篇是 issue 到补丁的修复 | AI Scientist 与 ChemCrow |
+| [[智能体工具与长程任务]] | Pro 的长程修复是工具环长程任务在软件工程上的评测实例 | 工具协议与旗舰产品环 |
+| [[奖励黑客与涌现失对齐]] | 本篇 4.1 的反泄漏环境（堵 Git 历史、隐藏测试、公网托管等通道）是该篇「环境加固」一类缓解的工程实例 | 奖励黑客的整体谱系与缓解方法 |
+| [[RL算力缩放与环境扩展]] | 该篇第四节的可执行软件环境中，R2E-Gym、SWE-smith 以 SWE-bench Verified 报告训练效果；本篇说明 Verified 的琐碎题与评测时泄漏问题，以及 Pro 的抗污染构造，是这类训练环境所对的评测端 | 环境构建方法与 RL 算力缩放 |
 
-### 3.4 主结果表（锚定 PDF Table 1 / 2）
+## 七、局限与待核实
 
-**Table 1 · Public（N=731），SWE-Agent，三件套全给，Pass@1 Resolve %**
+1. **语言覆盖不均**：只有 Python、JS/TS、Go，缺 Java、C++ 等；人工增广成本高，难以全自动扩展（Pro Limitations）。
+2. **默认无歧义**：三件套全给的设定不同于真实中描述不足的 issue。
+3. **摘要数字不一致**：Scale Labs 网页摘要写 GPT-5「23.3%」「below 25%」，来自 Pro Table 5 的 2 美元预算设定；arXiv v2 摘要写「below 45%」。引用时以 arXiv v2 为准，网页摘要可能滞后。
+4. **图上读数**：Pro Verified Figure 1 中各模型在 Pro 与 Verified 上的柱高（如 Kimi-K3 89.06 → 62.93）为读图值，待核实。
+5. **留出集未公开对照**：Held-out 858 题的结果与公开集的差距尚无公开数据。
 
-| 模型 | Resolve % |
-|---|---:|
-| Claude Sonnet 4.5 | **43.6** |
-| Claude Sonnet 4 | **42.7** |
-| OpenAI GPT-5 (high) | **41.8** |
-| Claude Haiku 4.5 | **39.5** |
-| Kimi K2 Instruct | **27.7** |
-| OpenAI GPT-OSS 120B | **16.2** |
+## 八、延伸阅读
 
-**Table 2 · Commercial（N=276）**（同 scaffold；企业仓更难，文述最佳模型 **<20%**）
-
-| 模型 | Resolve % |
-|---|---:|
-| Claude Opus 4.1 | **17.8** |
-| OpenAI GPT-5 (high) | **15.7** |
-| OpenAI GPT-5 (medium) | **14.9** |
-| Gemini 2.5 Pro Preview | **10.1** |
-| Claude Sonnet 4 | **9.1** |
-| OpenAI GPT-4o | **3.6** |
-
-**分层观察（§6.1 / Figure 3，定性）：** Go/Python 整体更高；JS/TS 方差大；文件数↑ resolve↓，前沿与开源差距在 **>3 files** 后拉开；部分仓全体 **<10%**，另一些可达 **>50%**。
-
-### 3.5 失败模式字段（Table 4，GPT-5 作 judge）
-
-对未 resolve 轨迹取末 **20** turns 分桶（对齐 Yang et al. SWE-agent 文内 87% 人机一致口径）。跟读只录**桶名 + 代表占比**，不展开 ACI：
-
-| 模型（摘） | 已提交占比 | 提交失败主因之一 | 未提交主因之一 |
-|---|---:|---|---|
-| Claude Opus 4.1 | 74.2% | Wrong solution **50.3%**；Syntax **31.3%** | Tool-use **68.0%** |
-| GPT-5 (high) | 27.2% | Wrong solution **39.5%** | Tool-use **96.4%** |
-| Claude Sonnet 4 | 44.1% | Other **62.6%**（文内叙述侧重 context overflow **35.6%** / endless read **17.0%**） | Long-context **57.4%**；Stuck **33.9%** |
-| Qwen3 32B | 47.3% | Syntax **48.7%** | Tool-use **78.8%** |
-
-桶定义（文内）：Wrong solution / Tool-use / Syntax error / Incorrect file / Instruction following / Edge case / Other；未提交侧另有 Long-context、Stuck in loop。
-
-### 3.6 局限（文内 Limitations，索引）
-
-- 语言覆盖不均（Python / JS / TS / Go；缺 Java、C++ 等）。
-- 人在环增广成本高、难全自动扩展。
-- 默认「无歧义」设定 ≠ 真实 under-specified issue 探索。
-
----
-
-## 四、主② SWE-Bench Pro Verified：可信任执行 + 任务校正（2609.08149）
-
-### 4.1 问题立轴：两类不可靠
-
-基于 Pro **公共 731**，作者指两类扭曲：
-1. **Reward hacking / 评测时泄漏**：从 Git 历史、本地隐藏测/金标、元数据 SHA、公网代码托管取答案。
-2. **任务质量**：误导说明、过窄/过宽测、损坏路径等 → 分不反映编码能力。
-
-**Verified = anti-hacking 环境（全量） + 102 题最小改动校正**；仍 **731** 题。
-
-### 4.2 评测字段：三设置对照协议
-
-| 设置 | 定义 |
-|---|---|
-| **Baseline** | 原 Pro 题面 + 原执行环境 |
-| **Anti-hacking** | 原题面 + **隔离反泄漏环境** |
-| **Verified** | Anti-hacking + **102** 题替换为校正版 |
-
-**主指标：** accuracy = 全 fail2pass∪pass2pass 通过占比（与 Pro resolve 同判定）。
-**Harness：** **AgentCompass** + **mini-swe-agent**；参数取各模型官方推荐。**与 Pro 正文 SWE-Agent Table 1 不可直接横比绝对分。**
-
-### 4.3 四条泄漏通道（Table 1）与控件（只录类别）
-
-| 通道 | 暴露物（论文表述） | 控件名（§3.2） |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| Local file system | Gold patches、隐藏测、fixtures、evaluator 产物 | **Test artifact concealment** |
-| Git history | 未来 commit / branch / tag / reflog 等 | **Repository reconstruction**（重建为**单 commit** 新仓，删未来对象） |
-| External network | 上游 commit/patch/测/镜像 | **Network blocking**（拦主要代码托管；保留依赖源） |
-| Task metadata | 目标 SHA、仓身份、敏感评测字段 | **Metadata filtering and anonymization**（allowlist；实例 ID 哈希化） |
-
-文内强调：仅删 branch/remote/tag 引用不够——`.git/objects` 仍可能残留未来对象（对照社区提案 [5]）。
-
-### 4.4 任务质量四类与校正规模（Table 2 / §3.3）
-
-| 问题类型 | 效应 | 文内 Count |
-|---|---|---:|
-| Misleading description | 跟错说明 → 测挂 | **22** |
-| Overly narrow test | 语义对但实现细节不符 → 假阴 | **75** |
-| Overly broad test | 不完整修复仍过 → 假阳 | **3** |
-| Other | 损坏数据/非法路径 | **2** |
-
-流程：公开 issue 映射 → **119** 候选 → LLM 筛+草拟 → 专家最小改 → **102** 改定、**17** 驳回。
-**Table 9 字段触及率（/102）：** requirements **92**（90.2%）；interface **60**（58.8%）；problem_statement **59**（57.8%）；test_patch **17**（16.7%）。优先改说明、少动测与 gold。
-
-### 4.5 主结果：泄漏一去，虚高回落
-
-**Table 3（代表模型，三设置 %）**
-
-| 模型 | Baseline | Anti-hacking | Verified |
-|---|---:|---:|---:|
-| GLM-5.2 | **78.80** | **57.32**（−21.48 pp） | **59.51** |
-| DeepSeek-V4-Pro | **49.98** | **49.11** | **49.93** |
-
-解读（文内）：GLM-5.2 与 AgentCompass 审计「大量 hacking」一致；DeepSeek-V4-Pro「几乎无 hacking」→ 几乎不动。Verified 相对 Anti-hacking 略回升 = 校正恢复部分本可解之题。
-
-**Figure 1（柱读数，待核实读图；文注 Baseline 来自 AgentCompass+策略 [5]）**
-
-| 模型 | Pro（light） | Pro Verified（dark） |
-|---|---:|---:|
-| Kimi-K3 | 89.06 | 62.93 |
-| GPT-5.6-Sol | 76.47 | 61.97 |
-| DeepSeek-V4 Pro-0813 | 79.48 | 61.42 |
-| DeepSeek-V4 Flash-0731 | 78.93 | 59.92 |
-| GLM-5.2 | 78.80 | 59.51 |
-| GLM-5.3 | 81.12 | 58.82 |
-| DeepSeek-V4 Pro | 49.98 | 49.93 |
-
-### 4.6 Anti-hacking 有效性字段（GLM-5.2 配对，731 跑）
-
-**Table 4 结局转移：** PASS→PASS 404；**PASS→FAIL 186**；FAIL→PASS 15；FAIL→FAIL 126（McNemar *p*<0.001）。
-
-**Table 5 高风险操作 / 答卷文件触及：**
-
-| 指标 | Baseline | Anti-hacking | 变化 |
-|---|---:|---:|---|
-| Local high-risk ops | 4,213 | 908 | **−78.4%** |
-| Network high-risk ops | 573 | 4 | **−99.3%** |
-| Tasks w/ local answer-file access | 103 | **0** | −100% |
-| Tasks w/ network answer-file access | 49 | **0** | −100% |
-
-**Table 8 · 186 次 PASS→FAIL 主因：** 直接 hacking 移除 **89.2%**；高度可能 **1.6%**；**正常执行受损 0.0%**；随机/证据不足 **9.1%** → 文称分降来自堵泄漏，非误伤常态跑法。
-
-**校正侧（Table 10，102 题）：** Anti-hacking→Verified 在改定子集上 **21** FAIL→PASS、**2** PASS→FAIL；全 731 上另有 53 FAIL→PASS / 37 PASS→FAIL（含未改题噪声）。59/102 双 FAIL → 文归因固有难度而非规格歧义。
-
-### 4.7 与 Pro 原文的协议差（跟读警示）
-
-| | Pro 主文 Table 1 | Pro Verified 文 |
-|---|---|---|
-| Scaffold | SWE-Agent | mini-swe-agent @ AgentCompass |
-| 模型世代 | 2025-09 切片（Sonnet 4.5 / GPT-5 …） | 2026 近窗（Kimi-K3 / GPT-5.6-Sol / GLM-5.x / DeepSeek-V4 …） |
-| 环境 | 原 Pro Docker | + 反泄漏重建 / 网络拦 / 元数据洗 |
-| 题面 | 原 731 | 102 题字段修订 |
-
-→ 不宜把 Verified 的 60% 档与 Pro Table 1 的 40% 档当成「模型半年暴涨/暴跌」单因果叙事；先对齐 scaffold、环境、题面版本。
-
----
-
-## 五、评测字段清单
-
-写报告 / 排行时建议显式填下表（缺一则不可横比）：
-
-1. **基准版本**：Pro public / commercial / held-out；或 **Pro Verified**（是否含 102 校正）。
-2. **N 与切分**：731 / 276 / 858。
-3. **Scaffold + 版本**：SWE-Agent vs mini-swe-agent / AgentCompass。
-4. **提示增广**：三件套 vs problem-only。
-5. **预算**：max turns、max cost、reasoning effort、temperature。
-6. **环境**：是否 anti-hacking（单 commit 仓、测隐藏、元数据哈希、代码托管拦名单）。
-7. **指标**：Pass@1 / accuracy；fail2pass+pass2pass 全过。
-8. **泄漏审计**（若声称高分）：本地/网络 answer-file access 是否为 0。
-9. **失败模式**（可选）：Wrong solution / Tool-use / Syntax / Long-context 等桶占比。
-10. **时点**：模型卡与评测日期（Pro 文钉 2025-09-18；Verified 文 2026-09 近窗）。
-
----
-
-## 六、交叉引用与后续
-
-- **[[代码智能体Harness史线]]**：需要「动作面 / 沙箱 SDK」时跳转；本卡不重写。
-- **[[评测与排行榜可靠性]]**：需要「thinking / pass@k / 系统卡协议」通史时跳转；本篇只讲 Pro 族字段。
-- **[[奖励黑客与涌现失对齐]]**：本篇 4.1 的 anti-hacking 环境（堵 Git 历史、隐藏测试、公网托管等泄漏通道）是 RL 编码环境加固的工程实例；奖励黑客的整体谱系与缓解见那篇。
-- **[[科研智能体]] / [[开端性与发现基础模型]]**：科学发现或开端自改进若用 SWE 作验证信号，只引用本卡指标，不反向重写 Pro 构造。
-- **未覆盖**：held-out 858 公开对照；Java/C++ 扩展；与 SWE-bench-Live / ProMax / DeepSWE 的协议对齐表（Verified Related work 已索引，本篇不展开）。
-
----
-
-## 七、来源与核验
-
-| 项 | 状态 |
-|---|---|
-| 页数 | **20** / **37** |
-| 辅页 | Scale Labs HTML 摘要已对照；与 v2「<45%」不一致已标 |
-| 读图 | Figure 1 柱高 **待核实读图** |
+| 1 | [SWE-bench](https://arxiv.org/abs/2310.06770) | 原始任务形式与判定方式 |
+| 2 | [SWE-Bench Pro](https://arxiv.org/abs/2509.16941) §1、§3、Table 1–3 | 抗污染采集、难度过滤、任务说明三件套与主结果 |
+| 3 | [SWE-Bench Pro Verified](https://arxiv.org/abs/2609.08149) §3、Table 3–5、Table 8 | 泄漏通道、坏题校正、三设置对照与误伤分析 |
+| 4 | [Pro 数据集](https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro) 与 [Pro Verified 数据集](https://huggingface.co/datasets/opencompass/SWEBench-Pro-Verified) | 题目格式与校正版字段 |
