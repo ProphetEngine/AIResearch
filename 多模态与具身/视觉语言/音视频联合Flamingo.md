@@ -11,206 +11,127 @@ arxiv: ["2607.16107"]
 related:
  - "QwenOmni音视频原生"
  - "SpeechLLM语音语言模型"
- - "SeamlessM4T语音翻译"
+ - "StepAudio2语音旗舰"
  - "多模态架构脉络"
+ - "SiLVR与ChainOfFrames"
+ - "GRPO与DAPO算法族"
  - "视频生成模型脉络"
-retrieval_cutoff: 2026-09-22
+retrieval_cutoff: 2026-07-17
 timezone: Asia/Shanghai (CST)
 ---
 
-# 开源音视频联合模型：Audio-Visual Flamingo（Nemotron-Labs-AV-Flamingo）
+# 开源音视频联合模型：Audio-Visual Flamingo / Nemotron-Labs-AV-Flamingo（≠ Qwen Omni / Speech-LLM / Seamless / 视频生成）
 
-> **定位**：开源音视频联合旗舰增量——补仓库在 **[[QwenOmni音视频原生]] Qwen Omni 产品线 TR** 之外仍缺的 **「非 Qwen 栈」开源长视频音视联合理解（AV-LLM）** 锚点。主文：Ghosh, Goel, et al., *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos*（arXiv **2607.16107v1**）。
-> **研究线**：**架构思想（主）**——OmniVinci 初始化 + SigLip/AF-Whisper + 时序交错与 CRTE + 三阶段课程 + TAVIT/AV-Think；**评测字段（辅）**——文内 Omni / Audio / Video / ASR 表（Table 1）与 AV-Skills 消融（Table 6）。
+> **主要来源**：[Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos](https://arxiv.org/abs/2607.16107)（Ghosh、Goel 等，NVIDIA / 马里兰大学，v1 2026-07-17；正文标题为 Nemotron-Labs-Audio-Visual Flamingo，简称 AV-Flamingo 或 AVF）（截至 2026-07-17）。
+> **研究线**：架构思想（主：双编码器、按时间交错的音视 token、短到长三阶段课程、带时间戳的推理链）；评测字段（辅：全模态、音频、视频、语音识别基准与数据消融）
 > **范围与相邻笔记**：
-> - **≠ [[QwenOmni音视频原生]] Qwen Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、Qwen3/3.5-Omni 产品栈与 36/215 基准表；本卡仅在「同题相邻的闭源/开权 omni 对照」处点名，**不**展开 Qwen Omni 配方。
-> - **≠ [[SpeechLLM语音语言模型]] Speech-LLM**：不重写 Qwen2-Audio / Whisper→LLM 音频→文本对话栈；本卡是 **音视频联合理解 + 可选流式 TTS**，不是 Voice Chat / Audio Analysis 接口史。
-> - **≠ [[SeamlessM4T语音翻译]] SeamlessM4T**：不重写 UnitY / EMMA 语音翻译与同传；本卡 **不做** S2ST/S2TT 翻译 FM。
-> - **≠ [[多模态架构脉络]] 多模态通史**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」阶梯；经典 Flamingo（Alayrac 2022）仅作 related-work 一句祖先。
-> - **≠ [[视频生成模型脉络]] 视频生成通史**：本篇是 **理解 / 推理 AV-LLM**，不是视频（含音视频联合）生成。
-> 页眉 Code / Model / Project Page / Dataset / Demo **按钮在 PDF 中未见可核 URI**（仅见 `arxiv.org/abs/2607.16107v1`），故不列 GitHub / HF 链接；文内写「fully open」与 Broader Impacts「non-commercial research use only」**并列表出**。
+> - ≠ [[QwenOmni音视频原生]]：那篇是 Qwen 系开放权重的全模态产品线，本篇是训练数据与代码都公开的非 Qwen 系音视频联合理解模型。
+> - ≠ [[SpeechLLM语音语言模型]]：那篇只处理音频，本篇把音频与视频按时间对齐后一起理解。
+> - ≠ [[视频生成模型脉络]]：本篇是理解与推理，不是生成。
+>
+> **意义**：此前的音视频大模型多在短片段上训练，且常把音频与视觉分开训练、指望跨模态推理自然出现；最强的模型要么闭源，要么只开放权重。AV-Flamingo 从 OmniVinci 出发，用约 700 万条专门要求音视联合推理的长视频描述与问答，按短到长三阶段训练，再用把推理步骤挂到音视时间戳上的思维链做 SFT 与 GRPO，在面向长视频音视理解的 MMOU 上把开源模型此前 46.8% 的水平提到 56.9%（推理版 60.2%），并公开模型、训练与推理代码。它说明在 7B 规模上，开源路线可以靠专门构造的联合监督缩小与闭源模型在长视频音视理解上的差距；但许可只限非商业研究。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 页数 |
-|---|---|---|---|
-| **主文** | *Nemotron-Labs-Audio-Visual Flamingo: Open Audio-Visual Intelligence for Long and Complex Videos* | arXiv:**2607.16107v1** \[eess.AS\] **17 Jul 2026**（页眉日期 **2026-7-20**）；https://arxiv.org/pdf/2607.16107 · `https://arxiv.org/abs/2607.16107` | **47** letter |
+作者归纳了长视频音视理解的三个缺口（§1）：一是公开数据多为单模态或短片段的识别型问答，长视频的联合监督稀缺；二是许多全模态模型分别训练音频与视觉理解，跨模态推理只能隐式获得，已有分析还发现深层网络偏向视觉、压制音频表示；三是能力最强的音视频模型闭源或只开放权重，数据、代码与方法不公开。作者在相关工作部分指出，Video-MME 与 MMOU 都显示性能随视频变长系统性下降，MMOU 上最好的闭源模型只有 64.2% 准确率，开源模型停在 46.8%；这两个数即 Table 1 中 MMOU 的两个对照 Gemini-2.5 Pro 与 MiniCPM-o 4.5。
 
-| 字段 | 文内可核 |
-|---|---|
-| 作者 / 机构 | Sreyan Ghosh¹·²,∗、Arushi Goel¹,∗ 等；**¹ NVIDIA, USA** · **² University of Maryland, USA**（∗ Project-Leads；排序硬币决定） |
-| 简称 | **AV-Flamingo** / **AVF**；变体 **AVF-Instruct**、**AVF-Think** |
-| 版权行 | 「© 2026 NVIDIA. All rights reserved.」 |
-| 开源主张（摘要 / 贡献 3） | 开源 **model、training、inference code** 及相关技术 |
-| 许可边界（Appendix I Broader Impacts） | 释放 **AV-Flamingo 与 AV-Skills** 供 **non-commercial research use only**，并写明禁止有害用途；另有 **AV-Safety QA**（§A，92K QA / 536 hrs）在 long-context SFT 中保留拒绝行为 |
-| 页眉按钮 | Code · Model · Project Page · Dataset · Demo —— **PDF 内仅见 arXiv abs/DOI 链接，无额外可核仓链** |
+## 二、脉络
 
-**一句话抓手：** 从 **OmniVinci** 检查点出发，用自建 **AV-Skills（≈7M caption+QA，含 ≈4.8M QA）** 做短→长三阶段课程，再用 **TAVIT（Temporal Audio-Visual Interleaved Chain-of-Thought）/ AV-Think（≈24K，推理链均长 635.7 词）** 做 SFT+**GRPO**，得到面向 **长、复杂真实音视频** 的开源 AV-LLM（骨干 **Qwen2.5-7B**）。
-
-跟读口诀：
-
-`
-数据： AV-Skills-Short（≤60s，100K h，3.8M）→ AV-Skills-Long（60s–15min，~140K h，3.2M）→ AV-Think（24K TAVIT）
-课程： Init OmniVinci → Short-SFT（≤5min / 16K）→ Long-SFT（≤15min / 32K）= AVF-Instruct
- → CoT SFT + GRPO = AVF-Think
-架构： SigLip + Dynamic S2 ‖ AF-Whisper（30s 滑窗）→ MLP 适配 → 时序交错 + CRTE → Qwen2.5-7B
- （可选 streaming TTS，细节指向 Audio Flamingo 3）
-`
-
----
-
-## 二、议题边界：只写「开源长视频 AV 联合理解」，不写 Omni 产品线 / 语音翻译 / 视频生成
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[QwenOmni音视频原生]]** Qwen3/3.5-Omni | 文内把 Qwen-Omni / Qwen3.5-Omni 列为短片或开权 omni 对照；表内 Qwen2.5-O 等数字 | Thinker–Talker、AuT 小时数、ARIA、256k 产品叙事全文 |
-| **[[SpeechLLM语音语言模型]]** Speech-LLM | 「音频可进 LLM」的相邻意识；基线表出现 Qwen2-Audio 等 | Whisper-large-v3 前端、三阶段 Voice Chat 配方 |
-| **[[SeamlessM4T语音翻译]]** Seamless | 「语音可端到端」的压力面一句 | UnitY / SeamlessAlign / EMMA 同传 |
-| **[[多模态架构脉络]]** | related work 中 Flamingo / LLaVA / InternVL 作视觉 LMM 前史一句 | CLIP→指令微调通史重写 |
-| **[[视频生成模型脉络]]** | 无接口（生成 ≠ 理解）；那篇的音视频联合生成与本篇的音视频联合理解方向相反 | Sora / 文生视频脉络 |
+| 2022-04 | [Flamingo](https://arxiv.org/abs/2204.14198) | 桥接冻结的预训练视觉与语言模型，处理任意交错的图文序列，靠少样本提示适配新任务 |
+| 2025-03 | [Qwen2.5-Omni](https://arxiv.org/abs/2503.20215) | 音频与视频按时间交错排列，用 TMRoPE 对齐时间戳，Thinker–Talker 同时出文本与语音（[[QwenOmni音视频原生]]） |
+| 2025-07 | [Audio Flamingo 3](https://arxiv.org/abs/2507.08128) | 统一语音、环境声与音乐的 AF-Whisper 编码器，按需思考，最长 10 分钟音频，只用开源音频数据训练 |
+| 2025-10 | [OmniVinci](https://arxiv.org/abs/2510.15870) | OmniAlignNet 对齐视觉与音频嵌入，加时间嵌入分组与约束旋转时间嵌入（CRTE），用 0.2T token 训练，为 Qwen2.5-Omni 的六分之一 |
+| 2026-07 | AV-Flamingo | 以 OmniVinci 初始化，构造长视频音视联合数据与带时间戳的推理链 |
 
-### 2.2 本卡主轴 vs 范围外
+## 三、方法
 
-| 写 | 不写 |
-|---|---|
-| AV-Skills 技能分类与 Short/Long 规模 | 合成标注 prompt 逐字复刻成「可复现假数据配方」操作手册（附录图仅点名存在） |
-| 三阶段课程与 Table 4/5 超参 | 把 512×H100 外推成未给出的总 FLOPs / 美元成本 |
-| TAVIT 时间戳接地 + GRPO 奖励类型（format / accuracy / structured） | 侧写可复现越狱或有害 AV 请求绕过 |
-| Table 1 / Table 6 文内分数 | 未列表的 Figure 1 雷达图读点、未读的 OmniVinci 原文细节 |
-| 「fully open」主张 **与** non-commercial 许可 **并列** | 断言 Apache/商用可任意部署 |
+### 3.1 架构（§2.1）
 
----
+架构与 OmniVinci 相近，五个部件：
 
-## 三、架构思想（主读）
+1. **视觉编码器**：SigLip 加先多尺度编码再压缩的 Dynamic S2 模块，使分辨率与帧数提高时送进 LLM 的 token 数不按比例增长。
+2. **音频编码器**：沿用 Audio Flamingo 系列的 AF-Whisper，16 kHz 单声道、128 通道对数梅尔谱，切成不重叠的 30 秒片段分别编码再按时间拼接，可处理整集播客或电影音轨。
+3. **跨模态对齐**：两路各用两层 MLP 投到 LLM 嵌入空间；按时间切成同步片段后交错排列，使同一时间窗的视觉与音频 token 相邻，自注意力可直接跨模态关联；再加 CRTE 编码绝对时间。
+4. **语言骨干**：Qwen2.5-7B（36 层），以交错音视嵌入为前缀、文本指令在后，自回归输出文本；最长 15 分钟视频的训练靠混合序列并行（节点内 Ulysses、节点间 Ring-Attention）。
+5. **流式语音合成（可选）**：仅解码器 Transformer，根据 LLM 输出的子词与已生成的音频 token 预测下一个音频 token，细节指向 Audio Flamingo 3。
 
-### 3.1 总图（§3.1 / Fig.2）
+### 3.2 数据：AV-Skills 与 AV-Think（§2.2、附录 A）
 
-文称架构 **similar to OmniVinci**，五块：
+作者把 WorldSense、MMOU 等基准的多选题改成开放题，归纳模型的失败类型，再据此构造数据：
 
-1. **SigLip** 视觉编码器（Zhai et al., 2023）+ **「Spatial-Scale-then-Compress」Dynamic S2**（循 Liu et al. 2025a / Ye et al. 2025）——多尺度编码再压缩，宣称在提高分辨率/帧数时 **不按比例膨胀** LLM token 数。
-2. **AF-Whisper** 音频编码器（借自 Audio Flamingo 3 / Next / Music Flamingo）：波形 **16 kHz mono** → **128-ch** log-mel（窗 **25 ms** / hop **10 ms**）→ **非重叠 30 s** 滑窗独立编码再沿时间拼接，以支持长音频。
-3. **跨模态时序对齐**：各模态 **2-layer MLP** 投到 LLM 嵌入空间；按时间切同步块后 **交错（interleave）**，使同学段视听 token 相邻，便于自注意力跨模态；再加 **CRTE（Constrained Rotary Time Embeddings）** 编码绝对时间。
-4. **LLM 骨干**：**Qwen2.5-7B**（Team, 2025）——文内写 **7B 参数、36 hidden layers、16 attention heads**；前缀为交错 AV 嵌入 + 文本指令，自回归出文本。长视频（文称最长约 **15 min**）训练用 **hybrid sequence parallelism**（Ulysses 节点内 + Ring-Attention 节点间）+ FSDP/ZeRO。
-5. **Streaming TTS（可选）**：decoder-only，条件于 LLM 子词与已生成音频 token；细节 **显式外指** Goel et al. 2025（Audio Flamingo 3），本卡不展开声码器。
-
-**与 [[QwenOmni音视频原生]] 接口一句（不展开）**：Qwen Omni 走 Thinker–Talker + AuT 原生全模态产品栈；本卡是 **OmniVinci 系「双编码器 + 时序交错 + 7B 文本 LLM」** 路线，TTS 为可选外接式模块叙述。
-
-### 3.2 数据：AV-Skills 与 AV-Think（§3.2）
-
-**动机**：公开资源多为单模态或短片识别型 AVQA；许多 omni 模型「分模态训完指望隐式交叉」；长视频联合监督稀缺。作者在 WorldSense、MMOU 等上把多选改开放题以减选项捷径，归纳缺口后建库。
-
-| 子集 | 时长 | 规模（文内） | 技能焦点（摘要） |
+| 子集 | 视频时长 | 规模 | 侧重 |
 |---|---|---|---|
-| **AV-Skills-Short** | ≤ **60 s** | **100K hours**；**3.8M** instances（**1M** captions + **2.8M** QA） | Relation / Emotion Change / Temporal / Spatial / Causal / Hallucination Detection / Audio Counting / Video Counting 等 |
-| **AV-Skills-Long** | **60 s – 15 min** | ~**140K hours**；**3.2M** instances（**1.2M** captions + **2.0M** QA） | Needle-in-haystack、Temporal Referring/Order/Attribute、Sub-scene、Holistic、Counting、AV Referring、Topic、Detailed Captioning、Event Sequence、AV Event Alignment、Inference、Comparative、Context 等（文列 13 类技能叙事） |
-| **合计（摘要）** | — | ≈**7M** caption+QA；≈**4.8M** QA | 强调 temporal / compositional / cross-modal |
-| **AV-Think（TAVIT 数据）** | 长视频（预告片、电影回顾、悬疑、多方对话等） | ≈**24K**；推理链均长 **635.7** words | 中间推理步显式挂到 **音+视** 时间戳；TAC 风格时间戳字幕 → LLM 合成 QA–reasoning 三元组 |
+| AV-Skills-Short | 不超过 60 秒 | 10 万小时，380 万条（100 万描述 + 280 万问答） | 关系、情绪变化、时序、空间、因果、幻觉识别、音频与视频计数等 |
+| AV-Skills-Long | 60 秒至 15 分钟 | 约 14 万小时，320 万条（120 万描述 + 200 万问答） | 大海捞针、时序指代与排序、整体推理、音视事件对齐、比较与上下文等 |
+| AV-Think | 长视频（预告片、电影回顾、多人对话等） | 约 2.4 万条，推理链平均 635.7 词 | 每个推理步骤都挂到音频与视觉的时间戳上 |
+| AV-Safety QA | 长视频 | 536 小时，9.2 万条问答 | 对识别私人身份、提取敏感信息等请求给出安全拒绝 |
 
-公开源举例（文内）：短侧 YouTube-8M、HD-VILA、InternVid、VidChapters；长侧 HarmonySet、LSMDC、MMTrail、MovieClips、MiraData；另有开放互联网按品类采样（播客、城市漫步、访谈、体育等，Fig.4）。
+AV-Skills 合计约 700 万条描述与问答，其中问答约 480 万条。AV-Think 的生成方式：先产生带时间戳的音视描述，再由 LLM 合成问题、推理与答案三元组。
 
-**AV-Safety QA（Appendix A）**：long-context SFT 中 **536 hrs / 92K** QA，针对识别私人、骚扰描述、抽取敏感信息等请求，目标回答为安全拒绝/重定向。
+### 3.3 三阶段课程（§2.3）
 
-单模态混料大量借自 OmniVinci / Audio Flamingo 3 / Music Flamingo 等（Table 2 有 epoch 配比；CoT 列仅 **AV-Think** 标 2.0）。
+1. **预训练**：从 OmniVinci 检查点出发，用单模态数据加 AV-Skills-Short 训练，视频最长 5 分钟、上下文 16K。
+2. **中段训练**：加入 AV-Skills-Long，视频最长 15 分钟、上下文 32K，得到 AVF-Instruct。
+3. **后训练**：在 AV-Think 上先做 SFT 再做 GRPO，得到 AVF-Think。
 
-### 3.3 三阶段课程（§3.3 + Table 4/5）
+作者的假设：早期的单模态与短上下文训练建立感知与弱对齐，后期的长真实视频才建立强对齐、长上下文与时间推理。三阶段都在 512 张 H100 上训练（§3）。
 
-| 阶段 | 产出 | 数据重心 | 时长 / 上下文上限 | 全局 batch / LR / epoch | 并行 |
-|---|---|---|---|---|---|
-| **Pre-training** | 基础能力 | Init **OmniVinci** → Short-SFT：单模态 + **AV-Skills-Short** | ≤**5 min** / **16K** tokens | 128 / **1e-5** / 1 | ZeRO-3；**512×H100** |
-| **Mid-training** | **AVF-Instruct** | **AV-Skills-Long** + 降采样 Short 等 | ≤**15 min** / **32K** | 128 / **1e-5** / 1 | ZeRO-3 + **SP**；同 512×H100 |
-| **Post-training** | **AVF-Think** | **AV-Think**：先 SFT 再 **GRPO**（Shao et al., 2024） | ≤**15 min** / **32K** | 64 / **2e-5** / 2 | ZeRO-3 + SP；同 512×H100 |
+### 3.4 带时间戳的推理链与 GRPO（§2.2、附录 E）
 
-共性（Table 4）：cosine decay；warmup ratio **0.03**；weight decay **0.0**；bf16；grad accumulate **8**。
+TAVIT（Temporal Audio-Visual Interleaved Chain-of-Thought）要求在证据分散的长音视流里，把中间推理步骤绑定到时间戳，并交错引用音频与视觉证据。GRPO 每题采样 5 个回答（G=5），组内归一化奖励作为优势；奖励有三种：格式（推理与答案须放在规定标签内）、准确率（问答题规范化后比对答案）、结构化（开放描述由 LLM 提取场景、参与者、话题等字段再比重叠）。问答题用格式加准确率，开放生成用格式加结构化。
 
-**假设（文内）**：早期单模态+短上下文打感知与弱对齐；后期长真实视频才强化强对齐、长上下文与时间推理。
+## 四、结果
 
-### 3.4 TAVIT 与 GRPO（§3.2 末 + Appendix E）
+作者在 15 个以上的音视频、全模态、音频与视觉基准上评测（摘要）。以下取自 Table 1（准确率，语音识别为 WER）：
 
-- **TAVIT**：相对「视频-only CoT」或短音频上事后贴推理，强调在 **长、证据分散** 的真实 AV 流里，把中间思维绑到时间戳，并 **交错** 音/视证据。
-- **GRPO**：去掉显式 value，用同题多样本奖励均值估优势；Appendix E 写明 group size **G=5**。奖励：
- - **Format**：须落在 `<think>…</think>` + `<answer>…</answer>`；
- - **Accuracy**（QA）：规范化答案匹配；
- - **Structured**（开放 caption/回复）：LLM 抽 JSON 字段（场景、参与者、话题等）再比重叠。
- QA 用 format+accuracy；开放生成用 format+structured。
-
----
-
-## 四、评测字段（辅读，Table 1 / §5 / Table 6）
-
-文称在 **15+** AV / omni / audio / vision 基准上评测；Table 1 标注 closed / open-weight / open-source。下表只录 **文内写出的数字**（ACC↑，ASR 为 WER↓）。
-
-### 4.1 Omni / 长 AV
-
-| 基准 | 对照（文内） | AVF-Instruct | AVF-Think |
+| 基准 | 对照 | AVF-Instruct | AVF-Think |
 |---|---|---|---|
-| WorldSense | Qwen2.5-O **45.4**；OmniVinci **48.2** | **50.3** | **51.6** |
-| DailyOmni | OmniVinci **66.5** | **72.4** | **73.9** |
-| OmniBench | Gemini-1.5 Pro **47.6** | **48.5** | **50.6** |
-| MMOU | Gemini-2.5 Pro **64.2**；Minicpm-o 4.5 **46.8** | **56.9** | **60.2** |
-| AVHBench A→V \| V→A Hall. | Gemini-2.0 Flash **83.3 \| 63.3** | **77.0 \| 81.1** | **79.0 \| 85.9** |
+| WorldSense | Qwen2.5-Omni 45.4；OmniVinci 48.2 | 50.3 | 51.6 |
+| DailyOmni | OmniVinci 66.5 | 72.4 | 73.9 |
+| OmniBench | Gemini-1.5 Pro 47.6 | 48.5 | 50.6 |
+| MMOU | Gemini-2.5 Pro 64.2；MiniCPM-o 4.5 46.8 | 56.9 | 60.2 |
+| AVHBench 音→视、视→音幻觉 | Gemini-2.0 Flash 83.3、63.3 | 77.0、81.1 | 79.0、85.9 |
+| MMAU（test，平均） | Audio Flamingo 3 72.42；OmniVinci 71.60 | 73.49 | — |
+| Video-MME（无字幕、有字幕） | OmniVinci 67.3、68.6 | 70.7、71.2 | — |
+| LongVideoBench | OmniVinci 62.0 | 60.1 | — |
+| LibriSpeech clean、other（WER） | 对照各取最好：clean 为 Phi-4-mm 1.67，other 为 Qwen2.5-Omni 3.4 | 1.64、3.5 | — |
 
-正文强调：MMOU 上相对开源平台 **46.8** 有明显提升；长复杂真实 AV 是主卖点。AVHBench 上 A→V 低于 Gemini-2.0 Flash，V→A 高于该对照——**分列，不捏合成「全面超过」**。
+数据消融（Table 6）：OmniVinci 在 DailyOmni、WorldSense、Video-MME 上为 66.5、48.2、67.3；加 AV-Skills-Short 训练后为 69.5、48.5、68.5；再加 AV-Skills-Long 得到 AVF-Instruct，为 72.4、50.3、70.7。短数据先带来跨模态推理，长数据再提升长程理解。
 
-### 4.2 Audio / Video / ASR（多为 Instruct）
+## 五、意义
 
-| 基准 | 文内要点 |
-|---|---|
-| MMAR | OmniVinci **58.4** → Instruct **60.1** |
-| MMSU | Gemini 1.5 Pro **60.7** → Instruct **61.5** |
-| MMAU-v05.15.25 Sound\|Music\|Speech\|Avg | AF3 **75.83\|74.47\|66.97\|72.42**；OmniVinci **73.57\|73.07\|68.17\|71.60**；Instruct **77.97\|73.17\|69.33\|73.49**（文称 overall avg 最佳） |
-| CMM Hallucination | Gemini 2.5 Pro **82.0** → Instruct **86.7** |
-| Video-MME w/o \| w/ subs | OmniVinci **67.3\|68.6**；Instruct **70.7\|71.2**（相对 NVILA **64.2\|-** 亦高） |
-| LongVideoBench | OmniVinci **62.0**；NVILA **58.7**；Instruct **60.1**（**低于** OmniVinci，文内如实写 competitive） |
-| MVHBench | OmniVinci **70.6** → Instruct **71.7** |
-| LibriSpeech clean\|other WER | Phi-4-mm\|Qwen2.5-O **1.67\|3.4**；Instruct **1.64\|3.5** |
-| SPGISpeech / TEDLIUM / GigaSpeech / VoxPopuli WER | Instruct **2.8** / **3.0** / **10.2** / **5.8**（与表内 Phi-4-mm 等对照，互有胜负） |
+AV-Flamingo 的贡献主要在数据与训练流程而非新结构：架构基本沿用 OmniVinci，提升来自专门要求音视联合推理的长视频数据、由短到长的课程，以及把推理绑定到时间戳的后训练。消融显示短、长两类联合数据都带来增益，长数据在 WorldSense 与 Video-MME 上的增益更大。数据、代码与配方公开，给长视频音视理解提供了一条可复现的开源基线；它与 Qwen-Omni 的开放权重路线、SiLVR 的外接推理路线形成三种可比较的做法。
 
-### 4.3 消融（Table 6）
+## 六、局限与待核实
 
-| 模型 | DailyOmni | WorldSense | VideoMME |
-|---|---|---|---|
-| OmniVinci | 66.5 | 48.2 | 67.3 |
-| AVF-Stage1（+AV-Skills-Short） | 69.5 | 48.5 | 68.5 |
-| AVF-Instruct（+AV-Skills-Long） | 72.4 | 50.3 | 70.7 |
+- **作者自陈**（§5）：AV-Skills 来自公开数据集与开放互联网，可能有来源偏差，并与预训练数据重叠；极长、信息密集且证据分散的视频仍然困难；现有基准不足以代表开放的真实场景。
+- **不是全面领先**：AVHBench 音→视幻觉低于 Gemini-2.0 Flash，MMOU 仍低于 Gemini-2.5 Pro，LongVideoBench 低于初始化来源 OmniVinci。
+- **许可**：论文称「fully open」，但 AV-Flamingo 与 AV-Skills 仅限非商业研究使用（附录 I）；初始化检查点与音频编码器为 NVIDIA OneWay Noncommercial License，Qwen2.5-7B 为 Apache 2.0（附录 H、Table 9）。训练用的 Aidatatang 语料在训练后被发行方撤回，不随模型再分发（附录 H）。
+- **标题不一致**：arXiv 页面标题为 Audio-Visual Flamingo，PDF 正文标题前加了 Nemotron-Labs；仅有 v1。
+- **MMAU 口径**：本篇引用的是 MMAU test 集（v05.15.25），[[StepAudio2语音旗舰]] 引用的是 test-mini，两篇的 Audio Flamingo 3 数字不同，不能横向比较。
+- **代码与模型地址**：PDF 页眉有 Code、Model 等按钮，但没有可核对的链接，本篇不列。
 
-文内解读：Short 注入跨模态推理；Long 再抬长程与 grounding。
+## 七、与相邻笔记的分工
 
----
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[QwenOmni音视频原生]] | 对照：Qwen2.5-Omni 在 Table 1 中作为开放权重对照；两者都把音视 token 按时间交错，Qwen 系用 TMRoPE，本篇用 CRTE | Thinker–Talker 与 Qwen-Omni 产品线 |
+| [[SpeechLLM语音语言模型]] | 上游：Whisper 系编码器接 LLM 的音频理解骨架在那篇，本篇的 AF-Whisper 沿用同一思路并加入视频 | 纯音频模型的训练 |
+| [[StepAudio2语音旗舰]] | 对照：那篇是音频入、音频出的端到端语音对话模型，本篇是音视入、文本出（语音合成可选）的联合理解模型；两篇的 MMAU 口径不同 | 语音对话与副语言 |
+| [[多模态架构脉络]] | 上游：Flamingo 到 LLaVA 的视觉语言模型史在那篇，本篇是加入音频的长视频分支 | 视觉语言模型通史 |
+| [[SiLVR与ChainOfFrames]] | 对照：同样面向长时真实音视频理解，那篇用现成语音识别与描述模型外接推理 LLM，本篇训练一个联合模型 | 视频推理框架 |
+| [[GRPO与DAPO算法族]] | 方法：AVF-Think 的后训练用 GRPO，组大小 5 | GRPO 的推导与变体 |
+| [[视频生成模型脉络]] | 辨析：那篇的音视频联合生成与本篇的音视频联合理解方向相反 | 视频生成 |
 
-## 五、局限与开放声明（§6 + Appendix I）
+## 八、延伸阅读
 
-文内自陈：
-
-1. AV-Skills 来自公开集 + 开放互联网 → **源偏差**、与先验训练数据 **潜在重叠**；
-2. **极长、极密** 且证据稀疏/分散的视频仍难；
-3. 现有基准 **不足以** 代表开放真实部署。
-
-未来工作：扩域、更难长视频、更真实评测协议。
-
-Broader Impacts：正向（无障碍音频描述、讲座/纪录片理解、内容审核辅助）；风险（监控滥用、深伪辅助、多模态虚假信息）。缓解叙述：non-commercial 许可 + AV-Safety QA + 呼吁社区护栏。Aidatatang 语料在训练后被发行方撤回——Table 9 保留透明度说明，**不**随 AVF 产物再分发（Appendix H）。
-
----
-
-## 六、本卡不回答的问题
-
-- Qwen3.5-Omni 如何做到 256k / ARIA / 非降级 → **[[QwenOmni音视频原生]]**。
-- Qwen2-Audio 三阶段与 Voice Chat 接口 → **[[SpeechLLM语音语言模型]]**。
-- Seamless 百语 S2ST 与 EMMA 同传 → **[[SeamlessM4T语音翻译]]**。
-- CLIP/Flamingo/LLaVA 视觉指令通史 → **[[多模态架构脉络]]**。
-- Sora 等视频**生成**脉络 → **[[视频生成模型脉络]]**。
-- OmniVinci（Ye et al., 2025）自身训练全配方 → 本卡仅作 **初始化检查点** 接口，不代替其专篇。
-- 页眉 Code/Model 的具体 GitHub/HF URL → **本 PDF 未抽出可核链接，标待核实**。
-
----
-
-## 七、来源与核验
-
-| 项 | 值 |
-|---|---|
-| 主 PDF | `https://arxiv.org/abs/2607.16107`（**47** 页） |
-| arXiv | https://arxiv.org/abs/2607.16107 · https://arxiv.org/pdf/2607.16107 |
-| 核验日 | 2026-09-22 CST |
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [AV-Flamingo](https://arxiv.org/abs/2607.16107) §1、Figure 2 | 三个缺口与五部件架构 |
+| 2 | [AV-Flamingo](https://arxiv.org/abs/2607.16107) §2.2–2.3、Table 6 | 数据构造、三阶段课程与消融 |
+| 3 | [OmniVinci](https://arxiv.org/abs/2510.15870) | 初始化来源的对齐模块与时间嵌入 |
+| 4 | [Audio Flamingo 3](https://arxiv.org/abs/2507.08128) | AF-Whisper 与流式语音合成 |
