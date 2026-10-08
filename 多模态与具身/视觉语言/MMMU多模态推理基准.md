@@ -11,7 +11,7 @@ sources:
  - https://mmmu-benchmark.github.io/
  - https://mmmu-benchmark.github.io/#leaderboard
 arxiv: ["2311.16502", "2409.02813"]
-related: ["多模态架构脉络", "评测与排行榜可靠性", "SelfRAG与CorrectiveRAG", "训练数据污染检测"]
+related: ["多模态架构脉络", "评测与排行榜可靠性", "训练数据污染检测"]
 archived: 2026-09-22
 ---
 
@@ -22,7 +22,6 @@ archived: 2026-09-22
 > **范围与相邻笔记**：
 > - **相对 [[多模态架构脉络]]**：本篇 **不**重写 CLIP 对比预训练、Flamingo Perceiver、LLaVA 视觉指令微调全文；只取「多模态产品默认 / 需要可区分能力的评测」接口。
 > - **相对 [[评测与排行榜可靠性]]**：本篇 **不**重写污染三分法、thinking 路由、第三方聚合榜元规则全文；只取「分数必须绑定协议」一句，并把 MMMU 族的协议字段写清。
-> - **相对 [[SelfRAG与CorrectiveRAG]]**：检索增强评测另槽；本篇不写 Self-RAG/CRAG。
 > live 榜滚动更新，正文以 PDF Table 为准。
 
 ---
@@ -51,7 +50,6 @@ archived: 2026-09-22
 | **[[多模态架构脉络]]** 多模态架构脉络 | 「需要评测真正的图文联合理解」的产品/能力动机 | CLIP 双塔、Flamingo gated XAttn、LLaVA 投影+指令数据全文 |
 | **[[评测与排行榜可靠性]]** 榜可靠性 | 「一个数字 = 一整套未声明协议」→ 本篇把输入模态/选项数/滤题规则写死 | 污染检测通史、thinking 开关对照表、第三方聚合榜规范全文 |
 | **[[训练数据污染检测]]** 污染检测 | 「公开题会渗入爬取」自觉一句 | 检测方法论 |
-| **[[SelfRAG与CorrectiveRAG]]** Self-RAG/CRAG | 同属「评测加固」族的相邻槽 | 检索正确性 / 引用 faithfulness 正文 |
 
 ### 2.2 评测史一条线
 

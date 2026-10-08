@@ -1,225 +1,152 @@
 ---
-title: "Agentic RAG：分层检索接口（A-RAG）"
-topic: AgenticRAG分层检索接口
 date: 2026-09-24
+topic: AgenticRAG分层检索接口
+title: "Agentic RAG：分层检索接口（A-RAG）"
 lines: [架构思想, 评测字段]
-status: archived
 sources:
  - https://arxiv.org/abs/2602.03442
-arxiv: ["2602.03442"]
-related: ["检索增强与知识外挂", "SelfRAG与CorrectiveRAG", "HippoRAG2与CatRAG", "图谱检索GraphRAG"]
-code: "https://github.com/Ayanami0730/arag"
-retrieval_cutoff: 2026-09-24
+related: ["检索增强与知识外挂", "SelfRAG与CorrectiveRAG", "HippoRAG2与CatRAG", "图谱检索GraphRAG", "上下文工程与智能体技能"]
+retrieval_cutoff: 2026-02-03
 timezone: Asia/Shanghai (CST)
+status: archived
+arxiv: ["2602.03442"]
+code: "https://github.com/Ayanami0730/arag"
 archived: 2026-09-24
 ---
 
 # Agentic RAG：分层检索接口（A-RAG）
 
-> **定位**：Agentic RAG / A-RAG——在 [[检索增强与知识外挂]]稠密检索通史、[[SelfRAG与CorrectiveRAG]] 自省与纠错、[[HippoRAG2与CatRAG]] 记忆式图检索之后，补近窗一刀：**把多粒度检索暴露成 agent 工具**，并考察 **test-time 扩展**。
-> **研究线**：**架构思想（主）**——`keyword_search` / `semantic_search` / `chunk_read` 分层接口 + 最简 ReAct 环；**评测字段（辅）**——LLM-Acc / Contain-Acc、检索 token 数、max-step 与 reasoning effort 扩展。
+> **主要来源**：[A-RAG: Scaling Agentic Retrieval-Augmented Generation via Hierarchical Retrieval Interfaces](https://arxiv.org/abs/2602.03442)（Du 等，v1 2026-02-03，迄今唯一版本；截至 2026-02-03）。下文简称「A-RAG」。
+> **研究线**：架构思想（主）——把关键词、语义、整块阅读三种粒度的检索做成智能体工具，用最简 ReAct 环让模型自己编排；评测字段（辅）——LLM-Acc、检索 token 数、步数与推理强度的测试时扩展。
 > **范围与相邻笔记**：
-> - **≠ [[SelfRAG与CorrectiveRAG]]**：不写 reflection tokens、Correct/Incorrect/Ambiguous 三动作、Web 回退；本文是 **工具接口自主编排**，不是「要不要检索 / 检索坏了怎么办」的固定策略机。
-> - **≠ [[HippoRAG2与CatRAG]]**：不写 OpenIE+PPR、查询自适应边权；本文 **不做图索引算法**，关键词层甚至不做离线倒排。
-> - **≠ [[图谱检索GraphRAG]]**：不写 Leiden 社区摘要与 map-reduce QFS。
-> - **≠ Harness 工具环通史**：不写 MCP / 长程 harness / 生产 Memory API；对象是 **语料库上的检索工具面**。
-> **主要来源**：[A-RAG: Scaling Agentic Retrieval-Augmented Generation via Hierarchical Retrieval Interfaces](https://arxiv.org/abs/2602.03442)（v1；截至 2026-09-24）。
+> - ≠ [[SelfRAG与CorrectiveRAG]]：本篇不写反思 token、三种纠错动作与 Web 回退。
+> - ≠ [[HippoRAG2与CatRAG]]：本篇不写 OpenIE 加 PPR 的图检索与查询自适应边权；A-RAG 不建图，关键词层连离线倒排都不做。
+> - ≠ [[图谱检索GraphRAG]]：本篇不写社区摘要与 map-reduce 全局问答。
+> - 本篇不写 MCP 等通用工具协议与生产记忆接口，对象只是语料库上的检索工具。
+>
+> **意义**：A-RAG 把 RAG 的改进方向从「设计更聪明的检索算法」转到「给模型更好用的检索接口」。只给三个分层工具、不预设流程，强推理模型就能自己组合出适合任务的检索策略，在多跳问答上超过图检索与工作流方法；准确率还随允许步数与推理强度上升，同时检索 token 不比传统 RAG 多。
+
+**一句话**：不替模型决定怎么检索，而是给它「搜关键词、搜语义、读整块」三个工具，让它先看片段再决定读哪一块。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 角色 |
+A-RAG §1 把既有 RAG 归为两类，共同点是模型不参与检索决策：
+
+1. **算法一次取**：用检索算法（可以带图结构）一次取出多段拼进上下文，如 GraphRAG、RAPTOR、HippoRAG 系、LinearRAG。
+2. **预设工作流**：写好固定流程让模型逐步执行，如 FLARE、IRCoT、RA-ISF 和多智能体编排，以及用 SFT 或 RL 让模型更好地遵循流程的训练式方法。论文称之为 Workflow RAG。
+
+两类都不能让模型按任务换策略，也不能让它自己判断「证据够了、可以作答」。论文的初步实验发现，即使只给一个向量检索工具的最简 Agentic RAG，也稳定优于 Naive RAG 与多数既有基线（Fig.1、§4），说明收益首先来自检索决策的自主权，而不是更复杂的索引。
+
+## 二、脉络
+
+据 A-RAG §2：
+
+| 阶段 | 代表工作 | 特点 |
 |---|---|---|
-| **主文** | Du, Xu†, Zhu, Wang, Wang, Wang & Mao‡, *A-RAG: Scaling Agentic Retrieval-Augmented Generation via Hierarchical Retrieval Interfaces* | 分层检索接口；Agentic vs Graph/Workflow 三分；test-time 扩展 |
-| **版本** | arXiv:**2602.03442v1** \[cs.CL\]（**3 Feb 2026** UTC；PDF 页眉 *February 4, 2026*）；`https://arxiv.org/abs/2602.03442`；**18** 页 letter | 本稿唯一数字源 |
-| **代码（文内）** | `https://github.com/Ayanami0730/arag` | 文称将释出代码与评测套件；本笔记不展开仓库提交史 |
+| 基础 RAG | Lewis 等 2020；其后的查询改写、自适应路由、检索质量评估（CRAG）、重排 | 检索算法固定，逐项改进环节 |
+| Graph RAG（2024 起） | GraphRAG、RAPTOR、LightRAG、HippoRAG | 结构更丰富，但仍依赖预定义检索算法；初次检索不够时模型无法自己补查 |
+| Workflow RAG | FLARE（置信度低时检索）、IRCoT（推理与检索交替）、RA-ISF；MA-RAG、RAGentA 等多智能体；Self-RAG 等训练式方法 | 有多步与工具，但流程在设计时写死 |
+| Agentic RAG | A-RAG（2026-02） | 策略、轮数与工具调用都由模型决定 |
 
-**一句话抓手：** 现有 RAG 要么「算法一次取段再拼接」，要么「预写工作流让模型逐步执行」——模型都不能真正改检索策略。A-RAG 把 **关键词 / 语义 / 整块阅读** 三层暴露成工具，用最简 ReAct 环让模型按任务自编排，并证明 **步数与 reasoning effort** 可抬升准确率，同时 Full 配置的检索 token 可与传统方法相当甚至更低。
+论文用三条原则界定「真正的 agentic」：**自主策略**（是否、何时、如何检索与验证由模型动态决定）、**迭代执行**（轮数随中间结果变化）、**交错用工具**（每次调用以上一次观察为条件）。附录 Table 4 把 Self-RAG、CRAG、HippoRAG2、GraphRAG、IRCoT、MA-RAG 等标为不满足或部分满足，只有 A-RAG 三条全满足。这是作者为自己的范式划的界，并不否定相邻方法本身的机制。
 
----
-
-## 二、动机：为何「算法一次取」与「预写工作流」都不够
-
-### 2.1 两种旧范式（§1 / Fig.1）
-
-文首把既有 RAG 收成两类（均 **不允许模型参与检索决策**）：
-
-1. **算法一次取**：用（可含图结构的）检索算法一次取出多段，拼接进上下文（GraphRAG、RAPTOR、HippoRAG 系、LinearRAG 等）。
-2. **预写工作流**：固定流程，提示模型逐步执行（FLARE、IRCoT、RA-ISF、部分多 agent 编排，以及依赖 SFT/RL 跟流程的训练式方法）。文称此类为 **Workflow RAG**。
-
-二者共同缺口：模型不能按任务改交互策略，也不能自主判断「证据何时够用可作答」。
-
-### 2.2 初探：最简 Agentic 已胜过 Naive RAG
-
-文称：即便 **Naive Agentic RAG**（只给单一 embedding 检索工具）也稳定优于 Naive RAG 与若干既有基线（Fig.1 / §4）。这表明收益来自 **检索决策自主权**，而不必先堆复杂索引。
-
-### 2.3 真 Agentic 的三条原则（§2 / Appendix A Table 4）
-
-文用三原则筛「真 agentic」：
-
-| 原则 | 含义 |
-|---|---|
-| **Autonomous Strategy** | 高层策略（是否/何时/如何检索、分解、验证、再规划）由模型动态组织，而非被外部规则/分类器锁死 |
-| **Iterative Execution** | 多轮执行，轮数可随中间结果变化，而非严格 one-shot |
-| **Interleaved Tool Use** | ReAct 式 action→observation→reasoning；每次工具调用条件于前次观察 |
-
-Appendix Table 4 将 Self-RAG、CRAG、HippoRAG2、GraphRAG、IRCoT、MA-RAG 等标为 ✗ 或边界 Δ；文称 **仅 A-RAG 三项全 ✓**。跟读用途：这是作者的范式分类锚，不是对相邻笔记机制的否定——相邻笔记仍各自成立，只是 **不满足本文定义的「真 agentic」全集**。
-
----
-
-## 三、分层检索接口设计
-
-总览（Fig.3）：**分层索引** + **三工具** + **最简 agent 环**。刻意不用并行工具调用等复杂编排，以便隔离「接口形态」对行为的影响（§3.3）。
+## 三、分层检索接口
 
 ### 3.1 轻量分层索引（§3.1）
 
-| 层 | 做法 | 备注 |
+| 层 | 做法 | 用途 |
 |---|---|---|
-| **Chunk** | 约 **1,000** token / 块，边界对齐句子（跟 LinearRAG 设定） | 完整语义单元；按需读取，而非一律拼接 |
-| **Sentence** | 规则分句；预训练句编码器 $f_{\mathrm{emb}}$ 得 $\mathbf{v}_{i,j}$ | 细粒度语义匹配；句→父块可回溯 |
-| **Keyword** | **不**做离线倒排或 KG；查询时 **精确文本匹配** | 降索引成本；实体名等精确命中 |
+| 块 | 约 1,000 token 一块，边界对齐句子（沿用 LinearRAG 设定） | 完整语义单元，按需整块阅读 |
+| 句 | 规则分句，每句用句向量编码，保留句到所属块的映射 | 细粒度语义匹配，再回到块 |
+| 关键词 | 不建倒排索引也不建图，查询时直接精确文本匹配 | 实体名等精确命中；省去索引成本 |
 
-三层合起来支持「先瞥片段、再读全文」的渐进取证。
+### 3.2 三个工具（§3.2）
 
-### 3.2 三个检索工具（§3.2）
+- **keyword_search**：输入关键词列表与返回数 $k$，块得分为 $\sum_{k\in\mathcal{K}}\mathrm{count}(k,T_i)\cdot|k|$（越长的词越具体，权重越高）；只返回块 ID 和含关键词的句子片段。
+- **semantic_search**：查询向量与所有句向量算余弦相似度，按所属块取最高句分聚合；同样只返回块 ID 与匹配句片段。
+- **chunk_read**：根据片段判断后读取完整块，也可以读相邻块补上下文。
 
-**`keyword_search`**  
-- 输入：关键词列表 $\mathcal{K}$ 与返回数 $k$。  
-- 块分：$\mathrm{Score}_{\mathrm{kw}}(c_i,\mathcal{K})=\sum_{k\in\mathcal{K}}\mathrm{count}(k,T_i)\cdot|k|$（更长词加权更高）。  
-- 返回：top-$k$ 块 ID + **含关键词句子的缩略 snippet**（非整块）。
+两个搜索工具只给片段，作答前须用 chunk_read 读原文，形成「先瞥后读」的渐进披露。
 
-**`semantic_search`**  
-- 输入：自然语言查询 $q$；$\mathbf{v}_q=f_{\mathrm{emb}}(q)$，与句向量余弦相似度。  
-- 按父块聚合（块分 = 块内最高句分）；返回 top-$k$ 块 ID + 匹配句 snippet。
+### 3.3 智能体环（§3.3）
 
-**`chunk_read`**  
-- 据 snippet 判断后读完整块；也可读相邻块补上下文。  
-- 与搜索工具配合形成 **「先瞥后读」**：搜索只给缩略，回答前须 `chunk_read`（Appendix 工具说明原文强调）。
+ReAct 式循环，每轮只调用一个工具，观察结果后再决定下一步；达到最大轮数仍未作答就据已有信息强制作答。刻意不用并行调用等复杂编排，以便单独考察接口形态的作用。**Context Tracker** 记录已读块，重复读取只返回「已读过」提示，不再消耗全文 token。
 
-### 3.3 Agent 环与 Context Tracker（§3.3 / Appendix C）
+对照变体：**A-RAG (Naive)** 只有一个向量检索工具；**A-RAG (Full)** 有全部三个工具。
 
-- **环**：ReAct 式（Yao et al., 2023）；每轮选 **一个** 工具 → 观察 → 再决策；达最大迭代仍无答案则强制据已有信息作答。  
-- **Context Tracker**：维护已读块集合 $\mathcal{C}^{\mathrm{read}}$；重复 `chunk_read` 只返回「This chunk has been read before」，**不**再消耗全文 token，并鼓励探索新块。
+## 四、关键结果
 
-对照变体：
+### 4.1 设定（§4.1）
 
-| 变体 | 工具面 |
-|---|---|
-| **A-RAG (Naive)** | 单一 embedding 检索（+ 读块，视提示配置） |
-| **A-RAG (Full)** | `keyword_search` + `semantic_search` + `chunk_read` |
+多跳问答 MuSiQue、HotpotQA、2WikiMultiHopQA，以及 GraphRAG-Bench 的医学与小说两个子集（沿用 LinearRAG 的语料与题目）。骨干为 GPT-4o-mini 与 GPT-5-mini；除 LinearRAG 外统一用 Qwen3-Embedding-0.6B 检索、$k=5$；主指标 LLM-Acc 由 GPT-5-mini 判分。
 
----
+### 4.2 准确率（Table 1，GPT-5-mini，LLM-Acc %）
 
-## 四、与 Self-RAG / CRAG、HippoRAG 2 的分工
-
-| 笔记 / 范式 | 主问题 | 本篇只取 | 本篇不写 |
-|---|---|---|---|
-| [[检索增强与知识外挂]] | 库外非参数记忆 + 条件生成 | 「固定 top-K 无差别塞入」对照槽 | DPR/MIPS、RAG-Token/Sequence 通史 |
-| [[SelfRAG与CorrectiveRAG]] | 何时检索；检索坏了如何纠错 | Table 4 中 Self-RAG / CRAG 作「非全自主」对照；Workflow 谱系中的自省/纠错定位一句 | reflection tokens；CRAG 三动作与 Web 回退 |
-| [[HippoRAG2与CatRAG]] | 记忆式开放 KG + PPR；查询自适应遍历 | Table 1/3 中 HippoRAG2 作 **Graph-RAG 系基线**；文 §2.2 一句：结构丰富仍靠预定义检索算法 | OpenIE、PPR、CatRAG 动态边权 |
-| [[图谱检索GraphRAG]] | 社区摘要全局 QFS | 同作 Graph-RAG 基线 | Leiden / map-reduce 全文 |
-| **本篇 A-RAG** | **多粒度检索工具面 + 模型自编排 + test-time 扩展** | — | — |
-
-跟读口诀：
-
-```
-B6            = 向量 RAG 通史（一次取段拼接）
-Self/CRAG     = 何时取 / 取坏了怎么办（自省·纠错策略机）
-HippoRAG2 等  = 记忆式图算法（索引侧聪明）
-A-RAG         = 检索接口侧 agent 化（工具面聪明 + 测时算力可扩）
-```
-
----
-
-## 五、评测与扩展结果（仅文内可核）
-
-### 5.1 设定（§4.1）
-
-| 项 | 文内 |
-|---|---|
-| 数据 | HotpotQA、2WikiMultiHopQA、MuSiQue、GraphRAG-Bench（Med. / Novel；跟 LinearRAG 同语料与题） |
-| 骨干 | **GPT-4o-mini**、**GPT-5-mini** |
-| 稠密检索 | 除 LinearRAG 外统一 **Qwen3-Embedding-0.6B**，$k=5$ |
-| 指标 | **LLM-Acc**（语义等价，judge=GPT-5-mini）；短答另报 **Contain-Acc**；GraphRAG-Bench 长答只报 LLM-Acc |
-| 基线组 | Vanilla：Direct / Naive RAG；Graph+Workflow：GraphRAG、HippoRAG2、LinearRAG、FaithfulRAG、MA-RAG、RAGentA |
-
-### 5.2 主结果摘录（Table 1，%）
-
-**GPT-5-mini · LLM-Acc（全文最优加粗语义由文标注）：**
-
-| Method | MuSiQue | HotpotQA | 2Wiki | Med. | Novel |
+| 方法 | MuSiQue | HotpotQA | 2Wiki | 医学 | 小说 |
 |---|---:|---:|---:|---:|---:|
 | Naive RAG | 52.8 | 81.2 | 50.2 | 86.1 | 70.6 |
+| GraphRAG | 48.3 | 82.5 | 66.5 | 87.3 | 77.1 |
 | HippoRAG2 | 61.7 | 84.8 | 82.0 | 78.2 | 54.3 |
 | LinearRAG | 62.4 | 86.2 | 87.2 | 79.2 | 54.7 |
 | A-RAG (Naive) | 66.2 | 90.8 | 70.6 | 92.7 | 80.4 |
-| **A-RAG (Full)** | **74.1** | **94.5** | **89.7** | **93.1** | **85.3** |
+| A-RAG (Full) | 74.1 | 94.5 | 89.7 | 93.1 | 85.3 |
 
-文述三点：
+- 统一评测下，Naive RAG 仍是强基线，图检索与工作流方法并未在所有数据集上稳定超过它。
+- 只给自主权的 A-RAG (Naive) 已在多数数据集上超过图与工作流方法，但在 2Wiki 上仍低于 HippoRAG2 与 LinearRAG。
+- Full 在 GPT-5-mini 上五个数据集全部最好；在 GPT-4o-mini 上只有 3 个最好（如 2Wiki 上 HippoRAG2 的 64.7 高于 Full 的 60.2）。论文据此认为分层工具与模型的推理和工具调用能力相互放大。
+- 消融（Table 2）：去掉语义搜索时 MuSiQue 从 74.1 降到 69.4，去掉关键词搜索降到 72.6；去掉 chunk_read、让搜索直接返回整块在多数数据集上也会掉点，说明「先瞥后读」本身有用。
 
-1. 统一评测下，Vanilla / Naive RAG 仍强；Graph/Workflow 系 **未能**在全部集上一致压过简单基线。  
-2. **Naive A-RAG** 已在多集上超过 Graph/Workflow，说明仅「给自主权」就有范式红利；换 GPT-5-mini 后更明显。  
-3. **Full** 在 GPT-4o-mini 上 5 集中 **3** 集最优；在 GPT-5-mini 上 **全部**最优——分层工具面与更强推理/工具调用能力同向放大。
+### 4.3 测试时扩展（§5.1、Fig.4）
 
-GPT-4o-mini 上 Full 的 LLM-Acc：MuSiQue **46.1**、Hotpot **77.1**、2Wiki **60.2**、Med. **79.4**、Novel **72.7**（相对同骨干 Naive A-RAG 与多数 Graph/Workflow 基线仍整体占优，但 2Wiki 上 HippoRAG2 的 64.7 高于 Full 的 60.2——跨骨干不可混比决绝对胜负）。
+在 MuSiQue 前 300 题上：最大步数从 5 增到 20，GPT-5-mini 约提升 8%，GPT-4o-mini 约 4%；推理强度从 minimal 调到 high，GPT-5-mini 与 GPT-5 都约提升 25%。推理越强的模型越能利用更长的探索。
 
-### 5.3 消融（Table 2，GPT-5-mini 设定下 Full 为参照）
+### 4.4 检索 token（Table 3，GPT-5-mini）
 
-| 变体 | MuSiQue LLM | Hotpot LLM | 2Wiki LLM |
-|---|---:|---:|---:|
-| Full | 74.1 | 94.5 | 89.7 |
-| w/o KW Search | 72.6 | 93.0 | 88.9 |
-| w/o Semantic | 69.4 | 93.9 | 89.1 |
-| w/o Chunk Read | 73.6 | 93.6 | 89.0 |
-
-文释：去掉关键词或语义任一层会伤多跳；去掉 `chunk_read`（搜索直接回整块）劣于「先 snippet 再精读」，说明渐进披露既增自主性又减噪声。
-
-### 5.4 Test-time 扩展（§5.1 / Fig.4）
-
-在 MuSiQue **前 300** 题：
-
-| 扩展轴 | 文内可核表述 |
-|---|---|
-| max-step **5→20** | GPT-5-mini LLM-Acc 约 **+8%**；GPT-4o-mini 约 **+4%**（强推理模型更吃长程探索） |
-| reasoning effort **minimal→high** | GPT-5-mini 与 GPT-5 均约 **+25%** |
-
-精确曲线点：**待核实读图**（Fig.4）。
-
-### 5.5 上下文效率（Table 3，GPT-5-mini，检索 token）
-
-| Method | MuSi. | Hotpot. | 2Wiki | Med. | Novel |
+| 方法 | MuSiQue | HotpotQA | 2Wiki | 医学 | 小说 |
 |---|---:|---:|---:|---:|---:|
 | Naive RAG | 5,387 | 5,358 | 5,506 | 5,418 | 4,997 |
-| HippoRAG2 | 5,411 | 5,380 | 5,538 | 5,447 | 5,019 |
 | A-RAG (Naive) | 56,360 | 27,455 | 45,406 | 23,657 | 22,391 |
-| **A-RAG (Full)** | **5,663** | **2,737** | **2,930** | **7,678** | **6,087** |
+| A-RAG (Full) | 5,663 | 2,737 | 2,930 | 7,678 | 6,087 |
 
-要点：Full 在更高准确率下检索 token **可比或更少**；Naive 变体 token 暴涨但分数更低——分层「先瞥后读」是效率关键，而非「多取必好」。
+只有一个向量工具时，智能体会反复检索，token 暴涨；有了分层工具和「先瞥后读」，Full 用与 Naive RAG 相当甚至更少的检索 token 换来更高准确率。
 
-### 5.6 失败模式（§5.3 / Appendix D）
+### 4.5 失败分析（附录 D）
 
-对 MuSiQue 上 A-RAG 前 **100** 错例人工归类：主因是 **推理链错误**（Appendix：MuSiQue 上约占 **82%**），其内 **实体混淆** 最常见（约 **40%**）；另有错误检索策略、题意误解等。相对 Naive RAG「找不到文档」瓶颈，Agentic 后瓶颈转为「找到了但推错」——优化方向偏实体消歧与策略，而非再堆索引复杂度。
+人工分析前 100 个错例：Naive RAG（GPT-4o-mini）约一半失败来自检索（多跳检索失败加 top-k 覆盖不足），瓶颈是「找不到文档」；A-RAG（GPT-5-mini）在 MuSiQue 上约 82% 是推理链错误，其中实体混淆最常见（约 40%），瓶颈变成「找到了但推错」。改进方向因此转向实体消歧与检索策略，而不是继续堆索引复杂度。
 
----
+## 五、意义
 
-## 六、局限（文内 Limitations）
+- **接口比算法更关键**：在强推理模型上，三个简单工具加最简循环就超过了更复杂的图检索与工作流方法，论文结论是今后重点应放在面向智能体的接口设计上（§6）。
+- **RAG 也能做测试时扩展**：准确率随步数和推理强度上升，RAG 可以像推理一样用更多推理算力换效果。
+- **渐进披露降低上下文成本**：先给片段、再按需读整块，使更高的准确率不以更多检索 token 为代价。
 
-1. **工具设计未穷尽**：未系统比较任意工具子集与行为差异；更全消融留待后续。  
-2. **更大骨干未验证**：算力所限，未在 GPT-5、Gemini-3 等更强模型上验证（文预期增益会更大，但属预期而非结果）。  
-3. **任务面偏多跳 QA**：事实核查、对话、长文生成等知识密集任务的泛化待证。
+## 六、局限与待核实
 
-结论取向（§6）：未来重点宜放在 **agent-friendly 接口设计**，而非继续堆复杂检索算法。
+- **工具组合未穷尽**：论文只比较了少数工具子集，更系统的消融留待后续（Limitations）。
+- **未在更强模型上验证**：受算力限制没有在 GPT-5、Gemini-3 等更大模型上实验；论文预期增益更大，但这只是预期。
+- **任务面偏多跳问答**：事实核查、对话、长文生成等知识密集任务未测。
+- **判分模型与骨干同源**：LLM-Acc 由 GPT-5-mini 判分，而 GPT-5-mini 也是骨干之一，本篇未见论文讨论这是否带来偏向；附录 D 的错例中判分错误也不少（A-RAG 错例里 MuSiQue 9%、2Wiki 19%）。
+- **依赖强推理骨干**：GPT-4o-mini 上 Full 并非全面最好，收益与模型能力绑定。
+- **待核实读图**：测试时扩展的精确曲线点（Fig.4）只取论文文字中的约数。
 
----
+## 七、与相邻笔记的分工
 
-## 七、文献
-
-| 角色 | 文献 | 链接 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **主锚** | Du et al., *A-RAG: Scaling Agentic Retrieval-Augmented Generation via Hierarchical Retrieval Interfaces*, arXiv:2602.03442v1, 2026 | https://arxiv.org/abs/2602.03442 |
-| 代码（文内） | Ayanami0730/arag | https://github.com/Ayanami0730/arag |
-| 语料设定参照 | Zhuang et al., LinearRAG, arXiv:2510.10114 | https://arxiv.org/abs/2510.10114 |
-| Agent 环骨架 | Yao et al., *ReAct*, 2023 | https://arxiv.org/abs/2210.03629 |
-| 划界对照 | Self-RAG https://arxiv.org/abs/2310.11511 ；CRAG https://arxiv.org/abs/2401.15884 ；HippoRAG 2 https://arxiv.org/abs/2502.14802 ；GraphRAG https://arxiv.org/abs/2404.16130 | 见各相邻笔记 |
+| [[检索增强与知识外挂]] | 那篇是 RAG 通史与共用背景；A-RAG 的 Naive RAG 基线就是那篇的固定 top-K 检索 | DPR、RAG-Token / Sequence、向量库 |
+| [[SelfRAG与CorrectiveRAG]] | 那篇把「是否检索、结果是否可信」写成固定的判断机制；A-RAG 把 Self-RAG 列为预设工作流、把 CRAG 列为单次检索的基础 RAG，两者都不满足「自主策略」，改由智能体自行决定检索策略 | 反思 token、三种动作、Web 回退 |
+| [[HippoRAG2与CatRAG]] | HippoRAG2 是 A-RAG 主表里的图检索强基线；两篇代表「索引侧更聪明」与「接口侧更自主」两条路线 | OpenIE、PPR、动态边权 |
+| [[图谱检索GraphRAG]] | GraphRAG 同为 A-RAG 的图检索基线；论文 §2.2 认为这类方法结构丰富但仍依赖预定义检索算法 | 社区摘要、map-reduce |
+| [[上下文工程与智能体技能]] | 那篇 §4.1「即时检索与渐进披露」主张只留轻量引用、运行时按需读取；A-RAG 的「先给片段、再按需 chunk_read 整块」加已读块追踪，是这一原则在语料检索上的具体做法 | 上下文压缩、子智能体、技能机制 |
 
+## 八、延伸阅读
+
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [A-RAG](https://arxiv.org/abs/2602.03442) §3 | 分层索引、三个工具与智能体环 |
+| 2 | [A-RAG](https://arxiv.org/abs/2602.03442) 附录 A | 三条原则下各方法的对照表 |
+| 3 | [ReAct](https://arxiv.org/abs/2210.03629) | A-RAG 采用的推理–行动循环 |
+| 4 | [LinearRAG](https://arxiv.org/abs/2510.10114) | 语料与评测设定的来源，也是主表基线 |
+| 5 | [Ayanami0730/arag README](https://github.com/Ayanami0730/arag) | 代码 |

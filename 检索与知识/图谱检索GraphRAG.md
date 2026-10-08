@@ -1,260 +1,158 @@
 ---
-title: "Graph RAG 增量：GraphRAG 经典 + EraRAG（相对检索增强通史）"
-topic: 图谱检索GraphRAG
 date: 2026-09-22
+topic: 图谱检索GraphRAG
+title: "图谱检索：GraphRAG 社区摘要 + EraRAG 增量索引"
 lines: [架构思想, AI Infra]
-status: archived
 sources:
  - https://arxiv.org/abs/2404.16130
  - https://arxiv.org/abs/2506.20963
+related: ["检索增强与知识外挂", "HippoRAG2与CatRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "MemoryR1强化学习记忆维护", "智能体长程记忆"]
+timezone: Asia/Shanghai (CST)
+status: archived
 arxiv: ["2404.16130", "2506.20963"]
-related: ["检索增强与知识外挂", "智能体长程记忆", "MemoryR1强化学习记忆维护", "长上下文位置编码与系统侧"]
 archived: 2026-09-22
 ---
 
-# Graph RAG 增量：GraphRAG 经典 + EraRAG（相对检索增强通史）
+# 图谱检索：GraphRAG 社区摘要 + EraRAG 增量索引
 
-> **定位**：相对 [[检索增强与知识外挂]] 的 **图谱社区摘要查询 + 语料增长时的增量索引** 专篇。[[检索增强与知识外挂]] 已立 Lewis 式「检索–生成 / 稠密向量索引 / 热换整库」主轴；本篇只补两块缺口：**(1) Microsoft GraphRAG**——实体图谱 → Leiden 社区 → 社区摘要 → map-reduce 全局问答（面向 *global sensemaking*）；**(2) EraRAG**——超平面 LSH 多层图 + **选择性重分段/重摘要**，避免每次增量全量重建。
-> **研究线**：**架构思想（主）**——社区层次摘要与全局 map-reduce；**AI Infra（辅）**——增长语料下的局部更新复杂度与 token/时间开销。
+> **主要来源**：[From Local to Global: A Graph RAG Approach to Query-Focused Summarization](https://arxiv.org/abs/2404.16130)；[EraRAG: Efficient and Incremental Retrieval Augmented Generation for Growing Corpora](https://arxiv.org/abs/2506.20963)（截至 2026-02-03）。下文「GraphRAG」指前者（Edge 等，Microsoft；首版 2024-04-24，现行 v2 2025-02-19）；「EraRAG」指后者（Zhang、Huang、Zhou 等；首版 2025-06-26，现行 v2 2025-07-04）。
+> **研究线**：架构思想（主）——实体图谱、层次社区摘要与全局 map-reduce 问答；AI Infra（辅）——语料增长时图索引的局部更新复杂度与 token、时间开销。
 > **范围与相邻笔记**：
-> - **不重写** [[检索增强与知识外挂]] 的稠密检索 / DPR 双塔 / MIPS / 重排通史、RAG-Token vs RAG-Sequence、向量库产品对照。本篇只用「**向量 RAG 对全局主题问句失败**」这一对照槽位。
-> - **不重写** [[长上下文位置编码与系统侧]] 长上下文窗口外推；本篇是 **库外图索引**，不是把整库塞进上下文。
-> - **不重写** [[智能体长程记忆]] MemGPT / A-Mem 分层记忆全文；与 [[MemoryR1强化学习记忆维护]] Memory-R1 并列互补（结构图索引 vs RL 维护记忆银行），本篇不写 ADD/UPDATE/DELETE 策略。
+> - ≠ [[检索增强与知识外挂]]：本篇不写稠密检索、DPR、重排与向量库通史，只用「向量 RAG 答不了整库主题问题」作对照。
+> - ≠ [[HippoRAG2与CatRAG]]：本篇不写开放知识图谱加 PPR 的记忆式检索。
+> - ≠ [[MemoryR1强化学习记忆维护]]：本篇不写记忆条目的增删改策略。
+>
+> **意义**：GraphRAG 指出「这批文档的主要议题是什么」这类问题本质是面向查询的摘要，而不是检索，并给出可扩展的解法：先把语料组织成实体图与层次社区摘要，再在摘要上做 map-reduce，从而让 RAG 能回答指向整个语料库的问题。它很快成为 Graph RAG 这一主流路线的起点。EraRAG 补上图索引在语料持续增长时的运维问题：用固定的随机超平面分桶，使新文档只触发局部重建，更新开销比全量重建低一到两个数量级。
+
+**一句话**：GraphRAG 把整库主题问题变成「预先算好的社区摘要上的 map-reduce」；EraRAG 让这类层次图索引在新文档到来时只改受影响的局部。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文·经典** | Edge, Trinh, Cheng, Bradley, Chao, Mody, Truitt, Metropolitansky, Ness & Larson (Microsoft), *From Local to Global: A GraphRAG Approach to Query-Focused Summarization* | arXiv:**2404.16130v2** \[cs.CL\] **19 Feb 2025**；`https://arxiv.org/abs/2404.16130`（**26** 页 letter；CreationDate **2025-02-20** CST） | 实体 KG + Leiden 社区摘要 + map-reduce 全局答；相对向量 RAG 的 comprehensiveness / diversity |
-| **主文·增量** | Zhang, Huang, Zhou et al., *EraRAG: Efficient and Incremental Retrieval Augmented Generation for Growing Corpora* | arXiv:**2506.20963v2** \[cs.IR\] **4 Jul 2025**；`https://arxiv.org/abs/2506.20963`（**14** 页；Title 与作者元数据完整） | 超平面 LSH 多层图；merge/split + 向上传播的选择性更新；相对 GraphRAG/RAPTOR/HippoRAG 的重建成本 |
-| **辅·代码** | GraphRAG：`https://github.com/microsoft/graphrag`；EraRAG：`https://github.com/EverM0re/EraRAG-Official`（摘要自报） | 复现入口；本笔记不展开仓库提交史 | |
+1. **整库问题不是检索问题**（GraphRAG 摘要、§1）：向量 RAG 擅长答案能定位到某几段的问题，但对「数据集的主要主题是什么」这类问题，没有可检索的局部锚点，它本质上是面向查询的摘要（QFS）。而以往的 QFS 方法又扩展不到 RAG 常见的索引规模。GraphRAG 的目标是同时随问题的概括程度与源文本量扩展。
+2. **图索引默认静态语料**（EraRAG 摘要、§I）：新闻、用户内容、论文预印本等语料每天都在增长，而多数 Graph RAG 方法假设语料不变，即使少量新增也要整图重建，时间与 token 开销都很高。
 
-**一句话抓手：**
-- **GraphRAG**：把「整库主题问句」（QFS / global sensemaking）变成 **预计算社区摘要上的 map-reduce**，而非 top-k 块检索。
-- **EraRAG**：承认 Graph-RAG 系在 **增长语料** 上常被迫全量重建；用 **固定超平面 LSH + $S_{\min}/S_{\max}$** 把更新收成 **受影响桶向上传播**，摘要称相对既有 Graph-RAG 可 **省至约 95% 构建时间与 token**（Abstract / Fig.1 文案；细表见 §五）。
+检索–生成的基本结构与向量检索的共用背景见 [[检索增强与知识外挂]]。
 
----
+## 二、脉络
 
-## 二、议题边界：相对 [[检索增强与知识外挂]] 只取接口
+| 时间 | 工作 | 增量 |
+|---|---|---|
+| 2020 起 | 向量 RAG | 局部可定位的事实问答；见 [[检索增强与知识外挂]] |
+| 2024-04 | GraphRAG | 实体图谱、Leiden 层次社区、社区摘要上的 map-reduce，面向全局问答 |
+| 2024 前后 | RAPTOR、LightRAG、HippoRAG | 递归摘要树、图加向量的局部与全局检索、PPR 多跳检索；A-RAG §2.2 称 Graph RAG 由此成为主流范式 |
+| 2025-02 | HippoRAG 2 | 明确区分「用图生成摘要扩充语料」（GraphRAG）与「用图辅助检索」；见 [[HippoRAG2与CatRAG]] |
+| 2025-06 | EraRAG | 随机超平面分桶加大小约束，语料增长时局部更新 |
+| 2026-02 | A-RAG | 以 GraphRAG、HippoRAG2 为基线，转向由智能体编排检索；见 [[AgenticRAG分层检索接口]] |
 
-### 2.1 与相邻笔记的分工
+## 三、GraphRAG：社区摘要上的全局问答
+
+### 3.1 建索引（§3.1.1–3.1.5）
+
+1. **切块**：块越大，LLM 调用越少，但提取召回下降；论文在 HotpotQA 样本上观察到，600 token 块提取出的实体引用约为 2400 token 块的两倍，并用「追问是否有遗漏」的自我反思提示补救（附录 A）。
+2. **提取**：LLM 从每块中提取实体、关系及简短描述，可选地提取关于实体的可核实陈述（claims）；提示可按领域给少样本示例。
+3. **建图**：同名实体合并为节点，关系重复次数作为边权；实体匹配用精确字符串匹配。
+4. **层次社区**：用 Leiden 算法递归划分社区直到叶层。每一层都是对全部节点互斥且完整的划分，便于分而治之地做全局摘要。
+5. **社区摘要**：叶社区按边两端节点的度排序依次填入上下文生成报告式摘要；上层社区装不下时，用子社区摘要替换较长的元素描述。
+
+### 3.2 查询：map-reduce（§3.1.6）
+
+在选定的社区层级上，先把社区摘要随机打乱、按固定 token 长度分块（避免相关信息挤在同一窗口）；map 阶段对每块并行生成中间答案并打 0–100 的有用性分，过滤掉 0 分；reduce 阶段按分数从高到低填入上下文，生成最终的全局答案。层级越高，摘要越少越粗。
+
+### 3.3 评测设计（§3.2–4.1）
+
+- **问题**：由语料用途描述生成 $K$ 个用户画像、每人 $N$ 个任务、每个任务 $M$ 个需要理解整库的问题，取 $K=M=N=5$，每个数据集 125 题。
+- **数据**：播客转录约 100 万 token，新闻约 170 万 token。
+- **对照条件**：C0（根层社区摘要）到 C3（最细层），TS（不建图，直接对源文本块做 map-reduce），SS（向量 RAG）。
+- **判据**：由 LLM 两两比较全面性、多样性、赋能性，另以「直接性」作有效性对照（向量 RAG 理应更直接）。
+
+### 3.4 关键结果（§5）
+
+- **对向量 RAG**：全局方法在全面性上胜率为播客 72–83%、新闻 72–80%（$p<.001$），多样性胜率为 75–82% 与 62–71%；直接性则确认向量 RAG 最直接；赋能性结果不一。
+- **对不建图的 TS**：中低层社区摘要有小而一致的优势，如全面性胜率播客中层 57%、新闻低层 64%。
+- **token 成本**（Table 2）：根层 C0 每次查询所需 token 比 TS 少 9–43 倍，最细层 C3 也少 26–33%。C0 在性能小幅下降的同时，对向量 RAG 仍保持全面性 72%、多样性 62% 的胜率，适合需要反复追问的探索式问答。
+- **事实陈述数**（§4.2 Experiment 2）：用 Claimify 从答案中提取可核实陈述，全局条件的平均陈述数高于向量 RAG（如新闻 C0 为 34.18，SS 为 25.23），与 LLM 判分方向一致。
+
+## 四、EraRAG：增长语料上的局部更新
+
+### 4.1 建图（Algorithm 1）
+
+1. 切块并计算归一化向量。
+2. 随机采样若干超平面，以向量与各超平面点积的符号组成哈希码，把块分入桶中（局部敏感哈希，LSH）。
+3. 大小校正：桶大于上限 $S_{\max}$ 就拆分，小于下限 $S_{\min}$ 就与哈希码相近的桶合并。
+4. 每个最终分段由 LLM 生成摘要，摘要再作为下一层的「块」递归分桶，形成多层图（层次结构类似 RAPTOR，但分组改为 LSH 加大小约束）。
+
+关键在于超平面固定不变：之后插入的新块会确定地落入原来的桶，不必重新采样或全局重聚类。
+
+### 4.2 查询与更新（Algorithm 2–3）
+
+- **查询**：所有层的节点放进同一个扁平检索空间，按 token 预算取 top-$k$。论文称这种扁平检索在多种层次结构上都优于逐层挑选。
+- **增量更新**：新块用同一组超平面分桶；受影响的桶按大小拆分或合并后重新摘要，再把变化向上逐层传播。无关部分保持不变。单次插入 $\Delta$ 个块的代价为 $O\big(\Delta(nd+S_{\mathrm{LLM}})\big)$（Theorem 4），只与新增量有关，与语料总量无关。
+
+### 4.3 关键结果（§IV–V）
+
+默认用 Llama-3.1-8B-Instruct-Turbo 与 BGE-M3 向量模型。静态问答准确率（Table II，节选）：
+
+| 方法 | PopQA | QuALITY | HotpotQA | MultihopQA |
+|---|---:|---:|---:|---:|
+| Vanilla RAG | 56.21 | 39.87 | 48.32 | 50.50 |
+| GraphRAG | 49.98 | 44.90 | 40.84 | 56.98 |
+| HippoRAG | 59.29 | 53.31 | 50.46 | 57.49 |
+| RAPTOR | 59.02 | 55.48 | 53.29 | 60.11 |
+| EraRAG | 62.98 | 60.25 | 55.39 | 62.87 |
+
+- 静态问答在 10 项指标中 8 项最好，QuALITY 准确率比 RAPTOR 高 4.8 个点。论文归因于一对一分桶加大小约束让层次更稳定、冗余更少。
+- **动态更新**：先用一半语料建图，其余分 10 次、每次插入 5%；不支持增量的基线每次全量重建。相对 RAPTOR，EraRAG 的 token 最多省 57.6%（PopQA），重建时间最多省 77.5%（QuALITY）；逐轮插入后准确率接近一次性全量建图的上界（Fig.5）。
+- **小规模插入**：插入一篇文档（2 个块）约 20 秒完成，比 RAPTOR、HippoRAG 低一个数量级以上，比 GraphRAG 低两个数量级。
+- **初始覆盖**：初始图覆盖语料越多最终效果越好，准确率在约 50% 后趋于饱和，论文建议初始覆盖 50–70%（Table IV）。
+- **全局问题**：在 UltraDomain 与 MultihopSum 的抽象问答上与 GraphRAG、RAPTOR 两两比较，综合胜率多在 46–55% 之间，并非全面领先（如对 GraphRAG 的法律子集综合胜率 42%）。
+
+## 五、两篇对照
+
+| 维度 | GraphRAG | EraRAG |
+|---|---|---|
+| 图怎么来 | LLM 提取实体、关系与陈述后聚合 | 向量加随机超平面分桶，分段摘要成节点 |
+| 层次怎么来 | Leiden 递归社区划分 | 摘要再分桶，逐层叠加 |
+| 查询形态 | 社区摘要上的 map-reduce，可选粒度 | 各层节点扁平 top-$k$ |
+| 擅长问题 | 指向整库的主题与概括问题 | 多跳与开放域问答，语料持续增长 |
+| 更新方式 | 论文按静态索引设计 | 局部拆分、合并与向上重新摘要 |
+
+两者解决的是 Graph RAG 的两个不同环节：GraphRAG 定义了「建什么图、怎样用图回答全局问题」，EraRAG 处理「图建好以后怎样跟着语料长」。
+
+## 六、意义
+
+- **扩展了 RAG 能回答的问题类型**：GraphRAG 让 RAG 从定位事实扩展到概括整个语料库，并给出按社区层级调节成本的手段。
+- **把图索引的维护成本摆上桌面**：EraRAG 说明 Graph RAG 要在真实场景落地，必须能局部更新，并给出与新增量成正比的更新复杂度。
+- **形成 Graph RAG 的基线**：GraphRAG 之后的 HippoRAG 2、A-RAG 等都把它作为对照，讨论图应当用来扩充语料还是辅助检索。
+
+## 七、局限与待核实
+
+- **索引成本高**：GraphRAG 需要用 LLM 对全部语料提取实体并为全部社区生成摘要；论文中播客数据集（约 100 万 token）建索引用了 281 分钟（gpt-4-turbo）。
+- **评测依赖 LLM 判分**：GraphRAG 的主要结论来自 LLM 两两比较，只覆盖两个约百万 token 量级的数据集，论文也指出，结论能否推广到不同领域、不同用途的数据集还需研究（§6.1）。
+- **EraRAG 的「省 95%」**：这一说法出自摘要配图，正文给出的是一个数量级、57.6% token、77.5% 时间、相对 GraphRAG 两个数量级等具体数字，引用时应区分。
+- **计时口径**：EraRAG 的动态实验只计图构建时间，GraphRAG 的社区检测等预处理不计入。
+- **全局问题并非全面领先**：EraRAG 在抽象问答上与 GraphRAG、RAPTOR 互有胜负。
+- **开源实现与论文的差异**：GraphRAG 开源仓库的默认管线（实体类型、陈述提取开关、社区层级）可能与论文 v2 不同，本篇未跟踪。
+- **待核实读图**：EraRAG 逐轮插入的准确率曲线（Fig.5）与 token、时间曲线（Fig.4）只取正文文字中的数字，未读图取点。
+
+## 八、与相邻笔记的分工
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **[[检索增强与知识外挂]] Lewis RAG** | 「库外非参数记忆 + 条件生成」；向量 RAG 擅长 **局部可定位** 事实问 | DPR/MIPS 细节、RAG-Token/Sequence、稠密–稀疏混合、rerank 级联通史 |
-| **[[检索增强与知识外挂]]「Graph RAG 名录待核实」** | 本篇用两篇一手 PDF **填上**该待核实槽 | 不另列产品清单或未核论文 |
-| **[[长上下文位置编码与系统侧]] 长上下文** | 窗口装不下整库 → 需要外挂 | YaRN / 稀疏注意力 / lost-in-middle |
-| **[[智能体长程记忆]] / [[MemoryR1强化学习记忆维护]]** | 「结构记忆要可维护」的工程直觉 | MemGPT 分页、Memory-R1 动作空间 |
+| [[检索增强与知识外挂]] | 那篇是 RAG 通史与共用背景；本篇在其向量检索之外补「整库主题问题」与「图索引增量维护」两块 | DPR、重排、向量库选型 |
+| [[HippoRAG2与CatRAG]] | GraphRAG 是 HippoRAG 2 主表的结构化基线，HippoRAG（第一代）是 EraRAG 的对比基线；HippoRAG 2 用图辅助检索，而 GraphRAG 用图生成摘要 | OpenIE、PPR、动态边权 |
+| [[SelfRAG与CorrectiveRAG]] | 那篇改的是检索环的控制流（是否检索、结果是否可信），本篇改的是索引结构，两者可以叠加 | 反思 token、纠错动作 |
+| [[AgenticRAG分层检索接口]] | A-RAG 把 GraphRAG 当作「依赖预定义检索算法」的图检索基线，主张把检索策略交给智能体 | 分层工具与智能体环 |
+| [[Mem0与Zep生产级记忆]] | Zep 的社区层受 GraphRAG 启发，但对象是对话的时序知识图谱，检索也不用 map-reduce | 对话记忆的写入与失效 |
+| [[MemoryR1强化学习记忆维护]] | 同问「外部存储怎样随新信息更新」：那篇用 RL 学习对记忆条目做增删改，EraRAG 用固定分桶做确定性的局部重建 | RL 动作空间与奖励 |
+| [[智能体长程记忆]] | A-Mem 在新记忆加入时更新已有笔记之间的链接，与 EraRAG 的局部重建同属「结构随数据增长而维护」，对象是智能体记忆而非文档语料 | 分页与记忆演化细节 |
 
-### 2.2 问题立轴（跟读）
+## 九、延伸阅读
 
-`
-[[检索增强与知识外挂]] 向量 RAG：query → top-k 相似块 → 生成
- ✗ 对「整库主旨 / 趋势 / 主题」类问句：没有「该检索哪几块」的局部锚点
-
-GraphRAG： 文档 → 实体/关系图 → Leiden 社区层次 → 预生成社区摘要
- query →（选定社区层级）对社区摘要做 map 局部答 → reduce 全局答
-
-EraRAG： 承认上路线索图在「每天新增语料」时重建成本墙
- 固定超平面 LSH 分桶 + 尺寸闸门 → 新块只扰动局部桶，向上重摘要
-`
-
-GraphRAG Abstract 原话要点：RAG 在「What are the main themes in the dataset?」这类 **指向整库** 的问题上失败，因为那是 **query-focused summarization (QFS)** 而非显式检索；先验 QFS 又难扩到典型 RAG 索引规模。GraphRAG 要同时随 **问题泛化度** 与 **源文本量** 缩放。
-
-EraRAG Abstract 原话要点：既有 Graph-RAG 常假设 **静态语料**，新文档到来就要昂贵的 **full-graph reconstruction**；目标是动态环境下仍保持检索精度与低延迟。
-
----
-
-## 三、GraphRAG：图谱社区摘要 → 全局问答
-
-### 3.1 流水线总览（Fig.1 / §3.1）
-
-索引时（Indexing Time）与查询时（Query Time）分离：
-
-`
-Source Documents
- → text extraction & chunking → Text Chunks
- → domain-tailored entity/rel/claim 提取 → Entities & Relationships
- → 聚合为图（节点/边/协变量 claims） → Knowledge Graph
- → community detection（文内用 Leiden） → Graph Communities
- → domain-tailored 社区摘要 → Community Summaries
-查询时：
- Community Summaries → query-focused 社区答案（map）
- → query-focused 全局答案（reduce）
-`
-
-图索引跨 **nodes（实体）**、**edges（关系）**、**covariates（claims）**；LLM prompt 可按领域定制 few-shot。
-
-### 3.2 建索引五步（跟读）
-
-| 步 | 节 | 要点（文内） |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| 1 | §3.1.1 | 文档切块。块越长 → 抽取 LLM 调用越少（省钱），但对块前部信息 **recall 下降**（引 Kuratov / Liu）；权衡见 Appendix A.1 |
-| 2 | §3.1.2 | 从块中抽 **实体、关系** 及短描述；可选 **claims**（关于实体的可核事实：日期、事件、交互）。默认「named entities」；科学/医学/法律等可用领域 few-shot |
-| 3 | §3.1.3 | 多实例聚合为节点/边；关系重复次数作 **边权**；实体匹配文内用 **exact string matching**（可换更软匹配）；重复实体后续社区摘要阶段通常会被聚在一起 |
-| 4 | §3.1.4 | **Leiden**（Traag et al., 2019）层次社区：在社区内递归再检测，直到叶社区。每一层给出 **互斥且穷尽** 的节点划分 → 便于分治全局摘要。实现：`graspologic` |
-| 5 | §3.1.5 | 生成 **report-like** 社区摘要：叶社区按边两端节点度排序，迭代塞入上下文；高层社区装不下时用 **子社区摘要** 替换更长的元素摘要 |
-
-### 3.3 查询：社区摘要上的 map-reduce（§3.1.6）
-
-对选定社区层级：
-
-1. **Prepare**：社区摘要 **随机打乱** 后按预定 token 切块（避免相关信息挤在同一窗口丢失）。
-2. **Map**：并行生成中间答案；LLM 同时打 **0–100 helpfulness**；**score=0 过滤**。
-3. **Reduce**：中间答案按分数降序填入新上下文至 token 上限 → 生成返回用户的 **global answer**。
-
-层级条件（评测用，§4.1.2）：
-
-| 条件 | 含义 |
-|---|---|
-| **C0** | 根层社区摘要（数量最少） |
-| **C1–C3** | 逐级更细；若无子社区则向下投影父层 |
-| **TS** | 同一 map-reduce，但对象是 **源文本块**（无图索引） |
-| **SS** | 向量 RAG：块检索填满上下文窗口上限 |
-
-### 3.4 评测设计：自适应全局问句 + LLM-as-judge（§3.2–3.3）
-
-- **问句生成（Algorithm 1）**：由语料用途描述 → $K$ 用户画像 → 每用户 $N$ 任务 → 每 (用户,任务) $M$ 条 **需整库理解、不依赖低层事实检索** 的问句。评测取 $K=M=N=5$ → **每库 125** 题。
-- **判据**：Comprehensiveness（覆盖面细节）、Diversity（视角丰富）、Empowerment（助读者知情判断）；另加对照 **Directness**（向量 RAG 理应更「直给」）。
-- **数据**：约 **百万 token** 量级——Podcast（Behind the Tech，~1M tokens）、News（2013-09 起新闻，~1.7M tokens）。
-- **配置**：社区摘要/社区答/全局答上下文 **8k**；索引抽取窗 **600** token；Podcast 索引约 **281 min**（16GB VM + gpt-4-turbo 公网端点）。图谱规模：Podcast **8,564** 节点 / **20,691** 边；News **15,754** / **19,520**。
-
-### 3.5 主结果（§5.1–5.2；数字锚定正文）
-
-**相对向量 RAG（SS）**：全局法在 comprehensiveness / diversity 上显著胜出——comprehensiveness win rate Podcast **72–83%**、News **72–80%**（$p<.001$）；diversity Podcast **75–82%**、News **62–71%**（$p<.01$）。Directness 则确认向量 RAG 最「直接」。Empowerment 结果 **混杂**。
-
-**相对无图的源文本 map-reduce（TS）**：中间/低层社区摘要有小而一致增益（例：Podcast 中层 comprehensiveness **57%** win；News 低层 **64%**；diversity 对应 **57%** / **60%**）。
-
-**Token 可扩展性（Table 2）**：相对 TS 的 max tokens——
-
-| | Podcast C0 | Podcast C3 | Podcast TS | News C0 | News C3 | News TS |
-|---|---|---|---|---|---|---|
-| Units | 34 | 1310 | 1669 | 55 | 2142 | 3197 |
-| Tokens | 26,657 | 746,100 | 1,014,611 | 39,770 | 1,140,266 | 1,770,694 |
-| % Max | 2.6% | 73.5% | 100% | 2.3% | 66.8% | 100% |
-
-文内结论：C0 每查询 token 可比 TS **少 9×–43×**；C3 仍比 TS **少 26–33%** 上下文 token；C0 相对 SS 仍有 comprehensiveness **72%**、diversity **62%** win，适合 sensemaking 的迭代追问。
-
-**Claim 验证（Experiment 2）**：用 Claimify 抽可核事实句；全局条件与 TS 的平均 claim 数均高于 SS（Table 3：News SS **25.23** vs C0 **34.18** 等）；与 Experiment 1 方向一致。
-
-### 3.6 对 Infra 的直接含义（不写向量库通史）
-
-- **预计算贵、查询可分层选成本**：索引一次性 LLM 抽取 + 全社区摘要；查询可走 C0「极省」或 C3「更细」。
-- **与 [[检索增强与知识外挂]]「热换整库」不同**：GraphRAG 论文主线是 **静态语料上的全局 QFS**；语料持续增长时，实体图与社区摘要如何增量维护——**正是 EraRAG 切口**（见下节）。文内未给出与 EraRAG 同设定的增量协议，GraphRAG 并未解决动态重建。
-
----
-
-## 四、EraRAG：增长语料上的选择性增量图
-
-### 4.1 动机：Graph-RAG 的重建墙（§I / Fig.1）
-
-场景：新闻日更、UGC、arXiv 日投稿（文举例 cs.CL 日增百篇级）。既有 Graph-RAG 往往 **轻微语料变更也触发完整图重建**。EraRAG 自称可 **Save up to 95% building time and token cost**（Fig.1 文案）；Abstract：**up to an order of magnitude** 降低更新时间与 token，同时精度更优。
-
-对照系（Related / 实验）：RAPTOR、HippoRAG、GraphRAG、LightRAG（L/G/H）；动态相关还点名 DRAGIN、DyPRAG，但批评其 **高频率更新下的消耗** 仍被忽视。
-
-### 4.2 构造：超平面 LSH + 尺寸闸门 + 递归摘要（Algorithm 1）
-
-**记号（Table I）**：语料块 $c_i$、归一化嵌入 $v_i\in\mathbb{R}^d$、随机超平面 $h_j$、哈希码 $b_i\in\{0,1\}^k$、桶大小界 $S_{\min},S_{\max}$、层 $\ell=0\ldots L$。
-
-**跟读步骤：**
-
-1. 切块并算归一化嵌入。
-2. 采样 $n$ 条随机超平面；$b_i$ 由 $\mathrm{sign}(v_i\cdot h_j)$ 得到 → 入桶 $B_{b_i}$。
-3. **尺寸校正**：$|B|>S_{\max}$ → split；$|B|<S_{\min}$ → 与 Hamming 邻近桶 merge，直至落在 $[S_{\min},S_{\max}]$。
-4. 每最终段 $S_i$ LLM 摘要为节点 $s_i$；摘要再当作「块」向上递归，形成多层 $G_\ell$（架构对齐 RAPTOR 式递归，但分组改 LSH+闸门）。
-
-文内强调：相对传统 LSH 检索，这里是 **为 RAG 定做的多层 + 动态分段**；固定超平面使后续插入 **可复现地落入原桶**，无需重采样超平面。
-
-**静态构建复杂度（文内推导）**：在 $1<S_{\min}\le S_{\max}=O(1)$ 下，
-$T_{\mathrm{build}}=O\big(|C|(nd+S_{\mathrm{LLM}})\big)$（几何级数层衰减使层和为常数因子）。
-
-### 4.3 查询：Collapsed graph search（Algorithm 2）
-
-- 所有层节点投入 **同一扁平检索空间**（collapsed）；query 同编码器嵌入 → 在 token budget $T$ 下 top-$k$。
-- 文称在多种层次结构上，**flat top-$k$ consistently outperforms** 仅按层挑的策略；实验默认 collapsed。
-- 另讨论按层混合比例 $p$ 的变体（细粒度偏叶层、抽象偏高层），但主实验仍用 standard collapsed。
-
-### 4.4 增量：Selective Re-Segmenting and Summarization（Algorithm 3 / Theorem 4）——本篇 Infra 核心
-
-`
-新块 c_new → embed → 用【同一组】超平面算 hash → 插入桶 Bb
- if |Bb| > Smax: split；if |Bb| < Smin: merge 邻近桶
- 标记受影响段 → 重摘要；父节点标记 affected
- 向上：对受影响摘要再 hash / 再分区 / 再摘要（传播有界）
- 若当前最高层过大且 l < L：可开新层
-`
-
-- **不**全图重聚类；无关拓扑保持。
-- 重摘要时：**新建**含更新摘要的节点，保留原节点引用完整性（文述方案）。
-- **Theorem 4**：单次更新处理 $\Delta$ 新块时
- $T_{\mathrm{update}}(\Delta)=O\big(\Delta(nd+S_{\mathrm{LLM}})\big)$
- （每块 $O(nd)$ 投影 + 常数个桶的 split/merge；向上至多 $L$ 层、每层摊销常数段需 $S_{\mathrm{LLM}}$）。
-
-**动态实验协议（§V）**：语料半分——**50% 初始建图**，其余 **10 轮 × 每轮 5%** 插入；无动态能力的基线每轮 **从头重建**（含已有 50%+新增）。只计图构建时间（GraphRAG 的 community detection 等预处理 **排除在计时外**——文内 Note）。
-
-### 4.5 静态 QA 与动态消耗（Table II / Fig.4 文述）
-
-**设置**：默认 LLM **Llama-3.1-8B-Instruct-Turbo**；嵌入 **BGE-M3**；统一框架 \[33\]。指标 Accuracy / Recall（答案 **包含** gold 即算对；QuALITY 仅 Accuracy）。
-
-**Table II（部分，EraRAG vs 强基线）**：
-
-| Method | PopQA Acc | QuALITY Acc | HotpotQA Acc | MuSiQue Acc | MultihopQA Acc |
-|---|---|---|---|---|---|
-| Vanilla RAG | 56.21 | 39.87 | 48.32 | 14.22 | 50.50 |
-| GraphRAG | 49.98 | 44.90 | 40.84 | 19.32 | 56.98 |
-| HippoRAG | 59.29 | 53.31 | 50.46 | 25.15 | 57.49 |
-| RAPTOR | 59.02 | 55.48 | 53.29 | 24.02 | 60.11 |
-| **EraRAG** | **62.98** | **60.25** | **55.39** | **25.39** | **62.87** |
-
-文称在 10 项指标中 **8 项最优**；QuALITY Acc 相对 RAPTOR **+4.8** 点。归因：相对 RAPTOR 重叠聚类，EraRAG **一对一分桶 + 尺寸约束** → 层次更稳、冗余更少。
-
-**动态消耗（正文叙述 Fig.4）**：相对 RAPTOR，EraRAG token **最多降约 57.6%**（PopQA）、重建时间 **降约 77.5%**（QuALITY）。GraphRAG 每更一版全量重聚类 → 时间/内存极高；HippoRAG 虽可增量，但路径扩展与语义过滤拉高 token。
-
-**增量质量（Fig.5）**：HotpotQA / QuALITY / PopQA 上 Acc/Recall 随插入轮次上升，末轮接近 **全量静态上界**（点线）——选择性重建 **未**明显毁掉已有结构。精确点值：**待核实读图**。
-
-**小规模插入（Exp-1 / Fig.6）**：50% 初始后插入 **1 条文档（2 chunks）**；EraRAG 更新约 **20 s**；相对 RAPTOR/HippoRAG **over an order of magnitude** 降时间与 token；相对 GraphRAG **two-order-of-magnitude** 降更新开销。
-
-**初始覆盖（Table IV，MultihopQA）**：初始 0%→100% 再建完增量后——Accuracy 约 **41.3 → 62.9**，Recall **13.9 → 42.9**；文建议 **50–70%** 初始覆盖作性能与灵活性折中（Accuracy 在约 50% 后趋于饱和）。
-
-**抽象问句（Table III，LLM win rate）**：相对 GraphRAG / RAPTOR，在 UltraDomain（Mix/CS/Legal）与 MultihopSum 上综合 Overall 多在 **46–55%** 区间互有胜负；文称多数设定综合更优——按表逐格看并非全面碾压（例如 vs GraphRAG 的 Legal Overall **42%**）。
-
----
-
-## 五、对照表：社区摘要 vs 增量索引（本篇收束）
-
-| 维度 | GraphRAG（2404.16130） | EraRAG（2506.20963） |
-|---|---|---|
-| 图怎么来 | LLM 抽实体/关系/claim → 聚合 KG | 嵌入 + **超平面 LSH** 分桶 → 段摘要节点 |
-| 层次怎么来 | **Leiden** 社区递归 | 摘要再 LSH，叠到 $L$ 层 |
-| 查询形态 | **社区摘要 map-reduce**（可按 C0–C3 选粒度） | **Collapsed** 扁平 top-$k$（叶块+各层摘要） |
-| 擅长问题 | **全局 sensemaking / QFS**（百万 token 库主题） | 多跳/开放域 QA + **语料持续增长** |
-| 更新模型 | 论文主线 **静态索引**；增长场景重建成本留给后续 | **Algorithm 3** 局部 split/merge + 向上重摘要；$T_{\mathrm{update}}=O(\Delta(nd+S_{\mathrm{LLM}}))$ |
-| 与 [[检索增强与知识外挂]] 关系 | 打补丁：「向量 top-k 不够用时的全局层」 | 打补丁：「图索引运维不能每次全量重建」 |
-
-**跟读口诀：**
-[[检索增强与知识外挂]] 解决「事实在库外、可热换向量索引」；
-GraphRAG 解决「问题指向整库主题时，用社区摘要做全局 QFS」；
-EraRAG 解决「图索引要跟着语料长，更新必须局部化」。
-
----
-
-## 六、局限与待核实
-
-1. GraphRAG 开源仓库相对论文 v2 的默认管线（实体类型、claim 开关、社区层级默认）——以 GitHub 当前 README 为准，**本笔记不跟踪 commit**。
-2. Fig.2 / Fig.4 / Fig.5 / Fig.6 曲线上的精确坐标：正文已给数量级与百分比处已录入；其余标 **待核实读图**。
-3. EraRAG「95%」来自 Abstract/Fig.1 宣传句；与正文「order of magnitude / 57.6% token / 77.5% time / 两数量级 vs GraphRAG」并存——引用时区分 **摘要口号 vs 具体表/节数字**。
-4. LightRAG 等「可动态加文档」声明与 EraRAG 高频更新消耗批评的边界——未展开第三方复现。
-5. 与 [[MemoryR1强化学习记忆维护]] Memory-R1：图索引选择性更新 vs RL 维护记忆条目——交叉实验 **待后续专篇**，本篇不合并。
-
----
-
-## 相关笔记
-
-- [[法律专科模型]]
-- [[MixtureOfAgents与TUMIX]]
-- [[图谱检索GraphRAG]]
-- [[MemoryR1强化学习记忆维护]]
-- [[安全论证SafetyCases]]
-
+| 1 | [GraphRAG](https://arxiv.org/abs/2404.16130) §3 | 建索引五步与 map-reduce 查询 |
+| 2 | [EraRAG](https://arxiv.org/abs/2506.20963) §III | LSH 分桶、扁平检索与增量更新算法 |
+| 3 | [microsoft/graphrag README](https://github.com/microsoft/graphrag) | GraphRAG 开源实现 |
+| 4 | [EverM0re/EraRAG-Official README](https://github.com/EverM0re/EraRAG-Official) | EraRAG 代码 |

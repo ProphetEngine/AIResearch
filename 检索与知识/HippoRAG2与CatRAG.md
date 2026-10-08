@@ -1,233 +1,173 @@
 ---
-title: "RAG→记忆新范式：HippoRAG 2 + CatRAG（≠ GraphRAG / Self-RAG）"
-topic: HippoRAG2与CatRAG
 date: 2026-09-22
+topic: HippoRAG2与CatRAG
+title: "RAG→记忆新范式：HippoRAG 2 + CatRAG"
 lines: [架构思想, 评测字段]
-status: archived
 sources:
  - https://arxiv.org/abs/2502.14802
  - https://arxiv.org/abs/2602.01965
  - https://aclanthology.org/2026.findings-acl.290/
+related: ["检索增强与知识外挂", "图谱检索GraphRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "智能体长程记忆", "CHIME长程规划记忆", "持续学习"]
+retrieval_cutoff: 2026-09-02
+timezone: Asia/Shanghai (CST)
+status: archived
 arxiv: ["2502.14802", "2602.01965"]
 acl: ["2026.findings-acl.290"]
-related: ["检索增强与知识外挂", "图谱检索GraphRAG", "SelfRAG与CorrectiveRAG", "检索式注意力", "Mem0与Zep生产级记忆", "智能体长程记忆"]
 code_hipporag: "https://github.com/OSU-NLP-Group/HippoRAG"
 code_catrag: "https://github.com/kwunhang/CatRAG"
-retrieval_cutoff: 2026-09-22
-timezone: Asia/Shanghai (CST)
 ---
 
-# RAG→记忆新范式：HippoRAG 2 + CatRAG（≠ GraphRAG / Self-RAG）
+# RAG→记忆新范式：HippoRAG 2 + CatRAG
 
-> **定位**：**RAG / 记忆检索**——在 [[检索增强与知识外挂]] 稠密检索通史、[[图谱检索GraphRAG]] 社区摘要 GraphRAG、[[SelfRAG与CorrectiveRAG]] Self-RAG/CRAG 自适应检索之后，补近窗两刀：**HippoRAG 2**（把 RAG 推向**非参数长期记忆**的事实 / 联想 / 意义建构（sense-making）三维评测）与 **CatRAG**（在 HippoRAG 2 图上解决「静态图谬误 / hub 漂移」，做**查询自适应遍历**）。
-> **研究线**：**架构思想（主）**——OpenIE+PPR 记忆索引、dense-sparse、recognition memory、查询条件边权；**评测字段（辅）**——三轴记忆表 / FCR·JSR 完整性，不外推未测场景。
+> **主要来源**：[From RAG to Memory: Non-Parametric Continual Learning for Large Language Models](https://arxiv.org/abs/2502.14802)；[Breaking the Static Graph: Context-Aware Traversal for Robust Retrieval-Augmented Generation](https://arxiv.org/abs/2602.01965)；[Breaking the Static Graph: Context-Aware Traversal for Graph-Based RAG](https://aclanthology.org/2026.findings-acl.290/)（截至 2026-09-02）。下文「HippoRAG 2」指第一篇（Gutiérrez 等，OSU / UIUC，ICML 2025；arXiv 现行 v2 2025-06-19）；「CatRAG」指后两篇（Lau 等，Huawei HKRC / HKUST / CUHK-Shenzhen；arXiv v1 2026-02-02 为唯一版本，ACL Findings 2026 正式版改了副标题）。数字除特别注明外取自 arXiv 版。
+> **研究线**：架构思想（主）——开放知识图谱加个性化 PageRank（PPR）的记忆式检索、查询条件下的图遍历；评测字段（辅）——事实 / 联想 / 意义建构（sense-making）三类记忆任务，完整证据链指标 FCR 与 JSR。
 > **范围与相邻笔记**：
-> - **≠ [[检索增强与知识外挂]]**：不重写稠密双塔 / DPR / MIPS / 向量库产品通史；本卡只用「标准向量 RAG 缺联想与意义建构」对照槽。
-> - **≠ [[图谱检索GraphRAG]]**：不把 HippoRAG 写成 **GraphRAG 重写**。GraphRAG = 实体图 → Leiden 社区 → **预计算摘要扩库** → map-reduce 全局 QFS；HippoRAG 2 文内自述：KG **辅助检索过程**，**不**用摘要去膨胀检索语料（§2.2）。
-> - **≠ [[SelfRAG与CorrectiveRAG]]**：不重写 Self-RAG reflection tokens / CRAG 三动作 Web 回退；CatRAG 文内把 Self-RAG 等标为**多轮迭代检索**，自称 **one-shot** 改权再单次 PPR（§2.3）。
-> - **≠ [[检索式注意力]]**：不重写 RetrievalAttention 式「模型内注意力检索」；本卡是**库外开放 KG + PPR**。
-> - **≠ [[Mem0与Zep生产级记忆]]**：不重写 Mem0 / Zep **生产对话记忆层** API；本卡是**文档语料上的检索图算法**，不是会话事实抽取–更新服务。
+> - ≠ [[检索增强与知识外挂]]：本篇不写稠密双塔、DPR 与向量库通史，只用「向量检索缺联想与意义建构」作对照。
+> - ≠ [[图谱检索GraphRAG]]：本篇不写社区摘要与 map-reduce 全局问答；HippoRAG 2 的图用来辅助检索本身，不用摘要扩充检索语料。
+> - ≠ [[SelfRAG与CorrectiveRAG]]：本篇不写反思 token 与纠错动作；CatRAG 只调整一次图边权，不做多轮生成–检索。
+> - ≠ [[Mem0与Zep生产级记忆]]：本篇不写对话记忆层的接口与更新操作；对象是文档语料上的检索图算法。
+>
+> **意义**：HippoRAG 2 把 RAG 重新定位为大模型的「非参数持续学习」，并给出三类记忆任务的评测：它是同一组实验里唯一在简单事实、多跳联想和长篇理解上都不输最强向量检索的结构化方法，说明图结构不必以牺牲事实召回为代价。CatRAG 进一步指出，图在索引时就固定的转移概率会让检索被高连接度的「枢纽」节点吸走，改为按查询调整边权后，在 HoVer、MuSiQue 上完整证据链召回明显提高（FCR 34.8→42.5、30.5→34.6）。
+
+**一句话**：HippoRAG 2 用「短语图 + 段落节点 + 三元组过滤 + PPR」模仿海马体的联想记忆；CatRAG 在同一张图上按查询重新分配边权，让随机游走走完整条证据链。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主①** | *From RAG to Memory: Non-Parametric Continual Learning for Large Language Models*（HippoRAG 2） | arXiv:**2502.14802v2** \[cs.CL\]（**19 Jun 2025**）；ICML 2025（PMLR 267）；作者 Gutiérrez*, Shu*, Qi, Zhou, Su（OSU / UIUC） | `https://arxiv.org/abs/2502.14802` | **19** letter |
-| **主②·arXiv** | *Breaking the Static Graph: Context-Aware Traversal for Robust Retrieval-Augmented Generation*（CatRAG） | arXiv:**2602.01965v1** \[cs.CL\]（**2 Feb 2026**）；作者 Lau†, Zhang, Ruan, Zhou, Guo, Zhang, Zhou（Huawei HKRC / HKUST / CUHK-Shenzhen） | `https://arxiv.org/abs/2602.01965` | **13** A4 |
-| **主②·ACL** | *Breaking the Static Graph: Context-Aware Traversal for Graph-Based RAG* | ACL Findings **2026** pp.**5849–5863**； CreationDate **2026-06-09 22:00:05 CST** | [`ACL Anthology`](https://aclanthology.org/2026.findings-acl.290/)（近重复） | **15** A4 |
+1. **持续更新知识的三条路**（HippoRAG 2 §2.1）：继续微调会灾难性遗忘且代价高；模型编辑的修改过于局部，相关知识不随之更新；RAG 不改模型、推理时取外部信息，是可扩展的非参数路线。但标准向量 RAG 难以做到人类长期记忆的两种能力：**意义建构**（理解更大、更复杂的语境）与**联想**（在分散的事实之间建立多跳联系）。
+2. **结构化 RAG 的代价**（HippoRAG 2 §1）：RAPTOR、GraphRAG、LightRAG 等用摘要树、知识图谱或社区摘要增强结构，在多跳与长篇任务上有收益，但在简单事实问答上反而不如最强的向量检索。
+3. **静态图的谬误**（CatRAG §1、§3.1）：HippoRAG 2 的图转移矩阵在索引时就固定了，边的重要性与查询无关。随机游走的概率会被泛化的高权边吸走（论文例：Marie Curie → Radioactivity），并汇集到「Nobel Prize」「French」这类高连接度枢纽节点。结果是 Recall 看似不低，却常常只召回证据链的一部分。
 
-| 材料 | 代码 / 数据（文内或仓库自报） |
-|---|---|
-| HippoRAG 2 | https://github.com/OSU-NLP-Group/HippoRAG ；README 另链 HuggingFace `osunlp/HippoRAG_2`；前作 HippoRAG 1：arXiv 2405.14831 / `legacy` 分支 |
-| CatRAG | https://github.com/kwunhang/CatRAG ；README：**2026-04-14** 录 ACL Findings 2026；**2026-08-20** 释出**复现实现**与 HoVer 数据。注意：论文 Limitations 写「**完整源码因专有数据政策不能公开**」，仅给超参表；跟读以「复现仓库 ≠ 论文作者原仓库全量」标注 |
+## 二、脉络
 
-**一句话抓手：**
-- **HippoRAG 2**：OpenIE 短语图 + **passage 节点 / context 边**（dense-sparse）+ **query-to-triple** + LLM **recognition memory** 滤三元组 → PPR → 段落 QA；用事实 / 联想 / 意义建构三轴证明「结构增强不必牺牲简单事实」。
-- **CatRAG**：承认 HippoRAG 2 转移矩阵在索引期**冻结** → hub 漂移 / 高部分召回但证据链断裂；用 **Symbolic Anchoring + 查询感知动态边权 + Key-Fact 段落加权** 把静态图改成查询条件导航，主指标升 **FCR / JSR**。
-
----
-
-## 二、议题边界：只写「记忆式检索图」，不写社区摘要 / 自省检索 / 生产记忆 API
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 时间 | 工作 | 增量 |
 |---|---|---|
-| **[[检索增强与知识外挂]]** | 「向量 top-k 缺多跳联想」是两文共同对照槽 | 稠密双塔 / 向量库选型通史 |
-| **[[图谱检索GraphRAG]]** | GraphRAG / RAPTOR / LightRAG 作为 HippoRAG 2 Table 2–3、CatRAG Table 2–3 **结构增强基线**；HippoRAG 2 §2.2 一句点明与 GraphRAG「摘要扩库」之别 | Leiden 社区摘要 + map-reduce 全局 QFS 全文；EraRAG 增量 LSH |
-| **[[SelfRAG与CorrectiveRAG]]** | CatRAG §2.3 把 Self-RAG / IRCoT 标为多轮迭代对照 | reflection tokens / Corrective 三动作 / Web 回退全文 |
-| **[[检索式注意力]]** | （无直接依赖）仅防混淆：都叫「检索」 | 注意力内核内检索 |
-| **[[Mem0与Zep生产级记忆]] / [[智能体长程记忆]]** | 「长期记忆」隐喻相邻；对象不同 | Mem0 四操作 tool-call、Zep Graphiti 时序 episode、MemGPT 分页 |
-
-### 2.2 本卡主轴 vs 范围外（不写成 GraphRAG 重写）
-
-| 写 | 不写 |
-|---|---|
-| HippoRAG 2：OpenIE 开放 KG + PPR；passage 节点与 context 边；query-to-triple；recognition memory | GraphRAG 社区摘要管线；把 HippoRAG 说成「又一个社区 map-reduce」 |
-| 三轴评测：factual（NQ/PopQA）/ associativity（MuSiQue/2Wiki/Hotpot/LV-Eval）/ sense-making（NarrativeQA） | 把 NarrativeQA 误写成 GraphRAG 式「全局主题 QFS」专属 |
-| CatRAG：Static Graph Fallacy、hub bias、FCR/JSR | Self-RAG 式反复 generate–retrieve 环 |
-| 两文数字锚定 Table | 未给出的「生产 SLA / 客户语料」外推；跨文不同 embedding 直接比绝对分决胜负 |
-
-跟读口诀：
-
-`
-[[检索增强与知识外挂]] = 向量 RAG 通史
-[[图谱检索GraphRAG]] = 文档 GraphRAG：摘要扩库 + 全局 QFS
-[[SelfRAG与CorrectiveRAG]] = 何时取 / 取坏了怎么办（自省·纠错）
-[[HippoRAG2与CatRAG]] = 记忆式开放 KG + PPR；再升级查询自适应遍历
-[[Mem0与Zep生产级记忆]] = 对话/业务生产记忆层（≠ 文档检索图算法）
-`
-
----
+| 2024 | GraphRAG、RAPTOR、LightRAG | 用社区摘要、递归摘要树或图加向量增强结构；见 [[图谱检索GraphRAG]] |
+| 2024-05 | [HippoRAG](https://arxiv.org/abs/2405.14831)（NeurIPS 2024） | 以海马体索引理论为隐喻：开放知识图谱加 PPR 做多跳检索，偏实体中心 |
+| 2025-02 | HippoRAG 2（ICML 2025） | 段落节点嵌入图中、查询对三元组匹配、LLM 过滤三元组；补齐简单事实任务 |
+| 2026-02 | CatRAG（ACL Findings 2026） | 沿用 HippoRAG 2 的图，按查询动态调整边权，主打完整证据链 |
+| 2026-02 | A-RAG | 把 HippoRAG2 当作图检索强基线，转向由智能体编排检索工具；见 [[AgenticRAG分层检索接口]] |
 
 ## 三、HippoRAG 2：从 RAG 到非参数长期记忆
 
-### 3.1 动机：结构增强不能牺牲事实记忆
+### 3.1 结构与隐喻（§3）
 
-文首诊断（Abstract / §1 / Fig.1）：标准 RAG 靠向量检索，难捕获人类长期记忆的 **sense-making**（Klein et al.）与 **associativity**（Suzuki）；近期结构增强 RAG（摘要树 / KG / 社区）在多跳与长语篇上有收益，但在**简单事实 QA**上相对最强 embedding RAG **全面掉队**。HippoRAG 2 目标：在联想任务上相对 SOTA embedding **约 7 个点**提升的同时，事实与意义建构**不劣化甚至略升**（Abstract：「7% improvement in associative memory…」；正文 §1：「average 7 point improvement… associativity」）。
+沿用 HippoRAG 的类比：大模型相当于新皮层，开放知识图谱加 PPR 相当于海马体的联想索引，编码器相当于连接两者的旁海马区域。流程分为离线建索引与在线检索。
 
-与 GraphRAG 的关键一句（§2.2，跟读必留）：GraphRAG / LightRAG 用 KG **生成高层摘要以扩展检索语料**；HippoRAG 2 的 KG **用于辅助检索过程本身**，从而少引入 LLM 摘要噪声——这正是「≠ [[图谱检索GraphRAG]]」的文内锚点。
+- **离线**：用 LLM 做开放信息提取，得到三元组；三元组中的短语成为图节点，关系成为边，向量相似的短语之间加同义边。
+- **在线**：用查询找到相关三元组，作为 PPR 的起点在图上扩散，按最终分数取段落交给阅读模型作答。
 
-### 3.2 相对 HippoRAG 1 的三处加深（§3）
+### 3.2 相对 HippoRAG 的三处改进（§3.2–3.5）
 
-沿用神经生物学隐喻：LLM≈新皮层；开放 KG + PPR≈海马联想；encoder≈旁海马联结。流水线仍分 **offline indexing / online retrieval**（Fig.2），但 2 做了三刀：
-
-| 模块 | 做什么 | 相对 HippoRAG 1 |
+| 改进 | 做法 | 解决什么 |
 |---|---|---|
-| **Dense-Sparse Integration（§3.2）** | 短语节点=稀疏概念；新增 **passage 节点**，以 labeled **「contains」context 边**连回该段抽出的短语 | 1 的 document ensemble 只是分数融合；2 把段落**嵌进图结构** |
-| **Deeper Contextualization（§3.3）** | 默认 **Query → Triple**（整查询对三元组 embedding）；对照 NER→Node / Query→Node | 1 偏 NER 实体中心，上下文信号浪费 |
-| **Recognition Memory（§3.4）** | embedding 取 top-$k$ 三元组后，**LLM 过滤**得 $T'\subseteq T$（prompt Appendix A；DSPy MIPROv2 调优） | 线上引入「识别」过滤种子噪声 |
+| 稠密–稀疏融合 | 新增段落节点，用「contains」上下文边连到该段提取出的短语 | HippoRAG 只在分数层面融合段落；现在段落本身进入图结构 |
+| 更深的语境化 | 用整个查询去匹配三元组（query-to-triple），而不是先做命名实体识别再匹配节点 | 实体中心的匹配丢掉了查询中的上下文信号 |
+| 识别记忆 | 向量检索取 top-$k$ 三元组后，由 LLM 过滤掉无关三元组 | 减少 PPR 起点中的噪声 |
 
-**Online（§3.5）**：过滤后的短语作 seed；**所有 passage 节点**亦作 seed（文称更宽激活利于多跳）；passage reset 概率按 embedding 相似度再乘 **weight factor**（默认 **0.05**，Table 5）；跑 PPR；按 PageRank 取 top 段落给 QA。
+在线检索时，过滤后的短语节点和**所有**段落节点都作为起点，段落节点的重置概率按向量相似度设定并乘以权重 0.05（Table 5 的折中值）。论文称更宽的起点有利于多跳。
 
-边类型（后文 CatRAG 也沿用）：Relation / Synonym / Context。
+### 3.3 关键结果（§5–6）
 
-### 3.3 实验配置（§4）
+实验用 Llama-3.3-70B-Instruct 做信息提取、三元组过滤与阅读，NV-Embed-v2 做检索器；结构化基线都用同一提取模型与检索器复现。
 
-| 项 | 文内设定 |
-|---|---|
-| 抽取 / 过滤 LLM | **Llama-3.3-70B-Instruct**（OpenIE + triple filter） |
-| Retriever | **nvidia/NV-Embed-v2**（主）；另测 GTE-Qwen2-7B、GritLM-7B（Table 7） |
-| QA reader | Llama-3.3-70B-Instruct（主表）；附录含 GPT-4o-mini |
-| 指标 | 检索 **passage recall@5**；QA **token F1**（MuSiQue 协议） |
-| 结构基线 | RAPTOR、**GraphRAG**、LightRAG、HippoRAG（同 extractor+retriever 复现） |
-| 数据（Table 1） | NQ/PopQA/MuSiQue/2Wiki/Hotpot 各 1,000 查询；LV-Eval 124；NarrativeQA 293（10 部长文） |
+QA F1（Table 2，节选）：
 
-### 3.4 主结果（Table 2 / Table 3；QA reader = Llama-3.3-70B）
+| 检索方式 | NQ | MuSiQue | 2Wiki | NarrativeQA | 七项平均 |
+|---|---:|---:|---:|---:|---:|
+| NV-Embed-v2 | 61.9 | 45.7 | 61.5 | 25.7 | 57.0 |
+| GraphRAG | 46.9 | 38.5 | 58.6 | 23.0 | 49.6 |
+| HippoRAG | 55.3 | 35.1 | 71.8 | 16.3 | 53.1 |
+| HippoRAG 2 | 63.3 | 48.6 | 71.0 | 25.9 | 59.8 |
 
-**Table 2 · QA F1（节选）：**
+- GraphRAG、RAPTOR、LightRAG 的平均分都低于 NV-Embed-v2；HippoRAG 2 是表中唯一在七个数据集上都高于 NV-Embed-v2 的结构化方法。摘要称它在联想任务上比最强向量模型提升约 7%。
+- 检索 Recall@5 平均 78.2，对比 NV-Embed-v2 的 73.4；2Wiki 上 90.4 对 76.5。
+- 消融（Table 4，多跳平均 Recall@5）：完整方法 87.1；改回实体匹配节点降到 74.6，去掉段落节点 81.0，去掉三元组过滤 86.4。论文称 query-to-triple 比实体匹配平均提升 12.5%。
+- 换用 GTE-Qwen2、GritLM 等检索器，HippoRAG 2 相对纯向量检索的提升依然存在（Table 7）。
+- 在 NQ 与 MuSiQue 的分批增量语料模拟中（Fig.3），相对 NV-Embed-v2 的优势保持稳定，但随语料增长，两者在联想任务上以相近速度下降。
 
-| Retrieval | NQ | PopQA | MuSiQue | 2Wiki | HotpotQA | LV-Eval | NarrativeQA | Avg |
-|---|---|---|---|---|---|---|---|---|
-| NV-Embed-v2 | 61.9 | 55.7 | 45.7 | 61.5 | 75.3 | 9.8 | 25.7 | 57.0 |
-| GraphRAG | 46.9 | 48.1 | 38.5 | 58.6 | 68.6 | 11.2 | 23.0 | 49.6 |
-| HippoRAG | 55.3 | 55.9 | 35.1 | 71.8 | 63.5 | 8.4 | 16.3 | 53.1 |
-| **HippoRAG 2** | **63.3†** | 56.2 | **48.6†** | **71.0†** | 75.5 | **12.9†** | 25.9 | **59.8** |
+## 四、CatRAG：按查询调整图遍历
 
-†：相对最佳 NV-Embed-v2 基线 bootstrap $p<0.05$（表注）。
-跟读：结构增强里 GraphRAG / RAPTOR / LightRAG **Avg 全面低于** NV-Embed-v2；HippoRAG 2 是表内**唯一**全面压过最强稠密检索的结构方法——支持「记忆范式」而非「又一个 GraphRAG」。
+### 4.1 三种机制（§3.2–3.5）
 
-**Table 3 · recall@5（节选）：** HippoRAG 2 Avg **78.2** vs NV-Embed-v2 **73.4**；MuSiQue **74.7** vs **69.7**（文称相对最强稠密 +5.0 / 对 2Wiki +13.9 百分点量级，§5）。
+图结构沿用 HippoRAG 2（短语节点与段落节点，关系、同义、上下文三类边）。PPR 迭代为 $v^{(k+1)}=(1-d)\,e_s+d\,v^{(k)}T$，CatRAG 的目标是把固定的转移矩阵 $T$ 换成随查询变化的 $\hat T_q$。
 
-### 3.5 消融与稳健性（§6）
-
-**Table 4 · recall@5 消融（多跳 Avg）：** HippoRAG 2 **87.1**；换 NER-to-node **74.6**；Query-to-node **59.6**；去 Passage Node **81.0**；去 Filter **86.4**。文称 query-to-triple 相对 NER-to-node 平均 Recall@5 **+12.5%**（§6.1）。
-
-**Table 5**：passage reset 权重 0.01–0.5；默认 **0.05**（MuSiQue/NQ dev 折中）。
-
-**Table 7**：换 GTE / GritLM / NV-Embed，HippoRAG 2 相对纯稠密检索在 MuSiQue 子集均稳定抬升（如 NV-Embed 69.7→74.7）。
-
-**Fig.3（待核实读图）**：NQ / MuSiQue 四段增量语料的 continual 模拟；文称相对 NV-Embed 的优势在简单与联想轴上**保持一致**，但联想任务随语料膨胀**双方以相近速率下降**——提示未来 continual benchmark 要混复杂度。
-
----
-
-## 四、CatRAG：打破静态图——查询自适应遍历
-
-### 4.1 问题：Static Graph Fallacy
-
-建立在 **HippoRAG 2 架构之上**（Abstract / §3.1）：索引期固定转移矩阵 $T$，边相关性与查询无关 → **semantic drift**（概率被高权泛化边吸走，如 Marie Curie→Radioactivity）与 **hub node** 汇点（Nobel Prize、French 等）。表观 Recall 可因「部分命中」偏高，但**完整证据链**断裂。示例查询：「Which university did Marie Curie’s doctoral advisor attend?」（Fig.1）。
-
-与 [[SelfRAG与CorrectiveRAG]] 的边界（§2.3）：IRCoT / Self-RAG / 若干 agentic 环靠**多轮 LLM 检索**，延迟高；CatRAG 自称 **one-shot** 上下文改权后再单次遍历，保留图检索速度形态。
-
-### 4.2 三机制（§3.2–3.5）
-
-图定义沿用 HippoRAG 2：$V=V_E\cup V_P$；边 = Relation / Synonym / Context。PPR：$v^{(k+1)}=(1-d)\,e_s + d\,v^{(k)}T$；目标把 $T$ 炼成查询条件 $\hat T_q$。
-
-| 机制 | 操作要点 | 成本感（文内） |
+| 机制 | 做法 | 成本 |
 |---|---|---|
-| **Symbolic Anchoring** | NER 实体作**弱 seed**，reset 小概率 $\epsilon$，从属于 query-to-triple 主种子；对抗向 hub 扩散 | 轻 |
-| **Query-Aware Dynamic Edge Weighting** | 先拓扑粗剪（$N_{\mathrm{seed}},K_{\mathrm{edge}}$）；再 LLM 对出边打相关性，$\hat w_{uv}=\phi(\mathrm{LLM}(\cdot))\cdot w_{uv}^{(\mathrm{static})}$；仅对 seed 出发的前向边 | **需线上 LLM**（Limitations 主要开销） |
-| **Key-Fact Passage Weight Enhancement** | 若 context 边被 recognition 过滤后的 $T_{\mathrm{seed}}$ 支持，则 $\hat w_{up}=w_{up}(1+\beta\cdot I(\cdot))$ | **零额外 token** |
+| 符号锚定 | 把查询中识别出的实体作为弱起点，以小概率 $\epsilon$ 重置，牵制随机游走不要漂向枢纽 | 很低 |
+| 查询感知的动态边权 | 先按拓扑粗剪，再让 LLM 给起点出发的边打相关性分，用分数乘原始边权 | 需要在线调用 LLM，是主要开销 |
+| 关键事实段落加权 | 若某条上下文边被过滤后的种子三元组支持，就放大该边权重 | 不需要额外 LLM 调用 |
 
-默认超参（§4.4）：$\epsilon=0.2$（按 $|P_i|^{-1}$ 加权）、$\beta=2.5$、$N_{\mathrm{seed}}=5$、$K_{\mathrm{edge}}=15$；LLM=**GPT-4o-mini**；embedding=**text-embedding-3-small**（刻意不用 NV-Embed-v2，以**隔离拓扑增益**）；QA=Llama-3.3-70B-Instruct；主基线=**同栈复现的 HippoRAG 2**。
+默认设置（§4.4）：$\epsilon=0.2$、放大系数 $\beta=2.5$、每次最多 5 个种子与 15 条边参与打分；打分 LLM 为 GPT-4o-mini；检索器刻意用较小的 text-embedding-3-small，以便单独衡量拓扑上的增益；主要对照是同一套组件复现的 HippoRAG 2。
 
-### 4.3 指标升级：FCR / JSR（§4.3）
+### 4.2 完整证据链指标（§4.3）
 
-| 指标 | 定义 |
-|---|---|
-| Recall@5 / F1 | 常规 |
-| **FCR**（Full Chain Retrieval） | 检索上下文覆盖**全部**金标支持文档的查询占比 |
-| **JSR**（Joint Success Rate） | **同时**满足 FCR 且生成答案正确（对齐 FEVER/HoVer 严格口径） |
+- **FCR**（Full Chain Retrieval）：检索结果覆盖**全部**标准支持文档的查询比例。
+- **JSR**（Joint Success Rate）：既满足 FCR、答案又正确的比例，对应 FEVER / HoVer 的严格口径。
 
-数据：MuSiQue / 2Wiki / Hotpot 各 1,000（与 HippoRAG 子集协议）；**HoVer** 1,000 条 3–4 hop 声明（Table 1）。
+数据为 MuSiQue、2Wiki、HotpotQA 各 1,000 题，以及 HoVer 的 1,000 条 3–4 跳声明核查。
 
-### 4.4 主结果（Table 2–4）
+### 4.3 关键结果（Table 2–4、§6.1）
 
-**Table 2 · Recall@5：**
+| 方法 | 指标 | MuSiQue | 2Wiki | HotpotQA | HoVer |
+|---|---|---:|---:|---:|---:|
+| HippoRAG 2 | Recall@5 | 61.4 | 85.9 | 87.1 | 71.2 |
+| CatRAG | Recall@5 | 64.9 | 87.0 | 89.5 | 76.8 |
+| HippoRAG 2 | FCR / JSR | 30.5 / 21.5 | 66.1 / 53.0 | 75.5 / 53.4 | 34.8 / 26.2 |
+| CatRAG | FCR / JSR | 34.6 / 24.3 | 67.6 / 55.0 | 80.4 / 56.8 | 42.5 / 31.1 |
 
-| Method | MuSiQue | 2Wiki | HotpotQA | HoVer |
-|---|---|---|---|---|
-| text-embedding-3-small | 55.4 | 70.8 | 81.3 | 65.7 |
-| HippoRAG 2 | 61.4 | 85.9 | 87.1 | 71.2 |
-| **CatRAG** | **64.9** | **87.0** | **89.5** | **76.8** |
+- 常规 Recall 只是温和提升，完整性指标拉开得更多：HoVer 上 JSR 从 26.2 到 31.1，论文称相对提升 18.7%。QA 上 CatRAG 在四个数据集上都略高于 HippoRAG 2（如 MuSiQue F1 45.0 对 43.2）。
+- 枢纽分析（100 条 MuSiQue 抽样）：PPR 加权的平均节点强度从 837.0 降到 761.7，前 1% 超级枢纽占的概率质量从 45.7% 降到 42.5%。
+- 消融（Table 5）：去掉符号锚定在 HoVer 上掉得最多（76.8→73.6）；去掉关键事实加权在 2Wiki 上反而略升，论文称该机制主要对非结构化语料有用。
 
-**Table 3 · QA（F1；HoVer=accuracy）：** CatRAG MuSiQue **45.0** / 2Wiki **69.7** / Hotpot **71.4** / HoVer **69.0**；HippoRAG 2 为 43.2 / 68.1 / 69.4 / 67.2。
-
-**Table 4 · FCR/JSR：**
-
-| Method | MuSiQue | 2Wiki | HotpotQA | HoVer |
-|---|---|---|---|---|
-| HippoRAG 2 | 30.5/21.5 | 66.1/53.0 | 75.5/53.4 | 34.8/26.2 |
-| **CatRAG** | **34.6/24.3** | **67.6/55.0** | **80.4/56.8** | **42.5/31.1** |
-
-正文强调：MuSiQue FCR 30.5→**34.6**；HoVer JSR **31.1**，相对 HippoRAG 2 约 **+18.7% 相对提升**（§5）。标准 Recall「温和」、**完整性指标**拉开——这是本卡相对 [[图谱检索GraphRAG]]/[[SelfRAG与CorrectiveRAG]] 的评测增量。
-
-### 4.5 消融与 hub 分析（Table 5 / §6.1）
-
-**Table 5 · recall@5：** CatRAG 64.9/87.0/89.5/76.8；去 Symbolic 63.0/86.1/88.6/**73.6**（HoVer −3.2）；去 $E_{\mathrm{rel}}$ 加权 63.2/85.6/88.1/75.0；去 Passage Enhance 64.7/**88.4**/89.0/76.6——文称 2Wiki 上去 Key-Fact 略升、非结构化集上 Key-Fact 更有用。
-
-Hub 量化（100 条 MuSiQue 抽样）：Mean PPR-Weighted Strength **837.0→761.7**；top-1% super-hub 概率质量 **45.7%→42.5%**（§6.1）。Fig.2 分布左移 → **待核实读图**。
-
-### 4.6 Limitations（跟读必留）
-
-- 动态边权需运行时 LLM → 延迟/费用高于纯静态 PPR。
-- 实验刻意用较小 embedding，**绝对上限**可能被更大 encoder 抬高（非本卡可外推）。
-- **完整源码因专有政策未公开**；公开 GitHub 为后续**复现实现**（README 2026-08-20）——笔记索引代码时两者并存、不宜混称为「论文官方全量开源」。
-
----
-
-## 五、双主文对照（仅文内字段；不替选型拍板）
+## 五、两篇对照
 
 | 维度 | HippoRAG 2 | CatRAG |
 |---|---|---|
-| 问题框 | 结构 RAG 伤事实记忆；要事实+联想+意义建构三轴 | 静态 $T$ → hub 漂移；部分召回≠完整证据链 |
-| 图角色 | 开放 KG **辅助检索**（≠ 摘要扩库） | **同一 HippoRAG 2 图**上查询条件改 $T$ |
-| 线上 LLM | recognition 滤三元组 | 再加出边相关性打分（+弱锚定 / Key-Fact 无 LLM） |
-| 主 embedding（文内主表） | NV-Embed-v2 | text-embedding-3-small（隔离拓扑） |
-| 主增量指标 | 三轴 F1 / recall@5；Avg QA 59.8 | FCR / JSR；HoVer 链完整 |
-| 与 GraphRAG | Table 内基线；§2.2 机制划界 | 相关工作提及；**非**社区摘要主轴 |
-| 与 Self-RAG | 未作主对照 | §2.3：多轮迭代 vs one-shot 改权 |
+| 要解决的问题 | 结构化 RAG 伤事实记忆，需要事实、联想、意义建构三类都不输 | 固定转移矩阵导致漂移与枢纽偏向，部分召回不等于完整证据链 |
+| 图的角色 | 开放知识图谱辅助检索 | 同一张图，按查询改转移概率 |
+| 在线 LLM | 过滤三元组 | 过滤三元组之外，再给出边打分 |
+| 主表检索器 | NV-Embed-v2 | text-embedding-3-small（隔离拓扑增益） |
+| 主要指标 | 三类任务的 F1 与 Recall@5 | FCR / JSR |
 
-选型建议：若问题框是「**文档库非参数记忆是否在简单事实上不崩**」→ HippoRAG 2 Table 2；若问题框是「**多跳证据链是否收全（FCR）**、hub 是否吸走概率」→ CatRAG Table 4；若问题框是「**全局主题综述**」→ 回 **[[图谱检索GraphRAG]]**；若「**对话生产记忆 API**」→ 回 **[[Mem0与Zep生产级记忆]]**。以上按各文自报结果指路，不构成跨文优劣结论。
+两篇的检索器不同，CatRAG 表里的 HippoRAG 2 分数不能与 HippoRAG 2 原文的分数直接比较。
 
----
+## 六、意义
 
-## 六、局限与待核实
+- **结构化与事实召回可以兼得**：HippoRAG 2 表明，图只要用来辅助检索而不是替代原文，就能在多跳任务上获益而不损失简单事实问答。
+- **把 RAG 当作记忆来评测**：事实、联想、意义建构三分法和增量语料模拟，使 RAG 评测从单一问答准确率扩展到记忆能力。
+- **完整性比召回更能暴露问题**：CatRAG 用 FCR / JSR 表明，常规 Recall 会掩盖证据链断裂，而按查询调整图遍历能补上一部分。
 
-- HippoRAG 2 Fig.3 折线具体点坐标未从正文读出 → 只保留文内定性。
-- 两文主表 **embedding 栈不同**（NV-Embed-v2 vs text-embedding-3-small），**不宜**把 CatRAG 表内 HippoRAG 2 分数与 HippoRAG 2 原文 Table 3 直接纵向比绝对召回。
-- CatRAG 论文「源码未全公开」与 GitHub「复现实现」并存；本卡不比较二者 diff。
-- 不把 Mem0/Zep 的 LOCOMO/LongMemEval、Memory-R1 的 RL 增益写进本卡能力。
-- 不把 HippoRAG 2 叙事改写成 GraphRAG 社区摘要变体。
+## 七、局限与待核实
+
+- **检索器不同不可混比**：两篇主表的检索器不同，跨篇比较绝对分数没有意义。
+- **在线 LLM 开销**：CatRAG 的动态边权需要运行时调用 LLM。ACL 版新增的效率分析（ACL 版 §6.2、Table 6，MuSiQue）显示检索约慢 2.6 倍，每次查询多约 4.8 秒、多约 0.0015 美元。
+- **基线随版本变化**：ACL 版新增 PropRAG、LightRAG、HyperGraphRAG 等基线，CatRAG 自身数字与 arXiv 版相同；但在新增基线下它不再全部最好，例如 PropRAG 在 MuSiQue F1（46.1 对 45.0）、HotpotQA Recall@5（90.0 对 89.5）与 HotpotQA FCR / JSR（81.0 / 58.2 对 80.4 / 56.8）上更高。
+- **代码并非论文原版**：CatRAG 论文称因专有数据政策不能公开完整源码，只给超参数表；GitHub 仓库是 2026-08-20 发布的复现实现，与论文原实现的差异未核对。
+- **上限未测**：CatRAG 刻意用较小的检索器，换更强编码器后的绝对水平未知。
+- **待核实读图**：HippoRAG 2 增量语料模拟（Fig.3）与 CatRAG 枢纽强度分布（Fig.2）只取论文文字描述，未读图取点。
+
+## 八、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[检索增强与知识外挂]] | 那篇是 RAG 通史与共用背景；两篇论文都以向量检索为主要对照，并指出它缺联想与意义建构 | 稠密双塔、向量库选型 |
+| [[图谱检索GraphRAG]] | GraphRAG 是 HippoRAG 2 主表的结构化基线；区别在于 GraphRAG 用图生成摘要扩充语料，HippoRAG 2 用图直接辅助检索（§2.2） | 社区摘要、map-reduce、EraRAG 增量索引 |
+| [[SelfRAG与CorrectiveRAG]] | CatRAG 把 Self-RAG、IRCoT 归为多轮迭代检索，认为延迟高，自己改为一次性调整边权后单次遍历（§2.3） | 反思 token、纠错动作 |
+| [[AgenticRAG分层检索接口]] | A-RAG 用 HippoRAG2 作图检索基线，并在多数数据集上超过它；两篇代表「索引侧更聪明」与「接口侧更自主」两条路线 | 分层工具与智能体环 |
+| [[Mem0与Zep生产级记忆]] | 同样以「长期记忆」为目标，但那篇是对话与业务记忆的写入、更新服务，本篇是文档语料上的检索图 | 记忆操作接口、时序知识图谱 |
+| [[智能体长程记忆]] | 那篇写 MemGPT 分页与 A-Mem 卡片盒式记忆，本篇走检索图路线，两者同问「长期记忆怎样组织与取回」 | 分页与记忆演化 |
+| [[CHIME长程规划记忆]] | 同属不改模型参数、只更新外部存储的非参数记忆：本篇把文档语料写成知识图谱供检索，那篇把智能体轨迹提炼成规划与执行经验，并按信用归因决定写入哪条 | 轨迹经验库与信用归因 |
+| [[持续学习]] | 那篇的综述把检索列为持续学习的「外部知识」路线；HippoRAG 2 正是把 RAG 定位为非参数持续学习 | 持续学习的参数路线 |
+
+## 九、延伸阅读
+
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [HippoRAG 2](https://arxiv.org/abs/2502.14802) §3 | 离线建图、在线检索与三处改进 |
+| 2 | [CatRAG（arXiv）](https://arxiv.org/abs/2602.01965) §3 | 静态图谬误与三种机制 |
+| 3 | [CatRAG（ACL Findings 2026）](https://aclanthology.org/2026.findings-acl.290/) §5–6 | 新增基线与效率分析 |
+| 4 | [HippoRAG](https://arxiv.org/abs/2405.14831) | 前作与海马体索引隐喻 |
+| 5 | [OSU-NLP-Group/HippoRAG README](https://github.com/OSU-NLP-Group/HippoRAG) | HippoRAG 2 代码 |
+| 6 | [kwunhang/CatRAG README](https://github.com/kwunhang/CatRAG) | CatRAG 复现实现与 HoVer 数据 |
