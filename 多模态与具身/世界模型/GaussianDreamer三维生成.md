@@ -8,7 +8,7 @@ sources:
  - https://arxiv.org/pdf/2310.08529
  - https://arxiv.org/pdf/2406.18462
 arxiv: ["2310.08529", "2406.18462"]
-related: ["扩散生成式视觉与LLM", "视频生成正式报告"]
+related: ["扩散生成式视觉与LLM", "视频生成模型脉络"]
 project:
  - https://taoranyi.com/gaussiandreamer/
  - https://taoranyi.com/gaussiandreamerpro/
@@ -17,12 +17,12 @@ archived: 2026-09-22
 
 # 3D Gaussian 生成线：GaussianDreamer → GaussianDreamerPro
 
-> **定位**：三维生成短卡——相对 **[[扩散生成式视觉与LLM]]**（2D 扩散视觉 / LDM·DiT）与 **[[视频生成正式报告]]**（视频生成正式报告缺口），补仓库缺的 **文本 → 3D Gaussian Splatting 资产生成** 短史。主轴与 LLM 咬合弱，故弱档；一手 PDF + 项目页齐全。
+> **定位**：三维生成短卡——相对 **[[扩散生成式视觉与LLM]]**（2D 扩散视觉 / LDM·DiT）与 **[[视频生成模型脉络]]**（视频时序生成通史），补仓库缺的 **文本 → 3D Gaussian Splatting 资产生成** 短史。主轴与 LLM 咬合弱，故弱档；一手 PDF + 项目页齐全。
 > **研究线**：**架构思想（主）**——3D 先验初始化 → 2D 蒸馏丰富细节 → Pro 的几何绑定约束；**评测字段（辅）**——质量 / 一致性（T3 Bench、用户偏好）+ 可操纵性（动画 / 仿真）。
 > **范围与相邻笔记**：
 > - **不重写** [[扩散生成式视觉与LLM]] LDM / DiT / Stable Diffusion 通史——SD 2.1-base 只作 **冻结 2D 先验槽**。
 > - **不重写** NeRF 全谱（MipNeRF / Instant-NGP / DMTet 等）——仅在「表示对照」表点名。
-> - **不写成** [[视频生成正式报告]] 视频 / 时序生成正式报告备忘。
+> - **不写成** [[视频生成模型脉络]] 那样的视频 / 时序生成通史。
 > - SDS / ISM / DreamFusion 只取 **接口句**，不展开 2D→3D 蒸馏通史。
 > **主要来源**：[GaussianDreamer: Fast Generation from Text to 3D Gaussians by Bridging 2D and 3D Diffusion Models](https://arxiv.org/abs/2310.08529)（[项目页](https://taoranyi.com/gaussiandreamer/)）；[GaussianDreamerPro: Text to Manipulable 3D Gaussians with Highly Enhanced Quality](https://arxiv.org/abs/2406.18462)（[项目页](https://taoranyi.com/gaussiandreamerpro/)）（截至 2026-09-22）。
 
@@ -50,7 +50,7 @@ archived: 2026-09-22
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[扩散生成式视觉与LLM]]** LDM / DiT | 「2D 文生图先验可当冻结评分器」一句 | LDM 潜空间、DiT 块图、训练数据谱 |
-| **[[视频生成正式报告]]** 视频正式报告 | 「多模态生成另一轴」存在性 | Sora / Veo / 时序架构备忘 |
+| **[[视频生成模型脉络]]** 视频生成通史 | 「多模态生成另一轴」存在性 | Sora / Veo / 时序架构脉络 |
 | DreamFusion SDS / LucidDreamer ISM | **梯度接口**（Eq. 形式） | SDS 全族演进通史、VSD 全文 |
 | 3D-GS 重建论文（Kerbl et al.） | 显式椭球参数 + splat 可实时 | 大规模场景重建配方 |
 | NeRF / DMTet / Instant-NGP | 表内「表示对照」 | 辐射场全谱、体积渲染推导 |
@@ -255,7 +255,7 @@ ISM 接口（相对 SDS，文引 LucidDreamer）：用 DDIM inversion 得 $x_t$�
 
 - Stable Diffusion / DiT / LDM 训练与架构通史（→ [[扩散生成式视觉与LLM]]）。
 - NeRF 变体百科、体积渲染推导。
-- 文生视频 / 世界模型时序（→ [[视频生成正式报告]]）。
+- 文生视频 / 世界模型时序（→ [[视频生成模型脉络]]）。
 - 完整 text-to-3D 族谱（Magic3D / Fantasia3D / ProlificDreamer / GSGEN / DreamGaussian / LucidDreamer 等仅作对照点名）。
 - 复现 playbook（学习率表已作字段摘录，非操作手册）。
 
@@ -270,7 +270,7 @@ ISM 接口（相对 SDS，文引 LucidDreamer）：用 DDIM inversion 得 $x_t$�
 ## 八、交叉引用
 
 - [[扩散生成式视觉与LLM]]：2D 扩散视觉主轴——本卡 **只消费** SD-2-1-base 为冻结先验。
-- [[视频生成正式报告]]：视频生成正式报告缺口——本卡是 **静态 3D 资产** 线，互不重写。
+- [[视频生成模型脉络]]：视频时序生成通史——本篇是 **静态 3D 资产** 线，两者是多模态生成的两个轴，互不重写。
 - 3D-GS 重建原论文（Kerbl et al., ToG 2023）：表示定义来源；生成任务适配从 Dreamer 起。
 
 ## 相关笔记

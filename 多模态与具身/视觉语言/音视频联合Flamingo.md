@@ -13,7 +13,7 @@ related:
  - "SpeechLLM语音语言模型"
  - "SeamlessM4T语音翻译"
  - "多模态架构脉络"
- - "视频生成正式报告"
+ - "视频生成模型脉络"
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[SpeechLLM语音语言模型]] Speech-LLM**：不重写 Qwen2-Audio / Whisper→LLM 音频→文本对话栈；本卡是 **音视频联合理解 + 可选流式 TTS**，不是 Voice Chat / Audio Analysis 接口史。
 > - **≠ [[SeamlessM4T语音翻译]] SeamlessM4T**：不重写 UnitY / EMMA 语音翻译与同传；本卡 **不做** S2ST/S2TT 翻译 FM。
 > - **≠ [[多模态架构脉络]] 多模态通史**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」阶梯；经典 Flamingo（Alayrac 2022）仅作 related-work 一句祖先。
-> - **≠ [[视频生成正式报告]] 视频生成正式报告备忘**：本卡是 **理解 / 推理 AV-LLM**，不是文生视频 / Sora 缺口备忘。
+> - **≠ [[视频生成模型脉络]] 视频生成通史**：本篇是 **理解 / 推理 AV-LLM**，不是视频（含音视频联合）生成。
 > 页眉 Code / Model / Project Page / Dataset / Demo **按钮在 PDF 中未见可核 URI**（仅见 `arxiv.org/abs/2607.16107v1`），故不列 GitHub / HF 链接；文内写「fully open」与 Broader Impacts「non-commercial research use only」**并列表出**。
 
 ---
@@ -71,7 +71,7 @@ timezone: Asia/Shanghai (CST)
 | **[[SpeechLLM语音语言模型]]** Speech-LLM | 「音频可进 LLM」的相邻意识；基线表出现 Qwen2-Audio 等 | Whisper-large-v3 前端、三阶段 Voice Chat 配方 |
 | **[[SeamlessM4T语音翻译]]** Seamless | 「语音可端到端」的压力面一句 | UnitY / SeamlessAlign / EMMA 同传 |
 | **[[多模态架构脉络]]** | related work 中 Flamingo / LLaVA / InternVL 作视觉 LMM 前史一句 | CLIP→指令微调通史重写 |
-| **[[视频生成正式报告]]** | 无接口（生成 ≠ 理解） | Sora / 文生视频正式报告缺口 |
+| **[[视频生成模型脉络]]** | 无接口（生成 ≠ 理解）；那篇的音视频联合生成与本篇的音视频联合理解方向相反 | Sora / 文生视频脉络 |
 
 ### 2.2 本卡主轴 vs 范围外
 
@@ -201,7 +201,7 @@ Broader Impacts：正向（无障碍音频描述、讲座/纪录片理解、内�
 - Qwen2-Audio 三阶段与 Voice Chat 接口 → **[[SpeechLLM语音语言模型]]**。
 - Seamless 百语 S2ST 与 EMMA 同传 → **[[SeamlessM4T语音翻译]]**。
 - CLIP/Flamingo/LLaVA 视觉指令通史 → **[[多模态架构脉络]]**。
-- Sora 等视频**生成**正式 TR 缺口 → **[[视频生成正式报告]]**。
+- Sora 等视频**生成**脉络 → **[[视频生成模型脉络]]**。
 - OmniVinci（Ye et al., 2025）自身训练全配方 → 本卡仅作 **初始化检查点** 接口，不代替其专篇。
 - 页眉 Code/Model 的具体 GitHub/HF URL → **本 PDF 未抽出可核链接，标待核实**。
 

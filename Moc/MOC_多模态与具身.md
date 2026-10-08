@@ -18,12 +18,12 @@ status: active
 
 - [[多模态架构脉络]]
 - [[扩散生成式视觉与LLM]]
+- [[视频生成模型脉络]]
 
 ## 增量节点
 
 - [[世界模型与VJEPA]]
 - [[SpeechLLM语音语言模型]]
-- [[视频生成正式报告]]
 - [[QwenOmni音视频原生]]
 - [[GaussianDreamer三维生成]]
 - [[SeamlessM4T语音翻译]]

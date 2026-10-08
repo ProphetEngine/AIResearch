@@ -14,7 +14,7 @@ aux:
 arxiv: ["2604.08995", "2501.03575"]
 related:
  - "世界模型与VJEPA"
- - "视频生成正式报告"
+ - "视频生成模型脉络"
  - "DiffusionForcing族"
  - "视觉语言动作谱系"
 retrieval_cutoff: 2026-09-22
@@ -30,7 +30,7 @@ timezone: Asia/Shanghai (CST)
 > **研究线**：**架构思想 / 平台接口（主）** + **文内交互一致性 / 吞吐字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[世界模型与VJEPA]]**：不重写 JEPA **mask-denoising 表征预测**入门、V-JEPA 2 probe / VidQA / AC 后训练长文。本卡预测落在 **像素 / 潜视频生成**（动作条件交互或 Video2World），与表征空间 JEPA **正交**。
-> - **≠ [[视频生成正式报告]]**：不写成 **文生视频旗舰正式报告缺口备忘**（Sora 等）。本卡对象是 **交互/流式 WM + Physical AI WFM 平台**，非「无可核长 TR」产品备忘。
+> - **≠ [[视频生成模型脉络]]**：不写成 **视频生成通史**（Sora、Veo 等旗舰与开放模型的脉络在那篇，Matrix-Game、Cosmos、Genie 3 在那篇只作节点）。本篇对象是 **交互/流式 WM + Physical AI WFM 平台**。
 > - **≠ [[DiffusionForcing族]]**：不重写 Diffusion Forcing → Self Forcing → Causal Forcing **训推对齐 forcing 族通史**。Matrix 文内引用 Self-Forcing / DMD / Causal Forcing 仅作 **蒸馏接口一句**，不展开族谱。
 > - **≠ [[视觉语言动作谱系]]**：不写成 **Robotics VLA 控制部署通史**（RT-2 / OpenVLA / π0）。Cosmos 后训练含机器人 manipulation **样例**，本篇只列「预训练 WFM → 域内后训练」平台接口，不写闭环 VLA 策略谱系。
 > **主要来源**：[Matrix-Game 3.0: Real-Time and Streaming Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2604.08995)；[Cosmos World Foundation Model Platform for Physical AI](https://arxiv.org/abs/2501.03575)；[Genie 3: A new frontier for world models](https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/)（截至 2026-09-22）；文内未给出算力明细与完整配方。
@@ -59,7 +59,7 @@ timezone: Asia/Shanghai (CST)
 | 轴 | 预测落在哪 | 交互 / 控制 | 仓库位置 | 本篇是否主写 |
 |---|---|---|---|---|
 | **[[世界模型与VJEPA]] V-JEPA** | **表征空间** mask-denoising | AC 后训练接口 | [[世界模型与VJEPA]] | **否**（不重写 JEPA 入门） |
-| **[[视频生成正式报告]]** | 文生视频旗舰「正式报告」缺口 | 多为离线生成 | [[视频生成正式报告]] | **否** |
+| **[[视频生成模型脉络]]** | 视频生成通史（像素或潜空间生成） | 多为离线生成 | [[视频生成模型脉络]] | **否** |
 | **[[DiffusionForcing族]] Forcing 族** | 序列上 per-token 噪声 / 自 rollout | 训推对齐手法 | [[DiffusionForcing族]] | **否**（仅蒸馏引用） |
 | **[[视觉语言动作谱系]] VLA** | 观测→动作策略 | 闭环机器人 | [[视觉语言动作谱系]] | **否**（Cosmos 机器人后训练仅样例） |
 | **Matrix-Game 3.0** | **动作条件潜视频**流式生成 + 显式记忆 | 键鼠 / 相机；实时 | **本篇 A** | **是** |

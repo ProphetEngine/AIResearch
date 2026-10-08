@@ -11,7 +11,7 @@ sources:
 arxiv: ["2505.24869", "2506.00318", "2605.26014"]
 related:
  - "音视频联合Flamingo"
- - "视频生成正式报告"
+ - "视频生成模型脉络"
  - "多模态架构脉络"
  - "QwenOmni音视频原生"
 code_urls:
@@ -24,13 +24,13 @@ timezone: Asia/Shanghai (CST)
 
 # 视频—语言推理：SiLVR + Chain-of-Frames（≠ AV-Flamingo）
 
-> **定位**：多模态推理横切——在 **[[音视频联合Flamingo]] AV-Flamingo（开源音视频联合基础模型卡）**、**[[视频生成正式报告]] 视频生成正式报告备忘**、**[[多模态架构脉络]] 多模态通史**、**[[QwenOmni音视频原生]] Qwen-Omni 产品卡**之外，补「**理解侧视频—语言推理框架**」空位。双主锚：
+> **定位**：多模态推理横切——在 **[[音视频联合Flamingo]] AV-Flamingo（开源音视频联合基础模型卡）**、**[[视频生成模型脉络]] 视频生成通史**、**[[多模态架构脉络]] 多模态通史**、**[[QwenOmni音视频原生]] Qwen-Omni 产品卡**之外，补「**理解侧视频—语言推理框架**」空位。双主锚：
 > - **SiLVR**（*Simple Language-based Video Reasoning*）：**训练免费**；短 clip 视觉描述 + ASR 字幕 → **Adaptive Context Reduction** → 强推理 LLM（默认 DeepSeek-R1）在**纯语言空间**做复杂 VideoQA。
 > - **Chain-of-Frames（CoF）**：视频 LLM **单阶段**推理迹中显式引用帧 ID（Frame-k）；用 **CoF-DATA**（真实 VideoEspresso + 合成 CLEVRER，164,186 条）微调 InternVL 等，强化时序锚定。
 > **研究线**：**架构思想（主）**——语言管道 vs 帧锚定 CoT；**评测字段（辅）**——文内 VideoMME / Video-MMLU / CGBench / VSI-Bench 等表，不外推未测榜。
 > **范围与相邻笔记**：
 > - **≠ [[音视频联合Flamingo]] AV-Flamingo**：不重写 OmniVinci 初始化、SigLip/AF-Whisper、CRTE、AV-Skills 课程、TAVIT/AV-Think、GRPO 产品配方。本卡对象是 **推理框架 / 数据形态**，不是开源 AV 基础模型卡。
-> - **≠ [[视频生成正式报告]]**：不重写文生视频 / Sora 正式报告缺口备忘；本卡是 **理解 / 推理**，不是生成。
+> - **≠ [[视频生成模型脉络]]**：不重写视频生成通史；本篇是 **理解 / 推理**，不是生成。那篇第五节辨析了 Wiedemer 等的 chain-of-frames 与本篇 Chain-of-Frames 同名不同义。
 > - **≠ [[多模态架构脉络]]**：不重写 CLIP→Flamingo→LLaVA→「原生多模态」通史阶梯；经典多模态祖先仅作 related-work 接口。
 > - **≠ [[QwenOmni音视频原生]] Qwen-Omni**：不重写 Thinker–Talker MoE、AuT、ARIA、36/215 基准产品表；本卡不写 Omni 产品栈。
 > **补链**：**STORM/TORM**（arXiv **2605.26014**；PDF 题名 **TORM**，GitHub `aiming-lab/storm`）——把时空推理**内化到有界连续 latent**，方法面异于「语言管道 / 帧锚定文本 CoT」→ **仅附录一句**。
@@ -66,7 +66,7 @@ timezone: Asia/Shanghai (CST)
 | 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[音视频联合Flamingo]] AV-Flamingo** | 「长复杂真实音视频理解」是共同任务床 | OmniVinci/SigLip/CRTE/AV-Skills/TAVIT/GRPO 配方全文 |
-| **[[视频生成正式报告]]** | 「视频」一词相邻 | 文生视频正式 TR 缺口 / Sora System Card |
+| **[[视频生成模型脉络]]** | 「视频」一词相邻；chain-of-frames 同名不同义 | 视频生成通史 / Sora System Card |
 | **[[多模态架构脉络]]** | 多模态生成式接口是前序 | CLIP/Flamingo/LLaVA/Gemini 阶梯通史 |
 | **[[QwenOmni音视频原生]] Qwen-Omni** | 「端到端多模态助手」产品对照一句 | Thinker–Talker / AuT / ARIA / 延迟与非降级表 |
 
@@ -236,4 +236,4 @@ PDF 题名为 **TORM**（*Spatial-Temporal reasOning via inteRnalized Modeling*�
 
 ## 八、摘要
 
-本卡立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。范围 **≠[[音视频联合Flamingo]] / ≠[[视频生成正式报告]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅作补链。三 PDF **以官方 HTTPS 外链为准**。
+本卡立「视频—语言**理解侧推理**」横切：**SiLVR** = 多感官→语言→DeepSeek-R1 + ACR（训练免费）；**Chain-of-Frames** = 帧锚定单阶段 CoT + CoF-DATA（164k）微调 InternVL。范围 **≠[[音视频联合Flamingo]] / ≠[[视频生成模型脉络]] / ≠[[多模态架构脉络]] / ≠[[QwenOmni音视频原生]]**；**STORM/TORM** 仅作补链。三 PDF **以官方 HTTPS 外链为准**。
