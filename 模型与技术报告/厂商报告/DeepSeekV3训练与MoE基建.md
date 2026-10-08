@@ -1,287 +1,133 @@
 ---
-title: "技术报告专项：DeepSeek-V3 报告深读切片（训练配方 / MoE / Infra）"
+title: "技术报告专项：DeepSeek-V3 报告深读切片"
 topic: DeepSeekV3训练与MoE基建
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
 source_url: https://arxiv.org/abs/2412.19437
+sources:
+ - https://arxiv.org/abs/2412.19437
+ - https://github.com/deepseek-ai/DeepSeek-V3
+related: ["混合专家架构", "注意力效率族MQA到MLA", "MTP训练范式", "AI基础设施总览", "NVSHMEM与DeepEP通信", "DeepSeekR1推理训练深读", "DeepSeekV32技术报告深读", "DeepSeekV4技术报告深读", "KimiK2技术报告深读", "开源与闭源前沿模型谱系", "分布式训练并行策略", "MoE路由与负载均衡"]
 archived: 2026-09-22
 ---
 
-# TR · DeepSeek-V3 报告深读切片：训练配方 / MoE 机制 / Infra
+# 技术报告专项：DeepSeek-V3 报告深读切片
 
-> **定位**：报告级对照表 / 深读卡。数字一律取自官方 PDF `https://arxiv.org/abs/2412.19437`。
-> **刻意不写**：Switch→Mixtral→V3 史线叙事（见 [[混合专家架构]]）、开闭源谱系定位（见 [[开源与闭源前沿模型谱系]]）、Megatron/FA/vLLM 通论（见 [[AI基础设施总览]]）。本卡只补「可对表跟读」的配方与机制细节。
+> **主要来源**：[DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437)（DeepSeek-AI，v2，2025-02-18；首次提交 2024-12-27）；[deepseek-ai/DeepSeek-V3 README](https://github.com/deepseek-ai/DeepSeek-V3)（GitHub 仓库说明，活页面，无更新日期）（截至 2026-04-26）。
+> **研究线**：架构思想（DeepSeekMoE 路由与无辅助损失均衡、MTP，主）· AI Infra（PP × EP × ZeRO-1、DualPipe、跨节点 all-to-all、FP8 训练，辅）
+> **范围与相邻笔记**：
+> - ≠ [[混合专家架构]]：本篇不写 Switch → Mixtral → V3 的 MoE 史线。
+> - ≠ [[注意力效率族MQA到MLA]]：本篇不写 MLA 的低秩压缩推导，只列 V3 的取值。
+> - ≠ [[AI基础设施总览]]：本篇不写 Megatron、FlashAttention、vLLM 等通论。
+> - ≠ [[开源与闭源前沿模型谱系]]：本篇不写开闭源代际坐标。
+>
+> **意义**：V3 用约 2.788M H800 GPU 小时训出 671B 总参、37B 激活的开放权重 MoE，并公开了做到这一点的整套工程：无辅助损失的负载均衡、限节点路由与 DualPipe 让跨节点专家并行的通信几乎全被计算掩盖，报告称首次在这一规模上验证了 FP8 混合精度训练的可行性。此后 R1、V3.2、V4 都在这个底座上演进，其他开放权重 MoE（如 Kimi K2）也以它为参照。
 
----
-
-## 一、报告元信息
-
-| 项 | 报告原文 / PDF 元数据 | 出处 |
-|---|---|---|
-| 标题 | DeepSeek-V3 Technical Report | 封面 |
-| 作者 | DeepSeek-AI；`research@deepseek.com` | 封面 |
-| arXiv 页眉 | **arXiv:2412.19437v2** \[cs.CL\] **18 Feb 2025** | PDF 第 1 页页眉 |
-| PDF 页数 | **53**（A4） | |
-| PDF CreationDate / ModDate | Wed Feb 19 10:11:22 **2025 CST** | |
-| Producer | pdfTeX-1.40.25；LaTeX with hyperref | |
-| PDF 链接 | `https://arxiv.org/abs/2412.19437` | arXiv |
-| 权重仓库（摘要） | https://github.com/deepseek-ai/DeepSeek-V3 | Abstract |
-| 摘要规模一句话 | 671B total / **37B activated** per token；预训练 **14.8T** tokens；全流程 **2.788M H800 GPU hours**；auxiliary-loss-free 负载均衡 + MTP；训练过程「未出现 irrecoverable loss spikes / 未做 rollbacks」 | Abstract；§1 |
-
-**版本说明（本卡边界）**：本 PDF 页眉仅标 **v2 / 18 Feb 2025**。[[开源与闭源前沿模型谱系]] 另记「Submitted 2024-12-27 / last revised 2025-02-18」来自 arXiv abs 页，**不在本 PDF 正文** → 见第六节待核实。
+**一句话**：V3 的效率来自三处协同：细粒度专家 + 共享专家 + 偏置式负载均衡让专家更特化而不伤主任务；每 token 最多路由到 4 个节点，配合 DualPipe 把 all-to-all 与流水线通信藏进计算；FP8 用细粒度分块缩放与定期提升到 FP32 累加控制误差。
 
 ---
 
-## 二、训练配方对照表（仅报告数字）
+## 一、问题背景
 
-### 2.1 阶段与算力成本（Table 1 + §1）
+MoE 能把总参数与每 token 计算量解耦，但规模化有三个工程难题。其一，负载均衡：传统做法加辅助损失逼路由均匀，损失太大会伤主任务。其二，通信：细粒度专家分散在很多节点上，跨节点专家并行时计算与通信之比约为 1:1（原文 §3.2），通信直接拖慢训练。其三，精度与显存：在数千卡上用更低精度训练能省算力和显存，但此前没有在这种规模上验证过 FP8 训练的稳定性。
 
-| 阶段 | H800 GPU hours | 按 $2/GPU-hour 折算（报告假设） | 报告补充 |
+V3 的报告目标是在有限算力（2048 张 H800）上把这三点同时解决，并让训练全程不出现不可恢复的 loss 尖峰、不回滚（摘要）。
+
+## 二、脉络
+
+| 时间 | 节点 | 要点 | 出处 |
 |---|---|---|---|
-| Pre-Training | **2664K** | $5.328M | 每万亿 token ≈ **180K** H800 hours；2048 卡集群上约 **3.7 days / T tokens**；预训练「不到两个月」 |
-| Context Extension | **119K** | $0.238M | 两阶段 YaRN：4K→32K→128K |
-| Post-Training | **5K** | $0.01M | SFT + RL |
-| **Total** | **2788K = 2.788M** | **$5.576M** | 不含「先前研究与消融」成本 |
+| 2024-01 | DeepSeekMoE | 细粒度专家 + 共享专家隔离 | [DeepSeekMoE](https://arxiv.org/abs/2401.06066) |
+| 2024-04 | 多 token 预测（Gloeckle 等） | 一次预测多个未来 token 作为训练目标；V3 的 MTP 引用此线 | [Better & Faster LLMs via Multi-token Prediction](https://arxiv.org/abs/2404.19737) |
+| 2024-05 | DeepSeek-V2 | MLA + DeepSeekMoE；V3 沿用其架构与 YaRN 扩窗 | [DeepSeek-V2](https://arxiv.org/abs/2405.04434) |
+| 2024-08 | 无辅助损失负载均衡（Wang 等） | 用专家偏置代替辅助损失；V3 在 671B 规模上采用 | [Auxiliary-Loss-Free Load Balancing](https://arxiv.org/abs/2408.15664) |
+| 2024-12 | **DeepSeek-V3** | 671B / 37B；MTP；DualPipe；FP8 | 本篇 |
+| 2025-01 | DeepSeek-R1 | 以 V3-Base 为底座做推理 RL | [[DeepSeekR1推理训练深读]] |
+| 2025-12 | DeepSeek-V3.2 | 架构上只加 DSA 稀疏注意力 | [[DeepSeekV32技术报告深读]] |
+| 2026-04 | DeepSeek-V4 preview | CSA + HCA 混合注意力、mHC、Muon；MTP 配置同 V3 | [[DeepSeekV4技术报告深读]] |
 
-集群（§3.1）：**2048 NVIDIA H800**；每节点 8 GPU（NVLink + NVSwitch）；跨节点 **InfiniBand**。
+## 三、架构与 MoE 机制
 
-### 2.2 数据与分词（§4.1）
+**骨架（原文 §4.2）。** 61 层，hidden 7168；注意力为 MLA（128 头，KV 压缩维 512，query 压缩维 1536，解耦 RoPE 每头 64 维）；除前 3 层外 FFN 全换成 MoE，每层 1 个共享专家 + 256 个路由专家（中间维 2048），每 token 激活 8 个路由专家；总参 671B，每 token 激活 37B。
 
-| 项 | 报告数字 / 设定 |
-|---|---|
-| 预训练语料 | **14.8T** high-quality and diverse tokens（相对本 tokenizer） |
-| 打包 | document packing；**不做** cross-sample attention masking |
-| FIM | 与 DeepSeekCoder-V2 对齐；**PSM**：`<\|fim_begin\|> f_pre <\|fim_hole\|> f_suf <\|fim_end\|> f_middle <\|eos_token\|>`；文档级、pre-packing 阶段；**rate = 0.1** |
-| Tokenizer | Byte-level BPE；词表 **128K**；相对 V2 的 pretokenizer 改动（标点+换行合并 token 等）；训练中随机拆分部分合并 token 以缓解 token boundary bias |
+**路由（原文 §2.1.2）。** 亲和分由 V2 的 softmax 改为 $s_{i,t}=\mathrm{Sigmoid}(u_t^\top e_i)$，在选中的 Top-8 上再归一化得到门控。训练与推理都不丢 token。
 
-### 2.3 模型结构超参（§4.2 Model Hyper-Parameters）
+**无辅助损失均衡。** 每个专家带偏置 $b_i$，只用于**选择**：按 $s_{i,t}+b_i$ 取 Top-K，乘到专家输出上的门控仍来自原始 $s_{i,t}$。每步按整个 batch 统计负载，过载专家 $b_i\leftarrow b_i-\gamma$，欠载 $+\gamma$（前 14.3T token $\gamma=0.001$，最后 500B 为 0）。另加系数极小（$\alpha=0.0001$）的序列级辅助损失，防止单条序列内极端失衡。为什么有效：偏置只改「谁被选」，不进入梯度路径，因而不像辅助损失那样直接与语言建模目标冲突；原文 §4.5 与附录 C 显示这种做法下专家在不同领域上更特化。
 
-| 项 | 值 |
-|---|---|
-| Transformer 层数 $L$ | **61** |
-| Hidden dim $d$ | **7168** |
-| 参数初始化 std | **0.006** |
-| MLA：$n_h$ / $d_h$ | **128** / **128** |
-| MLA：KV 压缩 $d_c$ / Query 压缩 $d_c'$ | **512** / **1536** |
-| MLA：解耦 RoPE per-head $d_h^R$ | **64** |
-| MoE 替换范围 | **除前 3 层外**全部 FFN → MoE |
-| 每 MoE 层 | **1 shared + 256 routed**；每专家 intermediate **2048** |
-| 每 token 激活路由专家 $K_r$ | **8** |
-| Node-limited $M$ | **≤ 4 nodes** |
-| MTP 深度 $D$ | **1**（主 NTP + 额外预测 1 个未来 token） |
-| 总参 / 激活参 | **671B** / **37B** per token |
+**限节点路由。** 每 token 最多发往 4 个节点：先按各节点上最高 $K_r/M$ 个亲和分之和选节点，再在其中选专家。这把跨节点 IB 流量封顶，是后面通信几乎全掩盖的前提。
 
-### 2.4 预训练优化与调度（§4.2 Training Hyper-Parameters）
+**MTP（原文 §2.2）。** 深度 $D=1$：主模型预测下一个 token 之外，用一个顺序串接的 MTP 模块再预测一个未来 token，损失 $\mathcal{L}_{\mathrm{MTP}}=\frac{\lambda}{D}\sum_{k=1}^{D}\mathcal{L}^k_{\mathrm{MTP}}$（前 10T token $\lambda=0.3$，其后 0.1）。目的是加密训练信号；推理时可丢弃，也可当投机解码的草稿头。
 
-| 项 | 报告设定 |
-|---|---|
-| 优化器 | **AdamW**：$\beta_1=0.9$, $\beta_2=0.95$, **weight_decay=0.1** |
-| 预训练最大序列长 | **4K** |
-| 预训练 token 量 | **14.8T** |
-| LR warmup | 线性 **0 → $2.2\times10^{-4}$**，前 **2K steps** |
-| LR 恒定段 | $2.2\times10^{-4}$ 直到消耗 **10T** tokens |
-| LR cosine 衰减 | 在随后 **4.3T** tokens 内衰减到 $2.2\times10^{-5}$ |
-| 末 **500B** tokens | 前 **333B**：恒定 $2.2\times10^{-5}$；后 **167B**：恒定 $7.3\times10^{-6}$ |
-| Grad clip | **1.0** |
-| Batch size 调度 | 前 **469B** tokens：从 **3072 → 15360**；此后恒定 **15360** |
-| 专家部署（训练叙述） | 每层 routed experts **均匀部署在 64 GPUs / 8 nodes** |
-| Aux-loss-free $\gamma$（bias update speed） | 前 **14.3T**：$\gamma=0.001$；剩余 **500B**：$\gamma=0.0$ |
-| Sequence-wise balance $\alpha$ | **0.0001** |
-| MTP loss 权重 $\lambda$ | 前 **10T**：$\lambda=0.3$；剩余 **4.8T**：$\lambda=0.1$ |
+## 四、Infra：把通信藏进计算
 
-**训练目标组成（机制，§2.2）**：主模型 next-token CE + 加权 MTP 损失
-$$
-\mathcal{L}_{\mathrm{MTP}}=\frac{\lambda}{D}\sum_{k=1}^{D}\mathcal{L}_{\mathrm{MTP}}^{k},\quad D=1.
-$$
-推理时可丢弃 MTP 模块；也可挪作 speculative decoding。
+**并行组合（原文 §3.2）。** 自研 HAI-LLM 框架；16 路流水线并行 × 64 路专家并行（跨 8 节点）× ZeRO-1 数据并行；靠显存优化完全不用张量并行。
 
-### 2.5 长上下文扩展（§4.3）
+**DualPipe（原文 §3.2.1）。** 把每对 forward / backward chunk 拆成 attention、all-to-all dispatch、MLP、all-to-all combine，backward 再拆为对输入与对权重两部分（与 ZeroBubble 同思路），然后让一个 chunk 的计算与另一个 chunk 的通信重叠，并从流水线两端同时灌入 micro-batch。代价是参数存两份；收益是在保持算通比时，all-to-all 与流水线通信基本被完全隐藏，气泡也比 1F1B 少（气泡与显存对照见原文 Table 2）。
 
-| 项 | 阶段 1 | 阶段 2 |
+**跨节点 all-to-all（原文 §3.2.2）。** 节点内 NVLink（160 GB/s）约是跨节点 IB（50 GB/s）的 3.2 倍。token 先经 IB 发到目标节点上同编号的 GPU，再经 NVLink 转发到持有专家的 GPU，两段并行。这样每个节点平均可再选 3.2 个专家而不增加 NVLink 开销，理论上可把路由专家数扩到 13 个而通信成本不变（实际用 8 个）。只用 20 个 SM 就能打满 IB 与 NVLink 带宽。
+
+**显存（原文 §3.2.3）。** 反向时重算全部 RMSNorm 与 MLA 上投影；EMA 参数放 CPU 异步更新；DualPipe 让最浅层与最深层同处一个流水线 rank，MTP 模块与主模型物理共享 embedding 与输出头。
+
+**FP8 混合精度（原文 §3.3）。** 三类 GEMM（前向、对输入的反向、对权重的反向）都用 FP8；embedding、输出头、MoE 门控、归一化与注意力保持 BF16 / FP32，主权重与优化器状态保持高精度。三点控制误差：
+
+| 做法 | 内容 | 为什么需要 |
 |---|---|---|
-| 目标上下文 | **32K** | **128K** |
-| 每阶段 steps | **1000** | **1000** |
-| Batch size | **1920** | **480** |
-| LR | $7.3\times10^{-6}$（两侧相同；= 预训练末段 LR） | 同左 |
-| 方法 | **YaRN**；仅作用于解耦共享 key $k_t^R$；与 V2 一致 | 同左 |
-| YaRN 超参 | scale $s=40$, $\alpha=1$, $\beta=32$；scaling factor $t=0.1\ln s + 1$ | 同左 |
+| 细粒度缩放 | 激活按 1×128 tile、权重按 128×128 block 各自缩放，在线取 max-abs | 激活离群值只影响所在小块，不拉低整张量的精度 |
+| 提升累加精度 | H800 的 FP8 Tensor Core 累加约只保留 14 位；每 128 个元素把部分和提升到 CUDA Core 的 FP32 累加 | 长内积的累加误差随维度增大 |
+| 统一 E4M3 | 所有张量用 E4M3（不在反向改用 E5M2） | 细粒度缩放已解决动态范围，尾数精度更重要 |
 
-### 2.6 后训练配方要点（§5；数字仅报告给出者）
+小规模验证（约 1T token）中相对 BF16 的 loss 相对误差始终低于 0.25%（附录 B.1）。MoE dispatch 前的激活也量化到 FP8 以省通信，combine 路径保留 BF16。
 
-| 项 | 报告数字 / 设定 |
-|---|---|
-| SFT 数据规模 | **1.5M** instances（多域；推理域用内部 DeepSeek-R1 路线 + rejection sampling；非推理域用 DeepSeek-V2.5 生成 + 人工校验） |
-| SFT epochs | **2** |
-| SFT LR | cosine：**$5\times10^{-6}$ → $1\times10^{-6}$** |
-| SFT packing | 多样本打包进单序列，但 **sample masking** 使样本互不可见 |
-| RL 算法 | **GRPO**（与 V2 相同引用链；无同等规模 critic；组内 reward 标准化得 advantage） |
-| Reward | **Rule-based RM**（可规则校验题，如数学 boxed / LeetCode 编译）+ **Model-based RM**（自 V3 SFT checkpoint；偏好数据含得到 reward 的 CoT） |
-| 后训练算力 | Table 1：**5K** H800 hours（未再拆 SFT/RL 细账） |
+**推理部署（原文 §3.4）。** prefill 的 MoE 部分用 EP32 并设冗余专家；decode 用 EP320、每 GPU 约 1 个专家，共享专家当作路由专家处理（每 token 视作选 9 个）。完整节点表与冗余策略见原文。
 
----
+## 五、训练配方与成本
 
-## 三、MoE 机制对照表
+| 阶段 | H800 GPU 小时 | 要点 |
+|---|---:|---|
+| 预训练 | 2664K | 14.8T token，最大序列 4K；每万亿 token 约 180K GPU 小时（2048 卡上约 3.7 天） |
+| 上下文扩展 | 119K | YaRN 两阶段 4K → 32K → 128K，各 1000 步 |
+| 后训练 | 5K | SFT 1.5M 条（推理域数据来自内部 R1 系列并经拒绝采样）；RL 用 GRPO，规则奖励 + 模型奖励 |
+| 合计 | 2788K | 按 2 美元 / GPU 小时折算约 557.6 万美元，不含此前研究与消融 |
 
-### 3.1 结构与激活
+优化器为 AdamW；学习率 2.2×10⁻⁴ 恒定到 10T token 后余弦衰减；batch 在前 469B token 内从 3072 增到 15360；分词器为 128K 词表的字节级 BPE；FIM 比例 0.1。完整调度见原文 §4.2。
 
-| 维度 | DeepSeek-V3（报告） |
-|---|---|
-| 范式 | DeepSeekMoE：细粒度专家 + **shared experts 隔离**（相对 GShard 类粗粒度叙述） |
-| Shared / Routed | $N_s=1$, $N_r=256$（§4.2） |
-| 激活 | 每 token：**8 routed** + shared 始终参与（§2.1.2 / §4.2） |
-| 专家宽度 | intermediate hidden **2048** |
-| 亲和度 | $s_{i,t}=\mathrm{Sigmoid}(u_t^\top e_i)$（**相对 V2 改为 sigmoid**；选中专家上再归一化得门控 $g_{i,t}$） |
-| 门控 | Top-$K_r$ 选中后，对选中亲和度归一化；未选中为 0（式 13–15） |
-| Node-limited routing | 每 token 最多 **$M=4$** 节点；按各节点上最高 $K_r/M$ 亲和度和选节点（§2.1.2） |
-| Token drop | **训练与推理均 no token-dropping**（称均衡有效 + 推理侧部署策略） |
+## 六、意义
 
-### 3.2 负载均衡：auxiliary-loss-free + 极小序列辅助损失
+V3 表明，在 2048 张 H800 的集群上，靠算法与系统协同设计也能以较低成本训出与闭源旗舰可比的开放权重模型。可迁移的经验有三条：负载均衡可以只改选择、不改梯度；路由设计要先考虑网络拓扑（限节点）再考虑表达能力；低精度训练的关键在缩放粒度与累加精度，而不在格式本身。报告同时给出了按 GPU 小时与假设租金折算的成本口径，并写明不含前期研究与消融。
 
-| 机制 | 报告要点 | 超参 |
+## 七、局限与待核实
+
+- 原文 Table 2 中 DualPipe 的气泡公式排版有折行，本篇不转录，引用时以原表为准。
+- 推理部署的完整节点表与动态冗余专家策略（原文写在探索中）未收录。
+- FP8 与 BF16 的对比曲线（附录 B）、各层专家负载图（附录 C）未逐图数字化。
+- 评测分数（MMLU、MATH、SWE-bench 等）不在本篇范围。
+- 557.6 万美元按假设租金折算，不是审计账单，也不含前期研究成本。
+- arXiv 最新版即 v2（2025-02-18），本篇数字均按 v2。
+
+## 八、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **Auxiliary-loss-free**（主路径） | 每专家偏置 $b_i$；用 $s_{i,t}+b_i$ 做 Top-$K$ **选择**；真正乘到专家输出的门控仍来自原始 $s_{i,t}$。按 **整 batch** 监测负载：过载则 $b_i\leftarrow b_i-\gamma$，欠载则 $+\gamma$ | $\gamma=0.001$（前 14.3T）；末 500B $\gamma=0$ |
-| **Sequence-wise complementary aux loss** | 防止单条序列内极端不均；$\alpha$「extremely small」 | $\alpha=0.0001$ |
-| 动机（报告表述） | 过大 aux loss 伤主任务；无 aux 主路径旨在减少「为均衡牺牲质量」 | §2.1.2 |
-| 消融/现象 | §4.5 / Fig.9 / App.C：aux-loss-free 在 Pile 域上呈现 **更强专家特化**（relative expert load 可视化）；完整层图在附录 | 详见原文图，本卡不抄评分数 |
+| [[混合专家架构]] | V3 是该篇 MoE 史线中「无辅助损失均衡」的大规模实例，本篇给配方与数字 | Switch / Mixtral 史线与思想跳跃 |
+| [[注意力效率族MQA到MLA]] | 该篇以 V3 报告 §2.1.1 讲 MLA，本篇只列 V3 的维度取值 | MLA 推导 |
+| [[MTP训练范式]] | 该篇把 V3 的级联 MTP 损失当作后续方法的起点 | MTP 方法族 |
+| [[AI基础设施总览]] | 该篇摘 DualPipe、FP8 与分阶段部署作 Infra 案例，本篇给细节 | 训练与服务通论 |
+| [[NVSHMEM与DeepEP通信]] | 本篇只写 V3 报告中的 all-to-all 设计，内核实现在该篇 | DeepEP 内核与 NVSHMEM |
+| [[分布式训练并行策略]] | 本篇第四节的 16 路流水线 × 64 路专家并行 × ZeRO-1 是该篇「MoE 时代的组合案例」之一 | 五种并行各切什么、何时不用张量并行 |
+| [[MoE路由与负载均衡]] | 本篇第三节的无辅助损失偏置与限节点路由，在该篇放进从 Switch 到 Quantile Balancing 的路由演进中对照 | 路由与均衡方法的演进 |
+| [[DeepSeekR1推理训练深读]] | R1 以 V3-Base 为底座，V3 的 SFT 推理数据又来自 R1 系列 | 推理 RL 配方 |
+| [[DeepSeekV32技术报告深读]] | 下一代只改注意力（DSA），其余沿用 V3 | DSA 与混合 RL |
+| [[DeepSeekV4技术报告深读]] | V4 继承 DeepSeekMoE 与 MTP，改路由亲和函数并去掉节点约束 | CSA / HCA、mHC、Muon |
+| [[KimiK2技术报告深读]] | K2 以 V3 架构为参照，该篇给出两者的配置差分 | K2 与 MuonClip |
+| [[开源与闭源前沿模型谱系]] | V3 在开放权重谱系中的位置 | 代际坐标 |
 
-### 3.3 与训练并行的接口（机制侧）
+## 九、延伸阅读
 
-| 项 | 报告 |
-|---|---|
-| 训练 EP 叙述 | routed experts 均匀部署在 **64 GPUs / 8 nodes**（与 §3.2「64-way EP spanning 8 nodes」一致） |
-| 通信约束 | Node-limited $M=4$ 使框架「nearly achieve full computation-communication overlap」 |
-| 推理冗余专家（§3.4，机制摘要） | Prefill：EP32 + 冗余专家；Decode：把 shared 也当 routed（每 token 选 **9** 专家视角）、EP320 等——**部署数字**见第四节 Infra 表 |
-
----
-
-## 四、Infra 对照表（并行 / 精度 / 流水线）
-
-### 4.1 训练并行组合（§3.2）
-
-| 维度 | 设定 |
-|---|---|
-| 框架 | **HAI-LLM**（自研） |
-| Pipeline Parallelism | **16-way PP** |
-| Expert Parallelism | **64-way EP**，跨 **8 nodes** |
-| Data Parallelism | **ZeRO-1 DP** |
-| Tensor Parallelism | 报告称通过显存优化，**训练不使用昂贵的 TP** |
-| 算通比痛点 | 跨节点 EP 下 computation-to-communication ≈ **1:1** → DualPipe 动机 |
-
-### 4.2 DualPipe（§3.2.1，Table 2）
-
-| 项 | 报告内容 |
-|---|---|
-| 核心想法 | 在一对 forward/backward **chunk** 内重叠计算与通信；双向 pipeline（两端同时灌 micro-batch） |
-| Chunk 拆分 | forward：attention / all-to-all dispatch / MLP / all-to-all combine；backward 再拆 **backward for input** 与 **backward for weights**（类 ZeroBubble）；另有 PP communication |
-| 目标 | all-to-all 与 PP 通信 **fully hidden**；保持恒定算通比时可继续跨节点细粒度专家、近零 all-to-all 开销 |
-| 约束 | pipeline stages 与 micro-batches **均可被 2 整除**；不要求 micro-batches 可被 stages 整除；气泡与 activation 不随 micro-batch 数增加而恶化 |
-| 参数副本 | DualPipe 需 **2×** 参数副本；大 EP 下称内存影响有限 |
-| 与 MTP | 最浅层（含 embedding）与最深层（含 output head）放同一 PP rank → MTP 与主模型 **物理共享** emb/head |
-
-**Table 2 气泡 / 显存对照**（符号：$F$ forward chunk；$B$ full backward；$W$ backward-for-weights；$F\&B$ 互相重叠的一对 forward+backward）：
-
-| Method | Bubble | Parameter | Activation |
-|---|---|---|---|
-| 1F1B | $(PP-1)(F+B)$ | $1\times$ | $PP$ |
-| ZB1P | $(PP-1)(F+B-2W)$ | $1\times$ | $PP$ |
-| **DualPipe** | $\bigl(\frac{PP}{2}-1\bigr)(F\&B + B - 3W)$ | $2\times$ | $PP+1$ |
-
-> Table 2 的 DualPipe 气泡行原表有折行；上表按正文叙述与常见排版还原。**引用气泡公式时建议回看 PDF 原表**（亦见第六节）。
-
-### 4.3 跨节点 All-to-All（§3.2.2）
-
-| 项 | 报告数字 / 设定 |
-|---|---|
-| 拓扑 | 跨节点 **IB**；节点内 **NVLink** |
-| 带宽叙述 | NVLink **160 GB/s** ≈ IB **50 GB/s** 的 **3.2×** |
-| 与路由协同 | 每 token ≤ **4** 节点 → 压低 IB 流量；先 IB 到目标节点同 index GPU，再 NVLink 转发到托管专家的 GPU；IB∥NVLink |
-| 每节点可选专家均值 | 约 **3.2 experts/node** 无额外 NVLink 开销 → 理论上限约 **4×3.2=13** 路由专家同通信成本（实际 $K_r=8$） |
-| SM 占用 | **20 SMs** 即可打满 IB+NVLink；10 channels；warp specialization；定制 PTX + chunk auto-tune |
-
-### 4.4 显存技巧（§3.2.3）
-
-| 技巧 | 作用 |
-|---|---|
-| 重计算 **全部 RMSNorm** 与 **MLA up-projections** | 少存 activation |
-| **EMA** 参数放 **CPU**，异步更新 | 估 LR decay 后表现；几乎不占 GPU 时/存 |
-| DualPipe 同 rank 共享 emb/head | 服务 MTP，进一步省显存 |
-
-### 4.5 FP8 混合精度训练（§3.3）
-
-| 维度 | 报告设定 |
-|---|---|
-| 主张 | 「首次」在极大规模上验证 FP8 混合精度训练可行性（摘要 / §1 / §3.3） |
-| 小规模验证 | 类 V2-Lite / V2 规模，约 **1T** tokens（App. B.1）；相对 BF16，相对 loss error **持续 < 0.25%** |
-| GEMM | Fprop / Dgrad / Wgrad **走 FP8**；输出 BF16 或 FP32；相对 BF16 理论算力「约翻倍」 |
-| 保留高精度 | embedding、output head、**MoE gating**、normalization、**attention** → BF16/FP32 |
-| Master / 梯度 / 优化器 | master weights、weight gradients、以及用于 batch 累积的梯度等保持高精度；AdamW 一二阶矩可用 **BF16**；master 等仍 **FP32**（§3.3.3） |
-| 量化粒度 | Activations：**1×128 tile**（per token per 128 channels）；Weights：**128×128 block** |
-| FP8 格式选择 | **全部张量用 E4M3**（对比部分工作 Fprop=E4M3、Dgrad/Wgrad=E5M2） |
-| 缩放 | **Online** max-abs → scale（不用 delayed scaling 推断） |
-| 累加 | H800 上 FP8 Tensor Core 累加约 **14 bits**；每隔 $N_C=\mathbf{128}$ MMA 元素 **promote 到 CUDA Core FP32 累加** |
-| 特殊激活 | Attention 后 Linear 输入等：定制 **E5M6**；scale 取 2 的整数次幂；反向 1×128↔128×1 转换时避免额外量化误差 |
-| 低精度通信 | MoE **dispatch 前**激活量化到 FP8；**combine** 路径保留 **BF16** |
-
-### 4.6 推理部署并行（§3.4，摘要级）
-
-| 阶段 | 规模（报告） | 并行要点 |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| Prefilling | 例：涉及多节点 H800；MoE **EP32** | 冗余专家（文中：prefill 设 **32** redundant experts；每 GPU 原有 8 专家 + 1 冗余等） |
-| Decoding | MoE **EP320**；例述 40 节点 / 320 GPU 量级 | 每 GPU 约 1 专家；shared 视为 routed → 每 token 选 **9**；另有冗余专家统计轮换 |
-
-（完整 prefill/decode 节点表与冗余策略以 §3.4 原文为准；[[AI基础设施总览]] 已有摘要表，本卡不重复展开 serving 叙事。）
-
----
-
-## 五、与 [[混合专家架构]] / [[开源与闭源前沿模型谱系]] 的差异说明（本卡新增了什么）
-
-| 已有笔记 | 已覆盖（本卡不再复述） | **本 TR 卡新增 / 加深** |
-|---|---|---|
-| **[[混合专家架构]]** MoE 史线 | Switch / Mixtral / V3 思想跳跃；V3 头条：671B/37B、1 shared+256 routed、top-8、sigmoid、$M=4$、aux-loss-free 直觉、MLA/MTP 一句话、2.788M hours | **完整训练调度表**（LR / batch / $\lambda$ / $\gamma$ 分段）；YaRN 两阶段超参；SFT 1.5M / 2 epoch / LR；GRPO+双 RM；FIM 0.1；tokenizer 128K；**Table 2 DualPipe 气泡公式**；FP8 **E4M3 / 1×128 / 128×128 / $N_C=128$**；all-to-all 带宽与 20 SM / 3.2 experts/node |
-| **[[开源与闭源前沿模型谱系]]** 谱系 | 开闭源坐标；V3 代际定位与头条数字；与 Llama4/Qwen3 对照表 | **报告页元信息（v2 / 53 页）**；按章节可对表的配方与 Infra 深读卡；明确「成本不含消融」等脚注级陈述 |
-| **[[AI基础设施总览]]**（相关但不在任务强制对比列） | DualPipe/FP8/EP 的 Infra「势」通论与抓手 | 本卡把 V3 **单独拆成可打印对照表**，并补齐训练配方轴（[[AI基础设施总览]] 不展开 LR/batch/SFT） |
-
-**一句话**：史线笔记讲「为什么重要 / 放在哪条史线」；本卡讲「报告里训练怎么配、MoE 怎么路由均衡、Infra 怎么叠 PP×EP×FP8×DualPipe——数字可回查页码」。
-
----
-
-## 六、局限、待核实与引用
-
-### 6.1 局限与待核实
-
-1. arXiv **Submitted 2024-12-27** 与 abs 页 revision 历史：来自 [[开源与闭源前沿模型谱系]] / abs 页，**本 PDF 页眉仅见 v2 · 18 Feb 2025**；若写「首发日」需回查 https://arxiv.org/abs/2412.19437。
-2. Table 2 DualPipe 气泡公式：PDF 文本层折行，公式以 **PDF 原表排版**为准复核一次。
-3. §3.4 推理部署的完整节点/冗余专家表、动态 redundancy「探索中」表述：本篇只列摘要数字，未收录部署脚本级细节。
-4. App. B.1/B.2 FP8 vs BF16 曲线、App. C 全部层专家负载图：未在本卡逐图数字化。
-5. 评测表分数（MMLU / MATH / SWE-bench 等）：本专项聚焦训练/MoE/Infra，**不收录基准分**。
-6. 官方新闻后续 V3.1 / V3.2 / V4 等：不在本 PDF；勿用本卡数字外推后续代际。
-7. 「$2 / H800 GPU hour」与 $5.576M：报告**假设租金**折算，非独立审计账单。
-
-### 6.2 引用
-
-- DeepSeek-AI. *DeepSeek-V3 Technical Report*. arXiv:2412.19437v2 \[cs.CL\], 18 Feb 2025.
- PDF：https://arxiv.org/pdf/2412.19437
-
-### 6.3 关联笔记
-
-- [[混合专家架构]]（MoE 史线）
-- [[开源与闭源前沿模型谱系]]（谱系）
-- [[AI基础设施总览]]（Infra 通论，含 DualPipe/FP8 抓手）
-
-## 相关笔记
-
-### 技术报告专项
-- [[DeepSeekV3训练与MoE基建]]
-- [[Qwen3技术报告深读]]
-- [[DeepSeekR1推理训练深读]]
-- [[MOC_模型与技术报告]]
-
-### 相关深度笔记
-- [[混合专家架构]]
-- [[推理时扩展TestTimeScaling]]
-- [[开源与闭源前沿模型谱系]]
-- [[AI基础设施总览]]
-- [[分布式训练并行策略]]：本篇第四节的 PP16 × EP64 × ZeRO-1 是那篇「MoE 时代的组合案例」之一；五种并行各切什么、何时不用张量并行见那篇。
-- [[MoE路由与负载均衡]]：本篇第三节的无辅助损失偏置与节点受限路由，在那篇放进从 Switch 到 Quantile Balancing 的路由演进中对照。
-
+| 1 | [DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437) §2.1–2.2 | 路由、均衡与 MTP |
+| 2 | 同上 §3.2–3.3 | DualPipe、all-to-all 与 FP8 |
+| 3 | [Auxiliary-Loss-Free Load Balancing](https://arxiv.org/abs/2408.15664) | 偏置式均衡的原始论文 |
+| 4 | [[混合专家架构]] | MoE 史线 |
+| 5 | [[DeepSeekV4技术报告深读]] | V3 底座的后续演进 |

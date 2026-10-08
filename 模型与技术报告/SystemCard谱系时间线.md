@@ -19,9 +19,9 @@ status: active
 
 Anthropic 依据负责任扩展政策（RSP）发布系统卡。2025 年的卡以 ASL-3 部署级为核心结论；2026 年起，护栏按能力分档，分类器拦截时把请求转给上一代模型，部署形态本身成为系统卡的主要内容。
 
-- **2025-08** · Claude Opus 4.1 系统卡附录：增量发布只做精简安全评测以衔接 RSP，几乎不报能力榜，形成「主卡 + 附录」的分层写法（[系统卡页](https://www.anthropic.com/claude-opus-4-1-system-card)） · [[ClaudeOpus41系统卡附录深读]]
-- **2025-11** · Claude Opus 4.5 系统卡：把智能体能力榜与安全、对齐、RSP 评测合为一卷，在 ASL-3 下部署，并坦言排除 AI R&D-4 与 CBRN-4 风险已越来越难（[系统卡](https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47/Claude%20Opus%204.5%20System%20Card.pdf)） · [[ClaudeOpus45系统卡深读]]
-- **2026-07** · Claude Opus 5 系统卡：仍在 ASL-3 下发布，核心增量是「激活探针 → LLM 分类器」的分级网安护栏，放开源码漏洞发现、继续拦截二进制漏洞相关请求（[系统卡](https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf)） · [[ClaudeOpus5系统卡深读]]
+- **2025-08** · Claude Opus 4.1 系统卡附录：增量发布只做精简安全评测以衔接 RSP，几乎不报能力榜，形成「主卡 + 附录」的分层写法（[发布公告](https://www.anthropic.com/news/claude-opus-4-1)） · [[ClaudeOpus41系统卡附录深读]]
+- **2025-11** · Claude Opus 4.5 系统卡：把智能体能力榜与安全、对齐、RSP 评测合为一卷，在 ASL-3 下部署，并坦言排除 AI R&D-4 与 CBRN-4 风险已越来越难（[发布公告](https://www.anthropic.com/news/claude-opus-4-5)） · [[ClaudeOpus45系统卡深读]]
+- **2026-07** · Claude Opus 5 系统卡：仍在 ASL-3 下发布，核心增量是「激活探针 → LLM 分类器」的分级网安护栏，放开源码漏洞发现、继续拦截二进制漏洞相关请求（[发布公告](https://www.anthropic.com/news/claude-opus-5)） · [[ClaudeOpus5系统卡深读]]
 - **2026-09** · Claude Fable 5.1 与 Mythos 5.1 合卡：同一套权重配两套护栏，通用面（Fable）在分类器触发时回退到 Opus 4.8，受信面（Mythos）通过验证计划向受信用户开放更多生命科学与网安能力（[发布页](https://www.anthropic.com/claude-fable-and-mythos-5-1)） · [[ClaudeFable与Mythos51]]
 - **2026-09** · Claude Opus 5.5 系统卡：5.5 族首发，多项评测追平或超过 Mythos 5.1；卡内基本不再使用 ASL 标签，风险按 CB-1 等阈值判定，生物分类器命中时回退到 Opus 5（[发布页](https://www.anthropic.com/claude-opus-5-5)） · [[ClaudeOpus55系统卡短报]]
 - **2026-09** · Claude Sonnet 5.5 系统卡：同价同规格下能力接近 Opus 5.5，因此成为首个带网安护栏（拦截后转交 Sonnet 5）和防推理内容提取分类器（拦截后无回退）的 Sonnet（[发布页](https://www.anthropic.com/claude-sonnet-5-5)） · [[ClaudeSonnet55系统卡短报]]
@@ -34,7 +34,7 @@ OpenAI 依 Preparedness Framework 对生物化学、网络安全、AI 自我改�
 - **2025-08** · gpt-oss 模型卡：OpenAI 自 GPT-2 以来首个正式开放权重的语言模型，Apache 2.0 许可的 MoE 推理模型，推理强度可调（[arXiv:2508.10925](https://arxiv.org/abs/2508.10925)） · [[GPToss模型卡深读]]
 - **2025-08** · GPT-5 系统卡：面向「统一系统 + 路由」的产品形态，把 gpt-5-thinking 在生物化学域按 High 能力预防性处理并启用配套防护（[系统卡页](https://openai.com/index/gpt-5-system-card/)） · [[GPT5系统卡深读]]
 - **2025-11** · GPT-5.1 系统卡附录：5 页增补，只报安全评测，不给能力分与架构信息（[Hub](https://deploymentsafety.openai.com/gpt-5-1)） · [[GPT5系统卡深读]] 第四节
-- **2025-12** · GPT-5.2 更新卡：以差分表记录 GPT-5 → 5.1 → 5.2 的安全变化，生物化学仍预防性判为 High，网安与自我改进仍未达 High（[系统卡](https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf)） · [[GPT52SystemCard更新]]
+- **2025-12** · GPT-5.2 更新卡：以差分表记录 GPT-5 → 5.1 → 5.2 的安全变化，生物化学仍预防性判为 High，网安与自我改进仍未达 High（[Hub](https://deploymentsafety.openai.com/gpt-5-2)） · [[GPT52SystemCard更新]]
 - **2026-06** · GPT-5.6 预览版系统卡：Sol、Terra、Luna 三型号家族在生物化学与网安两域首次全员判为 High，连较小较快的型号也不例外（[Hub](https://deploymentsafety.openai.com/gpt-5-6-preview)） · [[GPT56系统卡深读]]
 - **2026-07** · GPT-5.6 正式版系统卡：安全叙事从模型拒答外移到激活分类器、实时扫描、账户级处置与受信访问（Trusted Access），后续更新又补入 GPT-Red 自动红队的提示注入结果（[Hub](https://deploymentsafety.openai.com/gpt-5-6)） · [[GPT56系统卡深读]]
 - **2026-09** · GPT-6 Astra 系统卡：OpenAI 首个在 Preparedness 下判为网安 Critical 并广泛部署的模型；思维链可监控性下降，监控转向全轨迹、激活与动作层面（[Hub](https://deploymentsafety.openai.com/gpt-6-astra)） · [[GPT6Astra系统卡深读]]
@@ -46,7 +46,7 @@ OpenAI 依 Preparedness Framework 对生物化学、网络安全、AI 自我改�
 Google 的闭源 Gemini 线从 2.5 代的长篇技术报告，转为 10 页左右的模型卡，再到旗舰只配评测文件；风险结论统一以前沿安全框架（FSF）的关键能力水平（CCL）表述。开放权重的 Gemma 线单独出技术报告。
 
 - **2025-07** · Gemini 2.5 技术报告（arXiv 首版）：73 页，公开推理、长上下文与智能体能力，安全章只给「未达 CCL」的结论（[arXiv:2507.06261](https://arxiv.org/abs/2507.06261)） · [[Gemini25技术报告深读]]
-- **2025-11** · Gemini 3 Pro 模型卡：10 页产品与安全卡，公开稀疏 MoE 加原生多模态的骨架和 FSF 各域「未达 CCL」，不给参数量与训练规模（[模型卡](https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-Pro-Model-Card.pdf)） · [[Gemini3Pro模型卡深读]]
+- **2025-11** · Gemini 3 Pro 模型卡：10 页产品与安全卡，公开稀疏 MoE 加原生多模态的骨架和 FSF 各域「未达 CCL」，不给参数量与训练规模（[发布博文](https://blog.google/products-and-platforms/products/gemini/gemini-3/)） · [[Gemini3Pro模型卡深读]]
 - **2026-07** · Gemma 4 技术报告：开放权重族的架构、效率与量化字段，与闭源 Gemini 卡分线公开（[arXiv:2607.02770](https://arxiv.org/abs/2607.02770)） · [[Gemma4技术报告深读]]
 - **2026-08** · Gemini 3.7 Flash 模型卡：9 页增量卡，多数字段指向 3.6 Flash 卡；FSF 升级到 2026 年 4 月版，并引入 TCL 与生化、网安「预警」（alert）表述（[模型卡页](https://deepmind.google/models/model-cards/gemini-3-7-flash/)） · [[Gemini37Flash模型卡深读]]
 - **2026-09** · Gemini 4 Argon：没有独立的模型卡或系统卡，只配 5 页评测文件，经 Fairwind 计划先向受信网络防御方分阶段放量（[官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)） · [[Gemini4Argon短报]]
