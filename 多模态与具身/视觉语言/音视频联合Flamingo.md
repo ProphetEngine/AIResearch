@@ -113,7 +113,6 @@ AV-Flamingo 的贡献主要在数据与训练流程而非新结构：架构基�
 - **许可**：论文称「fully open」，但 AV-Flamingo 与 AV-Skills 仅限非商业研究使用（附录 I）；初始化检查点与音频编码器为 NVIDIA OneWay Noncommercial License，Qwen2.5-7B 为 Apache 2.0（附录 H、Table 9）。训练用的 Aidatatang 语料在训练后被发行方撤回，不随模型再分发（附录 H）。
 - **标题不一致**：arXiv 页面标题为 Audio-Visual Flamingo，PDF 正文标题前加了 Nemotron-Labs；仅有 v1。
 - **MMAU 口径**：本篇引用的是 MMAU test 集（v05.15.25），[[StepAudio2语音旗舰]] 引用的是 test-mini，两篇的 Audio Flamingo 3 数字不同，不能横向比较。
-- **代码与模型地址**：PDF 页眉有 Code、Model 等按钮，但没有可核对的链接，本篇不列。
 
 ## 七、与相邻笔记的分工
 
@@ -135,3 +134,5 @@ AV-Flamingo 的贡献主要在数据与训练流程而非新结构：架构基�
 | 2 | [AV-Flamingo](https://arxiv.org/abs/2607.16107) §2.2–2.3、Table 6 | 数据构造、三阶段课程与消融 |
 | 3 | [OmniVinci](https://arxiv.org/abs/2510.15870) | 初始化来源的对齐模块与时间嵌入 |
 | 4 | [Audio Flamingo 3](https://arxiv.org/abs/2507.08128) | AF-Whisper 与流式语音合成 |
+| 5 | [NVIDIA/audio-flamingo](https://github.com/NVIDIA/audio-flamingo) | 官方代码仓 |
+| 6 | [nvidia/audio-visual-flamingo-hf](https://huggingface.co/nvidia/audio-visual-flamingo-hf) | 模型权重页（Hugging Face） |
