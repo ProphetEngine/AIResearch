@@ -50,7 +50,7 @@ status: active
 - **2025-04** · MegaScale-Infer 复制注意力模块、切开专家模块，分别部署扩展（解耦专家并行），解决 MoE 解码时专家 GPU 吃不饱的问题（[arXiv:2504.02263](https://arxiv.org/abs/2504.02263)） · [[MegaScaleInfer与UltraEP]]
 - **2025-04** · Google 发布第七代 TPU Ironwood，官方称是第一款面向推理的 TPU，专用加速器的设计重心从训练转向推理（[Google 博文](https://blog.google/products/google-cloud/ironwood-tpu-age-of-inference/)） · [[硬件软件协同部署]]
 - **2025-08** · TaiChi 不再在「聚合」与「解聚」之间二选一，用能力分化的实例和延迟转移覆盖任意首 token 延迟与单 token 延迟组合下的有效吞吐（[arXiv:2508.01989](https://arxiv.org/abs/2508.01989)） · [[PrefillDecode分离与统一服务]]
-- **2025-08** · ZeroQAT 用零阶方法从前向传播估计梯度，去掉反向传播，以接近推理的成本做端到端量化感知训练，手机上也能做 QAT（[arXiv:2509.00031](https://arxiv.org/abs/2509.00031)） · [[ZeroQAT量化感知训练]]
+- **2025-08** · ZeroQAT 用零阶方法只靠前向传播估计梯度、去掉反向传播，做同时量化权重与激活的端到端量化感知训练，显著降低训练的内存与计算开销；v2（2025-09）补充轻量变体与手机微调实验（[arXiv:2509.00031](https://arxiv.org/abs/2509.00031)） · [[ZeroQAT量化感知训练]]
 - **2025-09** · SGLang HiCache 把 KV 缓存从 GPU 显存扩展到主机内存和分布式存储三级，统一挂在一棵前缀树上，可复用的前缀容量大幅扩大（[LMSYS 博文](https://www.lmsys.org/blog/2025-09-10-sglang-hicache/)） · [[HiCache层次化KV缓存]]
 - **2025-11** · MobileLLM-Pro（1.08B）用隐式位置蒸馏把上下文扩到 128K，并做 4-bit 量化感知训练，端侧基础模型开始具备长上下文能力（[arXiv:2511.06719](https://arxiv.org/abs/2511.06719)） · [[MobileLLM端侧增量]]
 

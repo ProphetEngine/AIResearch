@@ -218,6 +218,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 - [[连续批处理与Orca]]：iteration-level scheduling 专线；本篇 4.2 只提到 PagedAttention 与它共设计，那篇讲请求级与 iteration-level 的吞吐 / 延迟边界，以及与分页互补而非替代。
 - [[PrefillDecode分离与统一服务]]：本篇 4.3 记 V3 把 prefill 与 decode 分阶段部署；那篇以 TaiChi 为主文，讲两阶段是否分实例、如何再统一的调度轴。
 - [[KV缓存量化与压缩]]：本篇 4.3 末把 serving 收益拆成 KV 布局、每 token KV 体积、位宽三层；那篇专讲第三层里 KV 的非对称量化与误差轴。
+- [[SpinQuant与ARCQuant量化]]：本篇 4.3 记 V3 训练侧的 FP8 与 1×128 / 128×128 细粒度缩放；那篇写推理侧的 4 比特训练后量化，其中 ARCQuant 针对 NVFP4 这类 16 元素一组的块缩放格式，指出全局旋转会破坏块间隔离。两篇合看，是「细粒度缩放抗离群值」在训练与推理两端的用法。
 - [[DeepSeekV3训练与MoE基建]]：V3 报告的配方与机制深读；本篇只取 DualPipe、FP8、分阶段部署几项，细节和数字对表看那篇。
 - [[NVSHMEM与DeepEP通信]]：本篇 2.4 说跨节点 EP 下 all-to-all 通信可与算力同量级；那篇讲 DeepEP 如何在 NVSHMEM 设备侧通信上自建 dispatch / combine。
 - [[推理引擎生态]]：vLLM / SGLang / TRT-LLM 选型地图；以本篇 4.2 的 PagedAttention 为基线，不重写分页本身。

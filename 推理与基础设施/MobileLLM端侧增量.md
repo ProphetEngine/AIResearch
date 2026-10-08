@@ -8,257 +8,127 @@ sources:
  - https://arxiv.org/abs/2511.06719
  - https://arxiv.org/abs/2603.15954
 arxiv: ["2511.06719", "2603.15954"]
-related: ["端侧小模型", "ZeroQAT量化感知训练", "硬件软件协同部署", "Gemma4技术报告深读", "推理引擎生态"]
-retrieval_cutoff: 2026-09-22
+related: ["端侧小模型", "模型合并", "ZeroQAT量化感知训练", "SpinQuant与ARCQuant量化", "Gemma4技术报告深读", "推理引擎生态", "硬件软件协同部署", "InfraServing发展时间线"]
+retrieval_cutoff: 2026-07-24
 timezone: Asia/Shanghai (CST)
 ---
 
 # 端侧 LLM 增量：MobileLLM-Pro + MobileLLM-Flash
 
-> **定位**：Meta Reality Labs / Meta AI 在 **2024 MobileLLM（ICML）之后**的两条**增量产品/方法轴**，不写成「MobileLLM 原文复述」：
-> - **MobileLLM-Pro**（*Technical Report*，arXiv **2511.06719**）：**1.08B** 端侧基础模型；四阶段预训练（SDM 数据混合 → **隐式位置蒸馏**扩到 **128k** → **专家合并** → **4-bit QAT**）+ 三阶段指令微调；对标 Gemma 3-1B / Llama 3.2-1B。
-> - **MobileLLM-Flash**（*Latency-Guided On-Device LLM Design*，arXiv **2603.15954**）：在 Pro/浅宽骨干上做 **硬件在环 NAS**（剪枝继承权重 + Ax 两阶段 BO）；产出 **350M / 650M / 1.4B** 族；主张 **skip-attention 交错**优于 SWA；Executorch 原生算子、无定制内核。
-> **研究线**：**架构思想（主）**——隐式位置蒸馏 / 专家合并 / 延迟—质量 Pareto；**AI Infra（辅）**——端侧 TTFT、INT4 分发、Executorch 可移植。
+> **主要来源**：[MobileLLM-Pro Technical Report](https://arxiv.org/abs/2511.06719)（Huber、Chang、Wen、Fedorov 等，Meta Reality Labs，v1 2025-11-10，以下简称 Pro）；[MobileLLM-Flash: Latency-Guided On-Device LLM Design for Industry Scale Deployment](https://arxiv.org/abs/2603.15954)（Huang、Fedorov 等，Meta AI，v2 2026-04-27，以下简称 Flash）（截至 2026-07-24）。
+> **研究线**：架构思想（主：用教师 logits 把长上下文、专家合并与 4 比特量化接进同一条训练流程；以真机延迟为目标做架构搜索）；AI Infra（辅：手机上的首 token 时延、INT4 分发、ExecuTorch 可移植性）
 > **范围与相邻笔记**：
-> - **≠ [[端侧小模型]]**：不重写 **MobileLLM 2024**（arXiv **2402.14905**）的深薄四件套、immediate block-wise 权重共享、DRAM/SRAM 层级通史，也不重写 Phi-4 / Gemma 4 E2B 对照全文。本卡只在「家族命名与浅宽反转」处交叉引用。
-> - **≠ [[ZeroQAT量化感知训练]]**：不写 ZeroQAT 的 **零阶（ZO）前向估计梯度**、可学习平滑、Q/V 轻量变体算法课；Pro 的 QAT 是 **标准 STE + 可学习量化范围 + FP 自蒸馏**，接口不同。
-> - **≠ [[硬件软件协同部署]]**：不写 NVIDIA Blackwell / TPU 机架白皮书、FP4/NVLink 代际表；本卡延迟数字来自 **手机 CPU/HTP + Executorch**，不是数据中心 codesign。
-> - **≠ [[推理引擎生态]]**：不写 vLLM/SGLang 选型通史；Executorch / xnnpack 仅作部署字段。
-> 文内叙述与表冲突时 **以表为准** 并标注。
+> - ≠ [[端侧小模型]]：本篇不重写 MobileLLM（2024）的深而窄配方与块级权重共享，只写其后的两代。
+> - ≠ [[ZeroQAT量化感知训练]]：Pro 的量化感知训练是常规的直通估计器加可学习量化范围与自蒸馏，不是零阶方法。
+>
+> **意义**：MobileLLM（2024）确立了「十亿参数以下靠架构取胜」的路线，但端侧产品还要长上下文、4 比特部署和可接受的首 token 时延。Pro 在 1.08B 规模上用 Llama 4-Scout 的完整 logits 做蒸馏，只用短文档就把上下文扩到 128k，再接专家合并与量化感知训练，在 11 项预训练基准上整体超过 Gemma 3-1B 与 Llama 3.2-1B，4 比特量化后平均分只掉 0.73 与约 1.3 个百分点（CPU 与加速器两路，§8.2）。Flash 则指出参数量和 FLOPs 与手机延迟的相关性很弱，改用真机延迟做硬件在环搜索，得到浅而宽、跳过部分注意力层的模型族，相对 LFM2 预填充最高快 1.8 倍、解码快 1.6 倍，并且只用 ExecuTorch 的标准算子。两篇合起来，把端侧模型设计的目标从「参数少」改成「在真机上快且好」。
 
----
+## 一、问题背景
 
-## 一、材料元信息
+十亿参数以下的端侧模型受限于手机的内存、带宽和功耗。MobileLLM（2024）系统比较了这一规模的架构选择，结论是深而窄优于浅而宽，并配合嵌入共享与分组查询注意力。之后的产品要求更具体：
 
-| 材料 | 标识 | 链接 / 页数 | 角色 |
-|---|---|---|---|
-| **主文 A** | Huber, Chang, Wen, Fedorov et al. (Meta Reality Labs), *MobileLLM-Pro Technical Report* | arXiv:**2511.06719**v1 \[cs.LG\] **10 Nov 2025**；文首 Date **November 11, 2025**；`https://arxiv.org/abs/2511.06719`（**22** 页 letter） | **1B Pro**：四阶段预训练 + IFT + INT4 CPU/加速器分发 |
-| **主文 B** | Huang, Fedorov et al. (Meta AI), *MobileLLM-Flash: Latency-Guided On-Device LLM Design for Industry Scale Deployment* | arXiv:**2603.15954**v2 \[cs.LG\] **27 Apr 2026**；文首 Date **April 29, 2026**；`https://arxiv.org/abs/2603.15954`（**16** 页 letter） | **Flash 族**：延迟在环 NAS + skip-attn；350M/650M/1.4B |
+- **长上下文**：Gemma 3 等同级模型已支持 128k，而端侧训练很难喂足够多的长文档，长文数据还会造成训练分布漂移（Pro §5）。
+- **低比特部署**：CPU 和 NPU 偏好的量化方式不同，直接对训练好的模型做训练后量化会明显回退（Pro Table 17）。
+- **真实时延**：首 token 时延（TTFT）4 秒还能接受，10 秒就不行；约 2k token 的输入是端侧任务的实用区间。Flash 在三星 S25 上测了 100 个架构，参数量与延迟的 Kendall τ 只有约 0.40，FLOPs 与预填充、解码延迟分别约 0.46 和 0.55（Flash §1–3）。
+- **可移植**：要覆盖大量设备，就不能依赖专用注意力内核，只能用 ExecuTorch 这类通用运行时的标准算子。
 
-**权重 / 代码（文内明示）：**
-- Pro 集合：`https://huggingface.co/collections/facebook/mobilellm-pro`
-- 具体卡：`facebook/MobileLLM-Pro-base`、`MobileLLM-Pro-base-int4-cpu`、`MobileLLM-Pro-base-int4-accelerator`、`facebook/MobileLLM-Pro`（instruct）
-- Flash：**文内未声明独立 HF 集合 URL**（以 PDF 为准；标「待核实」）。
+## 二、脉络
 
-**一句话抓手：**
-- **Pro**：在 ~1B 档用 **教师 logits（Llama 4-Scout）** 串起「数据混合 → 不喂长文却扩 128k → 专家合并 → INT4 QAT」，把 **Gemma 3-1B / Llama 3.2-1B** 在 11 项预训练榜上整体压过，量化平均分仅掉 **0.73 / 1.39** 个点（CPU / Accelerator）。
-- **Flash**：承认 **参数量/FLOPs ≠ 手机延迟**（Kendall τ 仅 ~0.4–0.55），用剪枝继承权重 + Ax 两阶段 BO 直接优化 **TTFT**；Pareto 原则钉死 **浅宽优先**、**skip-attn 优于 SWA**；相对 LFM2 声称最高 **1.8× prefill / 1.6× decode**。
-
----
-
-## 二、议题边界：增量产品轴 ≠ 2024 原文 / ≠ ZO-QAT / ≠ 机架白皮书
-
-### 2.1 四向对照（跟读）
-
-| 轴 | 问什么 | 仓库位置 | 本篇是否主写 |
-|---|---|---|---|
-| **2024 MobileLLM 深薄配方** | 层深、embedding 共享、GQA、immediate share | **[[端侧小模型]]** | **否**（不复述原文） |
-| **训练期 ZO-QAT** | 零阶梯度、端侧可训 QAT 显存 | **[[ZeroQAT量化感知训练]]** | **否**（不写算法课） |
-| **数据中心 HW–SW codesign** | Blackwell / TPU / FP4 / NVLink | **[[硬件软件协同部署]]** | **否** |
-| **1B 四阶段预训练 + 128k 位置蒸馏** | SDM / IPD / specialist merge / 双路径 INT4 | **本篇主文 A** | **是** |
-| **手机 TTFT 在环 NAS + skip-attn 族** | 剪枝搜索、Pareto 原则、Executorch 可移植 | **本篇主文 B** | **是** |
-
-跟读直觉：[[端侧小模型]] 问「**sub-billion 端侧该不该深薄**」；Pro 问「**已有 1B 配方后，数据/长上下文/合并/量化四阶段怎么叠**」；Flash 问「**深薄在手机上是否反而更慢——如何用真实 TTFT 搜出浅宽 + skip**」。三者串成「2024 架构立轴 → 2025 Pro 训练栈 → 2026 Flash 延迟栈」，不把后两篇写成 MobileLLM 原文附录。
-
-### 2.2 与 [[端侧小模型]] 的唯一允许接口
-
-| 字段 | [[端侧小模型]]（MobileLLM 2024） | 本篇 Pro | 本篇 Flash |
-|---|---|---|---|
-| 参量 | 125M–1.5B 深薄族 | **1.084B**（30L / d=1280 / FFN 6144） | **350M / 650M / 1.4B**（更浅：12–16L） |
-| 主杠杆 | 深度 + immediate share | **IPD + 专家合并 + SDM + QAT** | **延迟在环 NAS + skip-attn** |
-| 上下文 | 短窗叙事为主 | **128k** local-global（local 512，每 4 层一 global） | 预训练 CPT **2k**；IFT **8k**；评测到 **4k** |
-| 部署 | 内存层级通史 | INT4 CPU **590 MB** / 加速器 **720 MB**；S25 CPU + S24 HTP | Executorch + XNNPACK；S25 / iPhone 17 对照 |
-
-Flash Related Work 明确点名：先验 **深薄**（含 Liu et al. 2024 = MobileLLM、Huber et al. 2025 = Pro）**常未能改善端侧延迟**——这是本卡相对 [[端侧小模型]] 的**反转句**，不是重写深薄课。
-
-`
- 端侧 SLM / OD-LLM 问题链
- │
- ┌──────────┼──────────┐
- ▼ ▼ ▼
- 深薄立轴 训练栈增量 延迟在环增量
- [[端侧小模型]] 本篇 A Pro 本篇 B Flash
- (不复述) 128k+QAT skip-attn NAS
-`
-
----
-
-## 三、MobileLLM-Pro：1B 四阶段预训练 + 助手 IFT（主文 A）
-
-### 3.1 架构规格（Table 1，照录）
-
-| 字段 | 值 |
-|---|---|
-| Layers / Heads / KV | **30** / **20** / **4**（GQA） |
-| Dimension / Hidden（FFN） | **1280** / **6144**（文称 4.8× up-scaling） |
-| Vocab | **202,048**（与 Llama 4 同级；embedding **共享**，文称省约 **260M ≈ 25%** 参数） |
-| Total params | **1,084M（1.08B）** |
-| Context | **128k**；Local-Global：**512** local window，**每 4 层 1 个 global**（首尾层为 global） |
-| 模态 / 语言 | Text in/out；**English** |
-
-教师信号：全阶段预训练用 **Llama 4-Scout** 的完整 **202,048** logit 做 **forward KL** 蒸馏（相对 one-hot CE）。
-
-### 3.2 四阶段预训练（Fig.1 + §3–7）
-
-| Phase | 名字 | 核心动作 | 文内预算/要点 |
-|---|---|---|---|
-| **1** | Language-Acquisition | **Scalable Data Mixer (SDM)** 离线效用估计 → 静态采样权重 | **1.4T** tokens；batch **2M** tok；**640k** steps；LR max **4e-4** → 0 cosine；warmup **10k** |
-| **2** | Context-Expansion | **Implicit Positional Distillation（IPD）**：仍用短文数据，靠教师 logits 传长程位置 | 再 **100k** steps / **20B** tokens；LR max **4e-5**；避免 Phase1→2 数据分布漂移 |
-| **3** | Specialist Model Merging | 并行域专家小步退火 + **非均匀**参数平均 | 每专家约 **60M** tokens / **500** steps；LR **1e-5→0**；产出 **MobileLLM-Pro-base** |
-| **4** | Efficiency / QAT | CPU **group-wise INT4**；加速器 **channel-wise INT4 + 可学习范围**；**FP 自蒸馏** | 约全精度预算的 **5%** ≈ **80B** tokens；CPU **590 MB** / 加速器 **720 MB**（后者因不共享 emb） |
-
-**Phase 1 数据混合（Table 2，权重 %）：** Fineweb-EDU **89.75**、Starcoder **4.66**、Open Web Math **1.92**、Arxiv **1.35**、Wiki **1.02**、Stack Exchange **1.02**、Algebraic Stack **0.24**（合计 tokens 表列 **1640.3B** 行级统计；训练用 **1.4T**）。
-
-**IPD 机制（§5，跟读要点）：**
-RoPE 短窗训练只覆盖角度子空间；拼接短文档填满长窗**仍无真实长程语义**。Block causal packing **不阻断** logit 蒸馏中的位置信息迁移 → 学生模仿教师分布即可继承长程位置关系，**无需直接喂长上下文数据**，从而消除 Phase1/2 分布漂移。消融（Table 13）：Phase-1 NIH **6.7**；专用长文 Phase-2 NIH **80.22** 但平均榜 **-5.9**（53.74→47.86）；IPD NIH **99.78**、平均 **53.57**（几乎不掉）。
-
-**专家合并条件（§6）：** (1) 权重空间已稳定（仅晚期有效）；(2) 并行更新足够小。Table 14：Pre-Anneal 平均 **53.57** → Weight Avg **56.73**（不含 NIH），常优于单专家最优。
-
-**双路径量化（Table 3）：**
-
-| | CPU | Accelerator（ANE / HTP） |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| Weights & Emb | INT4 sym, **group-size 32** | INT4 sym, **channel-wise** |
-| Activations / KV | INT8 dyn asym per-token | **BF16** |
-| QAT | Vanilla range | **Learnable quant ranges** |
+| 2024-02 | [MobileLLM](https://arxiv.org/abs/2402.14905) | 十亿参数以下深而窄的架构、嵌入共享、分组查询注意力与块级权重共享 |
+| 2025-03 | [Gemma 3](https://arxiv.org/abs/2503.19786) | 1B 到 27B，提高局部与全局注意力层的比例来压 KV 缓存，上下文至少 128k |
+| 2025-11 | Pro | 1.08B，隐式位置蒸馏扩到 128k，专家合并，CPU 与加速器两路 INT4 |
+| 2025-11 | [LFM2](https://arxiv.org/abs/2511.23404) | 硬件在环搜索出门控短卷积加少量 GQA 的混合骨干，预训练 10–12T token |
+| 2026-03 | Flash | 剪枝继承权重加两阶段贝叶斯优化，以手机 TTFT 为目标搜索浅宽、跳过注意力的模型族 |
 
-文称 PTQ 直接砸 Phase-3 会严重回退（Table 17）；channel-wise 需可学习范围（Table 15：**55.67→60.46**，+4.79）；QAT 自蒸馏（Table 16：**58.61→61.04**，+2.43）。
+## 三、方法
 
-### 3.3 预训练主结果（Table 4 / 5）
+### 3.1 Pro：四阶段预训练与两路量化
 
-相对 Gemma 3-1B / Llama 3.2-1B（照录节选）：
+**架构**（Table 1）：30 层，宽 1280，FFN 6144，20 个注意力头、4 个 KV 头；词表 202,048 与 Llama 4 相同，输入输出嵌入共享，省下约 2.6 亿参数（约占模型 25%）；总参数 1,084M。局部与全局注意力交替，局部窗口 512，每 4 层一个全局层；只支持英文文本。
 
-| Benchmark | Pro | Gemma 3-1B | Llama 3.2-1B |
+| 阶段 | 做法 | 预算 |
+|---|---|---|
+| 1 语言习得 | Scalable Data Mixer 离线估计各数据源的效用，定出静态采样权重；全程用 Llama 4-Scout 的完整 logits 做前向 KL 蒸馏 | 1.4T token |
+| 2 上下文扩展 | 隐式位置蒸馏：仍用第一阶段的短文档数据，靠教师 logits 传递长程位置关系 | 约 20B token |
+| 3 专家合并 | 从同一检查点并行训练多个领域专家，每个约 60M token，再做非均匀参数平均，得到 Pro-base | 小 |
+| 4 量化感知训练 | CPU 路线权重按 32 一组 INT4、激活 INT8 动态量化；加速器路线权重按通道 INT4、激活 BF16，量化范围可学习；用全精度模型做自蒸馏 | 约 80B token，全精度预算的 5% |
+
+- **隐式位置蒸馏**（§5、Table 13）：拼接短文档填满长窗口并不能提供真实的长程语义，但学生模仿教师分布时能继承位置关系。第一阶段结束时大海捞针（NIH）只有 6.7；用专门的长文数据做第二阶段，NIH 到 80.22，平均分却从 53.74 跌到 47.86；用隐式位置蒸馏，NIH 99.78，平均分 53.57，几乎不掉。
+- **专家合并**（§6、Table 14）：要求权重空间已经稳定、各专家的更新足够小，因此只在训练后期有效；合并后平均分从 53.57 升到 56.73。
+- **量化**（§7）：按通道量化需要可学习范围（Table 15：55.67 → 60.46），自蒸馏再加 2.43 分（Table 16）。INT4 后 CPU 模型 **590 MB**，加速器模型因不共享嵌入为 **720 MB**。
+- **指令微调**（§9）：先按开源数据的自然分布追求多样性，再按留一法调高影响大的领域，最后用 SFT 与 DPO 合成数据补安全与自我身份，作者称后者与榜单分数有折中。
+
+### 3.2 Flash：以延迟为目标的架构搜索
+
+- **起点**：MobileLLM-Pro-Shallow-1.8B（16 层，宽 2048，FFN 8192），与 Pro 同配方的浅宽变体（§4.1）。
+- **搜索空间**（§3.2–3.3）：层数 10–16、FFN 2048–8192、模型宽度 1024–2048，每层的注意力可选全注意力、滑动窗口（SWA）或直接跳过，组合量级约 700 亿。候选由按激活能量剪枝母体得到，继承预训练权重，只需轻量继续预训练。
+- **两阶段贝叶斯优化**（§3.4）：先在手机上测约 800 次延迟，训练高斯过程代理模型（交叉验证 R² = 0.97）；再用预测延迟与真实训练损失做多目标搜索，参考点为损失 0.6、TTFT 4 秒。每个候选只继续预训练 2.6B token 就能得到稳定排序，与从头训练的排序 Kendall τ 为 0.74（20 个候选），剪枝路线约只需从头训练 35% 的 token。
+- **两条设计原则**（§3.5）：一是浅而宽在端侧更能平衡准确率与延迟，深模型质量高但更慢；二是跳过注意力优于 SWA，最好与全局注意力交错，不连续使用 3 层以上的高效注意力。延迟相同的候选里，连续跳过超过 3 层的 TriviaQA 只有 8.8%，没有连续跳过的为 33.2%（Table 4）。
+- **成本**（§4.1）：共 200 个候选，搜索总计 520B token；最终 3 个帕累托点各做 500B token 继续预训练与 800B token 指令微调。最终得到 350M（12 层，7 个注意力层）、650M（13 层，8 个注意力层）、1.4B（16 层）三个模型。
+
+## 四、结果
+
+**Pro 预训练对比**（Table 4 节选）：
+
+| 基准 | Pro | Gemma 3-1B | Llama 3.2-1B |
 |---|---|---|---|
-| HellaSwag | **67.11** | 62.30 | 65.69 |
-| BoolQ | **76.24** | 63.20 | 62.51 |
-| ARC-Challenge | **52.62** | 38.40 | 38.28 |
-| Natural Questions | **15.76** | 9.48 | 5.48 |
-| NIH | **100.00** | – | 96.80 |
+| HellaSwag | 67.11 | 62.30 | 65.69 |
+| BoolQ | 76.24 | 63.20 | 62.51 |
+| ARC-Challenge | 52.62 | 38.40 | 38.28 |
+| Natural Questions | 15.76 | 9.48 | 5.48 |
+| NIH | 100.00 | 未公布 | 96.80 |
 
-量化平均（Table 5，含 NIH）：Full **61.81** → Quant-CPU **61.08**（−0.73）→ Quant-Accelerator **60.42**（−1.39）。
+- **量化**（Table 5）：平均分全精度 61.81，CPU 量化版 61.08，加速器量化版 60.42。
+- **指令模型**（Table 7）：HumanEval 59.8（Gemma 41.5、Llama 37.8）；MMLU 44.8，低于 Llama 的 49.3；IFEval 62.0，低于 Gemma 的 80.2。
+- **端侧延迟**（Table 10，ExecuTorch，S25 CPU 与 S24 HTP）：2k 输入时 CPU 预填充 8.9 秒、HTP 2.0 秒，8k 时分别为 63.5 秒与 9.8 秒；CPU 解码 2k 时 33.6 token/s。
 
-### 3.4 指令微调三阶段 + 结果（§9–10）
+**Flash 对比 LFM2**（Table 6 节选，S25，平均准确率 / 2k 输入 TTFT / 2k 解码速度）：
 
-1. **Diversity-first**：贴近开源 IFT 样本自然分布（Table 6 合计 **7.64M** samples；Nemotron Math + Flan 约占 **70%**）。
-2. **Leave-One-Out**：按 LOO 雷达图调高 Tulu 3 / Nemotron Science 等影响大的域。
-3. **Safety + Self-ID**：SFT + DPO 合成数据退火；文称与榜分有折中。
-
-Instruct 榜（Table 7 节选）：HumanEval **59.8**（Gemma 41.5 / Llama 37.8）；MBPP **46.8**；BFCL v2 **29.4**；MMLU **44.8**（低于 Llama 49.3，高于 Gemma 29.9）；IFEval **62.0**（低于 Gemma 80.2）。人评（Table 8/9，每维 100 题）：对 Llama 四维皆胜；对 Gemma 在 Recall / Tool Calling 胜，Summarization / Rewrite 略负。Tool Calling 用 **Llama 3-70B** 作裁判（脚注）。
-
-### 3.5 端侧延迟字段（Table 10，S25 CPU / S24 HTP）
-
-| Metric | 2k | 4k | 8k |
-|---|---|---|---|
-| CPU Prefill (s) | 8.9 | 24.8 | 63.5 |
-| HTP Prefill (s) | 2.0 | 3.4 | 9.8 |
-| CPU Decode (tok/s) | 33.6 | 24.8 | 19.7 |
-| HTP Decode (tok/s) | 31.6 | 29.0 | 22.8 |
-| KV Cache (MB) | 14.0 | 23.0 | 40.0 |
-
-导出：**ExecuTorch**；CPU=xnnpack，加速器=HTP。
-
-### 3.6 关键消融速记（§12）
-
-| 消融 | 数字（文内） |
-|---|---|
-| SDM vs uniform（Table 11，CE 训练） | PT **38.70→49.31**；IFT 表列 **17.94→45.23**（正文另写「17.9→32.7」，**与表冲突，以表为准**） |
-| CE vs KD Phase-1（Table 12，FLOP 对齐） | **49.31→53.74**（+4.4，不含 NIH） |
-| IPD vs 长文数据（Table 13） | 见 §3.2 |
-| Specialist merge（Table 14） | 平均 **53.57→56.73** |
-
----
-
-## 四、MobileLLM-Flash：延迟在环 NAS + skip-attention 族（主文 B）
-
-### 4.1 问题立轴：TTFT 与可移植，而非代理指标
-
-产业约束（§1）：近实时 **TTFT**（例：4s 可用、10s 不可用）；~**2k** tokens 为实用甜点；必须 **通用运行时**（Executorch），避免专用注意力内核。Key Insight-1：100 个架构在 S25 / 2k 上，参数量 vs 延迟 Kendall τ≈**0.40**，FLOPs vs 延迟 ≈**0.46 / 0.55**（prefill/decode）→ **必须硬件在环**。
-
-### 4.2 方法：剪枝搜索空间 + 两阶段 Ax BO（Fig.2）
-
-**搜索空间 S（Table 3）：**
-`dL ∈ {10…16}`；`dffn ∈ {2048…8192}`；`dmodel ∈ {1024…2048}`；每层 `pi ∈ {full_attn, SWA, skip_attn}`（~**70B** 组合量级）。剪枝用激活能量：FFNMetric / ModelDimMetric / LayerMetric（§3.3）。
-
-**两阶段：**
-1. 廉价采延迟（~**800** 次手机测量）训 GP，CV **R²=0.97**；
-2. 预测延迟 + 真训练质量，NEHVI；参考点 loss **0.6**、TTFT **4s**。每候选 CPT 仅 **2.6B** tokens 得稳定排序（相对全量 **500B**）；相对从头训，剪枝路径约 **35%** token。Kendall τ（剪枝 CPT vs from-scratch）**0.74**（20 候选）。
-
-**Pareto 原则（§3.5）：**
-1. **浅宽**在端侧更好平衡准确率—延迟（深模型质量高但更慢；极低延迟区切浅）。
-2. **Skip-attn 优于 SWA**；最优为 **skip 与 global 交错**；禁止 ≥3 层连续高效注意力（Table 4：连续 skip 过多时 TQA **8.8%→33.2%** 等崩坏）。
-
-### 4.3 实现与架构表（§4.1 / Table 5）
-
-起点：**MobileLLM-Pro-Shallow-1.8B**（16L / d=2048 / FFN 8192）——同配方浅宽变体。校准 **600M** tokens（~预训练 **0.1%**）。Ax 每轮 8 候选；共 **200** trials；搜索总成本 **200×2.6B=520B**；最终 3 个 Pareto 点各 CPT **500B** + IFT **800B**。对比：Pro 约 **1.6T**、LFM2 **10–12T**（文内陈述）。
-
-| Model | Layers | dmodel | dFFN | H/KV/Hsize | #Attn blocks |
-|---|---|---|---|---|---|
-| Pro-1B* | 30 | 1280 | 6144 | 20/4/64 | 16 |
-| Pro-Shallow-1.8B | 16 | 2048 | 8192 | 32/8/64 | 16 |
-| **Flash-350M*** | **12** | **1024** | **4096** | 32/8/64 | **7**（其余 skip；full idx `[0,1,3,6,7,9,11]`） |
-| **Flash-650M*** | **13** | **1280** | **6144** | 32/8/64 | **8**（full idx `[0,2,3,5,7,8,9,10]`） |
-| **Flash-1.4B*** | **16** | **2048** | **8192** | 32/8/64 | 16 |
-
-\* embedding–unembedding 共享。CPT seq=**2048**，SWA window=**256**；IFT seq=**8192**。
-
-### 4.4 质量与效率（Table 6–8）
-
-**Avg↑ / Prefill TTFT@2k / Decode@2k（S25，节选）：**
-
-| Model | Avg | TTFT 2k (s) | Decode 2k (tok/s) |
+| 模型 | 平均 | TTFT（秒） | 解码（token/s） |
 |---|---|---|---|
 | LFM2 350M | 44.92 | 2.18 | 96.90 |
-| **Flash 350M** | **45.46** | 2.78 | **112.58** |
+| Flash 350M | 45.46 | 2.78 | 112.58 |
 | LFM2 700M | 48.52 | 6.01 | 53.57 |
-| **Flash 650M** | **48.57** | **3.34** | **85.35** |
+| Flash 650M | 48.57 | 3.34 | 85.35 |
 | LFM2 1.2B | 50.48 | 8.41 | 42.15 |
-| **Flash 1.4B** | **55.06** | 9.08 | 42.65 |
-| Pro-Shallow-1.8B（未剪） | 56.20 | 9.20 | 35.88 |
+| Flash 1.4B | 55.06 | 9.08 | 42.65 |
+| Pro-Shallow-1.8B（剪枝前） | 56.20 | 9.20 | 35.88 |
 
-文称 Flash-1.4B 相对浅宽母体平均准确率只让 **1.1%**，换最高约 **1.2× / 1.3×** prefill/decode；相对 LFM2 族最高 **1.8× / 1.6×**。量化部署字段：W4 group32 + A8 dyn + 量化 KV；Nemotron-Flash-1B 因 JetBlock **不支持 Executorch** 未测延迟。iPhone 17 上相对优势大体保持（Table 8）。
+Flash-1.4B 相对剪枝前的母体平均准确率少 1.1%，预填充与解码最高分别快约 1.2 倍与 1.3 倍。部署用权重 4 比特（32 一组）、激活 8 比特动态量化与量化 KV。在 S25 上搜出的架构换到 iPhone 17 上仍保持相对优势（Table 8）。Nemotron-Flash-1B 依赖 ExecuTorch 不支持的模块，没有测延迟。
 
-IFT（Table 7）：Flash-1.4B MMLU **47.89**、HumanEval **46.34**；Flash-650M Open Rewrite **46.84** 等——文称助手场景可比或更优；不宜与 Pro Table 7 无脚注硬并（评测设定/模型不同）。
+## 五、意义
 
-### 4.5 局限（文内 Limitations）
+Pro 说明在十亿参数规模上，教师 logits 能承担的不只是「软标签」：同一路蒸馏信号可以替代长文数据完成上下文扩展，也能在量化感知训练中以自蒸馏的形式保住精度，从而避免阶段之间的数据分布漂移。Flash 则把 MobileLLM 当年的深而窄结论放回真机上检验，发现它在手机上常常更慢；其相关工作部分直接写明，先前推荐深而窄的工作（包括 MobileLLM 与 Pro）往往没能改善端侧延迟。用真机延迟训练代理模型、用剪枝继承权重压低每个候选的训练成本，使硬件在环搜索在十亿参数规模上变得可行，搜索成本远低于从头训练一个模型族。
 
-- 未与架构联合搜训练超参（LR / optimizer）。
-- 为保 Executorch 可部署，**未**纳入 SSM / 线性注意力等缺成熟运行时支持的子二次模块。
-- CPU Pareto 未必迁移到 ANE 等异类加速器（延迟排序在手机 CPU 间较稳）。
+## 六、局限与待核实
 
----
+- **Flash 作者自陈**（Limitations、§4.2.2）：没有与架构联合搜索学习率、优化器等训练超参；为保证 ExecuTorch 可部署，没有纳入缺乏成熟运行时支持的状态空间模型与线性注意力；CPU 上的帕累托最优不一定适用于 Apple Neural Engine 等其他类型的加速器。
+- **Flash 版本差异**：v1（2026-03-16）与 v2 的标题、主要结论和加速倍数一致；v2 补充了代理模型的 R²、与剪枝前母体的对比，以及与 Pro、LFM2 训练 token 量的比较。本篇按 v2。文中没有给出 Flash 权重的公开地址。
+- **Pro 的数字口径**：§12.1 正文写 SDM 让指令微调平均分从 17.9% 升到 32.7%，Table 11 列的是 17.94 与 45.23，两者不一致，本篇不引该项。§3 写 1.4T token、批量 2M token、640,000 步，后两者相乘约 1.28T。Flash 称 Pro 预训练约 1.6T token，Pro 各阶段合计约 1.5T。
+- **Pro 的评测**：工具调用的人评用 Llama 3-70B 当裁判；Pro 只支持英文；报告没有单独的局限节。Pro 与 Flash 的指令微调评测设定不同，两表不宜合并比较。
+- **单一平台**：两篇的延迟都来自三星手机（Flash 另有 iPhone 17），与具体 SoC、运行时版本绑定。
 
-## 五、Pro × Flash 对照
+## 七、与相邻笔记的分工
 
-| 维 | MobileLLM-Pro | MobileLLM-Flash |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| 发布时间（文内 Date） | 2025-11-11 | 2026-04-29 |
-| 目标 | 1B 质量 + 128k + INT4 双路径 | 手机 **TTFT** Pareto 族 |
-| 架构哲学 | 30L 深一点 + local-global | **浅宽** + **skip/global 交错** |
-| 训练主创新 | IPD / specialist merge / SDM / QAT | 剪枝 NAS + 两阶段 BO |
-| 上下文产品叙事 | **128k** | 实用 **~2–8k** |
-| 相对 [[端侧小模型]] | 继承「端侧 1B」产品线，**不**复述深薄课 | **显式批评**深薄延迟失效 |
+| [[端侧小模型]] | 那篇的 MobileLLM（2024）是两篇的起点；Flash 对深而窄的反驳针对的就是那条路线 | 深而窄配方、权重共享与 Phi、Gemma 对照 |
+| [[模型合并]] | Pro 第三阶段的专家合并是权重平均的一个应用，那篇讲合并为何可行 | 合并方法谱系 |
+| [[ZeroQAT量化感知训练]] | 对照：Pro 用直通估计器做量化感知训练，那篇用零阶梯度在端侧做 | 零阶 QAT |
+| [[SpinQuant与ARCQuant量化]] | 对照：同为 Meta 端侧量化工作，SpinQuant 走不重训的训练后量化，Pro 走量化感知训练 | 旋转量化 |
+| [[Gemma4技术报告深读]] | Gemma 3-1B 是 Pro 的对照模型；那篇的 Gemma 4 E2B、E4B 是另一条端侧路线 | Gemma 架构 |
+| [[推理引擎生态]] | ExecuTorch 与 XNNPACK 只作部署字段 | 服务端引擎选型 |
+| [[硬件软件协同部署]] | 对照：那篇是数据中心的软硬协同，本篇的延迟来自手机 CPU 与 NPU | 芯片代际与互联 |
+| [[InfraServing发展时间线]] | 时间线的 2025-11、2026-03 两个节点即本篇两文 | serving 通史 |
 
-**跟读口诀：**
+## 八、延伸阅读
 
-`
-[[端侧小模型]] MobileLLM'24：深薄 × 共享 × DRAM 故事
- ↓（不复述）
-Pro：Scout-KD × SDM × IPD(128k) × Merge × INT4-QAT
- ↓ 浅宽母体
-Flash：真机 TTFT × 剪枝 BO × Skip>SWA × Executorch 可移植
-`
-
-1. **交叉链**：`related` 指向 [[端侧小模型]] / [[ZeroQAT量化感知训练]] / [[硬件软件协同部署]] / [[Gemma4技术报告深读]] / [[推理引擎生态]]；正文不展开其主课。
-2. **待核实**：Flash 权重/代码公开入口（PDF 未给 HF URL）；Pro IFT Table 11 正文「32.7%」与表「45.23」不一致——引用时锁表。
-3. **不混并**：Pro 128k NIH 与 Flash 4k TTFT、Pro/Flash 的 MMLU/HumanEval **分表引用**，不合成「统一端侧榜」。
-
----
-
-## 六、开放问题
-
-1. IPD 对非 RoPE / 非 Scout 教师是否可迁移？文内机制论证偏 RoPE+logit KD。
-2. Flash 的 skip-attn Pareto 在 ANE/HTP 上是否翻转？文内已提示跨加速器类可能失效。
-3. Pro 专家合并的域划分与权重 `w_b` 选择流程：正文给公式，**未**给完整域列表与权重搜索细节。
-4. 与 ZeroQAT（[[ZeroQAT量化感知训练]]）联用：Pro 已是 STE-QAT；端侧「训练期再量化」是否还有增益——超出两文范围。
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [Pro](https://arxiv.org/abs/2511.06719) §5–7、Table 13–16 | 隐式位置蒸馏、专家合并的条件与两路量化 |
+| 2 | [Pro](https://arxiv.org/abs/2511.06719) Table 4、7、10 | 与同级模型的对比和端侧延迟 |
+| 3 | [Flash](https://arxiv.org/abs/2603.15954) §1、§3 | 代理指标为何失效、搜索空间与两阶段贝叶斯优化、设计原则 |
+| 4 | [Flash](https://arxiv.org/abs/2603.15954) Table 5–8 | 最终架构、与 LFM2 的对比与跨设备迁移 |
+| 5 | [LFM2](https://arxiv.org/abs/2511.23404) | 另一条硬件在环搜索的端侧路线 |

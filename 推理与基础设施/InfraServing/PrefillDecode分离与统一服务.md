@@ -13,6 +13,7 @@ related:
   - "MegaScaleInfer与UltraEP"
   - "推理引擎生态"
   - "AI基础设施总览"
+  - "TEE机密推理"
 retrieval_cutoff: 2026-09-24
 timezone: Asia/Shanghai (CST)
 archived: 2026-09-24
@@ -145,6 +146,7 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 | [[连续批处理与Orca]] | 调度粒度：请求级 → **iteration-level**；selective batching | **正交**：连续批解决批内早结束 / 晚加入；PD 轴解决两阶段是否同池。TaiChi Related works 亦称 goodput 优化与 continuous batching 等正交。引擎侧常叠加（vLLM 上既有 continuous batching，又可做 PD 分池）。 |
 | [[MegaScaleInfer与UltraEP]] | MoE 服务：**Attention 节点 ↔ Expert 节点** 解耦、大 EP 均衡 | **另一解耦轴**：专家稀疏利用率，不是 TTFT/TPOT 双 SLO 的 PD 池化。 |
 | [[推理引擎生态]] / [[AI基础设施总览]] | 引擎选型、DeepSeek-V3 报告级 Prefill/Decode 分阶段部署表 | 本篇补 **学术系统侧**「聚合 ↔ 解聚 ↔ 再统一」机制与证据，不重写引擎对照表。 |
+| [[TEE机密推理]] | 机密计算：GPU 机密模式下 GPUDirect RDMA 不可用，机密客户机也不支持锁页主机内存 | **部署约束**：PD 分离依赖实例间经 RDMA 快速搬运 KV，机密模式下 KV 只能绕道 CPU、走加密回弹缓冲区，集成更难；那篇记录了这一约束，但没有端到端测量。 |
 
 一句话：Orca 管「批怎么连续」；MegaScale 管「Attention 与 Expert 分不分机」；本篇管「Prefill 与 Decode 分不分池、平衡 SLO 时如何把余量挪给濒危请求」。
 

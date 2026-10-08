@@ -134,5 +134,5 @@ AV-Flamingo 的贡献主要在数据与训练流程而非新结构：架构基�
 | 2 | [AV-Flamingo](https://arxiv.org/abs/2607.16107) §2.2–2.3、Table 6 | 数据构造、三阶段课程与消融 |
 | 3 | [OmniVinci](https://arxiv.org/abs/2510.15870) | 初始化来源的对齐模块与时间嵌入 |
 | 4 | [Audio Flamingo 3](https://arxiv.org/abs/2507.08128) | AF-Whisper 与流式语音合成 |
-| 5 | [NVIDIA/audio-flamingo](https://github.com/NVIDIA/audio-flamingo) | 官方代码仓 |
-| 6 | [nvidia/audio-visual-flamingo-hf](https://huggingface.co/nvidia/audio-visual-flamingo-hf) | 模型权重页（Hugging Face） |
+| 5 | [NVIDIA/audio-flamingo](https://github.com/NVIDIA/audio-flamingo) | 官方代码仓（论文页眉所指；各模型代码在各自分支） |
+| 6 | [nvidia/nemotron-labs-audio-visual-flamingo-hf](https://huggingface.co/nvidia/nemotron-labs-audio-visual-flamingo-hf) | 模型权重页（Hugging Face） |
