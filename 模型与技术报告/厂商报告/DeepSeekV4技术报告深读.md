@@ -101,6 +101,8 @@ archived: 2026-09-22
 3. **Shared-KV MQA：** 选中压缩条目同时作 K/V；query 与 indexer 共享压缩 latent $c_t^Q$（式 18–19）。
 4. **Grouped output projection：** $n_h$ 头先分成 $g$ 组中间投影再拼回，减轻大 $c\cdot n_h$ 投影负担。
 
+第三方研究报告，CSA 的固定压缩步长使 V4 家族的长上下文检索准确率随 token 相位（位置 mod 4）周期变化，base 检查点最大差距约 40 个百分点，见 [[分块KV压缩的相位敏感性]]。
+
 #### 3.3.2 HCA（Heavily Compressed Attention）
 
 - 压缩比 $m'\gg m$；**无** CSA 式重叠压缩；**无** sparse top-$k$（式 20–26；Fig 4）。

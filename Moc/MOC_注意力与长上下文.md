@@ -24,6 +24,7 @@ status: active
 - [[检索式注意力]]
 - [[原生稀疏注意力NSA]]
 - [[混合Mamba与注意力架构设计菜谱]]
+- [[分块KV压缩的相位敏感性]]
 - [[DuoAttention与KVzip]]
 - [[上下文蒸馏]]
 - [[Prompt前缀缓存]]
