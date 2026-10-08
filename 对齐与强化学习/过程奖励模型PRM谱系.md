@@ -16,12 +16,13 @@ archived: 2026-09-22
 # Process Reward Models（PRM）谱系
 
 > **定位**：横切——仓库缺「逐步奖励模型」独立笔记。本篇只立 **PRM 作为逐步奖励枢纽**：连接 **验证（rerank / Best-of-N）**、**test-time scaling**、**过程 RL（dense step reward）**。
+> **为何重要**：Lightman 在 MATH500 子集上 Best-of-1860 选解，PRM 78.2% 对 ORM 72.4%、多数投票 69.6%，且候选数 N 越大差距越大；Math-Shepherd 用自动标注把同一信号接进 step-by-step PPO（Mistral-7B GSM8K 77.9→84.1）。推理时多采样候选要靠逐步裁判来选，RL 要靠逐步奖励做信用分配，PRM 两头都接得上。
 > **研究线**：**数学原理（主）** + **架构思想（辅）**。
 > **谱系三站**：人类过程监督（Lightman et al.）→ 自动过程标注（Math-Shepherd）→ 用法闭环（TTS / process RL；综述作地图）。
 > **范围与相邻笔记**：
 > - **不重写** DeepSeek-R1 **阶段表** / 规则奖励通史（→ [[DeepSeekR1推理训练深读]]）。
-> - **不重写** [[GRPO与DAPO算法族]] **GRPO→DAPO 技巧清单** / 裁剪、动态采样等算法族配方（→ `[[GRPO与DAPO算法族]]-grpo-dapo-algorithm-family`）。
-> - **不重写** [[推理时扩展TestTimeScaling]] TTS 通史与 o1/R1 产品叙事（→ `[[推理时扩展TestTimeScaling]]-test-time-scaling`）；本篇只补 **PRM 在 TTS 中的打分器角色**。
+> - **不重写** [[GRPO与DAPO算法族]] **GRPO→DAPO 技巧清单** / 裁剪、动态采样等算法族配方。
+> - **不重写** [[推理时扩展TestTimeScaling]] TTS 通史与 o1/R1 产品叙事；本篇只补 **PRM 在 TTS 中的打分器角色**。
 > - **不重写** [[对齐脉络RLHF与偏好优化]] 偏好优化 / ORM 作 preference RM 全文。
 > 综述后延工作仅作索引。
 
@@ -52,7 +53,7 @@ archived: 2026-09-22
 
 **前作锚点（只点一句，不展开）：** Uesato et al. (2022) 在小学数学（GSM 域）上发现过程 vs 结果监督**最终表现相近**，但过程监督更省数据。Lightman §1 / §7.1 明确：自家差异在于 **更强基座（GPT-4）+ 更大量人工过程标签 + 更难的 MATH**。
 
-### 2.2 本篇枢纽图（跟读）
+### 2.2 本篇枢纽图
 
 `
 过程数据（人标 / 自动 / 半自动）
@@ -66,7 +67,7 @@ Best-of-N step reward → PPO 等
 搜索/重排 （算法细节 → [[GRPO与DAPO算法族]]，本篇不抄）
 `
 
-综述 Figure 1 同构：**generate process data → train PRMs → use PRMs（TTS or RL）→ better data**。本篇只把枢纽钉死在 **Lightman + Math-Shepherd**；扩展索引见 §六。
+综述 Figure 1 同构：**generate process data → train PRMs → use PRMs（TTS or RL）→ better data**。本篇只把枢纽放在 **Lightman + Math-Shepherd**；扩展索引见 §六。
 
 ---
 
@@ -80,7 +81,7 @@ Lightman **§2.1 Scope** 写得很硬：
 - 「outcome / process supervision」专指给 **reward model** 的监督，不是给 generator 的 RL 监督。
 - 评测：**Best-of-N**——对每题从 generator 均匀采样多解，用 RM 选最高分，按**终答**自动打分，报正确率。
 
-跟读：这篇是在证「**更可靠的逐步 RM**」，不是 R1 那种「用奖励把策略训成会想」的后训练通史。
+要点：这篇是在证「**更可靠的逐步 RM**」，不是 R1 那种「用奖励把策略训成会想」的后训练通史。
 
 ### 3.2 数据：PRM800K
 
@@ -100,7 +101,7 @@ Lightman **§2.1 Scope** 写得很硬：
 
 - PRM：在每步**末 token** 预测正确性；标准 LM pipeline 训练；整解一次前向即可得逐步分（§2.6）。
 - **解分数（主文默认）：** 各步正确概率的 **乘积**（「每步都正确」的联合概率）。
-- Appendix F / Table 4：另试 min vs product、neutral 当正/当负；**最优为 product + neutral=positive → Best-of-1860 上 78.2%**；四种策略差距不大（77.4–78.2）。
+- Appendix F / Table 4：min / product × neutral 当正 / 当负四种策略差距不大（77.4–78.2%），最优为 product + neutral=positive（78.2%）。
 
 ### 3.4 大模型结果（MATH 500 子集）
 
@@ -197,7 +198,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 | **与 majority / SC 组合** | 两文均试；Math-Shepherd Eq.5 | 强 RM 时叠投票未必增益（任务依赖） |
 | **搜索 / 剪枝（综述索引）** | Survey §4.1：beam annealing、Generate–Verify–Refine、MCTS 等 | PRM 从静态 reranker → **推理期控制器**；具体系统不在本篇展开 |
 
-跟读一句：**[[推理时扩展TestTimeScaling]] 讲「多花推理算力」；本篇讲这算力砸在候选上时，谁来当逐步裁判——答案经常是 PRM。**
+小结：**[[推理时扩展TestTimeScaling]] 讲「多花推理算力」；本篇讲这算力砸在候选上时，谁来当逐步裁判——答案经常是 PRM。**
 
 ### 5.2 过程 RL（对 [[GRPO与DAPO算法族]] / R1 的补丁）
 
@@ -207,7 +208,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 | **信号进目标的方式很关键** | Survey §4.2：求和易 reward hacking → 有工作改 **min-form** 等；另有 advantage 式 progress、熵正则等 | **有 PRM ≠ 会用 PRM**；进损失的形态影响稳定性 |
 | **与规则奖励 / 组相对策略** | Survey 提及可与 **GRPO** 等结合（如 PROF 过滤过程–结果不一致样本） | **只交叉引用**：算法旋钮仍在 [[GRPO与DAPO算法族]]；R1 主叙事仍是可验证规则奖，不在此重画阶段表 |
 
-跟读一句：**[[GRPO与DAPO算法族]] 管「怎么更新策略」；本篇管「逐步奖励从哪来、怎么进验证与 RL」。**
+小结：**[[GRPO与DAPO算法族]] 管「怎么更新策略」；本篇管「逐步奖励从哪来、怎么进验证与 RL」。**
 
 ---
 
@@ -228,9 +229,9 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 ## 七、延伸阅读
 
 1. **ORM 看结局，PRM 看过程**——难题上逐步信用分配更关键（Lightman §6.1）。
-2. **Lightman：** 人标 PRM800K + Best-of-N → MATH500 子集 **78.2%**（vs ORM 72.4 / vote 69.6）；主动学习约 **2.6×** 效率；**故意不训 generator RL**。
+2. **Lightman：** 人标 PRM800K + Best-of-N 显著优于 ORM 与投票（§3.4）；主动学习提效；**故意不训 generator RL**。
 3. **聚合：** Lightman 主用 **product**；Math-Shepherd 验证用 **min**——读代码时别混。
-4. **Math-Shepherd：** 用 completer 从该步续写，HE/SE 估「能否到金标」→ 无人工逐步标；同一 PRM 既做 **256-rerank** 又做 **step-by-step PPO**（Mistral：**77.9→84.1** GSM8K，**28.6→33.0** MATH；再验证到 **89.1 / 43.5**）。
+4. **Math-Shepherd：** 用 completer 从该步续写，HE/SE 估「能否到金标」→ 无人工逐步标；同一 PRM 既做 256 候选重排又做 step-by-step PPO（数字见 §4.3–4.4）。
 5. **枢纽：** PRM = TTS 的逐步裁判 + 过程 RL 的 dense 奖励源。
 
 ---
@@ -240,7 +241,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 | 项 | 状态 |
 |---|---|
 | Uesato et al. 2022 原文数字表 | 仅经 Lightman/Shepherd 转述；未深读 |
-| Lightman generator/ORM 具体 GPT-4 变体与 MathMix 构造细节 | Appendix A 未全文展开进本卡 |
+| Lightman generator/ORM 具体 GPT-4 变体与 MathMix 构造细节 | Appendix A 未全文展开进本篇 |
 | Math-Shepherd SE vs HE 完整消融曲线 | §5 有分析；本篇只列 HE 主实验设定 |
 | 综述中 OmegaPRM / GenPRM / PURE min-form 等 | **仅索引**，数字待各自 PDF |
 | 与 R1/GRPO 生产线的具体接线（是否用 PRM、何种聚合） | **各 TR 为准**；本篇不猜测 |
@@ -251,16 +252,13 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 | 笔记 | 关系 |
 |---|---|
-| `[[推理时扩展TestTimeScaling]]-test-time-scaling` | TTS / Best-of-N 叙事；本篇补 **PRM 打分器** |
-| `[[GRPO与DAPO算法族]]-grpo-dapo-algorithm-family` | 策略优化算法族；本篇 **不**抄技巧清单，只承认 PRM 可作奖励输入 |
+| [[推理时扩展TestTimeScaling]] | TTS / Best-of-N 叙事；本篇补 **PRM 打分器** |
+| [[GRPO与DAPO算法族]] | 策略优化算法族；本篇 **不**抄技巧清单，只承认 PRM 可作奖励输入 |
 | [[DeepSeekR1推理训练深读]] | 推理后训练阶段与规则奖；本篇 **不**重画阶段表 |
-| `[[对齐脉络RLHF与偏好优化]]-alignment-rlhf-dpo` | 偏好/ORM 对齐主线；本篇是 **逐步过程 RM** 横切 |
+| [[对齐脉络RLHF与偏好优化]] | 偏好/ORM 对齐主线；本篇是 **逐步过程 RM** 横切 |
 
 ## 相关笔记
 
-- [[Gemma4技术报告深读]]
-- [[AXK2技术报告深读]]
-- [[UIVenus2GUI智能体]]
-- [[宪法分类器防御]]
-- [[过程奖励模型PRM谱系]]
-
+- [[生成式奖励模型GenRM与奖励推理化]]：同属奖励侧，但打分对象是整段回复 / 偏好对；那篇把 RM 做成生成式推理，本篇管逐步过程分，两篇粒度互补。
+- [[可验证过程监督]]：同样给中间步骤打分，但由确定性域信号 / 规则核验，不用学出来的神经 PRM；可对照本篇学习式 PRM 的标注成本与噪声问题。
+- [[可扩展监督与弱到强]]：那篇 2.2 把 Lightman et al. 2023 列入可扩展监督的「分解 / 放大」族；本篇第三节是 Lightman 的展开。

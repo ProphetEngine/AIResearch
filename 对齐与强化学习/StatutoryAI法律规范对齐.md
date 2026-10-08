@@ -14,12 +14,12 @@ related: ["宪法分类器防御", "对齐脉络RLHF与偏好优化", "法律专
 
 # Constitutional 新变体：Statutory AI（法律规范对齐）
 
-> **定位**：在经典 **Constitutional AI（CAI，2212.08073）** 的「原则清单 → 批判/修订」谱系上，立近窗 **Statutory AI（2608.28593）**：**规范来源从手写/公司宪法原则 → 成文法律语料（本稿为法国刑法条文英译）**；本卡只做 **推理期 critique–revision 对齐范式** 与文内汇总安全指标，经典 CAI 仅作对照。
+> **定位**：在经典 **Constitutional AI（CAI，2212.08073）** 的「原则清单 → 批判/修订」谱系上，立近窗 **Statutory AI（2608.28593）**：**规范来源从手写/公司宪法原则 → 成文法律语料（本稿为法国刑法条文英译）**；本篇只做 **推理期 critique–revision 对齐范式** 与文内汇总安全指标，经典 CAI 仅作对照。
 > **研究线**：**架构思想 / 对齐范式（主）** + **评测字段（辅）**（初始/终态 vulnerability、Comparison Score、单 prompt 耗时；法官为 GPT-5 / Gemini 2.5 Flash）。
 > **范围与相邻笔记**：
 > - **≠ [[宪法分类器防御]] Constitutional Classifiers**：不写 constitution → 合成数据 → **部署侧** input / output / exchange **分类器护栏** 工程与生产级探针级联。
-> - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 RLHF / DPO / CAI 损失与三阶段通史；CAI 在本卡仅作 **谱系补链**（SL 批判修订环 + RLAIF 一句）。
-> - **≠ [[法律专科模型]] 法律专科模型**：SaulLM / Legal-R1 / Unilaw-R1 是 **域适应 / 法律推理任务模型**；本卡是 **用法律条文当对齐宪法**，不是法律考试/文书专科。
+> - **≠ [[对齐脉络RLHF与偏好优化]]**：不重写 RLHF / DPO / CAI 损失与三阶段通史；CAI 在本篇仅作 **谱系补链**（SL 批判修订环 + RLAIF 一句）。
+> - **≠ [[法律专科模型]] 法律专科模型**：SaulLM / Legal-R1 / Unilaw-R1 是 **域适应 / 法律推理任务模型**；本篇是 **用法律条文当对齐宪法**，不是法律考试/文书专科。
 > - **≠ [[审慎对齐与断路器]]**：不写 Deliberative Alignment 的规范 CoT 训练，也不写 Circuit Breakers / Representation Rerouting 的 **表征熔断**。
 > **安全范围**：不写可复现越狱 / 绕过步骤、对抗提示全文、红队剧本；只保留公开论文中的 **对齐范式与汇总指标**（vulnerability %、Comparison Score、耗时比、分类器 P/R、McNemar 等）。
 
@@ -30,7 +30,7 @@ related: ["宪法分类器防御", "对齐脉络RLHF与偏好优化", "法律专
 | 材料 | 标识 | 链接 / 页数 | 角色 |
 |---|---|---|---|
 | **主文** | Delage, Canu, Décombas & Foureur (**JustAI** / **INSA Rouen Normandie**), *Statutory AI: Aligning Large Language Models With Legal Norms* | arXiv:**2608.28593v1** \[cs.AI\] **13 Jun 2026**；`https://arxiv.org/abs/2608.28593`（**15** 页 letter） | **规范来源变体**：刑法主题分类 → 条文字典 → **单轮** CoT 批判/修订；与 CAI 批判环对照 |
-| **补链** | Bai et al. (Anthropic), *Constitutional AI: Harmlessness from AI Feedback* | arXiv:**2212.08073v1** \[cs.CL\] **15 Dec 2022**；`https://arxiv.org/abs/2212.08073`（**34** 页；CreationDate **2022-12-19 CST**） | **谱系**：SL 批判修订（SL-CAI）+ RLAIF；本卡**不**重写全管线 |
+| **补链** | Bai et al. (Anthropic), *Constitutional AI: Harmlessness from AI Feedback* | arXiv:**2212.08073v1** \[cs.CL\] **15 Dec 2022**；`https://arxiv.org/abs/2212.08073`（**34** 页；CreationDate **2022-12-19 CST**） | **谱系**：SL 批判修订（SL-CAI）+ RLAIF；本篇**不**重写全管线 |
 
 **开源（主文自报，本篇不展开实现）：** `https://github.com/justai-labs/statutory-ai`
 
@@ -48,7 +48,7 @@ related: ["宪法分类器防御", "对齐脉络RLHF与偏好优化", "法律专
 |---|---|---|---|
 | **人类介入** | 人类写原则清单；无害标签可极少 | 极简总指令（如 “best for humanity”） | **不新增原则标注**；复用既有法条（作者手工选条） |
 | **规范粒度** | 多条自然语言原则，批判时可随机抽 | 过宽、易主观解读偏置 | **主题绑定的具体条文**（定义型条款优先） |
-| **本卡深读范围** | 只取 **批判–修订环** 接口 | 动机对照一句 | **推理期两阶段流水线** + 文内表 |
+| **本篇深读范围** | 只取 **批判–修订环** 接口 | 动机对照一句 | **推理期两阶段流水线** + 文内表 |
 
 研究问题（Statutory §1，意译）：在 LLM-as-a-judge / constitutional 框架下，**既有法律体系能否充当 constitution**，在无需额外手写规则的情况下给出可操作的「有害」定义？作者自称：就「把既有法条嵌进 CAI 式批判–修订环做 harmlessness」而言，这是首个此类工作（§1.1）。
 
@@ -129,11 +129,11 @@ CoT 修订（去有害/违法内容；可引用法条；要求共情与教育性
 |---|---|---|
 | **分类器** | Gemini 2.5 Flash（全程固定） | 为隔离「分类误差 vs 法定批判」混淆 |
 | **批判/修订模** | Mistral 7B（Ollama `mistral:7b` Q4_K_M）；Gemini 2.5 Flash；Qwen3-VL-30B-A3B-Thinking（HF 端点，Q8 量化变体） | 开源弱 / 专有 / 开源强三档 |
-| **评测集** | 自 *Adversarial Dataset* \[Jiang et al., WildTeaming\] 随机 **1000** 条非 NaN 提示 | 文称相对 ALERT / Perez 等「过显式」基准，近模更不易被击穿；**本卡不转载样本提示** |
+| **评测集** | 自 *Adversarial Dataset* \[Jiang et al., WildTeaming\] 随机 **1000** 条非 NaN 提示 | 文称相对 ALERT / Perez 等「过显式」基准，近模更不易被击穿；**本篇不转载样本提示** |
 | **CAI 基线** | 同批判–修订环，最多 **四** 轮；用 CAI 文 few-shot；同样 CoT 指令 | **无** SFT/RL |
 | **法官** | **主**：GPT-5；**辅**：Gemini 2.5 Flash（因同族入流水线，可能偏置） | 作者人工抽查推理迹 |
 
-**安全读法：** 文中出现的「vulnerability / ART %」仅作 **公开聚合字段**；本卡不复述具体对抗提示、绕过手法或可复现攻击步骤。
+**安全读法：** 文中出现的「vulnerability / ART %」仅作 **公开聚合字段**；本篇不复述具体对抗提示、绕过手法或可复现攻击步骤。
 
 ---
 
@@ -141,16 +141,7 @@ CoT 修订（去有害/违法内容；可引用法条；要求共情与教育性
 
 ### 5.1 分类器抽检（Table 1，n=278，人工金标；95% 置信 / 5% 误差口径）
 
-| Category | Precision | Recall |
-|---|---:|---:|
-| Violence | 90% | 96% |
-| Confidential Information Disclosure | 96.7% | 96.6% |
-| Fraud | 89% | 98% |
-| Discrimination | 99% | 95% |
-| Fraudulent Abuse of a Vulnerable Person | 100% | 100% |
-| NaN | 82% | 100% |
-
-文称各类 P/R 均 **>80%**，歧视与泄密类 **>95%**，作为进入批判阶段的充分条件。
+五个主题与 NaN 类的 precision / recall 均 **>80%**，歧视与泄密类 **>95%**；最低一格是 NaN 类 precision **82%**，Fraudulent Abuse of a Vulnerable Person 两项均 100%。文称这足以作为进入批判阶段的前提。
 
 ### 5.2 批判–修订主结果（Table 2；格式 = GPT-5 / Gemini 2.5 Flash）
 
@@ -174,13 +165,7 @@ CoT 修订（去有害/违法内容；可引用法条；要求共情与教育性
 
 ### 5.3 计算时间（Table 3，秒 / prompt 均值）
 
-| 模型 | Constitutional AI | Statutory AI | Runtime Ratio（CAI / Statutory） |
-|---|---:|---:|---:|
-| Gemini 2.5 Flash | 100.99 | 44.08 | 2.29 |
-| Mistral 7B | 70.8 | 32.3 | 2.19 |
-| Qwen 30B | 150.61 | 47.94 | 3.14 |
-
-Abstract：**计算时间削减超过 50%**（与单轮 vs 最多四轮、以及条文一次给全一致）。
+CAI / Statutory 耗时比：Gemini 2.5 Flash **2.29**（100.99 s → 44.08 s）、Mistral 7B **2.19**、Qwen 30B **3.14**。Abstract：**计算时间削减超过 50%**（与单轮 vs 最多四轮、以及条文一次给全一致）。
 
 ### 5.4 讨论中的架构结论（§3.4，压缩）
 
@@ -196,13 +181,13 @@ Abstract：**计算时间削减超过 50%**（与单轮 vs 最多四轮、以及
 ## 六、对齐范式对照总览
 
 `
-规范来源光谱（本卡主轴）
+规范来源光谱（本篇主轴）
  GfH 总原则 ──► 手写多原则宪法（CAI）──► 成文法律字典（Statutory）
  │
  ├─ Stage1 主题分类
  └─ Stage2 单轮 CoT 批判/修订
 
-部署 / 训练正交轴（不混进本卡）
+部署 / 训练正交轴（不混进本篇）
  [[宪法分类器防御]]：serving 旁路分类器护栏
  [[审慎对齐与断路器]]：规范 CoT 训练 或 表征熔断
  [[对齐脉络RLHF与偏好优化]]：偏好优化改权重
@@ -213,8 +198,19 @@ Abstract：**计算时间削减超过 50%**（与单轮 vs 最多四轮、以及
 
 1. 主题分类换成检索/法定解释模型后，Final vulnerability 与 NaN 覆盖如何变？
 2. 单轮条文批判能否蒸馏进 SL-CAI / RLAIF，而不只做推理期审核？
-3. 多法域条文冲突时，Comparison Score 协议如何改（本卡法国刑法单法域）？
+3. 多法域条文冲突时，Comparison Score 协议如何改（本篇法国刑法单法域）？
 4. 与 [[宪法分类器防御]] 级联：Statutory 修订输出能否作为 **exchange 分类器** 的合成规格——只问接口，不写攻击。
+
+## 七、局限与待核实
+
+以下均取自文内自述或本篇已有标注：
+
+1. **只是推理期 POC**：只实现批判–修订环，未做 SFT / RL；对照基线是 CAI 批判环 × 最多四轮，不是完整 RL-CAI。降幅与「高约 10 pp」都只在这一设定下成立。
+2. **评测靠 LLM-as-judge**：主法官 GPT-5，辅法官 Gemini 2.5 Flash 与流水线同族，可能偏置；作者只做了人工抽查。
+3. **覆盖面**：单一法域（法国刑法，作者手工英译），五个主题文称覆盖红队数据集约 80%；评测集只取非 NaN 提示，落在 NaN 的提示怎么办尚未解决。
+4. **分类器固定**：全程用 Gemini 2.5 Flash 分类，未测分类器更换或分类错误对终态的影响。
+5. **开放问题未消融**：「给全文条优于仅给标签」只是作者初步判断；法条语境的语气风险只靠修订指令缓解。
+6. **待核实**：主文目前只核到 v1（2026-06-13）；「首个此类工作」为作者自称。
 
 ---
 
