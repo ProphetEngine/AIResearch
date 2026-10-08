@@ -19,7 +19,7 @@ archived: 2026-09-22
 > - Annotated Template：https://huggingface.co/docs/hub/en/model-card-annotated
 > - Guidebook（引用 Mitchell；模板演进）：https://huggingface.co/docs/hub/en/model-card-guidebook
 > 3. **对照**：相邻深读卡
-> - System Card 系：[[GPT5系统卡深读]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]、[[GPT6Astra系统卡深读]]、[[GPT61Sol系统卡短报]]、[[GPT6SolLuna十月版系统卡短报]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]、[[ClaudeOpus5系统卡深读]]、[[ClaudeFable与Mythos51]]、[[ClaudeOpus55系统卡短报]]、[[ClaudeSonnet55系统卡短报]]、[[ClaudeHaiku55系统卡短报]]
+> - System Card 系：[[GPT5系统卡深读]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]、[[GPT6Astra系统卡深读]]、[[GPT61Sol系统卡短报]]、[[GPT6SolLuna十月版系统卡短报]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]、[[ClaudeOpus5系统卡深读]]、[[ClaudeFable与Mythos51]]、[[ClaudeOpus55系统卡短报]]、[[ClaudeSonnet55系统卡短报]]、[[ClaudeHaiku55系统卡短报]]
 > - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]、[[GPToss模型卡深读]]、[[Gemini37Flash模型卡深读]]
 > - [[MOC_模型与技术报告]]
 > **范围与相邻笔记**：本篇写「文档体裁 → 字段接口」。
@@ -197,7 +197,6 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 | 笔记 | 官方 PDF（示例） |
 |------|------------------|
 | [[GPT5系统卡深读]] | `https://cdn.openai.com/gpt-5-system-card.pdf` |
-| [[GPT51SystemCard附录]] | `https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf` |
 | [[GPT52SystemCard更新]] | `https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf` |
 | [[GPT56系统卡深读]] | `https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf` 等 |
 | [[ClaudeOpus41系统卡附录深读]] | `https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16/Claude%204.1%20System%20Card.pdf` |

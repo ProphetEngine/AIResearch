@@ -227,7 +227,6 @@ Gemini 3 Pro Model Card（发布 2025-11，更新 2026-05，**10** 页）把 3 P
 
 ### 技术报告专项
 - [[GPT5系统卡深读]]
-- [[GPT51SystemCard附录]]
 - [[GPT52SystemCard更新]]
 - [[Gemini25技术报告深读]]
 - [[Gemini3Pro模型卡深读]]

@@ -33,7 +33,7 @@ OpenAI 依 Preparedness Framework 对生物化学、网络安全、AI 自我改�
 
 - **2025-08** · gpt-oss 模型卡：OpenAI 自 GPT-2 以来首个正式开放权重的语言模型，Apache 2.0 许可的 MoE 推理模型，推理强度可调（[arXiv:2508.10925](https://arxiv.org/abs/2508.10925)） · [[GPToss模型卡深读]]
 - **2025-08** · GPT-5 系统卡：面向「统一系统 + 路由」的产品形态，把 gpt-5-thinking 在生物化学域按 High 能力预防性处理并启用配套防护（[系统卡页](https://openai.com/index/gpt-5-system-card/)） · [[GPT5系统卡深读]]
-- **2025-11** · GPT-5.1 系统卡附录：5 页增补，只报安全评测，不给能力分与架构信息（[Hub](https://deploymentsafety.openai.com/gpt-5-1)） · [[GPT51SystemCard附录]]
+- **2025-11** · GPT-5.1 系统卡附录：5 页增补，只报安全评测，不给能力分与架构信息（[Hub](https://deploymentsafety.openai.com/gpt-5-1)） · [[GPT5系统卡深读]] 第四节
 - **2025-12** · GPT-5.2 更新卡：以差分表记录 GPT-5 → 5.1 → 5.2 的安全变化，生物化学仍预防性判为 High，网安与自我改进仍未达 High（[系统卡](https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf)） · [[GPT52SystemCard更新]]
 - **2026-06** · GPT-5.6 预览版系统卡：Sol、Terra、Luna 三型号家族在生物化学与网安两域首次全员判为 High，连较小较快的型号也不例外（[Hub](https://deploymentsafety.openai.com/gpt-5-6-preview)） · [[GPT56系统卡深读]]
 - **2026-07** · GPT-5.6 正式版系统卡：安全叙事从模型拒答外移到激活分类器、实时扫描、账户级处置与受信访问（Trusted Access），后续更新又补入 GPT-Red 自动红队的提示注入结果（[Hub](https://deploymentsafety.openai.com/gpt-5-6)） · [[GPT56系统卡深读]]

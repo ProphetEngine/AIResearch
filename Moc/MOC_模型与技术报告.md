@@ -28,7 +28,6 @@ status: active
 - [[DeepSeekR1推理训练深读]]
 - [[Qwen3技术报告深读]]
 - [[GPT5系统卡深读]]
-- [[GPT51SystemCard附录]]
 - [[GPT52SystemCard更新]]
 - [[GPT56系统卡深读]]
 - [[Gemini25技术报告深读]]

@@ -134,7 +134,7 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 - **产品旋钮仍是 Instant vs Thinking 双线**，安全数字必须分列读；Instant 的 jailbreak / mature-content 故事与 Thinking 的 bio/cyber/self-improve 故事不要混。
 - **对齐张力被写进正文**：Instruction following（尤其严格输出格式）可压过 abstention → 缺模态时「敢答」上升。
 - **Preparedness 对照锚从「o3 / 前代 thinking」扩到「gpt-5.1-codex-max」**：说明 OpenAI 内部把长程 agent / 多窗口编码线当作 cyber & self-improve 的能力上界参照。
-- **Safeguards 仍「引用 GPT-5 卡」而非本 Update 重写**——读 High Bio 防护栈须回主卡 §5.3。
+- **Safeguards 仍「引用 GPT-5 卡」而非本 Update 重写**——读 High Bio 防护栈须回主卡 §6.3（原 PDF §5.3）。
 
 ---
 
@@ -174,7 +174,6 @@ GPT-5 系列最新家族的 **Update / 增补卡**，不是从零重写的完整
 
 ### 技术报告专项
 - [[GPT5系统卡深读]]
-- [[GPT51SystemCard附录]]
 - [[GPT52SystemCard更新]]
 - [[Gemini25技术报告深读]]
 - [[Gemini3Pro模型卡深读]]
