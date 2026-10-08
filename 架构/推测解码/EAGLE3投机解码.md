@@ -1,5 +1,5 @@
 ---
-title: "EAGLE-3 投机解码增量切片（相对推理引擎生态）"
+title: "EAGLE-3 投机解码增量切片"
 topic: EAGLE3投机解码
 date: 2026-09-22
 lines: [AI Infra, 数学原理]
@@ -9,16 +9,16 @@ sources:
  - https://github.com/SafeAILab/EAGLE
  - https://papers.nips.cc/paper_files/paper/2025/hash/c7b5a35ea98b62512a869c19ea7b03cb-Abstract-Conference.html
 arxiv: ["2503.01840"]
-related: ["推理引擎生态", "投机解码发展时间线", "AdaptiveSpec与Goose", "EntMTP熵引导投机解码", "MTP训练范式"]
+related: ["投机解码原理与发展脉络", "推理引擎生态", "AdaptiveSpec与Goose", "EntMTP熵引导投机解码", "MTP训练范式"]
 archived: 2026-09-22
 ---
 
-# EAGLE-3 投机解码增量切片（相对推理引擎生态）
+# EAGLE-3 投机解码增量切片
 
 > **主要来源**：[EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test](https://arxiv.org/abs/2503.01840)（Li、Wei、Zhang、Zhang，v3；NeurIPS 2025 [论文页](https://papers.nips.cc/paper_files/paper/2025/hash/c7b5a35ea98b62512a869c19ea7b03cb-Abstract-Conference.html)）；[SafeAILab/EAGLE](https://github.com/SafeAILab/EAGLE)（截至 2026-07-03）。
 > **研究线**：AI Infra（草稿头设计，主）· 数学原理（接受长度与多步接受率，辅）
 > **范围与相邻笔记**：
-> - ≠ [[推理引擎生态]]：本篇不写「草稿—并行校验、分布不变」的框架与 Medusa / Lookahead，投机解码共用背景见该篇第三节。
+> - ≠ [[投机解码原理与发展脉络]]：本篇不写「草稿—并行校验、分布不变」的框架与 Medusa / Lookahead，投机解码共用背景见该篇。
 > - ≠ [[AdaptiveSpec与Goose]]：本篇不写在 EAGLE-3 草稿器之上做的运行时树形与有损校验。
 > - ≠ [[MTP训练范式]]：本篇不写与主模型联训的多 token 预测头。
 >
@@ -40,8 +40,8 @@ EAGLE 复用目标模型顶层特征（LM head 之前），在特征空间自回
 
 | 节点 | 内容 | 来源 |
 |---|---|---|
-| 投机采样（2022–2023） | 草稿 + 并行校验，输出分布不变 | [[推理引擎生态]] 第三节 |
-| Medusa | 在目标模型上挂多个解码头出草稿 | [[推理引擎生态]] 第三节 |
+| 投机采样（2022–2023） | 草稿 + 并行校验，输出分布不变 | [[投机解码原理与发展脉络]] 第二、三节 |
+| Medusa | 在目标模型上挂多个解码头出草稿 | [[投机解码原理与发展脉络]] 4.1 节 |
 | EAGLE | 顶层特征上自回归的草稿头 + 树注意力校验 | EAGLE-3 §2 |
 | EAGLE-2 | 上下文感知的动态草稿树，EAGLE-3 沿用 | EAGLE-3 §2 |
 | HASS | 保留特征预测、缓解特征误差累积 | EAGLE-3 §3.2 |
@@ -95,8 +95,8 @@ EAGLE-3 把「草稿头训练」从固定约束下的拟合问题改成可随数
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| [[推理引擎生态]] | 投机解码共用背景（decode 受带宽束缚、草稿—校验框架、Medusa / Lookahead）在那篇第三节，本篇是其后 EAGLE 系草稿头的增量 | 引擎选型、经典框架证明 |
-| [[投机解码发展时间线]] | EAGLE-3 列在该时间线的投机与多 token 预测族中 | 族谱全表 |
+| [[投机解码原理与发展脉络]] | 投机解码共用背景（decode 受带宽束缚、草稿—校验框架、Medusa / Lookahead）与脉络在那篇，本篇是其后 EAGLE 系草稿头的增量，即那篇脉络的 2025-03 节点 | 经典框架证明、族谱全表 |
+| [[推理引擎生态]] | EAGLE-3 已进入 SGLang、TensorRT LLM 的投机配置，本篇第五节的 SGLang 大 batch 结果属引擎层；引擎选型看那篇 | 引擎选型 |
 | [[AdaptiveSpec与Goose]] | AdaptiveSpec 以 EAGLE-3 为草稿器和静态基线，在其上每步调树形、放宽校验；Goose 是无草稿头的对照路线 | margin 校验、各向异性树 |
 | [[EntMTP熵引导投机解码]] | EntMTP 借用 EAGLE-2 的 path value 作为选树特征，是同一「草稿置信驱动树形」思路在 MTP 头上的变体 | TopologyBank、Hydra 栈评测 |
 | [[MTP训练范式]] | 两者都训练草稿头：EAGLE-3 是独立的特征级草稿模型，那篇的 MTP 头与主模型联训；FastMTP 兼容 EAGLE 式递归草稿 | MTP 损失与头对齐 |

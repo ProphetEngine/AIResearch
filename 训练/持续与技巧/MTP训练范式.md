@@ -10,7 +10,7 @@ sources:
  - https://arxiv.org/abs/2605.28184
  - https://arxiv.org/abs/2509.18362
 arxiv: ["2608.00434", "2603.23911", "2605.28184", "2509.18362"]
-related: ["EntMTP熵引导投机解码", "EAGLE3投机解码", "推理引擎生态"]
+related: ["EntMTP熵引导投机解码", "EAGLE3投机解码", "投机解码原理与发展脉络", "推理引擎生态"]
 github_occ: "https://github.com/MarkXCloud/RL-MTP"
 github_fastmtp: "https://github.com/Tencent-BAC/FastMTP"
 archived: 2026-09-22
@@ -18,12 +18,12 @@ archived: 2026-09-22
 
 # MTP 训练范式：AdaMTP + MTP-D + OCC（≠ EntMTP）
 
-> **定位**：**Infra / 训练横切**——在 **[[推理引擎生态]]** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补（草稿头训练增量）、**[[EntMTP熵引导投机解码]]** 已写（**训练免费**的运行时选树调度）之后，本卡只写 **MTP 头/损失本身怎么训**：三条训练范式主文 **AdaMTP**（熵分段 + 动态掩码 MTP）、**MTP-D**（主头→MTP 头自蒸馏 + looped 扩头）、**OCC**（RL 后训联合 MTP 的最优系数在线校准）；**FastMTP** 仅作「训推对齐」补链。
+> **定位**：**Infra / 训练横切**——在 **[[投机解码原理与发展脉络]]** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补（草稿头训练增量）、**[[EntMTP熵引导投机解码]]** 已写（**训练免费**的运行时选树调度）之后，本卡只写 **MTP 头/损失本身怎么训**：三条训练范式主文 **AdaMTP**（熵分段 + 动态掩码 MTP）、**MTP-D**（主头→MTP 头自蒸馏 + looped 扩头）、**OCC**（RL 后训联合 MTP 的最优系数在线校准）；**FastMTP** 仅作「训推对齐」补链。
 > **研究线**：**架构思想（主）**——监督深度 / 蒸馏对象 / RL 系数如何改 MTP 训练目标；**训练目标与系数字段（辅）**——文内 Avg、AR/CAR、speedup、AIME avg@32 等照录。
 > **范围与相邻笔记**：
 > - **≠ [[EntMTP熵引导投机解码]] EntMTP**：EntMTP 是推理期 **TopologyBank 选树**、**不改**目标权重；本卡改的是 **训练损失 / 头对齐 / RL λ**。二者都谈「熵」，但 AdaMTP 的熵用于 **训练数据分段与损失掩码**，EntMTP 的熵/path-value 用于 **在线换草稿树**——二者不同。
 > - **≠ [[EAGLE3投机解码]] EAGLE-3**：不重写 training-time test、低/中/高特征融合、SGLang 大 batch 表；FastMTP 文内只「兼容 EAGLE-style 递归草稿」时点到接口，不展开 EAGLE 谱系。
-> - **≠ [[推理引擎生态]] 投机通史**：不写 Leviathan / Chen / Medusa / Lookahead 证明与引擎选型全文；「自投机 draft–verify、同分布」只当无损接口一句。
+> - **≠ [[投机解码原理与发展脉络]] 投机通史**：不写 Leviathan / Chen / Medusa / Lookahead 证明，引擎选型见 [[推理引擎生态]]；「自投机 draft–verify、同分布」只当无损接口一句。
 
 ---
 
@@ -55,7 +55,7 @@ archived: 2026-09-22
 |---|---|---|
 | **[[EntMTP熵引导投机解码]]** | 「自投机 + 草稿树」是推理接口；熵可作可预测性信号 | TopologyBank、path-value 选树、Hydra/Medusa 默认树 tok/s 主表 |
 | **[[EAGLE3投机解码]]** | FastMTP「EAGLE-style 递归草稿」兼容句 | training-time test、多层特征融合、SGLang Table 3–4 |
-| **[[推理引擎生态]] 投机通史** | draft–verify、边际同分布 → 无损加速 | Leviathan/Chen 证明、引擎选型全文 |
+| **[[投机解码原理与发展脉络]] 投机通史** | draft–verify、边际同分布 → 无损加速；那篇 4.1、4.5 节写 MTP 模块当草稿的一面 | Leviathan/Chen 证明、族谱全表 |
 
 ### 2.2 本卡三条主轴 vs 补链（训练阶段对照）
 
@@ -266,7 +266,7 @@ $$
 
 ## 九、局限与待核实
 
-- **不写**：EntMTP TopologyBank 主表；EAGLE-3 SGLang 表；[[推理引擎生态]] 通史；Medusa/Hydra 方法课。
+- **不写**：EntMTP TopologyBank 主表；EAGLE-3 SGLang 表；[[投机解码原理与发展脉络]] 通史；Medusa/Hydra 方法课。
 - 正式引用以官方 PDF / arXiv HTTPS 为准。
 - **AdaMTP / MTP-D**：文内无 GitHub → 不强行补仓。
 - **MTP-D「+220.4%」**：摘要宣称；细粒度任务分解以 Fig.5 / Table 8 为准，跨表不宜换算成未出现的 tok/s。

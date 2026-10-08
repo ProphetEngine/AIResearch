@@ -13,7 +13,7 @@ archived: 2026-09-22
 
 > **定位**：A.X K2 增量技术报告主题轴（相对 [[DeepSeekV3训练与MoE基建]] / [[KimiK2技术报告深读]] / [[GLM45技术报告深读]] / [[Qwen3技术报告深读]]）。数字一律取自官方 PDF `https://arxiv.org/abs/2608.30181`（2026-09-22 CST）。
 > **研究线**：**架构思想（主）** + **评测字段 / agentic bench（辅）**。
-> **刻意不写**：DeepSeek-V3 MoE+MLA+DualPipe/FP8 分块配方全文（见 [[DeepSeekV3训练与MoE基建]]）；Kimi-K2 MuonClip / 15.5T / agentic 数据合成通史（见 [[KimiK2技术报告深读]]）；GLM-4.5 / Qwen3 训练 Infra 与 scaling 配方全文；DSA 两阶段续训（见 [[DeepSeekV32技术报告深读]]）；EAGLE 投机解码通史（[[推理引擎生态]] / 留给 [[EAGLE3投机解码]]）。本卡只补「SKT **A.X K2** 相对 **A.X K1** 与开源 MoE 对照表里的本 PDF 新公开点」。
+> **刻意不写**：DeepSeek-V3 MoE+MLA+DualPipe/FP8 分块配方全文（见 [[DeepSeekV3训练与MoE基建]]）；Kimi-K2 MuonClip / 15.5T / agentic 数据合成通史（见 [[KimiK2技术报告深读]]）；GLM-4.5 / Qwen3 训练 Infra 与 scaling 配方全文；DSA 两阶段续训（见 [[DeepSeekV32技术报告深读]]）；EAGLE 投机解码通史（[[投机解码原理与发展脉络]] / [[EAGLE3投机解码]]）。本卡只补「SKT **A.X K2** 相对 **A.X K1** 与开源 MoE 对照表里的本 PDF 新公开点」。
 > A.X K1 独立 TR、Nemotron/GLM-5.1/Kimi-K2.6 等对照模型数字 **仅录本 PDF Table 6 转述**。
 
 ---

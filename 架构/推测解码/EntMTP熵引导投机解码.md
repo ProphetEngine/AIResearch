@@ -7,7 +7,7 @@ status: archived
 sources:
  - https://arxiv.org/abs/2606.27550
 arxiv: ["2606.27550"]
-related: ["推理引擎生态", "EAGLE3投机解码", "MTP训练范式", "AdaptiveSpec与Goose", "投机解码发展时间线"]
+related: ["投机解码原理与发展脉络", "EAGLE3投机解码", "MTP训练范式", "AdaptiveSpec与Goose"]
 archived: 2026-09-22
 ---
 
@@ -16,7 +16,7 @@ archived: 2026-09-22
 > **主要来源**：[EntMTP: Accelerating LLM Inference with Entropy Guided Multi Token Prediction](https://arxiv.org/abs/2606.27550)（Carrie Chen，Cornell，v1）（截至 2026-07-03）。
 > **研究线**：架构思想（按局部可预测性选草稿树，主）· 评测字段（相对 Hydra / Medusa 默认树的吞吐与接受长度，辅）
 > **范围与相邻笔记**：
-> - ≠ [[推理引擎生态]]：本篇不写「草稿—并行校验、分布不变」的框架，投机解码共用背景见该篇第三节。
+> - ≠ [[投机解码原理与发展脉络]]：本篇不写「草稿—并行校验、分布不变」的框架，投机解码共用背景见该篇。
 > - ≠ [[MTP训练范式]]：本篇不写 MTP 头与损失怎么训；EntMTP 不改任何权重。
 > - ≠ [[EAGLE3投机解码]]：本篇不写 EAGLE 系草稿头，只借用 EAGLE-2 的 path value 作调度特征。
 >
@@ -36,8 +36,8 @@ MTP 头挂在目标模型最终隐状态上，用树状候选做稀疏校验，�
 
 | 节点 | 内容 | 来源 |
 |---|---|---|
-| 投机采样 | 草稿 + 并行校验，分布不变 | [[推理引擎生态]] 第三节 |
-| Medusa、Hydra | 在目标模型上挂多 token 预测头，用固定草稿树校验 | [[推理引擎生态]] 第三节；EntMTP §2 |
+| 投机采样 | 草稿 + 并行校验，分布不变 | [[投机解码原理与发展脉络]] 第二、三节 |
+| Medusa、Hydra | 在目标模型上挂多 token 预测头，用固定草稿树校验 | [[投机解码原理与发展脉络]] 4.1、4.2 节；EntMTP §2 |
 | 离线选树（Ankner、Cai 等） | 在任务数据上离线搜索一张最优静态树 | EntMTP §3 |
 | EAGLE-2 动态树 | 用草稿置信在线展开、剪枝节点 | [[EAGLE3投机解码]]；EntMTP §2.2 |
 | EntMTP（2026） | 离线建多张前沿树，在线按 path value 在树间切换 | EntMTP |
@@ -86,11 +86,10 @@ EntMTP 把「推测深度应随上下文可预测性变化」做成零训练、�
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| [[推理引擎生态]] | 投机解码共用背景（草稿—校验、分布不变、Medusa）在那篇第三节，EntMTP 是在 Medusa / Hydra 这类多头草稿上的调度增量 | 引擎选型、经典框架证明 |
+| [[投机解码原理与发展脉络]] | 投机解码共用背景（草稿—校验、分布不变、Medusa）与脉络在那篇，EntMTP 是在 Medusa / Hydra 这类多头草稿上的调度增量，即那篇脉络的 2026-06 节点 | 经典框架证明、族谱全表 |
 | [[MTP训练范式]] | 两篇都谈 MTP 与熵，但那篇改训练损失与头对齐，EntMTP 不改权重、只在推理时选树 | AdaMTP、MTP-D、OCC 的训练配方 |
 | [[EAGLE3投机解码]] | EntMTP 的调度特征沿用 EAGLE-2 的 path value；EAGLE 系在同一草稿机制内在线展开节点，EntMTP 在多张固定拓扑间切换 | training-time test、多层特征融合 |
 | [[AdaptiveSpec与Goose]] | AdaptiveSpec 同样无训练、按草稿置信每步改树形，但在一个三元组区间里连续插值，并在 EAGLE-3 上实现 | margin 校验、各向异性树 |
-| [[投机解码发展时间线]] | EntMTP 列在该时间线的投机与多 token 预测族中 | 族谱全表 |
 
 ## 八、延伸阅读
 

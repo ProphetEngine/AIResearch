@@ -29,8 +29,8 @@ archived: 2026-09-22
 |---|---|
 | **主文献** | Yu, Jeong, Kim, Kim, Chun. *Orca: A Distributed Serving System for Transformer-Based Generative Models*. **OSDI 2022**（Carlsbad, CA；Proceedings of the 16th USENIX Symposium on OSDI） |
 | **入口** | https://www.usenix.org/conference/osdi22/presentation/yu ；PDF https://www.usenix.org/system/files/osdi22-yu.pdf |
-| **对照基线** | Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention*（vLLM）→ `https://arxiv.org/abs/2309.06180`；笔记交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] §1.3 |
-| **本篇不覆盖** | SGLang Radix / TRT-LLM 选型轴；KV 量化通史（→ [[KV缓存量化与压缩]]）；投机算法族正文（→ [[推理引擎生态]] §三） |
+| **对照基线** | Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention*（vLLM）→ `https://arxiv.org/abs/2309.06180`；笔记交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] 3.3 节 |
+| **本篇不覆盖** | SGLang Radix / TRT-LLM 选型轴；KV 量化通史（→ [[KV缓存量化与压缩]]）；投机算法族正文（→ [[投机解码原理与发展脉络]]） |
 
 **一句话抓手：** 自回归生成使单请求必须跑 **多次 iteration**（每步产出一 token）；若调度仍锁在 **请求级 batch**，早结束的请求无法立刻返回、晚到的请求必须等整批结束——Orca 把调度粒度改到 **单次 iteration**，并用 **selective batching** 让「已处理 token 数不同」的请求仍能共享非 Attention 算子的批执行。
 
@@ -131,8 +131,8 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 | 轴 | 管什么 | 不替代什么 |
 |---|---|---|
 | **Iteration-level / continuous batching** | **时间维**：一步（iteration）内如何把活跃序列拼进同一批执行；完成/到达如何即时进出 | 不决定 prefill 与 decode 是否同池；不减少目标模型必须串行的「逻辑步」上限 |
-| **Prefill–Decode（PD）分离** | **拓扑 / 池维**：算力型 prefill 与访存型 decode 是否分池扩缩（DeepSeek-V3 §3.4 叙事见 [[AI基础设施总览]]；[[推理引擎生态]] §1.3） | 分池之后，各池内部仍通常需要某种连续批 / 步进调度 |
-| **投机解码** | **串行步维**：用草稿 + 校验减少目标模型前向次数（[[推理引擎生态]] §三） | 接受/拒绝仍发生在步进循环里；与「批里有哪些序列」是不同旋钮 |
+| **Prefill–Decode（PD）分离** | **拓扑 / 池维**：算力型 prefill 与访存型 decode 是否分池扩缩（DeepSeek-V3 §3.4 叙事见 [[AI基础设施总览]]；[[推理引擎生态]] 3.3 节） | 分池之后，各池内部仍通常需要某种连续批 / 步进调度 |
+| **投机解码** | **串行步维**：用草稿 + 校验减少目标模型前向次数（[[投机解码原理与发展脉络]] 4.4 节） | 接受/拒绝仍发生在步进循环里；与「批里有哪些序列」是不同旋钮 |
 
 **正交命题（可检验）：**
 
@@ -175,9 +175,9 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 | 文献 / 入口 | 标识 | 链接 |
 |---|---|---|
 | Yu et al., *Orca* | OSDI 2022 | https://www.usenix.org/system/files/osdi22-yu.pdf ；会议页 https://www.usenix.org/conference/osdi22/presentation/yu |
-| Kwon et al., *PagedAttention / vLLM*（对照基线） | arXiv:2309.06180 | `https://arxiv.org/abs/2309.06180`；交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] §1.3 |
+| Kwon et al., *PagedAttention / vLLM*（对照基线） | arXiv:2309.06180 | `https://arxiv.org/abs/2309.06180`；交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] 3.3 节 |
 
-**次级交叉（点到为止，不作本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；[[推理引擎生态]] 投机解码四篇一手 PDF。
+**次级交叉（点到为止，不作本篇主证据）：** BatchMaker（Orca §7，RNN cell 级批处理前史）；DeepSeek-V3 Prefill/Decode 部署表（[[AI基础设施总览]]）；[[投机解码原理与发展脉络]] 投机解码一手论文。
 
 ---
 

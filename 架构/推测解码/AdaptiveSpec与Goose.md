@@ -8,7 +8,7 @@ sources:
  - https://arxiv.org/abs/2609.02897
  - https://arxiv.org/abs/2604.02047
 arxiv: ["2609.02897", "2604.02047"]
-related: ["EAGLE3投机解码", "EntMTP熵引导投机解码", "推理引擎生态", "投机解码发展时间线"]
+related: ["EAGLE3投机解码", "EntMTP熵引导投机解码", "投机解码原理与发展脉络"]
 ---
 
 # 投机解码新轴：AdaptiveSpec + Goose（≠ EAGLE-3）
@@ -17,7 +17,7 @@ related: ["EAGLE3投机解码", "EntMTP熵引导投机解码", "推理引擎生�
 > **研究线**：AI Infra（投机解码的树形与校验规则，主）· 数学原理（margin 判据、接受率异构下的最优树，辅）
 > **范围与相邻笔记**：
 > - ≠ [[EAGLE3投机解码]]：本篇不写 training-time test 与多层特征融合；AdaptiveSpec 把 EAGLE-3 当草稿器和静态基线，Goose 与 EAGLE-3 不同类。
-> - ≠ [[推理引擎生态]]：本篇不写「草稿—并行校验、分布不变」的基本框架与引擎选型，投机解码共用背景见该篇第三节。
+> - ≠ [[投机解码原理与发展脉络]]：本篇不写「草稿—并行校验、分布不变」的基本框架与草稿来源分类，投机解码共用背景见该篇。
 > - ≠ [[EntMTP熵引导投机解码]]：本篇不写在预编译拓扑间切换的调度器。
 >
 > **意义**：两篇都不训练新草稿头，只改「树怎么长、错配怎么判」：AdaptiveSpec 说明已有草稿器在运行时还能每步调树形、放宽校验；Goose 说明没有草稿头时，把接受率悬殊的两种免费候选源排成不对称的树，本身就能拿到 1.9–4.3× 的无损加速。
@@ -36,8 +36,8 @@ related: ["EAGLE3投机解码", "EntMTP熵引导投机解码", "推理引擎生�
 
 | 节点 | 内容 | 来源 |
 |---|---|---|
-| 投机采样 | 廉价草稿 + 目标并行校验，输出分布不变 | [[推理引擎生态]] 第三节 |
-| Medusa / Lookahead / PLD | 草稿内置进目标或免模型取候选 | [[推理引擎生态]] 第三节；Goose 相关工作 |
+| 投机采样 | 廉价草稿 + 目标并行校验，输出分布不变 | [[投机解码原理与发展脉络]] 第二、三节 |
+| Medusa / Lookahead / PLD | 草稿内置进目标或免模型取候选 | [[投机解码原理与发展脉络]] 4.1 节；Goose 相关工作 |
 | EAGLE → EAGLE-2 → EAGLE-3 | 特征级草稿、动态树、training-time test | [[EAGLE3投机解码]] |
 | FLy、TALON | 窗口式有损校验；固定预算下的置信树形 | AdaptiveSpec 相关工作 |
 | AdaptiveSpec（2026） | 在 EAGLE-3 上同时放松校验与树形，落在 SGLang | AdaptiveSpec |
@@ -110,8 +110,7 @@ $\mathrm{margin}(j)\ge\kappa$ 时放行该草稿 token，否则拒绝。margin �
 |---|---|---|
 | [[EAGLE3投机解码]] | AdaptiveSpec 的草稿器与静态基线就是 EAGLE-3，那篇讲这个草稿头怎么训，本篇讲它上面的树形与校验怎么在运行时调 | training-time test、多层特征融合 |
 | [[EntMTP熵引导投机解码]] | 同为无训练的运行时树形调度：那篇在离线挑好的几张预编译树之间切换，AdaptiveSpec 在一个三元组区间里连续插值 | TopologyBank、path value 选树 |
-| [[推理引擎生态]] | 投机解码的共用背景（decode 受带宽束缚、草稿—校验框架）在那篇第三节，本篇直接建立在其上 | 引擎选型、Leviathan / Medusa / Lookahead 正文 |
-| [[投机解码发展时间线]] | 本篇两种方法列在该时间线的投机解码族中 | 族谱全表 |
+| [[投机解码原理与发展脉络]] | 投机解码的共用背景（decode 受带宽束缚、草稿—校验框架、保分布接受规则）与脉络在那篇，本篇直接建立在其上；两种方法是那篇脉络 2026-04、2026-09 节点和 4.2、4.3 节的例子 | Leviathan / Medusa / Lookahead 正文、族谱全表 |
 
 ## 九、延伸阅读
 
@@ -120,4 +119,4 @@ $\mathrm{margin}(j)\ge\kappa$ 时放行该草稿 token，否则拒绝。margin �
 | 1 | [AdaptiveSpec](https://arxiv.org/abs/2609.02897) §3、Table 2–3 | margin 与 DCS 的定义；两轴消融与 batch 扫描 |
 | 2 | [Goose](https://arxiv.org/abs/2604.02047) §3–4、Figure 1 | 接受率异构的测量与四个命题；建树与贪心游走 |
 | 3 | [[EAGLE3投机解码]] | AdaptiveSpec 所用草稿器的来历 |
-| 4 | [[推理引擎生态]] 第三节 | 投机解码的基本框架与 decode 带宽瓶颈 |
+| 4 | [[投机解码原理与发展脉络]] 第一、三节 | 投机解码的基本框架与 decode 带宽瓶颈 |

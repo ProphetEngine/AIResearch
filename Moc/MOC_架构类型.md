@@ -23,7 +23,7 @@ status: active
 - [[AdaptiveSpec与Goose]]
 - [[EAGLE3投机解码]]
 - [[EntMTP熵引导投机解码]]
-- [[投机解码发展时间线]]
+- [[投机解码原理与发展脉络]]
 - [[推理时扩展TestTimeScaling]]
 - [[推理时树搜索ABMCTS]]
 - [[注意力与Transformer核心思想]]

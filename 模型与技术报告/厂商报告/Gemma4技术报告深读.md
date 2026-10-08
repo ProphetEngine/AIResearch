@@ -176,7 +176,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 - 输入：主模型上一布 last-layer activations + token embeddings；4 层 Transformer **cross-attend** 主模型 KV（Figure 1）。
 - Drafter 宽度：E2B/E4B **d=256**；26B-A4B/31B **d=1024**；结构 **3 local + 1 global**。
 - E2B/E4B 解码优化：词表投影改为 **token cluster top-k** → 最终 matmul **$d×262k → d×4096$**，接受率相近。
-- → 与 [[推理引擎生态]] / 预定 **[[EAGLE3投机解码]] EAGLE-3** 划界：本卡只记 Gemma 官方 MTP 附头，不写投机解码通史。
+- → 与 [[投机解码原理与发展脉络]] / **[[EAGLE3投机解码]] EAGLE-3** 划界：本篇只记 Gemma 官方 MTP 附头，不写投机解码通史（Gemma 4 在前者脉络中列为 2026-07 节点）。
 
 ---
 
@@ -263,7 +263,7 @@ Table 10：550M → $d=1152$，MLP 4304，heads 16，layers 27；150M → $d=768
 | 议题 | 本卡只点到的咬合 |
 |---|---|
 | **[[端侧小模型]] on-device SLM** | E2B/E4B PLE、mobile QAT、LiteRT-LM 内存列、Pixel/Chrome 叙事 → **专篇留给 [[端侧小模型]]**（可与 MobileLLM/Phi-4 对照） |
-| [[推理引擎生态]] / **[[EAGLE3投机解码]]** 投机解码 | 官方 MTP drafter ≠ EAGLE-3 通史 |
+| [[投机解码原理与发展脉络]] / **[[EAGLE3投机解码]]** 投机解码 | 官方 MTP drafter ≠ EAGLE-3；投机解码通史在前者 |
 | [[多模态架构脉络]] 多模态 | encoder-free 12B 作「去掉独立编码器」开源样本 |
 | [[长上下文位置编码与系统侧]] 长上下文 | local/global + p-RoPE + KV 复用；窗长以 128k/256k 评测为准 |
 | [[推理时扩展TestTimeScaling]] thinking / TTS | thinking 控制符与轨迹格式；**无** budget 曲线 |
