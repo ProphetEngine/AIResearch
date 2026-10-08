@@ -21,6 +21,7 @@ status: active
 - [[ClaudeSonnet55系统卡短报]]：2026-09-29
 - [[GPT6.1Sol系统卡短报]]：2026-09-30
 - [[Gemini4Argon短报]]：2026-10-01
+- [[MistralLarge4短报]]：2026-10-08
 
 ## 相关主题
 
