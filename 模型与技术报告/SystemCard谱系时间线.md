@@ -32,4 +32,4 @@ status: active
 
 ## 前沿折入说明
 
-- 前沿短报：[[ClaudeOpus55系统卡短报]] · [[ClaudeSonnet55系统卡短报]] · [[GPT6.1Sol系统卡短报]] · [[Gemini4Argon短报]] · [[MistralLarge4短报]] · [[MiMoV26智能体强化学习短报]]（见 [[MOC_前沿]]）
+- 前沿短报：[[ClaudeOpus55系统卡短报]] · [[ClaudeSonnet55系统卡短报]] · [[GPT6.1Sol系统卡短报]] · [[Gemini4Argon短报]] · [[MistralLarge4短报]] · [[GPT6SolLuna十月版系统卡短报]] · [[MiMoV26智能体强化学习短报]]（见 [[MOC_前沿]]）
