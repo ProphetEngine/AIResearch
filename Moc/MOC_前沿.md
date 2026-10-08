@@ -23,6 +23,7 @@ status: active
 - [[Gemini4Argon短报]]：2026-10-01
 - [[MistralLarge4短报]]：2026-10-08
 - [[GPT6SolLuna十月版系统卡短报]]：2026-10-08
+- [[ClaudeHaiku55系统卡短报]]：2026-10-08
 
 ## 相关主题
 
