@@ -1,225 +1,150 @@
 ---
-title: "技术报告专项：Kimi K2 Technical Report 深读切片（架构 / MoE / Infra）"
+title: Kimi K2 Technical Report 深读
 topic: KimiK2技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
 source_url: https://arxiv.org/abs/2507.20534
+sources:
+ - https://arxiv.org/abs/2507.20534
+ - https://huggingface.co/moonshotai/Kimi-K2-Instruct
+ - https://github.com/MoonshotAI/checkpoint-engine
+related: ["DeepSeekV3训练与MoE基建", "混合专家架构", "MoE路由与负载均衡", "优化器与训练稳定性", "分布式训练并行策略", "RL算力缩放与环境扩展", "开源与闭源前沿模型谱系", "GLM45技术报告深读"]
 archived: 2026-09-22
 ---
 
-# TR · Kimi K2 Technical Report 深读切片：架构 / MoE / Infra
+# Kimi K2 Technical Report 深读
 
-> **定位**：报告级对照表 / 深读卡。数字一律取自官方 PDF `https://arxiv.org/abs/2507.20534`。
-> **刻意不写**：开闭源谱系叙事（见 [[开源与闭源前沿模型谱系]]）、MoE 通史（见 [[混合专家架构]]）、Megatron/FA/vLLM 通论（见 [[AI基础设施总览]]）。本卡只补「可对表跟读」的规模、MuonClip、稀疏度选择与训练 Infra 要点。
-> **评测分**：摘要级亮点可录；完整 Table 3/4 不逐行抄入（见第六节待核实）。
+> **主要来源**：[Kimi K2: Open Agentic Intelligence](https://arxiv.org/abs/2507.20534)（Kimi Team，v2，2026-02-03；首次提交 2025-07-28）；[Kimi-K2-Instruct 权重页](https://huggingface.co/moonshotai/Kimi-K2-Instruct)（仅用于核对型号名）；[checkpoint-engine](https://github.com/MoonshotAI/checkpoint-engine)（报告 v2 所附代码地址）（截至 2026-02-03）。两个仓库页不引事实，不计入截至。
+> **研究线**：架构思想（主：更稀疏的 MLA-MoE、MuonClip）；AI Infra（辅：万亿参数训练的并行与显存方案、RL 权重同步）
+> **范围与相邻笔记**：
+> - ≠ [[DeepSeekV3训练与MoE基建]]：K2 以 V3 架构为参照，V3 自身的训练与基建在那篇。
+> - ≠ [[混合专家架构]]：MoE 的通史在那篇，本篇只记 K2 的配置与取舍。
+> - ≠ [[优化器与训练稳定性]]：Muon 的来历与优化器谱系在那篇，本篇写 MuonClip 的机制与 K2 的超参。
+>
+> **意义**：Kimi K2 是 1.04T 总参、32.6B 激活的开放权重 MoE（Table 2），在 DeepSeek-V3 式 MLA-MoE 骨架上走「更稀疏、更少注意力头」的路线，并用 MuonClip 在 15.5T token 上完成无损失尖峰的预训练。后训练以大规模智能体数据合成加联合 RL 为主，报告称它在开源 non-thinking 模型中达到最好水平，智能体与软件工程能力尤其突出。
 
----
+## 一、问题背景
 
-## 一、报告元信息
+报告认为大模型正转向智能体智能：模型要在复杂、动态的环境中自主感知、规划、推理与行动。这给训练两端都提出了要求：预训练阶段高质量人类数据越来越有限，token 效率（每个 token 带来的学习信号）成为关键的缩放系数；后训练阶段要把先验转成可执行的行为，而智能体轨迹稀少、难以大规模获取（§1）。K2 对前者的回答是 Muon 优化器与知识数据改写，对后者是工具调用数据合成与可验证、自评两类奖励结合的 RL。
 
-| 项 | 报告原文 / PDF 元数据 | 出处 |
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| 标题 | Kimi K2: Open Agentic Intelligence（封面另标 *Technical Report of Kimi K2*） | 封面 |
-| 作者 | Kimi Team（XMP 另列大量具名贡献者） | 封面；XMP |
-| arXiv 页眉 | **arXiv:2507.20534v2** \[cs.LG\] **3 Feb 2026** | PDF 第 1 页页眉 |
-| XMP identifier | `https://arxiv.org/abs/2507.20534v2` | ` -meta` |
-| XMP MetadataDate | 2026-02-04T01:38:06+00:00（→ 用户时区 **2026-02-04 09:38 CST**） | XMP |
-| PDF 页数 | **32**（letter） | |
-| Creator / Producer | arXiv GenPDF (tex2pdf:57610bf)；pikepdf 8.15.1 | |
-| 权利声明（XMP） | `http://creativecommons.org/licenses/by-nc-nd/4.0/` | XMP |
-| PDF 链接 | `https://arxiv.org/abs/2507.20534` | arXiv |
-| 权重（摘要脚注） | https://huggingface.co/moonshotai/Kimi-K2-Instruct | Abstract 脚注 1 |
-| Checkpoint engine（§3.3） | https://github.com/MoonshotAI/checkpoint-engine | §3.3.2 脚注 4 |
-| 摘要规模一句话 | MoE；摘要写 **32B activated / 1T total**；MuonClip；预训练 **15.5T** tokens、「zero loss spike」；后训练含 agentic 数据合成 + 联合 RL | Abstract |
+| 2024-12 | [DeepSeek-V3](https://arxiv.org/abs/2412.19437) | MLA-MoE 骨架，K2 架构的参照 |
+| 2025-01 | [Kimi k1.5](https://arxiv.org/abs/2501.12599) | K2 沿用的数据管线、RL 算法、colocated 架构与 partial rollout |
+| 2025-02 | [Muon is Scalable（Moonlight）](https://arxiv.org/abs/2502.16982) | Muon 加权重衰减与一致的更新 RMS 缩放；K2 §2.1 转述其结论：同等算力与模型规模下 Muon 明显优于 AdamW |
+| 2025-07 | [Kimi K2](https://arxiv.org/abs/2507.20534) | MuonClip、稀疏度 48、智能体数据合成与联合 RL |
 
-**版本说明（本卡边界）**：本 PDF 页眉仅标 **v2 / 3 Feb 2026**。首发日、v1 修订史若不在本 PDF 正文 → 见第六节待核实。摘要「1 trillion / 32 billion」与正文 Table 2「**1.04T / 32.6B**」并存，对表时以后者为准并在待核实中标注。
+## 三、核心机制：架构与预训练
 
----
+### 3.1 与 DeepSeek-V3 的架构对照（§2.3，Table 2）
 
-## 二、模型规模 / MoE / 训练对照表（仅报告数字）
+K2 采用与 DeepSeek-V3 相似的设计，注意力用 MLA，隐层维度 7168，专家隐层维度 2048。
 
-### 2.1 与 DeepSeek-V3 的架构对照（Table 2 + §2.3）
-
-| 项 | DeepSeek-V3（报告表内） | Kimi K2 | 报告 ∆ |
+| 项 | DeepSeek-V3 | Kimi K2 | 报告所列变化 |
 |---|---|---|---|
-| #Layers | 61 | **61** | = |
-| Total Parameters | 671B | **1.04T** | ↑ 54% |
-| Activated Parameters | 37B | **32.6B** | ↓ 13% |
-| Experts (total) | 256 | **384** | ↑ 50% |
-| Experts Active per Token | 8 | **8** | = |
-| Shared Experts | 1 | **1** | = |
-| Attention Heads | 128 | **64** | ↓ 50% |
-| Number of Dense Layers | 3 | **1** | ↓ 67% |
-| Expert Grouping | Yes | **No** | — |
-| Hidden dim（正文） | — | **7168** | §2.3 |
-| MoE expert hidden dim（正文） | — | **2048** | §2.3 |
-| Attention | MLA（报告称 similar to V3） | **MLA** | §2.3 |
-| Sparsity（= total / activated experts） | — | **48**（8/384） | §2.3 |
+| 层数 | 61 | 61 | = |
+| 总参数 | 671B | 1.04T | ↑ 54% |
+| 激活参数 | 37B | 32.6B | ↓ 13% |
+| 专家总数 | 256 | 384 | ↑ 50% |
+| 每 token 激活专家 | 8 | 8 | = |
+| 共享专家 | 1 | 1 | = |
+| 注意力头 | 128 | 64 | ↓ 50% |
+| 稠密层数 | 3 | 1 | ↓ 67% |
+| 专家分组 | 有 | 无 | — |
 
-> 摘要/引言另写「32 billion activated」「1 trillion / 1.04 trillion」——与 Table 2 的 **32.6B / 1.04T** 口径不完全同一；本卡规模表以 **Table 2** 为准。
+### 3.2 稀疏度与注意力头数的取舍（§2.3）
 
-### 2.2 稀疏度与注意力头选择（§2.3；Figure 5–6）
+- **稀疏度**：定义为专家总数与激活专家数之比。小规模受控实验显示，固定激活参数（即固定 FLOPs）时，增加专家总数会持续降低训练与验证损失。按计算最优的稀疏度缩放律，要达到 1.5 的验证损失，稀疏度 48 相对 8、16、32 分别减少 1.69×、1.39×、1.15× 的 FLOPs。稀疏度越高基础设施越复杂，K2 折中取 48，即 384 个专家激活 8 个。
+- **注意力头**：DeepSeek-V3 把头数设为层数的约两倍以更好利用显存带宽。但在 128k 序列上，把头数从 64 加到 128（专家总数固定 384）会使推理 FLOPs 增加 83%，对需要高效处理长上下文的智能体应用是硬伤；而同等 token 下头数加倍只让验证损失改善 0.5% 到 1.2%。K2 因此取 64 个头。
 
-| 主张 / 数字 | 报告表述 |
+### 3.3 MuonClip 与 QK-Clip（§2.1）
+
+扩大 Muon 训练时会出现注意力 logit 爆炸，作者实验中 Muon 比 AdamW 更常见。logit soft-cap 只在点积之后截断，点积本身仍可能过大；QK-Norm 不适用于 MLA，因为推理时 Key 矩阵没有完全物化。
+
+QK-Clip 以每个头在 batch 内的最大 logit 为信号，超过阈值 τ 时在更新后按头缩放该头的 query 与 key 投影权重，不改变当前步的前向与反向计算。对 MLA 只裁剪不共享的部分：头专属的 q^C、k^C 各乘缩放因子的平方根，头专属的旋转分量 q^R 乘缩放因子，共享的旋转分量 k^R 不动，以免影响其他头。MuonClip 即 Muon 加权重衰减、一致的更新 RMS 缩放与 QK-Clip。
+
+效果：中等规模（9B 激活、53B 总参）的 MoE 用原始 Muon 训练时，最大注意力 logit 很快超过 1000；K2 正式训练取 τ = 100。附录 D 记录，前 70000 步中有 12.7% 的注意力头至少触发过一次 QK-Clip，之后各头的最大 logit 自然降到 100 以下，裁剪不再生效。
+
+### 3.4 预训练数据与配方（§2.2、§2.5）
+
+语料 15.5T token，覆盖网页文本、代码、数学与知识四个领域，处理管线大多沿用 Kimi k1.5。为提高高质量知识 token 的利用率，知识数据用多风格、多视角的改写（v2 注明受 WRAP 启发），长文档按块自回归改写再拼接，并做忠实度校验；Table 1 显示，在早期检查点上把原始数据改写 10 次、各训一遍，SimpleQA 准确率高于原始数据重复 10 个 epoch。数学数据改写成「学习笔记」风格，并把其他语言的高质量数学材料翻译成英文。
+
+上下文窗口 4,096 token，用 MuonClip 与 WSD 学习率调度：500 步预热后前 10T token 用恒定学习率 2e-4，随后 5.5T token 余弦衰减到 2e-5；权重衰减全程 0.1，全局 batch 67M token。预训练末尾先退火再做长上下文激活：batch 不变，学习率从 2e-5 降到 7e-6，先以 4k 序列训 400B token，再以 32k 序列训 60B token，最后用 YaRN 把上下文扩到 128k。
+
+## 四、训练基础设施（§2.4、§3.3）
+
+### 4.1 集群与并行
+
+训练用 NVIDIA H800 集群：每节点 2 TB 内存、8 块 GPU，节点内 NVLink 与 NVSwitch 互联，节点间 8×400 Gbps RoCE。为适应资源变化，K2 可在任意 32 的倍数个节点上训练，小规模与大规模实验复用同一并行配置。
+
+- **并行组合**：16 路带虚拟阶段的流水线并行、16 路专家并行与 ZeRO-1 数据并行。BF16 参数加 FP32 梯度累积缓冲约需 6 TB 显存，分布在 256 块 GPU 组成的模型并行组上，每块 GPU 用约 30 GB 存放全部状态，其余留给激活。优化器状态在节点多时分布存放，节点少（如 32 个）时可部分卸载到 CPU。
+- **不用 DualPipe**：DualPipe 使参数与梯度显存加倍，须加大并行度来弥补；对超过 1 万亿参数的模型，这些额外开销「prohibitively high」。K2 改为增加预热 micro-batch，在标准的交错 1F1B 调度下让专家并行的 all-to-all 与计算重叠，并让权重梯度计算与流水线通信并行。
+- **专家并行取最小可行值 16**：K2 只有 64 个注意力头，注意力计算时间更短，需要压缩专家并行的通信时间；较小的专家并行规模也放松了专家负载均衡的约束。
+
+### 4.2 激活显存
+
+- **选择性重算**：对 LayerNorm、SwiGLU 与 MLA 上投影这类计算便宜、占用大的环节重算；必要时也重算 MoE 下投影，防止训练早期专家不均衡导致显存溢出。
+- **FP8 只用于存储**：MoE 上投影与 SwiGLU 的输入以 1×128 tile 压缩为 FP8-E4M3，配 FP32 缩放；小规模实验未见可测的损失上升。由于初步研究中观察到性能下降风险，计算不用 FP8。
+- **激活卸载到 CPU**：其余激活全部卸载到 CPU 内存，由 copy engine 与计算、通信重叠；1F1B 阶段卸载上一 micro-batch 的前向激活，同时预取下一 micro-batch 反向所需的激活。
+
+### 4.3 RL 基础设施
+
+- **colocated 架构**：与 k1.5 相同，训练与推理引擎驻留同一批 worker，一方工作时另一方释放或卸载 GPU 资源。
+- **checkpoint engine**：每次迭代把训练引擎的新参数广播给推理引擎。作者选择向全集群广播完整参数，传输量是理论最优的数倍，换来与训练、推理引擎解耦的简单设计；K2 一次全量参数更新不到 30 秒。附录 G 记录，H800 上并发的主机到设备拷贝与广播会争用共享的 PCIe 带宽，因此实际采用两阶段方案：先同步完成主机到设备拷贝，再让广播与重载并行。
+- **智能体 rollout**：重型环境部署为可独立扩展的服务；长尾轨迹用 partial rollout 暂停，留到下一轮 RL 迭代继续；新环境通过仿照 OpenAI Gym 的统一接口接入。
+
+## 五、核心机制：后训练（§3）
+
+- **优化器**：SFT 与 RL 都用 Muon；作者此前的结论是 Muon 预训练的检查点用 Muon 微调效果最好。
+- **智能体数据合成**（§3.1.1）：工具库由两部分组成，一是从 GitHub 获取的 3000 多个真实 MCP 工具，二是按领域层级演化合成的两万多个工具。流程依次是工具规格、智能体与任务（每个任务配明确的 rubric）、轨迹生成；由 LLM 评判按 rubric 过滤，只保留达标轨迹。编程与软件工程任务另接真实执行沙箱，基于 Kubernetes，支持超过 10,000 个并发沙箱实例。
+- **RL 框架**（§3.2）：在类 Gym 的可扩展框架中，可验证奖励（RLVR）覆盖数学、STEM、逻辑、指令遵循、忠实度与代码等任务；对不可验证的任务，用自评 rubric 奖励：K2 critic 按核心、规范性与人工标注三类 rubric 对 actor 的回答两两比较排序，critic 本身再用可验证任务的 on-policy rollout 持续校准。
+- **RL 算法**（§3.2.3）：沿用 k1.5 的策略优化算法，并新增三项：按任务类型设定每样本最大 token 预算，超出则截断并惩罚（预算控制）；用人工挑选的高质量样本加辅助 PTX 损失防遗忘；创意写作与复杂推理任务前期用高采样温度鼓励探索，后期逐步降温（温度衰减）。
+
+## 六、主要结果（§1、§4）
+
+| 维度 | 报告数字 |
 |---|---|
-| 稀疏度定义 | total experts / activated experts |
-| 小规模规律 | 固定激活参（恒 FLOPs）下，提高 total experts（提高 sparsity）→ train/val loss 更低 |
-| 同 val loss=1.5 时 | sparsity **48** 相对 8 / 16 / 32 约减 FLOPs **1.69× / 1.39× / 1.15×** |
-| K2 取舍 | sparsity **48**（性能 vs Infra 复杂度） |
-| 头数动机 | agentic 长上下文推理成本：128k 上 heads 64→128（experts 固定 384）→ inference FLOPs **+83%** |
-| 头数实验 | iso-token 下加倍 heads，val loss 改善约 **0.5%–1.2%**；相对 sparsity 48 收益不划算 → 选 **64** heads |
+| 智能体与工具 | Tau2-Bench 66.1，ACEBench (En) 76.5 |
+| 软件工程 | SWE-Bench Verified 65.8（多次尝试 71.6%），SWE-Bench Multilingual 47.3 |
+| 代码、数学与 STEM | LiveCodeBench v6 53.7，OJBench 27.1，AIME 2025 49.5，GPQA-Diamond 75.1 |
+| 人类偏好 | LMSYS Arena（July 17, 2025）开源模型第 1、总榜第 5，基于 3,000 多张用户投票 |
 
-### 2.3 预训练配方（§2.5 + §2.1 + §2.2）
+评测配置（§4.1.1）：全部为 non-thinking 模式；输出上限 8192 token，SWE-bench Verified（Agentless）放宽到 16384。
 
-| 项 | 报告设定 |
-|---|---|
-| 优化器 | **MuonClip** = Muon + weight decay + consistent update RMS scaling + **QK-Clip**（Algorithm 1） |
-| QK-Clip 阈值 $\tau$（K2 正式跑） | **100** |
-| 预训练上下文 | **4,096** tokens |
-| 总 token | **15.5T** |
-| LR 调度 | **WSD** [26]：500-step warm-up 后，前 **10T** 恒定 **2e-4**；随后 **5.5T** cosine **2e-4 → 2e-5** |
-| Weight decay | **0.1**（全程） |
-| Global batch | **67M** tokens（恒定） |
-| 损失曲线 | Figure 3：全程 **no spikes**（未平滑/未抽样） |
-| 退火 + 长上下文激活 | batch 仍 67M；LR **2e-5 → 7e-6**；**400B** @ 4k + **60B** @ **32k**；再用 **YaRN** 扩到 **128k** |
-| 语料域 | Web Text / Code / Mathematics / Knowledge；处理管线多沿用 Kimi K1.5；知识/数学域强调 **rephrasing** 提 token utility |
-| 中尺度对比实验（Muon 不稳定） | 9B activated / 53B total MoE + vanilla Muon：max attention logits 快速 **>1000** |
+## 七、意义
 
-**MuonClip / QK-Clip 机制要点（§2.1）**：
+K2 把「稀疏度」明确当作可缩放的变量，用小规模缩放律支撑取 48 的决定，同时出于长上下文推理成本减少注意力头，给出了与 DeepSeek-V3 不同的 MoE 配置取舍。MuonClip 解决了 Muon 在万亿参数规模下的 logit 爆炸，使 token 效率更高的优化器能用于前沿规模的预训练。工程上，它不用 DualPipe，而用较小的专家并行、1F1B 重叠与激活卸载来容纳万亿参数，checkpoint engine 则示范了以多传数据换系统解耦的 RL 权重同步。
 
-- 问题：Muon 相对 AdamW 更易出现 **exploding attention logits**；logit soft-cap 不够；**QK-Norm 不适用于 MLA**（推理时 Key 未完全物化）。
-- 做法：用 batch 内 per-head max logit $S_{\max}^h$ 作信号；超过 $\tau$ 时 **post-update** 缩放 $W_q/W_k$（**不改当前步 forward/backward**）。
-- MLA 裁剪：仅 unshared 分量——$q_C,k_C$ 各乘 $\sqrt{\gamma_h}$；$q_R$ 乘 $\gamma_h$；**共享 $k_R$ 不动**。
-- Appendix D：K2 上前约 **70k steps** 有 **12.7%** heads 至少触发一次 clip；之后 heads 的 $S_{\max}$ 落到 100 以下 → clip **自停用**。
+## 八、局限与待核实
 
-### 2.4 后训练配方（公开级；§3）
+1. **规模写法不一**：摘要写 32B 激活、1T 总参，§2.3 写 1.04 trillion 与 32 billion，Table 2 写 1.04T 与 32.6B；本篇规模以 Table 2 为准，引用时须标明出处。
+2. **未给出的超参**：tokenizer 词表大小、路由函数、负载均衡方法、MLA 压缩维度与 YaRN 的具体参数，报告都没有给出与 V3 同级的完整表，不能从 V3 直接套用。
+3. **算力未汇总**：报告没有给出类似 V3 的全流程 GPU 小时汇总。
+4. **评测范围**：本篇只摘摘要级分数，完整的 Table 3、Table 4 与安全评测未录。
+5. **榜单时效**：Arena 排名是报告所写 July 17, 2025 的快照。
+6. **版本差异**：v1（2025-07-28）与 v2（2026-02-03）的正文结论与数字一致；v2 主要增补知识改写受 WRAP 启发的引注、checkpoint engine 的开源地址，并重排了参考文献。本篇按 v2。
 
-| 项 | 报告设定 |
-|---|---|
-| SFT / RL 优化器 | **Muon**（作者建议：Muon 预训练 ckpt 用 Muon 微调） |
-| Agentic SFT 数据 | 工具规格仓：真实 **MCP 工具 3000+** + 合成工具 **>20,000**；三阶段：tool spec → agent/task → trajectory；LLM judge + rubric 过滤；编码/SE 另接 **真实 sandbox** |
-| RL 框架 | verifiable rewards（**RLVR**）+ **self-critique rubric reward**；Gym-like 可扩展任务集 |
-| RL 算法 | 沿用 **K1.5** 的 policy optimization；组采样 $K$ 条、相对均值奖励、带 $\tau\log(\pi_\theta/\pi_{\mathrm{old}})^2$ 正则项（公式见 §3.2.3）；另加 **Budget Control / PTX Loss / Temperature Decay** |
-| SE sandbox | Kubernetes；**>10,000** 并发 sandbox 实例（§3.2.1） |
+## 九、与相邻笔记的分工
 
----
-
-## 三、架构与 Infra 公开要点
-
-### 3.1 预训练集群与并行（§2.4.1–2.4.2）
-
-| 项 | 报告 |
-|---|---|
-| GPU | **NVIDIA H800** |
-| 节点 | 每节点 **2 TB RAM**；**8 GPUs**；节点内 **NVLink + NVSwitch** |
-| 跨节点 | **8×400 Gbps RoCE** |
-| 弹性目标 | 可用任意 **32 的倍数** 节点数训练；小/大实验复用同一并行配置 |
-| 并行组合 | **16-way PP**（virtual stages）+ **16-way EP** + **ZeRO-1 DP** |
-| 模型并行组显存 | BF16 参数 + FP32 grad accum ≈ **6 TB**，摊在 **256 GPUs** 的 MP group |
-| 每卡状态预算 | 约 **30 GB** 装 parameters / grads / optimizer states；余量给 activations |
-| 优化器状态 | 大集群：分布式；小集群（例 **32** 节点）：可 **CPU offload** 部分 optimizer states |
-| DualPipe | **明确不用**：会加倍参数/梯度显存，迫使加大并行 → 气泡或 EP 开销对 **>1T** 参数「prohibitively high」 |
-| EP 通信重叠 | 增加 warm-up micro-batches，在标准 **interleaved 1F1B** 下叠 EP all-to-all；并把 weight-grad 与 PP 通信并行，使 warm-up 外 PP 通信可重叠 |
-| EP 规模 | 取可行最小 **EP=16**（K2 仅 64 attn heads，算力段更短，需缩短 EP 时间；小 EP 也放松 expert-balance 约束） |
-
-### 3.2 Activation 压缩与卸载（§2.4.3）
-
-| 技巧 | 报告要点 |
-|---|---|
-| Selective recomputation | LayerNorm、SwiGLU、**MLA up-projections**；另可选重算 **MoE down-projections**（防早期 expert imbalance OOM） |
-| FP8 **存储**（非计算） | MoE up-projection 与 SwiGLU 的 **inputs** → **FP8-E4M3**，**1×128 tiles** + FP32 scales；小规模称无 measurable loss 上升；**不把 FP8 用于 computation**（初步研究担心性能退化） |
-| Activation CPU offload | 剩余 activation → CPU；copy engine 与 compute/comm 重叠；1F1B 阶段 offload 上一 micro-batch forward、prefetch 下一 backward（Figure 7） |
-
-### 3.3 RL Infra（§3.3；与预训练 Infra 并列记录）
-
-| 项 | 报告 |
-|---|---|
-| 架构 | 与 K1.5 类似的 **hybrid colocated**：train / inference engine 同 worker，交替占用 GPU |
-| 权重同步 | 专用 **checkpoint engine**；选择「整模 broadcast」换简单解耦；K2 全量参数更新 **<30 s** |
-| H800 细节（App. G） | 并发 H2D+broadcast 会打满共享 PCIe → 实际采用 **two-stage**（同步 H2D 后，broadcast∥reload） |
-| 启动 | 训练侧集体只读盘一次再 peer broadcast；推理副本复用 checkpoint engine，降低单点故障联动 |
-| Agentic rollout | 重环境独立可扩服务；大量并发 rollout；**partial rollout** 暂停长尾轨迹到下一 RL iter；Gym 风格统一环境接口 |
-
----
-
-## 四、摘要级能力锚点（非评测深挖）
-
-报告自称 open-source **non-thinking** 设定下的 agentic/SWE 强项（Abstract / §1 / §4；完整表见 Table 3）：
-
-| 基准（报告给出） | K2 分数（报告） |
-|---|---|
-| Tau2-Bench | **66.1** |
-| ACEBench (En) | **76.5** |
-| SWE-Bench Verified | **65.8**（文中另写 multiple attempts **71.6%**） |
-| SWE-Bench Multilingual | **47.3** |
-| LiveCodeBench v6 | **53.7** |
-| AIME 2025 | **49.5** |
-| GPQA-Diamond | **75.1** |
-| OJBench | **27.1** |
-| LMSYS Arena（报告引用日期） | 2025-07-17：open-source top-1、overall 第 5（>3000 votes） |
-
-评测配置要点（§4.1.1）：一律 **non-thinking**；输出默认 cap **8192**（SWE Agentless **16384**）；长上下文评测窗口 **128K**。
-
----
-
-## 五、与既有笔记的差异说明
-
-| 已有笔记 | 已覆盖（本卡不复述） | **本 TR 卡新增 / 加深** |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **[[混合专家架构]]** MoE | 稀疏 MoE / V3 头条结构 | K2：**384 experts / top-8 / sparsity 48 / 无 expert grouping / dense layers=1 / heads=64**；Muon 下 sparsity scaling 数字 |
-| **[[开源与闭源前沿模型谱系]]** 谱系 | 开闭源坐标 | 报告页元信息（arXiv v2 · 32 页）；1.04T/32.6B 可对表口径 |
-| **[[AI基础设施总览]]** Infra | DualPipe/FP8/EP 通论 | K2：**不用 DualPipe**；EP=16+PP=16+ZeRO-1；FP8 **仅存不算**；activation CPU offload；RL colocated + checkpoint-engine <30s |
-| **[[DeepSeekV3训练与MoE基建]]** | V3 训练/MoE/Infra 深表 | 本卡提供 **K2↔V3 Table 2 差分** 与 MuonClip 专页 |
+| [[DeepSeekV3训练与MoE基建]] | V3 是 K2 架构的参照，本篇 3.1 节列出两者的配置差分 | V3 的训练与基建 |
+| [[混合专家架构]] | K2 的专家数、稀疏度与头数取舍 | MoE 通史 |
+| [[MoE路由与负载均衡]] | 本篇 3.2 节的稀疏度定义与取 48 的理由，在那篇的稀疏度与粒度讨论中作为案例 | 路由与负载均衡方法 |
+| [[优化器与训练稳定性]] | MuonClip 与 QK-Clip 的机制、K2 的阈值与裁剪统计 | Muon 的来历与优化器谱系 |
+| [[分布式训练并行策略]] | 本篇 4.1 节的 EP16 × PP16 × ZeRO-1 与不用 DualPipe 的理由，在那篇与 DeepSeek-V3 的组合并列对照 | 并行策略的通论 |
+| [[RL算力缩放与环境扩展]] | K2 的工具合成、Gym 式环境接口与 partial rollout，是那篇环境扩展的工业案例 | RL 算力缩放的整体脉络 |
+| [[开源与闭源前沿模型谱系]] | K2 在那篇中作为开放权重模型的一个节点 | 各厂代际坐标 |
+| [[GLM45技术报告深读]] | K2 之后，以 K2 为对照的「窄而深」MoE 取舍见 [[GLM45技术报告深读]] | GLM-4.5 的配方与结果 |
 
-**一句话**：K2 在 V3 式 MLA-MoE 骨架上走「更稀、更少头、MuonClip 换 token 效率」，Infra 则用较小 EP + 1F1B 重叠 + CPU offload，并显式拒绝 DualPipe。
+## 十、延伸阅读
 
----
-
-## 六、局限、待核实与引用
-
-### 6.1 局限与待核实
-
-1. arXiv **首发 / v1 日期**与 revision 历史：本 PDF 页眉仅见 **v2 · 3 Feb 2026**；写「首发日」需回查 https://arxiv.org/abs/2507.20534。
-2. 摘要「**1T / 32B**」vs Table 2「**1.04T / 32.6B**」vs 引言「1.04 trillion / 32 billion」——三处口径并存；对外引用建议标明来源表/段。
-3. Tokenizer 词表大小、路由函数（sigmoid/softmax）、aux-loss / bias 负载均衡细节、MLA 压缩维 $d_c,d_c'$ 等：**本 PDF 正文未给出与 V3 §4.2 同级的完整超参表** → 勿从 V3 卡直接搬运。
-4. 总 GPU hours / 美元成本：报告**未**给出类似 V3 Table 1 的全流程 H800 hours 汇总。
-5. YaRN 的具体 $s,\alpha,\beta$ 等超参：仅写「employed the YaRN method」，细参未在 §2.5 展开。
-6. Table 3/4 全部分数、安全评测、Appendix 曲线：本专项聚焦架构/训练/Infra，**未逐格录入**。
-7. XMP 权利为 **BY-NC-ND 4.0**；权重仓库实际许可证以 Hugging Face 页面为准（本 PDF 未在摘要写死 Apache 等）。
-8. LMSYS 排名绑定报告所写 **2025-07-17** 快照，非永久状态。
-
-### 6.2 引用
-
-- Kimi Team. *Kimi K2: Open Agentic Intelligence* (Technical Report). arXiv:2507.20534v2 \[cs.LG\], 3 Feb 2026.
- PDF：https://arxiv.org/pdf/2507.20534
-
-### 6.3 关联笔记
-
-- [[混合专家架构]]（MoE 史线）
-- [[开源与闭源前沿模型谱系]]（谱系）
-- [[AI基础设施总览]]（Infra 通论）
-- [[DeepSeekV3训练与MoE基建]]（V3 对照底表）
-
-## 相关笔记
-
-### 技术报告专项
-- [[DeepSeekV3训练与MoE基建]]
-- [[DeepSeekV32技术报告深读]]
-- [[Qwen3技术报告深读]]
-- [[DeepSeekR1推理训练深读]]
-- [[GPT5系统卡深读]]
-- [[Gemini25技术报告深读]]
-- [[ClaudeOpus45系统卡深读]]
-- [[KimiK2技术报告深读]]
-- [[GLM45技术报告深读]]
-- [[MiniMaxM1技术报告深读]]
-- [[MOC_模型与技术报告]]
-
-### 相关深度笔记
-- [[混合专家架构]]
-- [[开源与闭源前沿模型谱系]]
-- [[AI基础设施总览]]
-- [[分布式训练并行策略]]：本篇第三节的 EP16 × PP16 × ZeRO-1 与不用 DualPipe 的理由，在那篇与 DeepSeek-V3 的组合并列对照。
-- [[MoE路由与负载均衡]]：本篇的稀疏度定义与取 48 的理由，在那篇的稀疏度与粒度讨论中作为案例。
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [Kimi K2 arXiv（v2）](https://arxiv.org/abs/2507.20534v2) | §2.1 MuonClip、§2.3 稀疏度与头数、§2.4 基础设施 |
+| 2 | [Muon is Scalable for LLM Training](https://arxiv.org/abs/2502.16982) | MuonClip 之前的 Muon 规模化配方 |
+| 3 | [checkpoint-engine](https://github.com/MoonshotAI/checkpoint-engine) | RL 权重同步的实现 |
+| 4 | [Kimi-K2-Instruct](https://huggingface.co/moonshotai/Kimi-K2-Instruct) | 权重与部署说明 |
