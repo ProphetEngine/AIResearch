@@ -71,6 +71,7 @@ API 索引（`author=aisingapore&search=Nemotron-SEA-LION-v4.8`，2026-09-22；*
 | **[[多语言与跨语种]]** | 「多语覆盖不均、低资源脚本吃亏」动机一句；XLM-R curse / BLOOM ROOTS **不重写** | 编码器多语 MLM、ROOTS 语种表、旗舰配比旋钮通史 |
 | **[[NemotronCC数据策展]]** | CPT 用到的 Nemotron 系 SFT/推理子集名可索引；清洗哲学不展开 | Nemotron-CC 过滤 / 去重 / 质量分类全文 |
 | **[[Nemotron3Ultra技术报告深读]]** | 初始化自 Nemotron 3 Nano / Super；教师 Ultra 550B **作 OPD 信号源一句**；混合 MoE 架构名一句 | Ultra 训练配方、agentic 旗舰评测、LatentMoE 消融全文 |
+| **[[文化对齐]]** | 区域模型之外的另一条路：在通用模型上用语境条件化的偏好训练做文化对齐，可与 SEA-HELM 的区域评测对照 | CoCoA / Flattened 方法与指标 |
 
 ### 2.2 本卡主轴 vs 范围外
 
