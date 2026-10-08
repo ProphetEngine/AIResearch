@@ -1,5 +1,5 @@
 ---
-title: "生产级 Agent Memory 层：Mem0 + Zep（≠ MemGPT/A-Mem/Memory-R1）"
+title: "生产级 Agent Memory 层：Mem0 + Zep"
 topic: Mem0与Zep生产级记忆
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -14,279 +14,157 @@ related:
  - "MemoryR1强化学习记忆维护"
  - "图谱检索GraphRAG"
  - "检索增强与知识外挂"
+ - "HippoRAG2与CatRAG"
+ - "上下文工程与智能体技能"
+ - "CHIME长程规划记忆"
 code_mem0: "https://mem0.ai/research"
 code_graphiti: "https://github.com/getzep/graphiti"
 product_zep: "https://www.getzep.com"
-retrieval_cutoff: 2026-09-22
+retrieval_cutoff: 2026-09-02
 timezone: Asia/Shanghai (CST)
 ---
 
-# 生产级 Agent Memory 层：Mem0 + Zep（≠ MemGPT / A-Mem / Memory-R1）
+# 生产级 Agent Memory 层：Mem0 + Zep
 
-> **主题**：两篇近窗**生产记忆层**系统论文——**Mem0**（可扩展长程记忆抽取–更新–检索；含图变体 Mem0<sup>g</sup>）与 **Zep**（Graphiti 时序知识图记忆服务）。二者是「把对话事实变成可部署记忆 API」的主流入口，而非再做一套研究原型隐喻。
-> **读者向范围**：架构思想为主——抽取 / 更新 / 图分层 / 双时间轴；评测字段为辅——LOCOMO / DMR / LongMemEval 文内对照表，不外推未测场景。
-> **范围外参见**：
-> - MemGPT 主/档案上下文分页、A-Mem Zettelkasten 卡片链接演化 → 「智能体长程记忆」；本文若点到二者，仅作「基线 / related」一句。
-> - Memory-R1 在 `{ADD, UPDATE, DELETE, NOOP}` 上的 RL / 双 agent 蒸馏 → 「MemoryR1强化学习记忆维护」；Mem0 本文的四操作是 **LLM tool-call 启发式**，不是 RL 策略学习。
-> - 稠密检索 / DPR / 向量库产品通史 → 「检索增强与知识外挂」；RAG 仅作 Mem0 文内 chunk×k 对照槽。
-> - Microsoft GraphRAG **文档语料**社区摘要 + map-reduce 全局问答 → 「图谱检索GraphRAG」；Zep 虽引用 GraphRAG 作 community 灵感，对象是 **agent 对话/业务记忆的时序 KG**，不是文档库 QFS。
-> **材料口径**：表数字、延迟、token、准确率一律锚定官方 PDF（检索截止 2026-09-22）。Mem0 文对 Zep「构建延迟 / 图 token 膨胀」的批评、Zep 文对 MemGPT/DMR 的批评，均标为**该文主张**，不构成跨文客观结论。
+> **主要来源**：[Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory](https://arxiv.org/abs/2504.19413)（Chhikara、Khant、Aryan、Singh、Yadav，Mem0，简称 Mem0，v1 2025-04-28）；[Zep: A Temporal Knowledge Graph Architecture for Agent Memory](https://arxiv.org/abs/2501.13956)（Rasmussen、Paliychuk、Beauvais、Ryan、Chalef，Zep AI，简称 Zep，v1 2025-01-20）；[getzep/graphiti README](https://github.com/getzep/graphiti)（截至 2026-09-02）。
+> **研究线**：架构思想（主：事实提取与更新、图分层、双时间轴）；评测字段（辅：LOCOMO、DMR、LongMemEval 上的准确率、延迟与上下文 token）
+> **范围与相邻笔记**：
+> - ≠ [[智能体长程记忆]]：本篇不写 MemGPT 的分页与 A-Mem 的卡片网络，它们只作为基线出现。
+> - ≠ [[MemoryR1强化学习记忆维护]]：本篇的四操作由大模型按提示选择，不写用 RL 学习这些操作。
+> - ≠ [[图谱检索GraphRAG]]：本篇不写文档语料上的社区摘要与全局问答；Zep 只借用了社区层的思路。
+>
+> **意义**：两篇把「记住对话里的事实」做成可部署的记忆服务。Mem0 用大模型从对话中提取事实，再在增、改、删、不动四个操作中选一个写回记忆库，LOCOMO 上的裁判分 J 达 66.88%，比全上下文低约 6 个百分点，但 p95 总延迟降低 91%；Zep 用带双时间轴的时序知识图谱保存事实的有效期，在约 115k token 的 LongMemEval 上比全上下文准确率最多高 18.5%、延迟降约 90%。两者分别代表「自然语言事实库」与「时序知识图谱」两种生产记忆层设计，后续 Memory-R1 直接以 Mem0 的四操作为动作集。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 题名 / 版本 | 标识（HTTPS） | 页数 |
-|---|---|---|---|
-| **主①** | *Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory*；arXiv **2504.19413v1** \[cs.CL\]（**28 Apr 2025**） | https://arxiv.org/abs/2504.19413 | **23** |
-| **主②** | *Zep: A Temporal Knowledge Graph Architecture for Agent Memory*；arXiv **2501.13956v1** \[cs.CL\]（**20 Jan 2025**） | https://arxiv.org/abs/2501.13956 | **12** |
+固定的上下文窗口装不下跨会话的偏好与事实。只加长窗口会推迟溢出，却不能解决关键信息夹在大段无关内容中时注意力不稳的问题，成本与延迟也随对话长度上升（Mem0 §1）。企业场景还要求持续写入对话与业务数据，并处理「事实何时成立、何时失效」，而多数检索增强系统面向静态文档（Zep §1）。
 
-| 材料 | 作者 / 机构（文首） | 代码 / 产品（文内明示） |
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| Mem0 | Chhikara, Khant, Aryan, Singh, Yadav（`research@mem0.ai`） | https://mem0.ai/research ；图库实现写明 **Neo4j** |
-| Zep | Rasmussen, Paliychuk, Beauvais, Ryan, Chalef（Zep AI） | 产品 https://www.getzep.com ；引擎 **Graphiti** https://github.com/getzep/graphiti ；图检索侧写明 **Neo4j**（含 Lucene） |
+| 2023-04 | [Generative Agents](https://arxiv.org/abs/2304.03442) | 记忆流加反思，让智能体按重要性、时近性与相关性取回经历 |
+| 2023-05 | [MemoryBank](https://arxiv.org/abs/2305.10250) | 为对话助手建长期记忆，并按遗忘曲线更新 |
+| 2023-10 | [MemGPT](https://arxiv.org/abs/2310.08560) | 把上下文窗口当内存，模型调用函数在内存与外部存储间换入换出 |
+| 2024-02 | [LoCoMo](https://arxiv.org/abs/2402.17753) | 超长多会话对话记忆基准，Mem0 的主评测 |
+| 2024-10 | [LongMemEval](https://arxiv.org/abs/2410.10813) | 面向聊天助手的长期交互记忆基准，Zep 的主评测之一 |
+| 2025-01 | Zep | 时序知识图谱记忆服务，引擎 Graphiti |
+| 2025-02 | [A-Mem](https://arxiv.org/abs/2502.12110) | 卡片式笔记与自动建链的结构化记忆 |
+| 2025-04 | Mem0 | 提取—更新两阶段记忆层，另有图变体 Mem0g |
+| 2025-08 | [Memory-R1](https://arxiv.org/abs/2508.19828) | 以 Mem0 的四操作为动作集，用结果奖励 RL 学习维护策略 |
 
-**一句话抓手：**
-- **Mem0**：会话对 → 异步摘要 + 近窗 → LLM 抽候选事实 → 对 top-s 相似记忆做 **ADD / UPDATE / DELETE / NOOP** tool-call；Mem0<sup>g</sup> 再叠实体–关系有向标注图。
-- **Zep / Graphiti**：episode / entity / community **三层时序 KG** + 双时间轴（事件序 $T$ / 事务序 $T'$）+ 边失效；检索 = 搜索 → 重排 → 构造上下文字符串。
+## 三、Mem0：提取—更新记忆层
 
----
+### 3.1 两阶段流水线（§2.1）
 
-## 二、议题边界：只写「生产记忆层」，不写分页 OS / RL 四操作 / 文档 GraphRAG
+- **提取**：输入新的一对消息、异步刷新的会话摘要与最近 10 条消息，由大模型提取出候选事实。
+- **更新**：对每条候选事实，从向量库取 10 条最相似的已有记忆，由大模型以函数调用在四个操作中选一个：没有等价记忆则 ADD，可补充已有记忆则 UPDATE，与已有记忆矛盾则 DELETE，否则 NOOP。
+- 实验中所有大模型调用都用 GPT-4o-mini。
 
-### 2.1 与相关笔记的分工
+### 3.2 图变体 Mem0g（§2.2）
 
-| 相关笔记 | 本文只取 | 本文不写 |
-|---|---|---|
-| 智能体长程记忆 | MemGPT / A-Mem 是「记忆要外置」的前序系统论文；Mem0 表内把二者当 LOCOMO 旧基线 | MemGPT 主上下文压力告警与分页函数；A-Mem 笔记构造 / 链接 / 演化全文 |
-| MemoryR1强化学习记忆维护 | Memory-R1 把 Mem0 式四操作当作 **动作面出处**，再用下游答对做 RL | GRPO / Memory Manager–Answer Agent / 蒸馏训练曲线 |
-| 检索增强与知识外挂 | 「长对话当文档切块检索」是 Mem0 Table 2 的对照轴 | 稠密双塔 / 向量库选型通史 |
-| 图谱检索GraphRAG | Zep community 层「受 GraphRAG 启发」一句；检索方法论与 map-reduce **不同**（Zep §2.3 自述） | Leiden 社区摘要 + 全局 QFS map-reduce 全文 |
+记忆存为有向带标签的图：节点是实体，边是关系三元组。提取时先识别实体，再生成关系；写入时按嵌入相似度决定复用还是新建节点；冲突由大模型判定，旧关系标为失效而不物理删除，以便做时序推理。检索有两条路：从查询中的实体出发扩展邻接子图，或把整条查询与三元组文本做语义匹配。图库为 Neo4j。
 
-### 2.2 本文主轴 vs 范围外
+### 3.3 评测设定（§3）
 
-| 写 | 不写 |
-|---|---|
-| Mem0 抽取–更新双阶段与四操作 **tool-call**（启发式 LLM） | Memory-R1 式策略梯度 / 奖励设计 |
-| Mem0<sup>g</sup> 实体–关系图 + 双路检索（实体中心 / 三元组语义） | A-Mem 卡片盒演化算法 |
-| Zep Graphiti 三层图、双时间轴、边失效、search–rerank–constructor | MemGPT OS 虚拟上下文管理 |
-| 文内 LOCOMO / DMR / LongMemEval 数字 | 未给出的「生产 SLA / 客户实测」外推 |
-| 两文互相对照时的 **主张差异**（Mem0 §4.5 批 Zep 图体积；Zep 批 DMR 过易） | 替某方「打赢生产选型」裁决 |
+LOCOMO 有 10 段长对话，每段平均约 600 轮、26,000 token，平均约 200 道题，分单跳、多跳、时序、开放域四类；adversarial 类因没有标准答案被去掉。主指标是大模型裁判分 J（10 次运行的均值），另报 F1、BLEU-1、检索上下文的 token 数，以及检索与总延迟的 p50 / p95。基线包括 LOCOMO 原文的记忆系统（含 MemGPT、A-Mem）、LangMem、不同块大小与 k 的 RAG、全上下文、ChatGPT 记忆功能和 Zep 平台版。
 
-**层次说明（无工号）：**
-- 「智能体长程记忆」回答记忆放哪（分页 OS / 卡片网）——研究隐喻；
-- 「MemoryR1」回答四操作怎么学（RL）——策略层；
-- 本文回答生产记忆层怎么抽、怎么图、怎么评（Mem0 / Zep）——系统层；
-- 「图谱检索GraphRAG」回答文档语料全局问答——不是对话时序记忆。
+### 3.4 结果（Table 1–2）
 
----
+| 方法 | 检索上下文 token | 总延迟 p50 / p95（秒） | 总体 J |
+|---|---:|---:|---:|
+| 全上下文 | 26,031 | 9.870 / 17.117 | 72.90% |
+| Zep | 3,911 | 1.292 / 2.926 | 65.99% |
+| OpenAI（ChatGPT 记忆） | 4,437 | 0.466 / 0.889 | 52.90% |
+| Mem0 | 1,764 | 0.708 / 1.440 | 66.88% |
+| Mem0g | 3,616 | 1.091 / 2.590 | 68.44% |
 
-## 三、Mem0：抽取–更新记忆层（含 Mem0<sup>g</sup>）
+- **摘要口径**：Mem0 的 J 比 OpenAI 相对高 26%；Mem0g 比 Mem0 高约 2%；相对全上下文，p95 延迟低 91%，token 成本省 90% 以上。全上下文的 J 仍最高，作者强调的是精度、延迟与成本的折中。
+- **RAG 基线**：最好的配置（k = 2、块大小 256）J 为 60.97%。
+- **分题型**（Table 1）：单跳与多跳上 Mem0 最好（J 67.13 与 51.15），图结构在多跳上没有带来增益；时序上 Mem0g 最好（58.13）；开放域上 Zep 最好（76.60，比 Mem0g 高 0.89）。
 
-### 3.1 动机与产品定位
+### 3.5 Mem0 对 Zep 的批评（§4.5，Mem0 一方的观察）
 
-文首问题（§1 / Fig.1）：固定上下文窗口下，跨会话偏好（如素食、无乳）易丢；单纯加长窗口只是推迟溢出，且长上下文注意力对「夹在无关长段中的关键偏好」并不稳健。Mem0 自称面向 **production-ready** agent：动态提取、合并、检索显著信息；并给出图增强变体 Mem0<sup>g</sup>（正文上标 $g$，纯文本常写作 `Mem0g`）。
+作者测得每段对话的记忆规模：Mem0 约 7k token，Mem0g 约 14k，Zep 的图超过 600k，原因是 Zep 在每个节点缓存摘要、同时在边上存事实。作者还观察到，向 Zep 写入后立刻检索常答错，几小时后重查明显变好，推断其构图依赖多次异步 LLM 调用；Mem0 的图构建在最坏情况下也不到一分钟。
 
-### 3.2 Mem0 双阶段流水线（§2.1 / Fig.2）
+## 四、Zep：Graphiti 时序知识图谱
 
-| 阶段 | 输入 | 做什么 |
-|---|---|---|
-| **Extraction** | 新消息对 $(m_{t-1}, m_t)$ + 会话摘要 $S$ + 近窗 $\{m_{t-m},\ldots,m_{t-2}\}$ | LLM 抽取函数 $\phi(P)$ 产出候选事实集 $\Omega=\{\omega_i\}$ |
-| **Update** | 每个 $\omega_i$ + 向量库 top-$s$ 相似既有记忆 | LLM **tool-call** 在四操作中选一并写回库 |
-
-四操作（文内定义；**≠ Memory-R1 的 RL 学法**）：
-
-| 操作 | 语义 |
-|---|---|
-| **ADD** | 无语义等价记忆 → 新建 |
-| **UPDATE** | 用互补信息增强既有记忆 |
-| **DELETE** | 新信息与既有矛盾 → 删除 |
-| **NOOP** | 无需改库 |
-
-实验默认（§2.1 末）：$m=10$，$s=10$；抽取/更新 LLM = **GPT-4o-mini**；向量侧用 dense embedding。摘要模块**异步**刷新，避免阻塞主路径。
-
-### 3.3 Mem0<sup>g</sup>：图记忆（§2.2 / Fig.3）
-
-记忆表示为有向标注图 $G=(V,E,L)$：节点=实体（类型 + embedding + 创建时间戳），边=关系三元组 $(v_s,r,v_d)$。
-
-| 子模块 | 作用 |
-|---|---|
-| Entity extractor | 从对话抽关键实体与类型 |
-| Relationship generator | 产关系三元组（显式/隐式） |
-| 入库 | 按实体 embedding 相似度阈值 $t$ 决定新建/复用节点，再挂边 |
-| Conflict / update resolver | LLM 判冲突；**失效标记**而非物理删除 → 支持时序推理 |
-| 检索双路 | **Entity-centric**：锚实体扩邻接子图；**Semantic triplet**：整查询 embedding vs 三元组文本，超阈值返回 |
-
-实现：图库 **Neo4j**；抽取/更新同样 GPT-4o-mini + function calling。
-
-### 3.4 评测设定：LOCOMO（§3）
-
-| 字段 | 文内取值 |
-|---|---|
-| 数据 | LOCOMO：约 **10** 段长对话；每段约 **600** 轮、**26k** tokens；平均约 **200** 题 |
-| 题型 | single-hop / multi-hop / temporal / open-domain（**去掉** adversarial：无 ground truth） |
-| 质量指标 | F1、BLEU-1、**LLM-as-a-Judge (J)**（10 次均值 ±1 std；理由：词面指标对事实错误不敏感） |
-| 部署指标 | 检索上下文 **token**（`cl100k_base`）；search latency 与 total latency 的 **p50 / p95** |
-| 基线族 | LOCOMO 旧系（含 MemGPT、A-Mem）；LangMem；RAG（chunk 128–8192 × $k\in\{1,2\}$）；full-context；OpenAI ChatGPT memory；**Zep 平台版** |
-
-> 接口提醒：表内 MemGPT / A-Mem **只作数字对照** → 机制细节见「智能体长程记忆」。
-
-### 3.5 LOCOMO 主结果（Table 1 / Table 2；仅文内数字）
-
-**分题型 J（Table 1，节选）：**
-
-| Method | Single-hop J | Multi-hop J | Open-domain J | Temporal J |
-|---|---|---|---|---|
-| A-Mem* | 39.79±0.38 | 18.85±0.31 | 54.05±0.22 | 49.91±0.31 |
-| LangMem | 62.23±0.75 | 47.92±0.47 | 71.12±0.20 | 23.43±0.39 |
-| Zep | 61.70±0.32 | 41.35±0.48 | **76.60±0.13** | 49.31±0.50 |
-| OpenAI | 63.79±0.46 | 42.92±0.63 | 62.29±0.12 | 21.71±0.20 |
-| **Mem0** | **67.13±0.65** | **51.15±0.31** | 72.93±0.11 | 55.51±0.34 |
-| **Mem0<sup>g</sup>** | 65.71±0.45 | 47.19±0.67 | 75.71±0.21 | **58.13±0.44** |
-
-文内解读要点（§4.1–4.2）：
-- 单跳 / 多跳：稠密自然语言记忆 **Mem0** 更强；图结构对「单轮事实」增益有限，多跳上 Mem0<sup>g</sup> 甚至略逊。
-- 时序：Mem0<sup>g</sup> 最高 J；OpenAI memory 因多数记忆缺时间戳而崩。
-- 开放域：同台 **Zep** 以 J=76.60 略胜 Mem0<sup>g</sup>（75.71）。
-
-**Overall J + 延迟 + 检索 token（Table 2）：**
-
-| Method | memory/chunk tokens | Search p50/p95 (s) | Total p50/p95 (s) | Overall J |
-|---|---|---|---|---|
-| Full-context | 26031 | — | 9.870 / **17.117** | 72.90±0.19% |
-| A-Mem | 2520 | 0.668 / 1.485 | 1.410 / 4.374 | 48.38±0.15% |
-| LangMem | 127 | 17.99 / 59.82 | 18.53 / 60.40 | 58.10±0.21% |
-| Zep | 3911 | 0.513 / 0.778 | 1.292 / 2.926 | 65.99±0.16% |
-| OpenAI | 4437 | — | 0.466 / 0.889 | 52.90±0.14% |
-| **Mem0** | **1764** | **0.148 / 0.200** | **0.708 / 1.440** | **66.88±0.15%** |
-| **Mem0<sup>g</sup>** | 3616 | 0.476 / 0.657 | 1.091 / 2.590 | **68.44±0.17%** |
-
-与摘要口号对齐（用 Table 2 验算，不另造）：
-- Mem0 vs OpenAI Overall J：$(66.88-52.90)/52.90\approx$ **+26%** 相对提升。
-- Mem0<sup>g</sup> vs Mem0 Overall J：$68.44$ vs $66.88$ ≈ **+2%** 相对。
-- Mem0 total p95 vs full-context：$(17.117-1.440)/17.117\approx$ **91%** 降幅；检索上下文相对 26k 亦 **>90%** token 节省。
-- 但 full-context 仍有最高 Overall J（~73%），代价是尾延迟 ~17s——文强调的是 **精度–延迟–成本** 折中，不是「全面碾压全上下文」。
-
-### 3.6 Mem0 文对 Zep 的系统侧批评（§4.5；标为该文主张）
-
-| 主张（Mem0 §4.5） | 数字 |
-|---|---|
-| 物化记忆平均 token | Mem0 ~**7k** / 对话；Mem0<sup>g</sup> ~**14k**；Zep 图 **>600k**（节点摘要 + 边事实冗余） |
-| 构建可用性 | 称 Zep 写入后立刻检索常失败，数小时后再查变好 → 异步多 LLM / 后台构图；Mem0 图构建「最坏情况仍 **<1 分钟**」 |
-
-→ 跟读时当作 **Mem0 同台实验观察**，与 Zep 本文自称「生产系统、重延迟」可并存；本文不替某方结案。
-
----
-
-## 四、Zep：Graphiti 时序知识图记忆层
-
-### 4.1 定位：动态记忆服务，而非静态文档 RAG
-
-摘要 / §1：现有 agent RAG 多面向**静态语料**；企业场景需要持续写入对话 + 业务结构化数据。Zep 以 **Graphiti** 为核：时序感知动态 KG，非损失地保留事实有效期；对标评测用 MemGPT 的 **DMR**，并加更难的 **LongMemEval**（企业向）。
-
-> 接口：文中对比 MemGPT **只取 DMR 分数** → 分页机制见「智能体长程记忆」。GraphRAG 引用只解释 community 灵感 → 文档 GraphRAG 见「图谱检索GraphRAG」。
-
-### 4.2 三层子图（§2）
-
-形式化：$G=(N,E,\phi)$，$\phi:E\to N\times N$。
+### 4.1 三层子图（§2）
 
 | 层 | 内容 | 作用 |
 |---|---|---|
-| **Episode** $G_e$ | 原始消息 / 文本 / JSON 节点；边连到语义实体 | **非损失**原料仓；可回指引用 |
-| **Semantic entity** $G_s$ | 实体节点 + 实体间语义边（事实） | 解析、消歧、关系 |
-| **Community** $G_c$ | 强连通实体簇 + 高层摘要；边连成员实体 | 全局主题视图（灵感来自 GraphRAG，但检索 **不是** map-reduce） |
+| 情节（episode） | 原始消息、文本或 JSON，连到其中出现的实体 | 无损保留原始数据，可回溯引用 |
+| 语义实体 | 实体节点与实体间的事实边 | 实体消解与关系推理 |
+| 社区 | 强连通实体簇及其摘要 | 全局主题视图，思路来自 GraphRAG |
 
-认知隐喻：episodic vs semantic memory；社区层对齐「全局理解」。
+实体提取看当前消息与前 4 条消息，说话人自动作为实体；实体名嵌入为 1024 维向量，结合全文检索找候选，再由大模型消解。写库用预先写好的 Cypher 查询，而不是让大模型生成查询，以保证模式一致。社区划分用标签传播而非 Leiden，便于新节点动态并入邻居的多数社区，代价是结果会逐渐偏离全量重算，需要周期性刷新。
 
-### 4.3 双时间轴与边失效（§2.1 / §2.2.3）——相对文档 GraphRAG 的关键差分
+### 4.2 双时间轴与边失效（§2.1、§2.2.3）
 
-| 时间轴 | 含义 |
-|---|---|
-| $T$ | 事件/事实在世界中的**有效序**（$t_{\mathrm{valid}}, t_{\mathrm{invalid}}$） |
-| $T'$ | 系统**摄入事务序**（$t'_{\mathrm{created}}, t'_{\mathrm{expired}}$；审计） |
+Zep 记录两条时间轴：事实在现实中的有效期（开始与失效时间），以及系统写入与过期的事务时间（用于审计）。每条消息带参考时间，用来解析「两周前」这类相对时间。新事实与旧事实在时间上重叠且矛盾时，由大模型判定，把旧边的失效时间设为新边的生效时间。
 
-消息带参考时间戳 $t_{\mathrm{ref}}$，用于解析「下周四 / 两周前」等相对时间。新边可令旧边失效：LLM 比对新旧语义边；若时间重叠矛盾，将旧边 $t_{\mathrm{invalid}}$ 设为新边 $t_{\mathrm{valid}}$；事务序上**优先新信息**。
+### 4.3 检索（§3）
 
-实体当前消息 + 近 $n=4$ 条上下文；说话人自动为实体；embedding **1024** 维 + 全文检索候选 → LLM 实体消解；写库用**预写 Cypher**（非 LLM 生成查询）降幻觉。事实边在同实体对之间做去重；支持多实体事实的 hyper-edge 式建模。
+检索分三步：用余弦相似度、BM25 全文检索与图上广度优先搜索取候选；用 RRF、MMR、情节提及次数、节点距离或交叉编码器重排；最后把事实（含有效期）、实体摘要与社区摘要拼成上下文字符串。
 
-Community：用 **label propagation**（非 Leiden），便于新节点动态挂到邻居多数社区并更新摘要；承认与全量传播结果会渐偏，需周期性刷新。
+### 4.4 评测（§4）
 
-### 4.4 检索管线：$f=\chi\circ\rho\circ\phi$（§3）
+嵌入与重排用 BGE-m3，构图用 gpt-4o-mini。
 
-| 步 | 符号 | 内容 |
+- **DMR**（Table 1，500 段多会话对话）：gpt-4-turbo 下 Zep 94.8%，MemGPT 93.4%，全对话 94.4%；gpt-4o-mini 下 Zep 98.2%，全对话 98.0%。作者自评 DMR 每段只有约 60 条消息、以单跳事实检索为主，全上下文已接近饱和，不足以区分记忆系统。
+- **LongMemEval**（Table 2，平均约 115k token）：
+
+| 方法 | 模型 | 准确率 | 延迟 | 平均上下文 |
+|---|---|---:|---:|---:|
+| 全上下文 | gpt-4o-mini | 55.4% | 31.3 秒 | 115k |
+| Zep | gpt-4o-mini | 63.8% | 3.20 秒 | 1.6k |
+| 全上下文 | gpt-4o | 60.2% | 28.9 秒 | 115k |
+| Zep | gpt-4o | 71.2% | 2.58 秒 | 1.6k |
+
+摘要所说准确率最多提高 18.5%、延迟降约 90%，对应 gpt-4o 一组。分题型看，偏好、时序与跨会话题提升最大，单会话中关于助手发言的题反而下降（gpt-4o 降 17.7%，gpt-4o-mini 降 9.06%），作者承认需要继续改进（Table 3）。MemGPT 无法直接导入历史消息，没能在 LongMemEval 上跑通（§4.3）。
+
+## 五、两系统对照
+
+| 维度 | Mem0 / Mem0g | Zep |
 |---|---|---|
-| Search | $\phi$ | $\phi_{\cos}$ + $\phi_{\mathrm{BM25}}$ + $\phi_{\mathrm{bfs}}$（Neo4j Lucene）；对象字段：边 fact / 实体名 / 社区名 |
-| Rerank | $\rho$ | RRF、MMR、episode-mention 频次、节点距离、cross-encoder（最贵） |
-| Constructor | $\chi$ | 把边事实（含有效期）+ 实体摘要 + 社区摘要格式化为上下文字符串 $\beta$ |
+| 主数据结构 | 自然语言事实库，可选实体关系图 | 情节、实体、社区三层时序知识图谱 |
+| 更新方式 | 大模型在 ADD / UPDATE / DELETE / NOOP 中选择 | 新建事实边，按双时间轴使旧边失效；社区增量更新 |
+| 主评测 | LOCOMO（J、延迟、token） | DMR、LongMemEval（准确率、延迟、上下文 token） |
+| 互相引用 | 把 Zep 当基线，并批评其图规模与写入延迟 | 以 MemGPT 为主要对照，未与 Mem0 比较 |
 
-实验默认：检索 top **20** 边与实体节点再格式化（§4 开篇）；DMR 描述另写 top **10** nodes/edges（§4.2）——跟读时按节保留，不强行合并。
+按两文各自的结果：问题若是 LOCOMO 式的多跳对话事实加低检索延迟，可参考 Mem0；若是十万 token 级的长会话、跨会话偏好与事实有效期，可参考 Zep 的 LongMemEval 结果；文档库的全局主题问答不属于这两套系统的目标，见 [[图谱检索GraphRAG]]。
 
-### 4.5 评测：DMR + LongMemEval（§4）
+## 六、意义
 
-**模型配置（§4.1）：** embedding/rerank = **BGE-m3**；构图 gpt-4o-mini-2024-07-18；作答 gpt-4o-mini / gpt-4o；DMR 对齐 MemGPT 时另用 gpt-4-turbo-2024-04-09。
+Mem0 说明，一个「提取—比对—四选一更新」的轻量流水线，就能在长对话记忆上接近全上下文的准确率，同时把延迟和 token 降一个数量级；其四操作后来成为 Memory-R1 等学习式记忆维护工作的动作集。Zep 把时间作为记忆的一等属性，用双时间轴与边失效处理「事实会过期」，并指出 DMR 已接近饱和，主张改用 LongMemEval 这类更长、更难的基准。
 
-**Table 1 · DMR（500 段多会话；MemGPT 主指标）：**
+## 七、局限与待核实
 
-| Memory | Model | Score |
+- **互评不对称**：Mem0 对 Zep 的图规模与写入延迟的批评来自 Mem0 一方的实验；Zep 的延迟测量是从波士顿的家庭网络连到 AWS us-west-2 上的服务，含跨网开销，而全上下文基线没有（Zep §4.3）。两文的延迟数字测量条件不同，不能直接比较绝对秒数。
+- **基线条件**：Mem0 的 OpenAI 基线把生成的全部记忆放入上下文，作者说这是有意给它的优势；A-Mem 的 J 是 Mem0 作者重跑得到的。
+- **未评的能力**：Zep 声称能融合结构化业务数据，但实验只有对话记忆；两文都没有公开可复现的生产负载数据。
+- **原文内部不一**：Zep 的检索条数在 §4 开头写 20 条边与实体节点，在 DMR 一节写 10 个，本篇不合并。
+- **版本**：两篇都只有 v1，没有版本差异。
+
+## 八、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| Recursive Summarization† | gpt-4-turbo | 35.3% |
-| MemGPT† | gpt-4-turbo | 93.4% |
-| Full-conversation | gpt-4-turbo | 94.4% |
-| **Zep** | gpt-4-turbo | **94.8%** |
-| Full-conversation | gpt-4o-mini | 98.0% |
-| **Zep** | gpt-4o-mini | **98.2%** |
+| [[智能体长程记忆]] | 上游：MemGPT、A-Mem 等「记忆要外置」的研究系统在该篇，本篇只把它们当 LOCOMO 与 DMR 上的基线 | 分页机制与卡片网络 |
+| [[MemoryR1强化学习记忆维护]] | 下游：该篇以 Mem0 的四操作为动作集，用结果奖励 RL 学选择 | RL 训练与奖励设计 |
+| [[图谱检索GraphRAG]] | 相关：Zep 的社区层受 GraphRAG 启发，但对象是对话的时序知识图谱，检索也不用 map-reduce | 文档社区摘要与全局问答 |
+| [[检索增强与知识外挂]] | 对照：「把长对话当文档切块检索」是 Mem0 的 RAG 基线 | 稠密检索与向量库通史 |
+| [[HippoRAG2与CatRAG]] | 对照：同以长期记忆为目标，该篇是文档语料上的检索图，本篇是对话记忆的写入与更新服务 | 检索图算法 |
+| [[上下文工程与智能体技能]] | 对照：本篇负责跨会话的记忆存取，该篇只管单次任务内每一步放什么 | 上下文组织方法 |
+| [[CHIME长程规划记忆]] | 对照：同为外置记忆的自动维护，本篇存对话事实，CHIME 存从任务轨迹提炼的计划与执行经验 | 信用归因与经验库演化 |
 
-† 取自 MemGPT 原文报告。文自评：DMR 对话仅 ~60 条消息、题型偏单跳事实检索，**全上下文已接近饱和** → 不足以区分企业记忆系统。
+## 九、延伸阅读
 
-**Table 2 · LongMemEvals（均长 ~115k tokens）：**
-
-| Memory | Model | Score | Latency | Avg Context Tokens |
-|---|---|---|---|---|
-| Full-context | gpt-4o-mini | 55.4% | 31.3 s | 115k |
-| **Zep** | gpt-4o-mini | **63.8%** | **3.20 s** | **1.6k** |
-| Full-context | gpt-4o | 60.2% | 28.9 s | 115k |
-| **Zep** | gpt-4o | **71.2%** | **2.58 s** | **1.6k** |
-
-摘要口径：准确率提升最高约 **18.5%**（gpt-4o：60.2→71.2）；延迟约 **90%** 降幅（数量级：28.9s→2.58s）。上下文从 115k → 1.6k。
-
-**Table 3 · 题型差分（节选，文内 Delta）：** preference / temporal / multi-session 等大幅上升；**single-session-assistant** 反而下降（gpt-4o −17.7%，gpt-4o-mini −9.06%）——文承认需继续工程。MemGPT 在 LongMemEval 上因无法直接摄入历史消息而**未能成功同台**（§4.3.1）。
-
-实验环境备注（§4.3）：2024-12～2025-01，波士顿住宅网连 AWS us-west-2 上的 Zep 服务 → Zep 延迟含跨网，基线全上下文无此开销。
-
----
-
-## 五、两系统对照（仅文内字段；不替选型拍板）
-
-| 维度 | Mem0 / Mem0<sup>g</sup> | Zep / Graphiti |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| 主数据结构 | 自然语言事实库 +（可选）实体–关系图 | Episode / Entity / Community **三层时序 KG** |
-| 更新原语 | ADD/UPDATE/DELETE/NOOP（LLM tool-call） | 边创建 + **双时间轴失效**；社区动态 label propagation |
-| 默认推理 LLM（文内） | GPT-4o-mini | gpt-4o-mini 构图；作答含 gpt-4o / gpt-4-turbo |
-| 图库 | Neo4j（Mem0<sup>g</sup>） | Neo4j + Lucene |
-| 主基准 | **LOCOMO**（质量 + p50/p95 + token） | **DMR** + **LongMemEval**（准确率 + 延迟 + 上下文 token） |
-| 文内交叉 | Table 1/2 把 Zep 当基线；§4.5 批 Zep 图 token 与异步延迟 | 摘要/DMR 对标 MemGPT；未在 LongMemEval 成功跑通 MemGPT |
-| 与本仓库其他笔记 | 四操作面 → 被 Memory-R1 笔记引用为 RL 动作集出处 | community 灵感 → GraphRAG 笔记；MemGPT 分数 → 长程记忆笔记 |
-
-选型建议：若问题框是 **LOCOMO 式多跳对话事实 + 低 p95 检索延迟**，看 Mem0 Table 2；若问题框是 **~100k+ token 长会话 + 时序/跨会话偏好 + 事实有效期**，看 Zep LongMemEval；若问题框是 **文档库全局主题问答**，见 [[图谱检索GraphRAG]]，本篇两套记忆不适用。以上按各文自报结果指路，不构成跨文优劣结论。
-
----
-
-## 六、可复核清单与已知缺口
-
-**可复核：**
-1. 官方 PDF：https://arxiv.org/abs/2504.19413 、https://arxiv.org/abs/2501.13956 。
-2. 页数：**23 / 12**。
-3. Mem0 Table 1/2、Zep Table 1/2/3 数字与原文一致。
-4. 摘要「26% / 2% / 91% / >90% token」与 Table 2 算术一致。
-
-**缺口：**
-- 两文均未给出可复现的公开「客户生产 SLA」曲线；Mem0 §4.5 与 Zep 延迟测量条件不同，**不可直接比绝对秒数决胜负**。
-- Zep 称可合成 **structured business data**，但本文实验主轴仍是对话记忆；业务 JSON 摄入效果**无同台数字**。
-- Mem0 代码入口给的是 https://mem0.ai/research ；具体开源 commit / SDK API 面本篇不跟。
-- 不把 Memory-R1 的 RL 增益写进本篇「Mem0 系统能力」。
-
----
-
-## 七、收束
-
-本文补齐 Mem0 系统论文与 Zep 时序知识图记忆的独立跟读：生产记忆层双主文，范围划清，评测字段锚定 PDF。
+| 1 | [Mem0](https://arxiv.org/abs/2504.19413) §2、Table 1–2、§4.5 | 流水线、主结果与对 Zep 的观察 |
+| 2 | [Zep](https://arxiv.org/abs/2501.13956) §2–4 | 三层图、双时间轴、检索与 LongMemEval |
+| 3 | [getzep/graphiti README](https://github.com/getzep/graphiti) | Graphiti 引擎的开源实现 |
+| 4 | [[MemoryR1强化学习记忆维护]] | 用 RL 学习 Mem0 的四操作 |

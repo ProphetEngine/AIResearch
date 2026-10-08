@@ -7,222 +7,130 @@ status: archived
 sources:
  - https://arxiv.org/abs/2508.19828
 arxiv: ["2508.19828"]
-related: ["智能体长程记忆", "GRPO与DAPO算法族", "ToRL工具集成强化学习", "检索增强与知识外挂"]
+related: ["智能体长程记忆", "Mem0与Zep生产级记忆", "GRPO与DAPO算法族", "AgenticRL景观与能力模块", "CHIME长程规划记忆", "ToRL工具集成强化学习", "检索增强与知识外挂", "图谱检索GraphRAG"]
 archived: 2026-09-22
 ---
 
-# Memory-R1：RL 记忆维护策略（相对 [[智能体长程记忆]] 的增量）
+# Memory-R1：用 RL 学会 ADD/UPDATE/DELETE/NOOP 维护记忆库
 
-> **定位**：记忆维护主题轴 **弱档增量**——相对 **[[智能体长程记忆]]**（MemGPT 分页 OS / A-Mem 卡片盒网络）的「外置记忆怎么分层、怎么长结构」，本篇只收 **「记什么 / 改什么 / 删什么 / 不动」可否被 outcome RL 学会**。
-> **研究线**：**架构思想（主）**——双 agent（Memory Manager + Answer Agent）+ `{ADD, UPDATE, DELETE, NOOP}` 动作面；**评测字段（辅）**——LoCoMo / MSC / LongMemEval 上相对 Mem0、MemoryOS、A-Mem、Memory-SFT 的 F1 / BLEU-1 / Judge。
+> **主要来源**：[Memory-R1: Enhancing Large Language Model Agents to Manage and Utilize Memories via Reinforcement Learning](https://arxiv.org/abs/2508.19828)（Yan、Yang 等，LMU / MCML / TUM 等，简称 Memory-R1，v1 2025-08-27，v5 2026-01-14）（截至 2026-09-02）。
+> **研究线**：架构思想（主：记忆管理器加答题智能体，在 ADD / UPDATE / DELETE / NOOP 动作面上做结果奖励 RL）；评测字段（辅：LoCoMo、MSC、LongMemEval 上的 F1、BLEU-1 与 LLM 裁判分）
 > **范围与相邻笔记**：
-> - **不重写** [[智能体长程记忆]] 的 MemGPT 主存/外存/FIFO/分页告警全文，以及 A-Mem 笔记构造·建链·演化全文。本篇仅在对照句中点名二者为「启发式 / 结构记忆」前置，不复述公式与表。
-> - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单；本篇只用「PPO / GRPO 作组相对或近端策略优化槽位」。
-> - **不重写** [[ToRL工具集成强化学习]] ToRL 工具进 env 全文、[[检索增强与知识外挂]] 向量 RAG 通史。
-> **与 [[智能体长程记忆]] 的接口一句**：[[智能体长程记忆]] 回答「记忆放哪、如何换入换出 / 如何长网」；本篇回答「在 Mem0 式四操作面上，**用下游答对与否当奖励**，能否少标注地学出维护策略与检索后蒸馏」。
+> - ≠ [[智能体长程记忆]]：本篇不写 MemGPT 的分页与 A-Mem 的卡片网络，只把它们当作启发式记忆的前序工作。
+> - ≠ [[Mem0与Zep生产级记忆]]：本篇不写 Mem0 的提取—更新流水线与图变体，只借用它的四操作作为动作集。
+> - ≠ [[GRPO与DAPO算法族]]：本篇不重述 PPO 与 GRPO 的目标函数，只说明两者如何套到记忆操作上。
+>
+> **意义**：外置记忆系统大多靠提示词让模型选择增、改、删，没有「答对没有」的学习信号，常把补充信息误判为矛盾而删掉旧记忆。Memory-R1 保持 Mem0 的四操作不变，只用下游问答的精确匹配作奖励，分别训练记忆管理器和答题智能体；只用 152 条训练问答，就在 LoCoMo 上超过 A-Mem、Mem0、MemoryOS 等基线，并零样本迁移到 MSC 与 LongMemEval，说明记忆维护可以从人写规则变成可学习的策略。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文** | Yan, Yang et al. (LMU / MCML / TUM / …), *Memory-R1: Enhancing Large Language Model Agents to Manage and Utilize Memories via Reinforcement Learning* | arXiv:**2508.19828v5** \[cs.CL\] **14 Jan 2026**；`https://arxiv.org/abs/2508.19828`（**20** 页 A4） | 双 agent + outcome RL（PPO/GRPO）；四操作维护记忆库 + 答前蒸馏 |
-| **操作集出处（文内）** | Mem0（Chhikara et al., 2025）`{ADD, UPDATE, DELETE, NOOP}`；另引 MemGPT / AIOS CRUD 等为启发式对照 | 本篇不展开 Mem0 产品全文 | 动作面来源 |
-| **训练框架（文内）** | VERL（Sheng et al., 2025）；H100×4（14B 用 8 GPU） | Appendix D | 复现入口级信息 |
+把事实写到上下文窗口之外的外置记忆库，已是长对话智能体的常见做法（[[智能体长程记忆]]）。难点在维护：新信息到来时该新建、合并、删除还是不动。Mem0 等系统让大模型按提示在四个操作中选择，但选错了没有反馈。Memory-R1 的动机例（Figure 1）是：用户先说领养了 Buddy，后来又说领养了 Scout；启发式管理器把它当成矛盾，执行 DELETE 加 ADD，记忆被撕成碎片；经过 RL 的管理器执行一次 UPDATE，合并成「养了两只狗 Buddy 与 Scout」。另一方面，检索回来的几十条记忆里多数与问题无关，答题时也会被噪声干扰。
 
-**一句话抓手：** 把记忆维护从「ICL 启发式选 CRUD」改成 **可学习策略**——Memory Manager 对每条新事实输出 `(操作, 内容)`，用冻结 Answer Agent 的 **Exact Match** 当稀疏奖励；Answer Agent 再对 RAG 取回的约 **60** 条记忆做 **Memory Distillation** 后作答；仅 **152** 条训练 QA 即可在 LoCoMo 上相对强基线大幅提升，并零样本转到 MSC / LongMemEval。
+## 二、脉络
 
----
-
-## 二、议题边界：学「维护动作」，不是再写一套分页/卡片盒
-
-### 2.1 与相邻笔记的分工
-
-| 相邻笔记 | 本篇只取 | 本篇不写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[智能体长程记忆]] MemGPT** | 「窗口外事实需显式管理」；文内作启发式基线引用 | 主上下文三段、warning/flush、pgvector 分页检索 |
-| **[[智能体长程记忆]] A-Mem** | 同台基线（Table 1）；「结构可演化」直觉 | 式 (1)–(10)、Link/Evolution 消融表 |
-| **[[GRPO与DAPO算法族]] GRPO/DAPO** | 组相对优势、无价值函数的稳定更新 | Clip-Higher / Dynamic Sampling / token-level loss |
-| **[[ToRL工具集成强化学习]] ToRL** | 「outcome RL + 可验证终答」同族思路 | 代码解释器进 rollout、Sandbox Fusion |
-| **[[检索增强与知识外挂]] RAG** | 「取回后仍可能噪声淹没」 | 索引工程 / 重排器通史 |
-| **[[AgenticRL景观与能力模块]]** | 定位：Agentic RL 综述在「记忆」能力格把本篇列为用 RL 学习 ADD / UPDATE / DELETE / NOOP 记忆操作的代表 | 综述的 POMDP 形式化与其余能力格 |
+| 2023-10 | [MemGPT](https://arxiv.org/abs/2310.08560) | 把上下文窗口当内存、外部存储当磁盘，由模型调用函数换入换出 |
+| 2024-02 | [DeepSeekMath](https://arxiv.org/abs/2402.03300) | 提出 GRPO，去掉价值网络，用组内相对奖励估计优势 |
+| 2024-02 | [LoCoMo](https://arxiv.org/abs/2402.17753) | 超长多会话对话记忆基准 |
+| 2025-03 | [Search-R1](https://arxiv.org/abs/2503.09516) | 用结果奖励 RL 学习在推理中何时、如何调用搜索 |
+| 2025-04 | Mem0 | 提取—更新流水线，由大模型在 ADD / UPDATE / DELETE / NOOP 中选择 |
+| 2025-05 | [MemoryOS](https://arxiv.org/abs/2506.06326) | 借操作系统的存储分层，管理短期、中期与长期个人记忆 |
+| 2025-06 | [MEM1](https://arxiv.org/abs/2506.15841) | 用 RL 让智能体在每步把记忆与推理压进固定大小的内部状态 |
+| 2025-08 | Memory-R1 v1 | 在四操作上做结果奖励 RL，并训练答题时先筛记忆 |
+| 2026-01 | Memory-R1 v5 | 现行版本；与 v1 相比加入 MemoryOS 与 Memory-SFT 两个基线（见第六节） |
 
-### 2.2 问题立轴（跟读）
+## 三、方法
 
-`
-旧路：外置记忆银行 + 提示词教 LLM 选 ADD/UPDATE/DELETE/NOOP
- → 无「答对/答错」学习信号；易误判矛盾 → 错误 DELETE+ADD 碎片化事实
-新路：同一动作面，用下游 QA Exact Match 作奖励（PPO 或 GRPO）
- → Manager 学巩固（UPDATE）而非撕裂；Answer Agent 学先蒸馏再答
-`
+### 3.1 两个智能体（§3、Figure 2）
 
-**动机例（Figure 1 / §1）：** 用户先说「领养了 Buddy」，后说「又领养了 Scout」。Vanilla Manager 当成矛盾发 **DELETE+ADD**；RL Manager 发一次 **UPDATE** 合并成「Andrew 养了两只狗 Buddy 与 Scout」；Answer Agent 再从约 60 条检索结果压到相关条目后答「2 dogs」。
-
----
-
-## 三、方法骨架：双 Agent + 四操作 + Outcome RL
-
-### 3.1 流水线两阶段（§3 / Figure 2）
-
-| 阶段 | 角色 | 输入 → 输出 |
+| 角色 | 输入 | 输出 |
 |---|---|---|
-| **Stage 1** | **Memory Manager** | 新抽取事实 $x$ + 当前库 $M_{\mathrm{old}}$ → 操作 $o\in\{\mathrm{ADD},\mathrm{UPDATE},\mathrm{DELETE},\mathrm{NOOP}\}$ 与内容 $m'$，写回记忆库 |
-| **Stage 2** | **Answer Agent** | 问题 $q$ + RAG 检索集 $M_{\mathrm{ret}}$（文内默认约 **60** 条，跟 Mem0）→ **Memory Distillation**（筛相关条目）→ 答案 $y$ |
+| 记忆管理器 | 新提取的事实与当前记忆库 | 一个操作（ADD / UPDATE / DELETE / NOOP）及写入内容 |
+| 答题智能体 | 问题与检索回的约 60 条记忆 | 先选出相关记忆（Memory Distillation），再给出简短答案 |
 
-形式化（式 1 / 5）：
+四操作沿用 Mem0 的定义：库中没有就 ADD；同一主题但信息更多或可合并就 UPDATE，保留原 id；新事实与旧记忆矛盾就 DELETE；已存在或无关就 NOOP（附录 C.1）。两个智能体分开训练，作者说这是为了在稀疏奖励下保持稳定（Limitations）。
 
-$$
-(o,m')\sim\pi_\theta(\cdot\mid x,M_{\mathrm{old}}),\qquad
-y\sim\pi_\theta(\cdot\mid q,M_{\mathrm{ret}}).
-$$
-两 agent **分开** RL 微调（Limitations：稀疏奖励下为求稳定；端到端 multi-agent RL 留作未来工作）。
+### 3.2 奖励与优化（§3.1–3.2）
 
-### 3.2 四操作语义（Appendix C.1；提示词 Figure 9–10）
+- **管理器**：执行操作后，由冻结的答题智能体回答相关问题，奖励是预测与标准答案的精确匹配（EM）；训练时不需要「该 ADD 还是 UPDATE」的操作标注。
+- **答题智能体**：奖励同样是 EM。
+- **优化器**：PPO 与 GRPO 各训一版；两者的目标函数见 [[GRPO与DAPO算法族]]，本篇不重复。
 
-操作集采用 Mem0 设定；提示里 NOOP 亦写作 **NONE / No Change**。跟读规则（文内示例，非本仓库发明）：
+### 3.3 训练数据（§4.1、附录 B.2）
 
-| 操作 | 何时用（提示要点） | 实现注意（文内） |
-|---|---|---|
-| **ADD** | 新事实在库中不存在 | 生成新 `id`；`event: ADD` |
-| **UPDATE** | 同主题但信息不同 / 更细；或可合并 | **保留同一 `id`**；写 `old_memory`；信息等价则勿更新 |
-| **DELETE** | 新事实与旧记忆**矛盾** | 返回原 `id`，`event: DELETE`，勿造新 id |
-| **NOOP / NONE** | 事实已在库中或无关 | `event: NONE`，库不变 |
+- LoCoMo 去掉无标准答案的 adversarial 类，按 1:1:8 划分训练、验证、测试，即 152 / 81 / 1,307 题。
+- 管理器的样本由「此前对话构建的记忆快照、当前轮、相关问答」组成，快照用 GPT-4o-mini 构建；附录 B.2 写取前 24 轮，算法 1 写前 50 轮，原文前后不一。
+- 对照组 Memory-SFT 用同一架构与数据，但以 GPT-5 生成的轨迹做行为克隆。
+- 骨干模型为 LLaMA-3.1-8B-Instruct 与 Qwen-2.5-3B / 7B / 14B-Instruct（附录 D）。
 
-**RL 相对启发式的差异不在动作表，而在学习信号：** 训练时 **不**人工标注「该 ADD 还是 UPDATE」；只看操作应用后，冻结 Answer Agent 能否答对关联 QA（§3.1）。
+## 四、结果
 
-### 3.3 Memory Manager 的 RL（§3.1）
+### 4.1 LoCoMo 总体结果（Table 1）
 
-- **状态：** $(x, M_{\mathrm{old}})$；**动作：** $(o,m')$。
-- **奖励：** $R_{\mathrm{answer}}=\mathrm{EM}(y_{\mathrm{pred}},y_{\mathrm{gold}})$（式 4）——Exact Match，无需逐步操作标签。
-- **PPO：** 标准 clipped surrogate（式 2），重要性比 $\rho_\theta=\pi_\theta/\pi_{\mathrm{old}}$。
-- **GRPO：** 每状态采样 $G$ 个候选，组内标准化优势 $A_i=(r_i-\mathrm{mean})/\mathrm{std}$，加 KL 到 $\pi_{\mathrm{ref}}$（式 3）。
-
-### 3.4 Answer Agent 的 RL + Memory Distillation（§3.2）
-
-- 先相似度 RAG 取回约 60 条；策略需 **先选出有用记忆再答**（提示要求先输出选中 memories，再 `**Answer:**`，且答案宜短，Appendix C.2）。
-- 奖励同样为 **EM**；PPO/GRPO 对称套用。
-- 文内消融称：去掉蒸馏 → F1/B1/J 下降（§4.4 数字见下）。
-
-### 3.5 训练数据构造（Appendix B.2 / Algorithm 1–2）
-
-- **LoCoMo 划分（§4.1，跟 Mem0）：** 去掉 adversarial 子集；**train/val/test = 152 / 81 / 1307**（约 1:1:8）。
-- **Manager：** 每 turn 配「时序记忆快照 + 当前 turn + 相关 QA」；文内叙述用 GPT-4o-mini 建快照（B.2 写 preceding **24** turns；Algorithm 1 写 previous **50** turns——**原文自相出入，录两处，不擅自统一**）。**无**操作黄金标签。
-- **Answer Agent：** 用已训 Manager 维护的库，对每题 RAG top 记忆（Algorithm 2：每说话人 top **30** → 合计 **60**）+ gold answer 成对。
-- **Memory-SFT 对照：** 同架构同数据，但用 **GPT-5 轨迹行为克隆** 替代 RL（§4.1）。
-
-### 3.6 实现要点（Appendix D，只记可跟读项）
-
-- 底座：**LLaMA-3.1-8B-Instruct**；**Qwen-2.5-3B/7B/14B-Instruct**。
-- 优化：VERL；PPO actor/critic lr $1\times10^{-6}$ / $1\times10^{-5}$；batch 128，micro-batch 2/GPU；prompt/response 上限 4096 / 2048。
-- 解码：训练探索 $\tau=1.0$；验证/测试 greedy $\tau=0$。
-- 提示改编自 Mem0 / MemGPT 公开提示（Appendix C）。
-
----
-
-## 四、评测锚点（只记表内 / 正文可核对数字）
-
-### 4.1 设置（§4.1）
-
-| 项 | 文内 |
-|---|---|
-| **主榜** | LoCoMo：多 session 对话 QA（§4.1 叙述约 **600** turns / **26k** tokens；Appendix B.1 另述均值约 **300** turns / **9k** tokens、最多约 **35** sessions——**两处口径不同，引用时标明章节**） |
-| **题型** | Single-Hop / Multi-Hop / Open-Domain / Temporal（主表不含 adversarial） |
-| **泛化** | 仅在 LoCoMo 上训 → **零样本** MSC、LongMemEval |
-| **指标** | token F1、BLEU-1（B1）、LLM-as-a-Judge（J；CORRECT/WRONG，Appendix C.3） |
-| **基线（同骨干重实现）** | LoCoMo(RAG)、**A-Mem**、**Mem0**、**MemoryOS**、**Memory-SFT**；温度 0、max tokens 2048 |
-
-### 4.2 LoCoMo 主结果（Table 1，Overall）
-
-| Backbone | Method | F1↑ | B1↑ | J↑ |
+| 骨干 | 方法 | F1 | BLEU-1 | 裁判分 J |
 |---|---|---:|---:|---:|
-| LLaMA-3.1-8B-Instruct | LoCoMo (RAG) | 11.41 | 8.71 | 13.62 |
-| | A-Mem | 29.20 | 24.40 | 44.76 |
+| LLaMA-3.1-8B | A-Mem | 29.20 | 24.40 | 44.76 |
 | | Mem0 | 30.41 | 22.22 | 45.68 |
 | | MemoryOS | 35.04 | 27.99 | 48.20 |
 | | Memory-SFT | 42.81 | 32.98 | 58.76 |
 | | Memory-R1-PPO | 41.05 | 32.91 | 57.54 |
-| | **Memory-R1-GRPO** | **45.02** | **37.51** | **62.74** |
-| Qwen-2.5-7B-Instruct | MemoryOS | 34.64 | 29.36 | 51.26 |
+| | Memory-R1-GRPO | 45.02 | 37.51 | 62.74 |
+| Qwen-2.5-7B | MemoryOS | 34.64 | 29.36 | 51.26 |
 | | Memory-SFT | 39.51 | 30.84 | 61.13 |
 | | Memory-R1-PPO | 41.72 | 33.70 | 59.53 |
-| | **Memory-R1-GRPO** | **43.14** | **36.44** | **61.51** |
+| | Memory-R1-GRPO | 43.14 | 36.44 | 61.51 |
 
-**正文相对增益叙述（相对最强非 RL 基线 MemoryOS，LLaMA）：** GRPO 相对提升约 **F1 +28.5% / B1 +34.0% / J +30.2%**；PPO 约 **+17.2% / +17.6% / +19.4%**（§4.2）。Qwen 上 GRPO 相对 MemoryOS 约 **+24.5% / +24.1% / +20.0%**。作者强调：**RL 仍可超过 GPT-5 轨迹的 Memory-SFT**。
+正文以 MemoryOS 为最强基线计算相对增益：LLaMA 上 GRPO 的 F1、BLEU-1、J 分别高 28.5%、34.0%、30.2%，PPO 高 17.2%、17.6%、19.4%；Qwen 上 GRPO 高 24.5%、24.1%、20.0%（§4.2）。分题型看，LLaMA + GRPO 的多跳 F1 为 35.65、时序 F1 为 49.86。
 
-题型分解（同表）：LLaMA + GRPO 在 Multi-Hop F1 **35.65**、Temporal F1 **49.86** 等均为该骨干行内最高或并列前列——完整格以 PDF Table 1 为准。
+### 4.2 迁移（§4.3、Table 5）
 
-### 4.3 缩放与泛化（§4.3；图为主）
+只在 LoCoMo 上训练，零样本用于 MSC 与 LongMemEval 仍有提升。LongMemEval 总体上，LLaMA + GRPO 为 45.20 / 39.30 / 55.40（F1 / BLEU-1 / J），Memory-SFT 为 43.89 / 36.72 / 54.80，A-Mem 为 38.36 / 33.30 / 54.20；Qwen + GRPO 为 46.70 / 41.10 / 57.80。
 
-- **Figure 3：** Qwen-2.5 **3B / 7B / 14B** 上 PPO/GRPO 均持续高于 base（**逐点数字以图为准**）。Appendix Table 3 给出扩展数值表可核对。
-- **Figure 4：** 仅 LoCoMo 训练的管线在 **MSC、LongMemEval** 上仍一致增益。
-- **LongMemEval Overall（Table 5）：** 例 LLaMA 上 GRPO **45.20 / 39.30 / 55.40**（F1/B1/J）高于 Memory-SFT **43.89 / 36.72 / 54.80** 与 A-Mem **38.36 / 33.30 / 54.20**；Qwen 上 GRPO **46.70 / 41.10 / 57.80**。分任务（SSU/SSP/OD/MS/KU/TR）见 Table 4。
+### 4.3 消融（§4.4，LLaMA-3.1-8B）
 
-### 4.4 消融与奖励设计（§4.4；LLaMA-3.1-8B 叙述）
+- **管理器**：换回未经 RL 的管理器，PPO 管线从 41.0 / 32.9 / 57.5 降到 34.5 / 28.1 / 49.0。
+- **记忆筛选**：去掉 Memory Distillation，GRPO 管线从 45.0 / 37.5 / 62.7 降到 41.0 / 34.4 / 60.1。
+- **管理器越强，答题智能体的增益越大**：配 GPT-4o-mini 管理器时 F1 增益为 +19.72，配 LLaMA-8B 管理器时为 +10.10。
+- **奖励选择**（Table 2）：用裁判分作奖励时 J 为 63.58，但 F1 只有 33.69，因为模型学会输出冗长答案；改用 EM 后为 41.05 / 32.91 / 57.54，作者因此采用 EM。
 
-| 消融 | 文内数字（F1 / B1 / J） |
-|---|---|
-| 去掉 RL Manager（相对满分管线） | PPO：41.0/32.9/57.5 → **34.5/28.1/49.0**；GRPO → **37.5/30.6/52.9** |
-| 无 RL Answer Agent → 满分管线 | PPO：32.5/24.6/59.4 → **41.0/32.9/57.5**；GRPO：33.0/24.9/59.9 → **45.0/37.5/62.7** |
-| 无 Memory Distillation → 有蒸馏 | PPO：39.3/30.9/57.4 → **41.0/32.9/57.5**；GRPO：41.0/34.4/60.1 → **45.0/37.5/62.7** |
-| 更强 Manager（GPT-4o-mini vs LLaMA-8B）放大 Answer Agent 增益 | ΔF1 **+19.72 vs +10.10**；ΔB1 **+18.19 vs +10.81**；ΔJ **+15.76 vs +5.05**（Figure 6） |
+### 4.4 开销（附录 G）
 
-**奖励选择（Table 2，PPO Answer Agent）：**
+管理器在 LLaMA 上的中位延迟为 1.98–2.17 秒，Qwen-7B 上低于 1.4 秒，PPO、GRPO 与未训练版本相差不大；记忆检索的中位延迟低于 0.35 秒。作者据此认为 RL 没有明显增加操作选择的成本。
 
-| Reward | F1 | B1 | J |
-|---|---:|---:|---:|
-| J-based | 33.69 | 23.36 | **63.58** |
-| **EM-based（采用）** | **41.05** | **32.91** | 57.54 |
+## 五、意义
 
-文内解释：J 奖励诱使冗长答案，抬高 Judge、压低字符串重叠；为与基线公平对比采用 **EM**。
+Memory-R1 把记忆维护从「提示词里写规则」改成「按下游答题结果学策略」，不需要操作级标注，且只用 152 条训练问答。它也说明记忆系统的两个环节都能从结果奖励中受益：管理器学会合并而不是撕裂，答题智能体学会先筛后答。按 [[AgenticRL景观与能力模块]] 的划分，这是智能体 RL 在「记忆」能力上从「何时检索」走到「增、改、删」的代表工作。
 
-**训练动态（Figure 7）：** GRPO 早期收敛更快，后期与 PPO 终奖相近（曲线点不读）。
+## 六、局限与待核实
 
-### 4.5 延迟叙事（Appendix G / Figure 8）
+- **作者自述**：评测以对话数据为主，没有覆盖多模态记忆；两个智能体分开训练，端到端的多智能体 RL 留作后续。
+- **相对增益的口径**：正文的相对增益以 MemoryOS 为基准，而同表中的 Memory-SFT 更强；在 LLaMA 上 PPO 的 J（57.54）低于 Memory-SFT（58.76），在 Qwen 上 GRPO 的 J（61.51）与 Memory-SFT（61.13）接近，LongMemEval（Table 5）的 LLaMA 组中，GRPO、PPO、Memory-SFT、A-Mem 的 J 在 54.20–55.40 之间，相差不到 1.2 分，Mem0 则为 41.20；Qwen 组 GRPO（57.80）比 Memory-SFT 与 A-Mem（均为 54.80）高 3.0 分。Qwen 上 Mem0 的 J 为 53.30，高于 MemoryOS。
+- **版本口径**：v1（2025-08-27）的摘要只说优于「the most competitive existing baseline」，未点名；引言与 §4.2 以 Mem0 为最强基线，§4.2 报 LLaMA + GRPO 的 F1、BLEU-1、J 分别高 68.9%、48.3%、37.1%（v1 引言写成 F1 高 48%、BLEU-1 高 69%，与 §4.2 对调），当时基线中还没有 MemoryOS 与 Memory-SFT；现行 v5（2026-01-14）加入这两个基线，§4.2 改为相对 MemoryOS 计算，中间版本未逐一核对。本篇只用 v5 §4.2 的数字，v5 的 abs 页摘要不含具体百分比，与正文不冲突。
+- **原文内部不一**：快照长度在附录 B.2（24 轮）与算法 1（50 轮）不同；LoCoMo 规模在 §4.1（约 600 轮、26k token）与附录 B.1（平均 300 轮、9k token、最多 35 个会话）不同；v5 引言仍称 Mem0 为最有竞争力的基线，所给 F1、BLEU-1、J 的 28%、34%、30% 却与 §4.2 相对 MemoryOS 的 28.5%、34.0%、30.2% 一致，本篇以 §4.2 为准。
+- **基线为重新实现**：A-Mem、Mem0、MemoryOS 都在同一骨干上重新实现，与各自原论文的数字不可直接比较。
+- **只见于图中的数字**：缩放实验（Figure 3）、训练曲线（Figure 7）与延迟对比（Figure 8）的逐点数值只出现在图中，本篇不引。
 
-- 相对 Base + Reranker：学到的蒸馏在更高准确率下仍有更好 latency 权衡（图；**不读精确 ms 点**）。
-- Manager：LLaMA 上 p50 约 **1.98–2.17 s**，p95 约 **3.4–3.6 s**；Qwen-7B p50 **\<1.4 s**——文称 RL **未明显加重**操作选择成本。
-- Memory Search：两骨干 p50 **\<0.35 s**，p95 **\<0.65 s**。
+## 七、与相邻笔记的分工
 
----
-
-## 五、相对 [[智能体长程记忆]] 的增量对照
-
-| 维度 | [[智能体长程记忆]] | 本篇 Memory-R1 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **核心问题** | 分层分页 / 笔记图如何组织外置记忆 | 四操作策略与读后蒸馏 **如何被奖励学会** |
-| **决策信号** | 提示 + 函数调用 / LLM 建链演化（无 outcome RL） | 下游 **EM** → PPO/GRPO |
-| **同台关系** | A-Mem、MemGPT 为结构/OS 主文 | Table 1 把 **A-Mem、Mem0、MemoryOS** 当基线；MemGPT 在 related work 中作启发式代表 |
-| **数据效率叙事** | （各文自有） | **152** QA 即宣称大幅增益 |
+| [[智能体长程记忆]] | 上游：外置记忆的分层与结构化组织在该篇，本篇把 MemGPT、A-Mem 当作启发式维护的前序与基线 | 分页机制与卡片网络 |
+| [[Mem0与Zep生产级记忆]] | 上游：四操作的定义与 Mem0 系统在该篇，本篇把它当动作集，再用 RL 学选择 | 提取—更新流水线、图变体与生产评测 |
+| [[GRPO与DAPO算法族]] | 方法：本篇所用 PPO、GRPO 的目标函数与 DAPO 等改进在该篇 | 算法推导与技巧清单 |
+| [[AgenticRL景观与能力模块]] | 定位：Agentic RL 综述在「记忆」能力格把本篇列为用 RL 学习 ADD / UPDATE / DELETE / NOOP 记忆操作的代表 | 综述的 POMDP 形式化与其余能力格 |
+| [[CHIME长程规划记忆]] | 对照：同为记忆的自动维护，本篇用 RL 改模型参数，CHIME 冻结骨干、只按信用归因更新外置经验库 | 计划与执行的信用分配 |
+| [[ToRL工具集成强化学习]] | 同法异用：都用结果奖励 RL 学一类操作，那篇学代码解释器调用，本篇学记忆增删改 | 解释器进 rollout 的工程 |
+| [[检索增强与知识外挂]] | 上游：答题智能体用相似度检索取回记忆，属于该篇所写的 RAG；本篇在其后加一步学习式筛选 | 索引与重排工程 |
+| [[图谱检索GraphRAG]] | 同问「外部存储怎样随新信息更新」：本篇用 RL 学习对记忆条目做增删改，该篇所写的 EraRAG 用固定分桶做确定性的局部重建 | 图索引构建与社区摘要 |
 
-**跟读卡片：**
+## 八、延伸阅读
 
-> [[智能体长程记忆]]：**记忆子系统的形态**（RAM/磁盘 vs 卡片盒）。
-> [[MemoryR1强化学习记忆维护]]：**同一 CRUD 面上的策略学习**——少标签、outcome-driven，让 Manager 倾向 **UPDATE 巩固** 而非错误 **DELETE+ADD**，并让 Answer Agent **先滤噪再答**。
-
----
-
-## 六、局限与开放问题（文内 + 笔记边界）
-
-**作者 Limitations：**
-
-1. 评测偏 **对话中心**；多模态记忆未覆盖。
-2. Manager 与 Answer Agent **分训** 换稳定，端到端 multi-agent RL 未做。
-
-**笔记侧待核实（不填空）：**
-
-- Appendix B.2「24 turns」vs Algorithm 1「50 turns」快照长度不一致。
-- LoCoMo 规模在 §4.1 与 Appendix B.1 口径不一致；引用请带章节。
-- Figure 3/4/7/8 精确点值未列表 → 需要时重读图或作者发布数据。
-- 与生产 Mem0 / MemoryOS 的实现是否逐 API 对齐，原文称「re-implemented」——深度复现应核附录与开源（若后续发布）。
-
----
-
-## 相关笔记
-
-- [[法律专科模型]]
-- [[MixtureOfAgents与TUMIX]]
-- [[图谱检索GraphRAG]]
-- [[MemoryR1强化学习记忆维护]]
-- [[安全论证SafetyCases]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [Memory-R1](https://arxiv.org/abs/2508.19828) §3–4、Table 1–2、附录 C | 方法、主结果、消融、四操作提示词 |
+| 2 | [[Mem0与Zep生产级记忆]] | 四操作的来源与生产记忆层 |
+| 3 | [[GRPO与DAPO算法族]] | PPO 与 GRPO 的目标函数 |
+| 4 | [[AgenticRL景观与能力模块]] | 记忆能力在智能体 RL 中的位置 |
