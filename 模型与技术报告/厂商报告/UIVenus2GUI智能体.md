@@ -7,285 +7,97 @@ status: archived
 sources:
  - https://arxiv.org/abs/2609.00028
 arxiv: ["2609.00028"]
-related: ["智能体工具与长程任务", "视觉语言动作谱系", "GRPO与DAPO算法族"]
+related: ["智能体工具与长程任务", "视觉语言动作谱系", "GRPO与DAPO算法族", "多模态架构脉络", "OnPolicy蒸馏OPD范式", "计算机使用智能体", "浏览与深研Agent基准", "代码智能体Harness史线"]
 appendix_index:
  - arxiv: "2609.12394"
    title: "BlueLM-GUI Technical Report"
 archived: 2026-09-22
 ---
 
-# UI-Venus-2（GUI 观测–动作闭环）
+# UI-Venus-2 Technical Report：跨端 GUI 基础智能体与可验证 RL 信号
 
-> **定位**：GUI 智能体技术报告主题轴——**Ant Group Venus Team** 的跨 **mobile / web / desktop** foundation GUI agent；主轴是 **截图观测 → 推理 → 结构化 GUI 动作 → 环境反馈** 的统一闭环，以及为离线 RL 供能的 **trace / sample 级可验证信号**。
-> **研究线**：**架构思想（主）** + **评测字段（trace/sample 验证与多基准表，辅）**。
-> **范围与相邻笔记**：**不写** ReAct / MCP / 通用工具环全文（→ **[[智能体工具与长程任务]]**）；**不写** 具身机器人 VLA / 连续动作 flow（→ **[[视觉语言动作谱系]]**）；GRPO/DAPO 算法族细节仅交叉引用（→ **[[GRPO与DAPO算法族]]**），本篇不展开配方。
-> **同窗附录索引**：BlueLM-GUI（arXiv **2609.12394**）仅作对照入口，本篇不展开。
-> 正文未展开的投票协议 / 安全训练细节 / 离线 RL 具体损失标「文内未细写」。
+> **主要来源**：[UI-Venus-2 Technical Report](https://arxiv.org/abs/2609.00028)（Venus Team, Ant Group，v1，2026-08-27）（截至 2026-08-27）
+> **研究线**：架构思想（主：跨 mobile、web、desktop 的统一截图到动作闭环、三阶段管线、动作结构感知的多教师蒸馏）；评测字段（辅：轨迹级与样本级可验证信号、跨端基准表）
+> **范围与相邻笔记**：
+> - ≠ [[智能体工具与长程任务]]：通用工具环与长程任务的通论在那篇，本篇只写 GUI 控件级闭环。
+> - ≠ [[视觉语言动作谱系]]：具身连续动作的谱系在那篇，本篇只写数字界面上的结构化动作。
+> - ≠ [[GRPO与DAPO算法族]]：离线 RL 的损失沿用 UI-Venus-1.5，本篇不展开算法族。
+>
+> **意义**：UI-Venus-2 是覆盖移动、网页与桌面的 GUI 基础模型，基座为 Qwen3.5-9B 与 Qwen3.6-27B，产物为 UI-Venus-2-9B 与 UI-Venus-2-27B（§2.1）。报告把可部署的瓶颈写成三个维度同时扩大：环境覆盖、功能可落地的任务、用轨迹级与样本级评估器加多模型投票的验证（摘要），并称强化学习的可靠程度取决于提供奖励的数据质量验证器（§1）。离线 RL 的信号分两级：轨迹级的语义引导验证，与执行前的逐步判定。分域专家最后用多教师 on-policy 蒸馏合回一个策略（§2.4）。
 
----
+## 一、问题背景
 
-## 一、材料元信息
+报告把「基准模型到可信真实部署」的缺口压成三点（§1）：环境覆盖不够，不能只活在少数应用；开放指令必须功能可落地，否则轨迹不可执行、不可验；粗粒度的终态成功或失败会把部分进展当成完成，或给出可被策略利用的虚高信号。闭环本身是：给定自然语言指令，模型观察渲染界面图像，解释视觉上下文，把高层意图译成可执行的 GUI 动作，再据环境反馈持续适配，直到任务完成（§2.1）。
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文** | Venus Team (Ant Group), *UI-Venus-2 Technical Report* | arXiv:**2609.00028v1** \[cs.AI\] **27 Aug 2026**；`https://arxiv.org/abs/2609.00028`（**37** 页） | 跨端 GUI foundation agent；环境–任务–验证三轴共扩 |
-| **发布入口（文内）** | Code / Model / Project | https://github.com/inclusionAI/UI-Venus ；https://huggingface.co/collections/inclusionAI/ui-venus ；https://ui-venus.github.io/UI-Venus-2 | 权重与评测基建（本篇不跟 commit） |
-| **家族前作（交叉）** | UI-Venus / UI-Venus-1.5 | Gu et al. (2025)；Team et al. (2026c)，文内称 mid-training 与 RL 配方沿用 1.5 | 本篇不重写 1.5 损失表 |
-| **附录索引** | *BlueLM-GUI Technical Report* | arXiv:**2609.12394v3**（摘要核：真机 flywheel；35B-A3B；MobileGUI-VBench / AndroidWorld） | **仅索引**，见 §九 |
+## 二、脉络
 
-**一句话抓手：** 把「能点会逛」的 GUI agent 做成 **可部署 foundation** 的瓶颈不在单点 grounding，而在 **环境覆盖 × 功能可执行任务 × 防 reward hacking 的验证器** 三者同扩；UI-Venus-2 用统一 **reasoning–action** 闭环吃 mobile/web/OS，再用 **SGV（trace）+ a priori 逐步判定（sample）** 给离线 RL 喂多分辨率信号，最后用 **MOPD（动作结构感知蒸馏）** 把分域专家合回一个策略。
-
----
-
-## 二、问题框定（相对工具环 / VLA）
-
-摘要与 §1 把「基准模型 → 可信真实部署」的缺口压成三点：
-
-1. **环境覆盖不够**：不能只活在少数应用；需覆盖多语言 mobile app 与 **原生桌面 OS**。
-2. **任务构造脆弱**：开放指令必须 **功能可落地（function-grounded）**，否则轨迹不可执行、不可验。
-3. **奖励验证不可靠**：粗粒度终态成功/失败会把「部分进展」当完成，或给出可被策略利用的虚高信号——**RL 只与 verifier 一样可靠**（§1）。
-
-| 相邻路线 | 数据流 | 本篇是否主写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[智能体工具与长程任务]]** 工具环 / MCP / 长程可靠性 | API·文件·沙箱工具调用 | **否**；GUI 动作是像素坐标级人机控件，不是 MCP 协议栈 |
-| **[[视觉语言动作谱系]]** 机器人 VLA | 相机观测 → 关节/末端动作 | **否**；此处是 **数字界面截图 → Click/Type/Hotkey…** |
-| **UI-Venus-2（本篇）** | 渲染界面图 → 结构化 GUI 动作 → 环境反馈再观测 | **是** |
+| 2025-08 | [UI-Venus](https://arxiv.org/abs/2508.10833) | 家族前作，本篇不重写其损失 |
+| 2026-02 | [UI-Venus-1.5](https://arxiv.org/abs/2602.09082) | 中训练与 RL 配方沿用 1.5，本篇不重写其损失表 |
+| 2026-08 | [UI-Venus-2](https://arxiv.org/abs/2609.00028) | 跨端统一闭环、两级可验证信号、多教师蒸馏 |
 
-**可跟读闭环句（§2.1）：** 给定自然语言指令，模型 **观察渲染界面图像 → 解释视觉上下文 → 把高层意图译成可执行 GUI 动作 → 据环境反馈持续适配，直到任务完成**。
+## 三、核心机制：三阶段管线（§2）
 
----
+1. **初始化**（§2.1）：基座为 Qwen3.5-9B 与 Qwen3.6-27B。任务混合物为 Grounding、CAPTCHA、Mobile、Web、Computer 五类。动作空间跨平台统一，桌面侧的额外动作见附录 Table 7。
+2. **Stage I 中训练**（§2.2）：大规模轨迹上的监督微调，以 Mobile、Web、OS 为主。查询由整理过的种子条件生成，轨迹经人工与判别器协同，再用自动的轨迹级评估过滤无效、歧义与低质样本。
+3. **Stage II 离线 RL**（§2.3）：在中训练模型上按域做逐步离线 RL。Mobile、OS、Web 用大规模逐步轨迹；CAPTCHA 与 Grounding 用程序化合成嵌入真实页面或应用背景，以获得稠密、难度可控、动作级可验的监督。具体损失沿用 UI-Venus-1.5，本报告正文未重写算法式。
+4. **Stage III 多教师蒸馏**（§2.4）：把分域专家并入学生，同时尽量保留基座的多模态推理。GUI 回复通常是推理轨迹加结构化动作，但只有动作进入环境、决定状态转移，动作内部又有类型到参数的依赖。相对整段回复均匀蒸馏，报告做两类适配：按学生动作正确性调节蒸馏强度，完整正确则抑制动作段，类型对而参数错则加强动作跨度，类型错则强调类型 token 并遮住下游参数；给教师提示追加正确动作类型的提示，该提示从不进入学生的提示或推理，教师不另生成轨迹，只对学生采样打分。
 
-## 三、系统总览：三阶段管线 + 统一任务混合物
+## 四、核心机制：数据生成（§3.1–§3.2）
 
-### 3.1 初始化与任务族
+通用三段：用深度研究聚合官方文档、帮助页与常见工作流，建成带函数签名、前置条件与覆盖度的能力目录，rollout 后再按观测到的页面状态与失败案例更新采样；把每条任务做成绑定指令、域、能力标签、初态与期望结果的可执行合同，有效性门拒绝不支持的函数、歧义目标、缺依赖与不可验的结果；按截图到动作的循环收集轨迹，成功与失败都回写目录。
 
-| 项 | 论文事实 |
-|---|---|
-| 基座 | **Qwen3.5-9B**、**Qwen3.6-27B**（§2.1） |
-| 产物 | **UI-Venus-2-9B** / **UI-Venus-2-27B** |
-| 任务混合物 | **Grounding + CAPTCHA + Mobile + Web + Computer**（互补：精细空间 / 可控可验交互 / 真实导航经验） |
-| 动作空间 | 跨平台统一；桌面侧额外动作见附录 Table 7（§2.1 指向 appendix） |
+分域的规模（§3.2）：环境扩到 170 多个多语言移动应用，贡献条目写作 100 多个中文加 70 多个英文，并覆盖原生桌面操作系统。Web 侧从公开基准与 Tranco 出发，经可达性检查与打分得到超过 4,000 个域、19 类，能力目录种入 45,000 条任务，用真实 Chrome 会话与 15 种动作的 Playwright 接口执行，并按规则清洗冗余等待、反向滚动与循环动作。CAPTCHA 侧有 70 类规则引擎，渲染前先验可解性。
 
-### 3.2 三阶段（Figure 3 / §2.2–2.4）
+## 五、核心机制：两级可验证信号（§3.3）
 
-`
-BASE (Qwen3.5-9B / Qwen3.6-27B)
- │
- ├─ Stage I Mid-Training 大规模轨迹 SFT（Mobile/Web/OS 主导）
- │
- ├─ Stage II Offline RL 分域 step-level 离线 RL
- │ Grounding / CAPTCHA / Mobile / Web / Computer
- │
- └─ Stage III MOPD 多教师 On-policy Distillation → 统一 GUI agent
-`
+1. **轨迹级**（§3.3.1）：开放 GUI 的成功常常是语义而非句法。语义引导验证用视觉语言模型作评判，看执行轨迹是否语义满足目标，不依赖智能体自报的成功，失败、超时与用户介入的轨迹同样可验。五步为：从目标抽可验证的完成要点；轨迹切固定窗口并在截图上叠红标；并行判定各窗口满足哪些要点；证据明确则用硬规则，有歧义则做多模态终判；输出结构化报告。轨迹分四类：全部达成、部分达成或有实质进展、外部约束下客观不可行且被正确识别、未形成有效进展。这些结论用于数据策展的质量分层，不是直接的训练标签或基准分数。摘要与贡献条目写用多个异构模型投票以降低单裁判偏差；§3.3.1 正文展开的是并行窗口判定加歧义终判，投票的席位与票权正文未逐步展开。
+2. **样本级**（§3.3.2）：只用执行前的信息判定动作质量，即当前截图、声明的动作类型与目标、智能体推理和任务目标，以免把外部因素导致的页面跳变算进动作好坏。先查推理与动作是否一致，再查是否对齐任务。逐步分四类：明确推进且有把握、有依据的探测、无实质贡献、偏离目标或推理与动作不一致。再聚合时，可行轨迹里至少要有一步有效的任务专属动作才算部分达成，只有启动应用、切页、滚动这类通用动作则算失败。
 
-- **Stage I**：异构合成 + 交互轨迹 mid-training；查询由 curated seed 条件生成；轨迹经 **human–discriminator 协同** + 自动轨迹级评估过滤无效/歧义/低质样本（§2.2）。
-- **Stage II**：在 mid-trained 模型上做 **离线 RL**。Mobile/OS/Web 用大规模 **step-level** 轨迹；CAPTCHA/Grounding 用程序化合成嵌入真实页面/App 背景，以获得 **稠密、难度可控、动作级正确性可验** 的监督（§2.3）。具体 RL 损失沿用 **UI-Venus-1.5** 配方——**本 TR 正文未重写算法式，不填 GRPO/PPO 名**。
-- **Stage III · MOPD**：多教师 on-policy distillation，把分域专家并入学生，同时尽量保留基座多模态推理（§2.4；引用 Xiao et al. 2026；Yan et al. 2026）。
+## 六、主要结果（§4）
 
-### 3.3 MOPD：把蒸馏压在「会改环境的那一小段动作」上
+读表口径（Figure 1 与各表注）：对照优先取独立的端到端系统，并取最接近的任务子集与步数预算；来源报告的动作脚手架可能不同；带星号的是作者复现。
 
-GUI 回复通常是 **推理轨迹 + 结构化动作**，但 **只有动作进入环境、决定状态转移**；动作内部又有 **类型 → 参数 schema** 依赖（§2.4）。
+1. **移动**（Table 1）：MobileGym 上 9B 为 52.7、27B 为 60.5；VenusBench-Mobile（149 个任务）为 46.5 与 48.7；AndroidWorld 为 80.2 与 84.0，报告称该基准已较饱和；MemGUI pass@1 为 62.6 与 70.3。
+2. **桌面**（Table 2）：OSWorld-Verified 为 70.8 与 80.5，对照 Claude-Opus-4.8 的源报 83.4，报告强调脚手架不可严格对齐；OSWorld 2.0 在 150 步、108 个任务上，9B 的二元分与部分分为 0.0 与 7.5，27B 为 2.8 与 13.2。
+3. **网页**（Table 3）：WebVoyager 为 90.8 与 93.4；Online-Mind2Web 为 74.0 与 78.3。
+4. **定位、验证码与安全**（Table 4–6）：VenusBench-GD 英文指令的 micro 平均为 77.1 与 80.1；VenusBench-CAPTCHA（219 例，micro Pass@1）为 78.1 与 79.9。安全攻击成功率越低越好：OSHarm 上 9B 为 11.3、27B 为 15.3；OSBlind 上为 48.8 与 47.9。OSHarm 覆盖故意滥用、第三方注入与模型误行为，OSBlind 是指令良性但环境潜藏伤害（§4.1.2）。
+5. **推理设定**（§4.1.1）：一般智能体任务默认开启思考并保留完整推理史；定位任务关闭推理、温度为 0；一般采样温度为 1.0。
 
-相对「整段 response 均匀 token 蒸馏」的 vanilla OPD，文内做两类 GUI 适配：
+## 七、意义
 
-**（1）Structured Action-Aware Distillation**——按学生动作正确性调节蒸馏强度：
+1. **验证器与奖励绑在一起**：报告把可验证信号的粒度当作离线 RL 能不能用的前提，轨迹级用于策展分层，逐步级才直接服务逐步监督。
+2. **蒸馏只压在会改环境的那一段**：动作类型与参数的依赖被写进蒸馏强度，类型错时不拿参数去对齐教师。
+3. **跨端用同一套闭环**：移动、网页与桌面共用截图到动作的循环，差异放在数据生成与动作表，不放在模型族。
 
-| 学生动作状态 | 蒸馏策略（文内） |
-|---|---|
-| 完整动作正确 | **抑制** 动作段蒸馏（无需纠正） |
-| 类型对、参数错 | **加强** 动作 span 监督 |
-| 类型错 | **强调 type token**，并 **mask** 下游参数（参数语义依赖类型） |
+## 八、局限与待核实
 
-例：Click 类型对但坐标错 → 仍可纠坐标；若误预测为 Scroll，其参数语义无关（§2.4）。
+1. **离线 RL 的目标函数、组大小与 KL 未在本报告复述**，指向 UI-Venus-1.5。
+2. **多模型投票的席位与聚合规则**正文未逐步展开。
+3. **安全**：§1 有安全机制的主张，方法论未见独立的安全训练小节，证据主要在 §4.2.6 的攻击成功率。
+4. **引言预告的消融**：目录与正文未见独立消融章节或消融表。
+5. **版本**：arXiv 上只有 v1（2026-08-27）。
+6. **对照入口**：[BlueLM-GUI Technical Report](https://arxiv.org/abs/2609.12394) 是另一份移动端 GUI 智能体报告，只作对照入口，不引其内容，不计入截至。
 
-**（2）Teacher-Side Action-Type Conditioning**——给教师 prompt 追加正确动作类型 hint $h(z^*)$；**hint 从不进学生 prompt / 推理**；教师不另生成轨迹，只对学生采样打分。token 级蒸馏优势（文内式 (1)）：
+## 九、与相邻笔记的分工
 
-$$
-\hat{A}^{\mathrm{hint}}_t = \mathrm{sg}\big[\log \pi_{T_d}(y_t \mid P_T(x,z^*), y_{<t}) - \log \pi_\theta(y_t \mid P_S(x), y_{<t})\big]
-$$
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[智能体工具与长程任务]] | GUI 控件级闭环是长程智能体可靠性的一种界面 | 工具 API 与协议栈 |
+| [[视觉语言动作谱系]] | 本篇的动作是 Click、Type、Hotkey 一类结构化控件动作 | 机器人连续控制 |
+| [[GRPO与DAPO算法族]] | Stage II 是离线 RL，损失指向 UI-Venus-1.5 | 算法族清单 |
+| [[多模态架构脉络]] | 基座是多模态理解模型，本篇增量在交互轨迹、可验奖励与动作结构蒸馏 | 多模态融合通史 |
+| [[OnPolicy蒸馏OPD范式]] | Stage III 的多教师 on-policy 蒸馏归入那篇讨论的范式 | OPD 的方法谱系 |
+| [[计算机使用智能体]] | 桌面 GUI 评测的协议与步数预算在那篇，本篇只报自己表内的分数 | 计算机使用的评测协议 |
+| [[浏览与深研Agent基准]] | 网页浏览基准的定义在那篇，本篇 Table 3 列出自己的分数 | 浏览基准的协议 |
+| [[代码智能体Harness史线]] | 代码仓库的命令面与本篇的 GUI 界面并列，对象不同 | 代码智能体的工具面 |
 
-其中 $T_d$ 为域 $d$ 冻结教师，$\mathrm{sg}$ 停梯度。
+## 十、延伸阅读
 
----
-
-## 四、数据生成闭环：目录 → 合同任务 → 截图–动作 rollout
-
-### 4.1 通用三段（§3.1 / Figure 2）
-
-1. **Capability Catalog Construction**：冷启动用 **Deep Research** 聚合官方文档、帮助页、用户讨论、常见工作流与历史任务 → 结构化能力目录（函数签名、前置条件、兼容函数、覆盖度）。rollout 后用观测页面状态、控件约束、实体校验、失败案例 **动态更新** 采样分布。
-2. **Task Construction**：生成单能力 / 复合 / 查询式 / 批量 / 场景任务；每条任务是绑定 NL 指令、域、能力标签、初态、资源与期望结果的 **executable contract**；**validity gate** 拒绝不支持函数、歧义目标、缺依赖、**不可验结果**。
-3. **Trajectory Collection**：**screenshot–action loop**；成功与失败都回写目录（观测函数、非法实体、未满足前置、失败原因），驱动下一轮覆盖薄弱能力。
-
-摘要量化锚点（与贡献条目一致）：环境扩到 **170+** 多语言 mobile apps（贡献写 **100+ 中文 + 70+ 英文**）及 **原生桌面 OS**；任务侧用 deep-research **功能落地** 指令生成。
-
-### 4.2 分域实例化（§3.2，只记可核数字与机制）
-
-| 域 | 关键机制 / 数字（文内） |
-|---|---|
-| **Web** | 公开 browser-agent 基准 + **Tranco** → 可达性检查 + Kimi 2.6 打分 → **>4,000** 域、**19** 类；能力目录种入 InSTA-150k-v3 的 **45,000** 任务；真实 Chrome + **15-action Playwright**；规则清洗冗余 wait / 反向滚动 / 循环动作 |
-| **Computer** | **TaskSpec**（桌面快照、setup、文件/服务、出处、outcome evaluator）；fixture fingerprint 去重与 hidden-answer 泄漏检测；长程任务 **层级切分子目标**，已验证 exit state 续种下一段 |
-| **Synthetic Grounding** | 合成 HTML/CSS/JS → 截图+DOM+几何；九位点测（可见性、裁剪、滚动包含、遮挡、绘制像素等）；不可行指令作 hard negative；直接导出 SFT/RL，**绕过**通用任务构造 |
-| **Synthetic CAPTCHA** | **70** 类规则引擎；潜状态决定答案/几何/合法动作/解轨迹；渲染进 mobile/webpage；渲染前验可解性 → 稠密可机验标签 |
-
-CAPTCHA 在叙事上还有数据缩放作用：避免登录/注册等流程卡在验证门，阻塞下游状态收集（§1）。
-
----
-
-## 五、可验证 RL 信号：Trace-level + Sample-level（本篇主轴）
-
-动机（§3.3）：开放 GUI 任务上，粗 **二元终态** 标签不足以刻画部分进展、推理质量与任务可行性；需要 **语义上有意义且时间上可粒度化** 的验证。
-
-### 5.1 Trace-level · Semantic Guided Verification（SGV）
-
-相对规则可验的文件/配置终态，开放 GUI 成功常是 **语义** 而非句法。SGV 用 **VLM-as-Judge**（引用 Sun et al. 2026）看执行轨迹是否语义满足目标；**不依赖** agent 自报成功——失败/超时/用户介入轨迹同样可验（§3.3.1）。
-
-五步管线（文内）：
-
-1. 从任务目标抽 **可验证 completion keypoints**；
-2. 轨迹切固定窗口，截图上对 CLK 叠 **红标**，增强视觉 grounding；
-3. **并行** 判定各窗口满足哪些 keypoints，累积过程证据；
-4. 证据 unambiguous → 硬规则；歧义 → 多模态终判（终止信号、行为统计、窗口解释、末帧）；
-5. 结构化报告：结论、推理、逐 keypoint 状态、证据截图。
-
-**轨迹四分类：**
-
-| 标签 | 含义（文内） |
-|---|---|
-| **completed** | 全部关键目标达成 |
-| **partial** | 部分目标达成或朝完成有实质进展 |
-| **infeasible** | 外部约束下客观不可行，且被 agent 正确识别 |
-| **failed** | 未形成有效进展 |
-
-例：「在目标群发指定内容」→ keypoints：进对群、填标题正文、确认发布；前两步完成但步数耗尽 → **partial** 而非 failed。
-
-**用途边界（重要）：** SGV 结论是 **数据策展的质量分层**，**不是**直接训练标签或基准分数。completed → 高质量候选；partial → 截断/续写修复队列；infeasible → 反哺可行性规则；failed → 拆分任务设计 / 环境稳定性 / agent 能力问题；新发现功能回灌子能力池（§3.3.1）。
-
-**关于「multi-model voting」：** 摘要与贡献条目写「多异构模型投票」以降低单裁判偏差、减轻 reward hacking；§3.3.1 正文展开的是 **并行窗口判定 + 歧义多模态终判**。**投票的具体席位/票权协议正文未逐步展开** → 笔记只记主张，不补伪流程。
-
-### 5.2 Sample-level · 执行前（a priori）逐步判定
-
-与事后终态不同：仅用 **执行前** 信息——当前截图、声明动作类型与目标、agent 推理、任务目标——判定动作质量，便于实时干预，并避免把外部因素导致的页面跳变算进动作好坏（§3.3.2）。
-
-两阶段：先查 **reasoning–action consistency**，再查任务对齐。
-
-| 逐步标签 | 含义（文内） |
-|---|---|
-| **Correct** | 明确推进任务，且 agent 对正确性有把握 |
-| **Exploratory** | 显式不确定但对合理候选路径做有根据探测（有 grounded 理由且引起状态变化） |
-| **Ineffective** | 无实质贡献（点非交互区、短无用环等） |
-| **Incorrect** | 偏离目标、完成后仍继续、或推理–动作不一致（幻觉 / thought–action mismatch） |
-
-再聚合为轨迹三层：先判可行性（正确报 infeasible vs 未识别→failed）；可行则区分 **generic**（启动 App、切 tab、滚动）与 **task-specific**（填具体内容、选特定目标）——**至少一步有效 task-specific** 才可进 partial，仅 generic → failed。文内明确：这比粗二元成功/失败更可靠地服务 RL 奖励（§3.3.2）。
-
----
-
-## 六、动作空间速览（附录 Table 7）
-
-统一空间并把开源数据动作映射进来（Table 7 caption）。跟读分组：
-
-- **共享**：Click / Drag / Swipe / DoubleClick / LongPress / Type / Wait / CallUser / Finished
-- **Mobile**：PressBack/Home/Enter/Recent、LaunchApp、GetScreenshot、Answer
-- **Desktop**：RightClick、Hotkey
-- **Web**：Scroll、Launch(url)、GetUrl、TakeNote、Hover、Hotkey、SelectOption、PressBack/Home/Enter
-
-推理侧（§4.1.1）：一般 agent 任务默认开 **think**，保留完整推理史进上下文；grounding **关推理、temperature=0**；CAPTCHA 支持 **multi-action** 解析。一般采样 temperature **1.0**，视觉分辨率用 Qwen3.5 默认配置。
-
----
-
-## 七、评测字段（摘主表；对照声明保留）
-
-**读表注意（Figure 1 / 各表注）：** 偏 standalone 端到端、最近似任务子集与步数预算；源报告的 **action scaffold 可能不同**；`*` = 作者复现。本笔记只摘与「跨端闭环 + 验证叙事」相关的锚点分，不抄全表。
-
-### 7.1 Mobile（Table 1）
-
-| 基准 | UI-Venus-2-9B | UI-Venus-2-27B | 文内对照要点 |
-|---|---:|---:|---|
-| MobileGym | 52.7 | **60.5** | 超 Seed-2.0-Pro 52.0 |
-| VenusBench-Mobile（149-task） | **46.5** | **48.7** | 复现 Opus-4.6 36.5* |
-| AndroidWorld | 80.2 | **84.0** | 表内最强；文称该基准已较饱和 |
-| MobileWorld GUI-only 117 tasks @50 steps（括号 @100） | 65.8 (75.2) | 76.1 (82.9) | @50 时 Qwen-UI-Agent-27B 报 82.1 |
-| KnowUBench | 56.5 | 59.7 | — |
-| MemGUI pass@1 | 62.6 | **70.3** | 超 Seed-2.0-Pro 65.6* |
-
-### 7.2 Computer（Table 2）
-
-| 基准 | 9B | 27B | 备注 |
-|---|---:|---:|---|
-| OSWorld-Verified | 70.8 | 80.5 | Claude-Opus-4.8 源报 83.4；文强调 scaffold 不可严格对齐 |
-| DeskCraft（作者汇总 538-task Standard∪Interactive） | 48.0 | **55.5** | 超 Kimi-K2.6 41.4* |
-| OSWorld 2.0 @150 steps（108 tasks）Binary / Partial | 0.0 / 7.5 | 2.8 / 13.2 | 长程仍弱；GPT-5.5 Binary 13.0 |
-
-### 7.3 Web（Table 3）
-
-| 基准 | 9B | 27B |
-|---|---:|---:|
-| WebVoyager（refreshed 595-task 协议） | 90.8 | **93.4** |
-| Online-Mind2Web | 74.0 | **78.3** |
-| REAL | 76.9 | **80.2** |
-| Odysseys Avg / Perfect（200 tasks） | 77.3 / 62.0 | **80.4 / 66.3** |
-
-### 7.4 Grounding / CAPTCHA / Safety（Table 4–6）
-
-- **VenusBench-GD**（英指令 micro-avg）：9B **77.1** / 27B **80.1**（超 1.5-30B-A3B 的 75.0）。
-- **VenusBench-CAPTCHA**（219 例 micro Pass@1）：9B **78.1** / 27B **79.9**（Qwen3.6-27B 53.0）。
-- **安全 ASR↓（Table 6）**：OSHarm — 9B **11.3** / 27B **15.3**（Qwen3.5-27B 18.0）；OSBlind — 9B **48.8** / 27B **47.9**（基座对照文称 79.4 / 89.3）。
- - OSHarm：故意滥用 / 第三方注入 / 模型误行为；OSBlind：指令良性但环境潜藏伤害（§4.1.2）。
-
-**诚实缺口：** 引言称「后续章节含 ablations」，但 TOC/抽取正文 **未见独立消融章节或消融表**；「safety-aware mechanisms」在 §1 有主张，**方法论未见独立安全训练小节**——安全证据主要落在 §4.2.6 评测。笔记不补未写机制。
-
----
-
-## 八、与仓库其他议题的接口（一句）
-
-| 议题 | 接口 |
-|---|---|
-| **[[智能体工具与长程任务]]** | 同属「长程 agent 可靠性」；本篇对象是 **GUI 像素控件闭环**，不是工具 API / MCP |
-| **[[视觉语言动作谱系]]** | 同属「观测→动作」；本篇动作空间是 **Click/Type/Hotkey…**，不是机器人连续控制 |
-| **[[GRPO与DAPO算法族]]** | Stage II 是离线 RL，但损失式指向 UI-Venus-1.5；此处不重写 GRPO/DAPO 清单 |
-| **[[多模态架构脉络]]** | 基座是多模态理解模型；本篇增量在 **交互轨迹 + 可验奖励 + 动作结构蒸馏** |
-
----
-
-## 九、附录索引：BlueLM-GUI
-
-| 项 | 核验（arXiv API，2026-09-22） |
-|---|---|
-| 标识 | arXiv:**2609.12394v3** \[cs.AI\]；标题 *BlueLM-GUI Technical Report: A Real-Device-Centric Flywheel for Self-Improving Mobile GUI Agents* |
-| 摘要抓手 | **真机中心** flywheel；三原则 Every Sample / Every Rollout Is Real / Every Query Evolves；模型 **35B-A3B**；报 MobileGUI-VBench **87.4**、AndroidWorld **84.9**（开源侧叙述） |
-| 与本篇关系 | 同窗 mobile GUI agent TR，侧重 **真机分布与自改进飞轮**；UI-Venus-2 侧重 **跨端统一闭环 + 验证器扩 RL 信号**。本篇**仅作索引** |
-
----
-
-## 十、可跟读金句 / 误区
-
-**金句**
-
-- 「reinforcement learning is only as reliable as the data quality verifier that supplies its reward.」（§1）
-- 「the action is the sole interface through which the agent interacts with and changes the environment.」（§2.4）
-- SGV：「does not rely on the agent’s self-declared success」（§3.3.1）
-
-**误区**
-
-1. 把 UI-Venus-2 读成「又一个 grounding SOTA」——文内主线是 **环境×任务×验证** 共扩与 **MOPD 合专家**。
-2. 把 SGV 四分类直接当 RL 标量奖励——文内定位是 **策展分层**；逐步四分类才直接服务 step-level 监督叙事。
-3. 用 OSWorld-Verified 分数做严格头对头——作者已声明 **scaffold 不同**。
-4. 把本篇写成 ReAct/MCP 或机器人 VLA——划界见文首。
-
----
-
-## 十一、局限与待核实
-
-- Offline RL 的具体目标函数、组大小、KL 等 → 指向 UI-Venus-1.5，本 PDF 未复述。
-- 「multi-model voting」席位与聚合规则。
-- Safety-aware **训练/门控** 实现细节（仅有评测 ASR）。
-- 引言预告的 ablations 表。
-- BlueLM-GUI 全文对照（若后续要做 mobile 真机专线再开，不在本笔记扩写）。
-
-## 相关笔记
-
-- [[Gemma4技术报告深读]]
-- [[AXK2技术报告深读]]
-- [[UIVenus2GUI智能体]]
-- [[过程奖励模型PRM谱系]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [UI-Venus-2 arXiv（v1）](https://arxiv.org/abs/2609.00028v1) | §2 管线、§3.3 两级验证、Table 1–6 |
+| 2 | [UI-Venus 代码](https://github.com/inclusionAI/UI-Venus) | 报告所附代码地址，不引仓库页事实 |
+| 3 | [UI-Venus 权重集](https://huggingface.co/collections/inclusionAI/ui-venus) | 报告所附权重地址，仅用于核对型号名 |
+| 4 | [UI-Venus-2 项目页](https://ui-venus.github.io/UI-Venus-2/) | 报告所附项目地址，不引页面事实 |

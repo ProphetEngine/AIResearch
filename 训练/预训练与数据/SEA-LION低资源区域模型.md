@@ -1,5 +1,5 @@
 ---
-title: "低资源区域专报：SEA-LION-v4.8（≠ 多语通史）"
+title: "低资源区域专报：SEA-LION-v4.8"
 topic: SEA-LION低资源区域模型
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -7,213 +7,107 @@ status: archived
 sources:
  - https://arxiv.org/abs/2609.18310
 aux:
- - https://sea-lion.ai/
- - https://sea-lion.ai/blog/uplifting-ai-in-southeast-asia-sea-announcing-nemotron-sea-lion-v4-8-in-collaboration-with-nvidia/
  - https://leaderboard.sea-lion.ai/
  - https://huggingface.co/collections/aisingapore/sea-lion-v48-6aaa084b80451baa08e73db0
 arxiv: ["2609.18310"]
-related: ["多语言与跨语种", "NemotronCC数据策展", "Nemotron3Ultra技术报告深读"]
+related: ["多语言与跨语种", "NemotronCC数据策展", "Nemotron3Ultra技术报告深读", "OnPolicy蒸馏OPD范式", "文化对齐"]
 hf_index_prefix: "aisingapore/Nemotron-SEA-LION-v4.8-*"
-retrieval_cutoff: 2026-09-22
+retrieval_cutoff: 2026-09-18
 timezone: Asia/Shanghai (CST)
 ---
 
-# 低资源区域专报：SEA-LION-v4.8（≠ [[多语言与跨语种]] 通史）
+# 低资源区域专报：SEA-LION-v4.8
 
-> **定位**：**低资源区域专报**——立 **东南亚（SEA）区域适配栈**：在 NVIDIA Nemotron 3 开源基座上做 **继续预训练（CPT）+ SFT / 在线 on-policy 蒸馏（OPD）后训练**，并以更新版 **SEA-HELM** 做区域评测。主文：AI Singapore *SEA-LION-v4.8: A Technical Report*（arXiv:**2609.18310**v3，**18 Sep 2026**）。
-> **研究线**：**架构思想（区域 CPT / 蒸馏接口，主）** + **评测字段（SEA-HELM 语种分 / 能力分，辅）**。
+> **主要来源**：[SEA-LION-v4.8: A Technical Report](https://arxiv.org/abs/2609.18310)（AI Singapore，v3，2026-09-18；首次提交 2026-09-16）；[SEA-HELM 排行榜](https://leaderboard.sea-lion.ai/)（报告所附榜单地址，分数以报告 Table 5 为准，不引页面事实）；[SEA-LION-v4.8 权重集](https://huggingface.co/collections/aisingapore/sea-lion-v48-6aaa084b80451baa08e73db0)（仅用于核对型号名）（截至 2026-09-18）
+> **研究线**：架构思想（主：在开源基座上做区域继续预训练，再接监督微调与在线 on-policy 蒸馏）；评测字段（辅：更新版 SEA-HELM 的语种分与能力分）
 > **范围与相邻笔记**：
-> - **≠ [[多语言与跨语种]]**：不重写 XLM-R / BLOOM / 旗舰「语种覆盖 × 配比」通史；本卡只写 **SEA 区域落地配方与 SEA-HELM 数字**，多语通史仅作动机一句。
-> - **≠ [[NemotronCC数据策展]]**：不重写 **Nemotron-CC 语料清洗篇**；本卡 CPT 混合只列文内 Table 2 组件与权重，不展开通用网页过滤管线。
-> - **≠ [[Nemotron3Ultra技术报告深读]]**：本卡不写成 **Nemotron 3 Ultra 基座旗舰全文**；基座 **Mamba2–Transformer / LatentMoE 混合 MoE** 只交叉 **一句**，主轴停在 **区域 CPT + OPD + SEA-HELM**。
-> 辅站 / HF 仅作入口索引。
+> - ≠ [[多语言与跨语种]]：多语模型的语种覆盖与配比通史在那篇，本篇只写东南亚区域的适配配方与 SEA-HELM 结果。
+> - ≠ [[Nemotron3Ultra技术报告深读]]：Nemotron 3 基座旗舰的训练在那篇，本篇只把 Ultra 当作蒸馏教师。
+> - ≠ [[NemotronCC数据策展]]：通用英文网页语料的策展在那篇，本篇的继续预训练混合只列报告 Table 2 的组成。
+>
+> **意义**：SEA-LION-v4.8 不从零训练基座，而是在 NVIDIA Nemotron 3 开源模型上做面向东南亚语言的继续预训练，再用监督微调加在线 on-policy 蒸馏做后训练，教师为 Nemotron 3 Ultra 550B-A55B（§2、§4）。发布 30B-A3B 与 120B-A12B 两个规模，各有 Base 与后训练版本。在更新版 SEA-HELM 上，120B-A12B 的总体 SEA 分从 49.30 升到 63.44，缅甸语与泰米尔语的提升最大（§1、Table 5）。报告也写明区域适配不能只当作数据扩量问题：保留原分词器会让高棉语、老挝语与泰米尔语的 token 数约为前代 SEA-LION 分词器的五倍（§3.4）。
 
----
+## 一、问题背景
 
-## 一、材料元信息
+近年的开放权重模型越来越多语，但多语覆盖仍很不均：在大规模训练语料中占比小的语言，得到的语言、文化与领域支持较弱，英文基准上的进步也不一定同样迁移到这些语言（§1）。东南亚语言谱系与文字系统多样，数字资源差异大。报告的思路是借用强基座的推理、代码与通用能力，用继续预训练与在线后训练补上东南亚语言能力，而不必从零开发新的基座模型（§1）。继续预训练的目标是加强东南亚语言的表征，同时保住 Nemotron 3 继承来的能力；数据刻意不以泛网页文本为主，而是强调问答、思维链、数理与科学推理、代码与双语平行数据（§3）。
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主文** | *SEA-LION-v4.8: A Technical Report*（AI Products Pillar, AI Singapore） | arXiv:**2609.18310**v3 \[cs.CL\] **18 Sep 2026** | `https://arxiv.org/abs/2609.18310` | **19** letter |
-| **辅·产品站** | SEA-LION 官网（系列定位 / SEA-HELM / SEA-Guard 入口） | https://sea-lion.ai/；2026-09-22 核对 | — | — |
-| **辅·发布博文** | *Uplifting AI in Southeast Asia… Nemotron-SEA-LION-v4.8*（AISG，**2026-09-18**） | https://sea-lion.ai/blog/uplifting-ai-in-southeast-asia-sea-announcing-nemotron-sea-lion-v4-8-in-collaboration-with-nvidia/；与 TR 数字交叉核验 | — | — |
-| **辅·榜单** | SEA-HELM Leaderboard | https://leaderboard.sea-lion.ai/；文内 §6.1；Table 5 注明分数采集于 **2026-09-15**，live 可能变更 | — | — |
+## 二、脉络
 
-**一手 PDF：** **有**（arXiv）；Title=`SEA-LION-v4.8: A Technical Report`。
-
-### 1.1 Hugging Face 索引
-
-Collection：`aisingapore/sea-lion-v48-6aaa084b80451baa08e73db0` → https://huggingface.co/collections/aisingapore/sea-lion-v48-6aaa084b80451baa08e73db0
-
-API 索引（`author=aisingapore&search=Nemotron-SEA-LION-v4.8`，2026-09-22；**仅列 ID，不下权重**）：
-
-| HF ID | 角色（据 model card / TR Table 1） |
-|---|---|
-| `aisingapore/Nemotron-SEA-LION-v4.8-30B-A3B-Base` | CPT base（30B / 3B active） |
-| `aisingapore/Nemotron-SEA-LION-v4.8-30B-A3B` | 后训练 instruct |
-| `aisingapore/Nemotron-SEA-LION-v4.8-30B-A3B-FP8` / `-NVFP4` / `-GGUF` | 量化 / 边缘部署变体（索引） |
-| `aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B-Base` | CPT base（120B / 12B active） |
-| `aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B` | 后训练 instruct |
-| `aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B-FP8` / `-NVFP4` / `-GGUF` | 量化变体（索引） |
-
-文内 / card：许可证 **MIT**；联系 `sealion@aisingapore.org`。
-
-**一句话抓手：** 不从零训基座——在 Nemotron 3 Nano/Super 上灌 **SEA 定向 CPT**（30B：**150B** tokens；120B：**33.5B** tokens），再用 **SFT ∪ 在线 OPD**（教师：Nemotron 3 Ultra 550B-A55B）把区域能力拧到 **SEA-HELM**；120B 总体 SEA 分 **49.30→63.44**，缅甸语 / 泰米尔涨幅最大。
-
----
-
-## 二、议题边界：区域适配栈 ≠ 多语通史 ≠ 语料篇 ≠ 基座旗舰
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[多语言与跨语种]]** | 「多语覆盖不均、低资源脚本吃亏」动机一句；XLM-R curse / BLOOM ROOTS **不重写** | 编码器多语 MLM、ROOTS 语种表、旗舰配比旋钮通史 |
-| **[[NemotronCC数据策展]]** | CPT 用到的 Nemotron 系 SFT/推理子集名可索引；清洗哲学不展开 | Nemotron-CC 过滤 / 去重 / 质量分类全文 |
-| **[[Nemotron3Ultra技术报告深读]]** | 初始化自 Nemotron 3 Nano / Super；教师 Ultra 550B **作 OPD 信号源一句**；混合 MoE 架构名一句 | Ultra 训练配方、agentic 旗舰评测、LatentMoE 消融全文 |
-| **[[文化对齐]]** | 区域模型之外的另一条路：在通用模型上用语境条件化的偏好训练做文化对齐，可与 SEA-HELM 的区域评测对照 | CoCoA / Flattened 方法与指标 |
+| 2023-09 | [BHASA](https://arxiv.org/abs/2309.06085) | 东南亚语言与文化评测套件，报告参考文献所列 |
+| 2024-09 | [KALAHI](https://arxiv.org/abs/2409.15380) | 菲律宾语的参与式文化评测，SEA-HELM 文化维的一部分 |
+| 2025-07 | [SEA-HELM](https://aclanthology.org/2025.findings-acl.636/) | 东南亚整体评测，本报告使用其更新版 |
+| 2026-06 | [Nemotron 3 Ultra](https://arxiv.org/abs/2606.15007) | 本报告的蒸馏教师 |
+| 2026-09 | [SEA-LION-v4.8](https://arxiv.org/abs/2609.18310) | 开源基座加区域继续预训练、在线 on-policy 蒸馏 |
 
-### 2.2 本卡主轴 vs 范围外
+## 三、核心机制：发布家族与基座（§2、Table 1）
 
-| 写 | 不写 |
-|---|---|
-| 四卡发布：30B/120B × Base/Instruct；CPT 混合 Table 2；OPD+SFT 异步管线 Figure 5 / Table 4 | 从零预训练配方；Nemotron 3 Ultra 模型 TR |
-| Tokenizer **保留原 Nemotron** 的效率瓶颈（Khmer/Lao/Tamil≈5×）；Filipino **未入 CPT** 的失败模式分化 | 词表扩张 / 新 tokenizer 训练实现细节（文内留作未来工作） |
-| SEA-HELM 7 语 + 8 能力维；Table 5–7 点估计 | 把 SEA-Guard 产品线写成第二主轴；live 榜未核分数 |
-
-跟读口诀：**[[多语言与跨语种]] 问「多语权衡通史」；[[NemotronCC数据策展]] 问「通用语料怎么洗」；[[Nemotron3Ultra技术报告深读]] 问「Nemotron 3 旗舰怎么训」；本卡问「已有强基座如何 CPT+OPD 成 SEA 区域模型，并用 SEA-HELM 量出来」。**
-
----
-
-## 三、发布家族与基座交叉（一句）
-
-文内 Table 1 / §2.1 四卡：
-
-| 模型 | 阶段 | 总参 / 激活 | 架构（文内名） | Context（Table 1） |
+| 模型 | 阶段 | 规模 | 架构（报告用名） | 上下文 |
 |---|---|---|---|---|
-| `…-30B-A3B-Base` | CPT | 30B / 3B | Mamba2-Transformer Hybrid MoE | 128K |
-| `…-30B-A3B` | Post | 同上 | 同上 | 128K |
-| `…-120B-A12B-Base` | CPT | 120B / 12B | Mamba2-Attention Hybrid LatentMoE（含 MTP） | 128K |
-| `…-120B-A12B` | Post | 同上 | 同上 | 128K |
+| Nemotron-SEA-LION-v4.8-30B-A3B-Base | 继续预训练 | 30B | Mamba2-Transformer Hybrid MoE | 128K |
+| Nemotron-SEA-LION-v4.8-30B-A3B | 后训练 | 30B | 同上 | 128K |
+| Nemotron-SEA-LION-v4.8-120B-A12B-Base | 继续预训练 | 120B | Mamba2-Attention Hybrid LatentMoE | 128K |
+| Nemotron-SEA-LION-v4.8-120B-A12B | 后训练 | 120B | 同上 | 128K |
 
-**基座交叉一句（≠ [[Nemotron3Ultra技术报告深读]]）：** 30B 初始化自 `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-Base-BF16`，120B 初始化自 `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16`；二者均为 Nemotron 3 系 **Mamba2–Attention 混合 MoE**，本卡不展开 Ultra/LatentMoE 训练与消融。
+30B 初始化自 NVIDIA-Nemotron-3-Nano-30B-A3B-Base-BF16，120B 初始化自 NVIDIA-Nemotron-3-Super-120B-A12B-BF16。§2.1 写继续预训练后保留基座 1M token 的最大上下文，脚注说明后训练阶段只把上下文设为 128k，与 Table 1 的 128K 一致。
 
-注：§2.1 正文写 CPT 后仍保留基座最大上下文 **1M tokens**，脚注说明 **后训练阶段将 context 设为 128k**——与 Table 1「128K」列一致；跟读以「部署/评测窗口 128k、基座宣称 1M」区分。HF card 另写部署字段 → **本卡以 PDF 为准**，不把 card 数字回写进 TR。
+## 四、核心机制：区域继续预训练（§3）
 
----
+1. **配置**（Table 3）：30B 用 150B 高质量 token，Megatron Bridge 训练，峰值学习率 3×10⁻⁵，32 张 H200，114.23 小时；120B 用 33.5B token，NeMo AutoModel 训练，峰值学习率 1×10⁻⁵，32 张 H200，186.65 小时。两者都保留原 Nemotron 分词器，序列长度 8192，AdamW，全局批大小 1024，BF16。
+2. **学习率**：用 WSD 日程但省略最后的衰减段，以免继续预训练检查点在后训练前收敛过度，给后训练留出可塑性（§3.3）。
+3. **混合**（Table 2）：东南亚指令数据权重最高，缅甸语、印尼语、马来语、泰米尔语、越南语各为 10；代码、数学、科学推理、通用推理与思维链数据各为 2.5，另有泰语医学推理 2.5；东南亚与英文的双向平行数据中，ID、KM、LO、MS、MY、TA、TH、VI、ZH 各为 2，BN、JV、SU 各为 0.25。
+4. **两个缺口**（§3.4）：保留原分词器，高棉语、老挝语与泰米尔语的 token 数约为前代 SEA-LION 分词器的五倍，固定上下文内的信息密度下降；菲律宾语没有进入当前的继续预训练语料，评测上的增益主要来自跨语迁移与通用多语能力。报告把词表扩张与分词器适配留作未来工作。
 
-## 四、区域 CPT：数据混合、配方与瓶颈（主轴）
+## 五、核心机制：监督微调加在线蒸馏（§4）
 
-### 4.1 设计目标（§3）
+1. **数据**（§4.1）：离线监督数据取自 aisingapore/SEA-Instruct-2602，覆盖印尼语、越南语、泰语、菲律宾语、泰米尔语、他加禄语、马来语、缅甸语与英语，各语种等比例。
+2. **在线蒸馏**（§4.2）：学生用当前策略生成，教师 RedHatAI/NVIDIA-Nemotron-3-Ultra-550B-A55B-FP8-dynamic 在学生轨迹上给监督，学生用 reverse KL 蒸馏目标更新。智能体环境编排器支持约 3,000 个同时活跃的智能体实例，训练期间处理超过 100,000 个交互会话；智能体实例本身不含独立的语言模型，推理请求一律打到正在训练的学生。
+3. **训练细节**：只训练陈旧度不超过 32 的 token，超出这一窗口的 token 被遮住；同一提示的 rollout 与离线参考答案打包进同一批。以 OPD 为主目标、结合 SFT 损失训练后，再分别与 NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16 和 NVIDIA-Nemotron-3-Super-120B-A12B-BF16 合并；30B 训练 1200 步，120B 训练 1600 步。
+4. **配置**（Table 4）：两个规模的最大序列长度都是 128,000。
 
-CPT 目标：**加强 SEA 语言表征**，同时 **保住** Nemotron 3 继承的推理 / 代码 / 通用能力。刻意少用「泛网页原文」，加重 **结构化、能力导向** 数据：QA、CoT/数理/科学推理、代码、双语平行。
+## 六、主要结果（§5–§6）
 
-| 规模 | Init | CPT tokens | 框架 | 峰值 LR | LR 日程 | seq | 硬件 | 时长（Table 3） |
-|---|---|---|---|---|---|---|---|---|
-| 30B-A3B | Nano Base | **150B** | Megatron Bridge | $3\times10^{-5}$ | WSD **省略最终 decay** | 8192 | 32×H200 | 114.23 h |
-| 120B-A12B | Super Base | **33.5B** | NeMo AutoModel | $1\times10^{-5}$ | 同上 | 8192 | 32×H200 | 186.65 h |
+1. **评测方法**（§5）：SEA-HELM 本版新增马来语与缅甸语，覆盖的东南亚语言共 7 种；文化维用 SEA-NLI，菲律宾语另加 KALAHI；安全维新增 SEA-SafeguardBench。每个模型独立运行八次取各提示的平均，每个任务做 2000 次自助法重采样，计算 95% 置信区间；表中为点估计。
+2. **语种总分**（Table 5，分数采集于 2026 年 9 月 15 日，排行榜上的分数可能变化）：
 
-共同：保留 **原 Nemotron tokenizer**；AdamW；global batch 1024；BF16。省略 final decay 的动机（§3.3）：避免 CPT 过度收敛，给后训练留塑性。
-
-### 4.2 混合组成（Table 2 + Figure 2）
-
-三大组（采样权重决定在 **150B** 语料中的相对贡献）：
-
-1. **SEA-Instruct（高权）**：Indonesian / Malay / Burmese / Tamil / Vietnamese — 各 **weight 10**。
-2. **Reasoning / Code**：Code、Math、Scientific reasoning、General reasoning/CoT — 各数据集 **2.5**；另加 Thai medical reasoning **2.5**。
-3. **Parallel（SEA↔EN，双向交替）**：ID/KM/LO/MS/MY/TA/TH/VI/ZH — 各 **2**；BN/JV/SU — 各 **0.25**。
-
-SEA 覆盖语种叙述（§3.1）：Balinese, Burmese, Indonesian, Javanese, Khmer, Lao, Malay, Sundanese, Tamil, Thai, Vietnamese 等；高权 instruct 集中在 MY/ID/MS/TA/VI。
-
-博文补充的公开数据集名（辅，**非** PDF Table 2 全量）：如 `aisingapore/SEA-Instruct-2602`、若干 `nvidia/Nemotron-SFT-*`、平行/推理公开集等——跟读以 PDF 权重表为准，博文仅作命名索引。
-
-### 4.3 Tokenizer 瓶颈与 Filipino 缺口（§3.2 / §3.4 / §8）
-
-文内明确：**区域适配不能只当「数据 scaling」问题**。
-
-- 保留原 tokenizer → Khmer / Lao / Tamil 相对「前代 SEA-LION tokenizer」约 **5×** token（§3.2）；fertility 差导致固定 context 内信息密度低。
-- **Filipino 未进入当前 CPT 混合**：评测上的 TL 增益主要来自跨语迁移与通用多语能力，**非**菲律宾语定向 CPT。
-- 失败模式分化：TA/MY = **有数据、被表示/切词卡住**；TL = **缺直接 CPT 覆盖**。未来工作：词表扩张 / tokenizer 适配 / 高质量菲律宾语料（文内未做）。
-
----
-
-## 五、后训练：SFT ∪ 在线 OPD（区域接口）
-
-### 5.1 数据流（§4.1）
-
-- **离线 SFT**：`aisingapore/SEA-Instruct-2602` 子集；语种 ID/VI/TH/Filipino/Tamil/Tagalog/MS/MY + EN，**等比例**。
-- **在线交互**：同一批 prompt 经环境–agent harness 产出轨迹；≈**3,000** 并发 agent、训练期 **≥100,000** sessions；agent **不含独立 LM**，一律打到「当前在训学生」。
-
-### 5.2 管线五件套（Figure 5 / §4.2）
-
-`environment-agent orchestrator` → `Conductor`（token-exact 捕获 + 训练库）→ `serving fleet`（改版 SGLang）→ `reward fleet`（教师 top-k 压缩二进制）→ `asynchronous trainer`（改版 AutoModel）。
-
-关键机制（跟读，不写可复现攻击细节）：
-
-- 学生 on-policy 生成 $\tau_t\sim p_{\theta_t}$ → 教师在 $\tau_t$ 上给监督 → reverse KL OPD → $\theta$ 更新后分布再变。
-- 教师（两规模共用）：`RedHatAI/NVIDIA-Nemotron-3-Ultra-550B-A55B-FP8-dynamic`（**仅作蒸馏教师一句 → 详见 [[Nemotron3Ultra技术报告深读]]，本卡不展开 Ultra**）。
-- 训练记录 staleness 窗 **≤32**（超窗 mask）；同 prompt 的 rollout 与 off-policy 参考答打包同 batch。
-- 有效流：$D_{\mathrm{train}}=D_{\mathrm{SFT}}\cup D_{\mathrm{OPD}}$。
-- 后训练后再与对应 Nemotron 参考权重 **merge**（30B：`nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16`；120B：`nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16`）；步数 30B **1200** / 120B **1600**（§4.2）。
-
-| 配置（Table 4） | 30B-A3B | 120B-A12B |
-|---|---|---|
-| 方法 | SFT + online OPD | 同左 |
-| max seq | 128,000 | 128,000 |
-| max LR | 1e-5 | 1e-5 |
-| GBS | 24 | 24 |
-| Train / Reward / Serve GPU | 16 / 48 / 8 | 48 / 48 / 16 |
-| 时长 | 12 h | 24 h |
-
-（Reward/Serve GPU 为初始化值，文内注可动态伸缩。）
-
----
-
-## 六、评测字段：SEA-HELM（辅轴）
-
-### 6.1 套件设定（§5）
-
-- **SEA-HELM**（Susanto et al., 2025 Findings ACL；本版更新）：社区参与、尽量 **母语撰写 / 本地化**，避免纯机翻 translationese；任务提示用目标语；分数相对随机基线归一后分层聚合 → 公开榜 https://leaderboard.sea-lion.ai/ 。
-- **语种（7）**：Filipino, Indonesian, Tamil, Thai, Vietnamese + 本版新增 **Malay、Burmese**。
-- **增量维**：文化（SEA-NLI；Filipino 另 KALAHI 生成式）；知识（Global MMLU-Lite、Thai Exam）；语言诊断 LINDSEA（含生成式变体）；安全 **SEA-SafeguardBench**。
-- **方法**：每模型 **8** 次独立运行（默认生成配置）取 prompt 均分；任务级 **2000** bootstrap → 95% CI（表中点估计；Table 5 注：采集 **2026-09-15**）。
-
-### 6.2 语种总分（Table 5）
-
-| Model | Size | SEA | MY | TL | ID | MS | TA | TH | VI |
+| 模型 | 规模 | SEA | MY | TL | ID | MS | TA | TH | VI |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Nemotron 3 Nano | 30 | 46.89 | 3.23 | 55.53 | 65.36 | 58.00 | 22.50 | 62.90 | 60.72 |
-| Nemotron 3.5 Lightning | 30 | **46.06** | 3.79 | 58.69 | 64.34 | 58.76 | 17.23 | 58.66 | 60.97 |
-| **SEA-LION v4.8 30B** | 30 | **51.57** | **10.61** | **61.82** | **65.87** | **62.09** | **33.14** | 62.60 | **64.86** |
+| Nemotron 3.5 Lightning | 30 | 46.06 | 3.79 | 58.69 | 64.34 | 58.76 | 17.23 | 58.66 | 60.97 |
+| SEA-LION v4.8 30B | 30 | 51.57 | 10.61 | 61.82 | 65.87 | 62.09 | 33.14 | 62.60 | 64.86 |
 | Nemotron 3 Super | 120 | 49.30 | 4.98 | 66.92 | 70.78 | 68.66 | 21.83 | 56.61 | 55.31 |
-| **SEA-LION v4.8 120B** | 120 | **63.44** | **31.35** | **71.01** | **73.10** | **73.25** | **56.35** | **68.66** | **70.36** |
+| SEA-LION v4.8 120B | 120 | 63.44 | 31.35 | 71.01 | 73.10 | 73.25 | 56.35 | 68.66 | 70.36 |
 
-**读表注意（不可混比）：**
-- Abstract / Figure 1a 叙述 30B 总体 **46.06→51.57**（对 **Lightning**）；§6.1 正文写 **46.89→51.57**（对 **Nano**）。两基线同表均给出，跟读时标明对照对象。
-- 120B：**49.30→63.44**（对 Super）无歧义。
-- 最大相对跃升（120B）：**MY 4.98→31.35**；**TA 21.83→56.35**（与博文 6.3× / 2.6× 叙述一致）。
-- 绝对水平仍不均：MY/TA 弱于 ID/MS/TL/TH/VI（§6.1 归因回切词效率）。
+3. **两种 30B 基线**：摘要与 Figure 1(a) 写 30B 的总体分从 46.06 到 51.57，对照的是 Nemotron 3.5 Lightning；§6.1 正文写从 46.89 到 51.57，对照的是 Nemotron 3 Nano。120B 从 49.30 到 63.44，对照 Nemotron 3 Super。
+4. **能力维**（§6.2）：NLU 上泰米尔语的提升在两个规模都最清楚，30B 为 75.26，Nemotron 3 Nano 为 19.38、Nemotron 3.5 Lightning 为 23.48；120B 从 17.89 到 80.04。
 
-### 6.3 能力维摘要（Tables 6–7；八类）
+## 七、意义
 
-八类：Cultural / Instruction Following / Knowledge / Multi-turn / NLG / NLR / NLU / Safety。
+1. **区域模型的路线从从零训练转向开源基座加适配**：继续预训练只用 150B 与 33.5B token，后训练用在线蒸馏借用更大教师的能力。
+2. **分词器是区域适配的硬约束**：报告把泰米尔语与缅甸语的失败模式归到切词效率，把菲律宾语的问题归到缺少直接语料，两类问题的解法不同。
+3. **评测随模型一起更新**：SEA-HELM 本版扩到 7 种语言，并把单次运行改为多次运行加自助法置信区间。
 
-文内定性（§6.2，数字已在表）：
+## 八、局限与待核实
 
-- **30B**：NLG、Instruction Following 面较宽；NLU 上 **Tamil 75.26** vs Nano **19.38** / Lightning **23.48** 跃升显著；Cultural/Knowledge 在 TL/ID/MS 等有增益，TH/VI 等处参考模型仍可更强。
-- **120B**：Cultural、IF、Knowledge、NLR、NLU **更一致**；Cultural 七语全面提升（含 MY **0.00→37.68**）；NLU Tamil **17.89→80.04**，Burmese **2.25→43.46**。
-- **Safety**：30B 在 TL/VI 等相对双基线有改善，TH 相对 Lightning 大涨；120B 在 MY/MS/TA/TH/VI 等有改善——**非**均匀碾压，文内 §8 承认能力维 trade-off。
+1. **报告自述**（§8）：分词器对高棉语、老挝语、泰米尔语等效率低；继续预训练没有显式的菲律宾语数据；能力增益不均，随语种而变；评测只覆盖 7 种语言，未覆盖区域的全部语言多样性。
+2. **基线口径**：v1 只以 Nemotron 3.5 Lightning 为 30B 基线，v2 起同时列出 Nemotron 3 Nano 与 Lightning，§6.1 的总体分与泰米尔、缅甸语分改为对 Nano（v1 为 46.06、17.23、3.79，v3 为 46.89、22.50、3.23）。
+3. **版本差异**：v1（2026-09-16）、v2（2026-09-17）、v3（2026-09-18）。v2 新增第 8 节局限，摘要中「最强增益在指令遵循、自然语言推理与理解」一句改为「120B 的提升更广、更一致」。本篇按 v3。
+4. **合并的作用未拆开**：后训练后与参考权重合并，报告没有给出合并前后的对比。
 
-### 6.4 Limitations（§8）对齐读
+## 九、与相邻笔记的分工
 
-1. Tokenizer 低效（KM/LO/TA 等）。
-2. CPT 无显式 Filipino。
-3. 能力增益不均（IF/推理/NLU 最清晰；文化/生成/安全/知识/多轮更依赖语种）。
-4. 评测仅 **7** 语，未覆盖区域全部语言多样性。
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[多语言与跨语种]] | 多语覆盖不均这一动机，本篇只写东南亚区域的落地 | 多语模型通史与配比旋钮 |
+| [[NemotronCC数据策展]] | 通用网页语料的策展在那篇；本篇的继续预训练刻意不以泛网页文本为主 | 网页过滤、去重与质量分类 |
+| [[Nemotron3Ultra技术报告深读]] | 那篇的旗舰模型是本篇的蒸馏教师，本篇只记教师名 | 基座旗舰的训练与评测 |
+| [[OnPolicy蒸馏OPD范式]] | 本篇的在线蒸馏是那篇讨论的 on-policy 蒸馏在区域适配上的应用 | OPD 的方法谱系 |
+| [[文化对齐]] | 区域模型把文化维度列为评测项，可与那篇的文化对齐路线对照 | 文化对齐的方法与指标 |
 
----
+## 十、延伸阅读
 
-## 七、主数字锚
-
-1. 主数字锚：CPT **150B / 33.5B**；SEA **51.57 / 63.44**；MY/TA 120B 分；教师 Ultra 仅作 OPD 交叉。
-2. HF：十个 `Nemotron-SEA-LION-v4.8-*` ID **仅索引**。
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [SEA-LION-v4.8 arXiv（v3）](https://arxiv.org/abs/2609.18310v3) | Table 2–7 与 §3.4、§8 |
+| 2 | [SEA-HELM](https://aclanthology.org/2025.findings-acl.636/) | 评测套件的原始设计 |
