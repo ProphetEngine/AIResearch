@@ -81,6 +81,7 @@ RSP 评测按威胁模型设阈值（定义见 [[ClaudeOpus5系统卡深读]] �
 | [[ClaudeHaiku55系统卡短报]] | 同族最低档：沿用 Opus 5.5 系统卡的判定，cyber 护栏按能力收窄 | Haiku 5.5 能力与护栏细节 |
 | [[宪法分类器防御]] | 方法背景：probe 与分类器级联护栏的论文来源（Fable 5.1 卡称其护栏仿照 constitutional classifiers） | 分类器防御的论文与架构 |
 | [[SystemCard谱系时间线]] | 所在时间线：各厂商系统卡的整体脉络 | 时间线中的其余节点 |
+| [[计算机使用智能体]] | 基准背景：能力表中 OSWorld 2.0 的任务设计、部分分与严格完成两种口径见该篇 | OSWorld 2.0、Operator 与 StateAct 的细节 |
 
 ## 六、意义
 

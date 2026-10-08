@@ -1,5 +1,5 @@
 ---
-title: "气候科学/政策 Agent：ClimateAgent + ClimateAgents（附录 ClimAgent）"
+title: "气候科学/政策 Agent：ClimateAgent + ClimateAgents"
 topic: 气候科学Agent
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -8,286 +8,122 @@ archived: 2026-09-22
 sources:
  - https://arxiv.org/abs/2511.20109
  - https://arxiv.org/abs/2603.13840
- - https://arxiv.org/abs/2604.16922
-arxiv: ["2511.20109", "2603.13840", "2604.16922"]
-related: ["天气气候基础模型", "科研智能体", "智能体工具与长程任务", "代码智能体Harness史线"]
+arxiv: ["2511.20109", "2603.13840"]
+related: ["天气气候基础模型", "地球系统基础模型ESFM", "科研智能体", "智能体工具与长程任务", "代码智能体Harness史线"]
 code_climateagent: "https://github.com/Relaxed-System-Lab/ClimateAgent"
-code_climagent: "https://github.com/usail-hkust/ClimAgent"
-retrieval_cutoff: 2026-09-22
+retrieval_cutoff: 2026-09-14
 timezone: Asia/Shanghai (CST)
 ---
 
-# 气候科学/政策 Agent：ClimateAgent + ClimateAgents（附录 ClimAgent）
+# 气候科学/政策 Agent：ClimateAgent + ClimateAgents
 
-> **定位**：气候科学智能体主题轴——补 [[天气气候基础模型]]「天气/气候 **foundation model**」之后仍缺的轴：**多代理编排做气候数据科学 / 社会—气候分析**。主锚两篇：**(A) ClimateAgent**（HKUST；气候数据获取→分析→报告的端到端编排）与 **(B) ClimateAgents**（HIT；社会—气候动力学的多智能体研究助手）。附录索引 **ClimAgent**（开放式气候建模 + ClimaBench）。
-> **研究线**：**架构思想（主）**——角色分层 / 共享上下文 / API 自省与自纠；**评测字段（辅）**——工作流完成率、报告质量多维分、社会—气候案例与 Agentic Reviewer 文内分。
+> **主要来源**：[CLIMATEAGENT: Multi-Agent Orchestration for Complex Climate Data Science Workflows](https://arxiv.org/abs/2511.20109)（Li、Kim 等，HKUST，简称 ClimateAgent，v1 2025-11-25，v2 2026-09-14）；[ClimateAgents: A Multi-Agent Research Assistant for Social-Climate Dynamics Analysis](https://arxiv.org/abs/2603.13840)（Shan，哈工大，简称 ClimateAgents，v1 2026-03-14）；[Relaxed-System-Lab/ClimateAgent README](https://github.com/Relaxed-System-Lab/ClimateAgent)（截至 2026-09-14）。
+> **研究线**：架构思想（角色分层、共享工作流上下文、API 自省与自纠，主）· 评测字段（任务完成率、报告质量四维分、社会—气候案例与自动评审分，辅）
 > **范围与相邻笔记**：
-> - **≠ [[天气气候基础模型]]**：不重写 Aurora / Earth-system FM 的 3D latent、预训练→多域微调、预报 rollout；本卡对象是 **LLM 多代理工作流**，不是格点地球场基础模型。
-> - **≠ [[科研智能体]]**：不重写 The AI Scientist / ChemCrow 通史；ChemCrow 若出现仅作 ClimateAgent related work 一句邻接，不复述化学工具表。
-> - **≠ ClimateGPT（2401.09646）**：专科气候 LLM 若点到，**仅作前置对照一句**，本篇不展开其架构。
-> - **≠ [[智能体工具与长程任务]] / [[代码智能体Harness史线]]**：不写 MCP / SWE-bench harness 通史；AutoGen / Copilot 仅作文内对照槽。
-> ClimateAgents 自称 GitHub 但**未给完整 URL**。
+> - ≠ [[天气气候基础模型]]：本篇不写 Aurora 等格点地球场基础模型的预训练与预报；本篇对象是 LLM 多智能体工作流。
+> - ≠ [[科研智能体]]：本篇不写 The AI Scientist、ChemCrow 的通用科研闭环与化学工具链。
+> - ≠ [[代码智能体Harness史线]]：本篇不写 SWE-agent、OpenHands 等通用编码智能体的 harness。
+>
+> **意义**：气候研究的瓶颈之一是把一个分析问题变成「找数据、下数据、处理、出图、写报告」的完整工作流，通用 LLM 智能体缺少气候数据接口的语境，常在数据请求与数组维度上出错。ClimateAgent 用编排、规划、数据、编码四类智能体加持久上下文与多候选自纠，在 85 个真实任务上全部生成报告，报告质量 8.32 分，远高于同用 GPT-5 的单模型基线（3.26）与 GitHub Copilot（6.27）；ClimateAgents 则把多智能体用在社会经济指标与气候政策的探索上。作者称两个基线都以 GPT-5 为底层模型，对照的是专长分工与单模型推理之差。
+
+**一句话**：ClimateAgent 把气候数据分析拆给编排、规划、数据、编码四类智能体，靠持久上下文传递中间产物、靠多候选脚本与迭代调试自纠；ClimateAgents 用感知、推理、操作三层和 11 个角色探索社会—气候问题。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 角色 | 标题 / 版本 | 标识 | 链接 | 页数 |
-|---|---|---|---|---|
-| **主①** | *CLIMATEAGENT: Multi-Agent Orchestration for Complex Climate Data Science Workflows* | arXiv:**2511.20109v2** \[cs.LG\]（文首标 **14 Sep 2026**） | `https://arxiv.org/abs/2511.20109` | **49** letter |
-| **主②** | *ClimateAgents: A Multi-Agent Research Assistant for Social-Climate Dynamics Analysis* | arXiv:**2603.13840v1** \[cs.MA\]（文首标 **14 Mar 2026**）；Preprint. Under review. | `https://arxiv.org/abs/2603.13840` | **15** letter |
-| **附录** | *ClimAgent: LLM as Agents for Autonomous Open-ended Climate Science Analysis* | arXiv:**2604.16922v1** \[cs.AI\]（文首标 **18 Apr 2026**） | `https://arxiv.org/abs/2604.16922` | **23** A4 |
+气候数据规模大、格式异构，ERA5 等再分析数据要经 Copernicus 气候数据存储（CDS）或 ECMWF 的 API 下载，参数约定不统一；分析又依赖 xarray、CDO、TempestExtremes 等专门工具。ClimateAgent 指出（§1），通用 LLM 智能体与静态脚本缺少气候领域语境与灵活性，生成代码错误率高，非专家难以上手。另一类问题来自社会—气候交叉研究：社会经济指标、碳排放与政策之间的关系需要检索、统计与解释结合，ClimateAgents 认为窄的指标预测模型不足以支持这种探索。
 
-| 材料 | 作者 / 机构（文首） | 代码（文内明示） |
+## 二、脉络
+
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| ClimateAgent | Chenyue Li\*, Hyeonjae Kim\*, Wen Deng, Mengxi Jin, Wen Huang, Mengqian Lu, Binhang Yuan†（\*共一；†通讯）；The Hong Kong University of Science and Technology | https://github.com/Relaxed-System-Lab/ClimateAgent |
-| ClimateAgents | Shan Shan；Department of Mathematics / International Center for Interdisciplinary Statistics，Harbin Institute of Technology；`shans@hit.edu.cn` | 文称「source code repository hosted on GitHub」——**未给出可点击完整 URL**（本卡不补造） |
-| ClimAgent（附录） | Hao Wang¹, Jindong Han³, Wei Fan⁴, Hao Liu¹,²\*；HKUST(GZ) / HKUST / Shandong University / University of Auckland | https://github.com/usail-hkust/ClimAgent |
+| 2023-04 | [ChemCrow](https://arxiv.org/abs/2304.05376) | 给 LLM 接上化学专家工具，在 ReAct 循环中完成专业任务；ClimateAgent 在相关工作中把它列为科学流程自动化的先例 |
+| 2024-01 | [ClimateGPT](https://arxiv.org/abs/2401.09646) | 训练气候领域专用 LLM，走「专科模型」路线 |
+| 2025-11 | ClimateAgent v1 | 多智能体编排端到端气候数据工作流，并发布 Climate-Agent-Bench-85 |
+| 2026-03 | ClimateAgents | 多智能体研究助手用于社会—气候动力学 |
+| 2026-09 | ClimateAgent v2 | 现行版本 |
 
-**一句话抓手：**
-- **ClimateAgent**：用户气候问题 → Orchestrate + Plan 分解 → Data-Agent（cdsapi / ecmwf-api 动态 introspect，m=8 候选脚本）→ Coding-Agent（自纠 Rmax=3）→ 报告；基准 **Climate-Agent-Bench-85**，文称 **100%** 任务完成、报告质量 **8.32**（vs Copilot **6.27** / GPT-5 **3.26**）。
-- **ClimateAgents**：Minsky *Society of Mind* 灵感的三层（Perception / Reasoning / Operation）+ AutoGen 上 **11** 角色智能体；面向 UN / World Bank 等社会经济—气候指标的假设生成、相关/因果探索与情景；评测用 Stanford Agentic Reviewer 文内总体分 **6.4**。
-- **ClimAgent（附录）**：Climate Environment（文称 **150** 工具 + **30** 数据库）支撑开放式物理建模四阶段；ClimaBench（文内任务数口径见 §六冲突说明）。
+## 三、ClimateAgent：气候数据工作流的多智能体编排
 
----
+### 3.1 持久上下文（§3.1）
 
-## 二、议题边界：只写「气候数据科学 / 社会—气候 Agent」，不写天气 FM / 科学 Agent 通史
+给定任务 $T$，Plan-Agent 把它分解为有序子任务 $P=[s_1,\ldots,s_n]$，专长智能体依次执行，并更新工作流上下文 $C_i=\mathrm{Execute}(C_{i-1},s_i,A_k)$。$C_i$ 记录任务、计划、代码、数据、结果与日志，每个子任务后序列化保存，同时充当智能体之间的通信协议、断点恢复的检查点与可复现的溯源记录。
 
-### 2.1 相对相邻笔记只取接口
+### 3.2 四类智能体与自纠（§3.2–3.4）
 
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 智能体 | 职责 | 自纠机制 |
 |---|---|---|
-| **[[天气气候基础模型]]** | 「气候/地球数据很大、异构」是动机邻接；ClimateAgent 用 ERA5/CDS 等**数据 API**，不是 Aurora 式场预报骨干 | 3D Perceiver/Swin、预训练小时数、多域微调表、Aurora 1.5 |
-| **[[科研智能体]]** | ClimateAgent related work 点名 ChemCrow 作「科学协议自动化」邻接一句 | AI Scientist 三阶段 / ChemCrow 18 工具与双用途细节 |
-| **ClimateGPT** | 若需交代「专科气候 LLM ≠ 编排 Agent」 | ClimateGPT 架构/训练/榜单 |
-| **[[智能体工具与长程任务]] / [[代码智能体Harness史线]]** | 「LLM + 工具多步」抽象；ClimateAgents 文内点 OpenHands/SWE-Agent 作通用 agent 先例 | MCP 协议史、SWE-bench resolve 表 |
-
-### 2.2 本卡主轴 vs 范围外
-
-| 写 | 不写 |
-|---|---|
-| ClimateAgent 三层角色 + 持久上下文 $C_i$ + 自纠（多候选 / 迭代 / 语义校验） | 业务同化、数值天气预报作业流、订正 SLA |
-| Climate-Agent-Bench-85 六域任务分层与报告四维分 | 未给出的「生产运维 KPI」外推 |
-| ClimateAgents 三层 + Table 1 的 11 Agent 角色；社会指标—碳排放相关/因果管道 | 把 Agentic Reviewer **6.4** 升成跨文客观「可发表裁决」 |
-| ClimAgent 附录：CE / 四阶段 / ClimaBench 文内主表数字 | 把附录升成与双主文对等的第三主锚 |
-
-跟读口诀：
-
-`
-[[天气气候基础模型]] = 格点地球场怎么预训练成 FM —— 预报骨干
-[[科研智能体]] = 通用科学发现 / 化学工具代理通史 —— 邻接一句即可
-────────────────────────────────────────
-本卡 A = 气候数据科学工作流怎么被多代理编排跑通（CDS/ECMWF → 报告）
-本卡 B = 社会—气候动力学怎么被多代理助手探索（指标/政策/因果叙述）
-附录 = 开放式物理建模 + ClimaBench（索引，不抢主）
-`
-
----
-
-## 三、ClimateAgent：气候数据科学端到端多代理编排
-
-### 3.1 问题形式化（§3.1）
-
-给定任务 $T$，系统经多阶段分析输出科学报告 $R$；持久工作流上下文：
-
-$$
-C_i=\{\mathrm{task}:T,\ \mathrm{plan}:P,\ \mathrm{code}:\{c_j\},\ \mathrm{data}:\{d_j\},\ \mathrm{results}:\{r_j\},\ \mathrm{logs}:\{l_j\}\}
-$$
-Plan-Agent 将 $T$ 分解为有序子任务 $P=[s_1,\ldots,s_n]$；专长 Agent $A_k$ 执行：$C_i=\mathrm{Execute}(C_{i-1},s_i,A_k)$。上下文同时充当：(1) 跨 Agent 通信协议；(2) 断点恢复检查点；(3) 可复现溯源记录。
-
-### 3.2 三层架构与三大能力（§3.2–3.4，Fig.1 / Algorithm 1）
-
-`
-用户气候问题 T
- │
- ▼
-Orchestrate-Agent ── 建实验目录 / 持久化上下文 / 调度
-Plan-Agent ── 领域模式分解（climatology→anomalies→extremes→report 等）
- │
- ▼
-Data-Agent(s) ── CDS(cdsapi) / ECMWF(ecmwf-api-client) 动态 introspect API
- 生成 m=8 候选下载脚本，顺序尝试至成功
- │
- ▼
-Coding-Agent(s) ── xarray/cartopy/cf-python 等；分析+可视化+报告
- 迭代精炼至多 Rmax=3；每候选最多 5 次 debug；
- 另有 LLM 语义校验（抓「跑得通但科学错」）
- │
- ▼
-科学报告 R（文本 + 图）
-`
-
-文内三大能力标签：
-
-| 能力 | 机制要点（文内） |
-|---|---|
-| **Coordinated Task Planning** | Plan 分解 + 专长委托；Orchestrate 管目录与全局进度 |
-| **Contextual Coordination** | $C_i$ 单调累积；每子任务后 JSON 序列化；下游读上游制品 |
-| **Adaptive Self-Correction** | Data：m=8 多候选；Coding：Rmax=3 + ≤5 debug；语义校验 |
+| Orchestrate-Agent | 建实验目录、持久化上下文、调度全局进度 | — |
+| Plan-Agent | 按领域模式分解任务（如气候态 → 距平 → 极端事件 → 报告） | — |
+| Data-Agent | 动态查询 CDS / ECMWF API 的参数约定，生成下载脚本 | 一次生成 8 个候选脚本，顺序尝试直到成功 |
+| Coding-Agent | 用 xarray、cartopy 等做分析、可视化与报告 | 最多 3 轮迭代精炼，每个候选最多 5 次调试；另用 LLM 做语义校验，抓「能运行但科学上错」的结果 |
 
 ### 3.3 基准 Climate-Agent-Bench-85（§4）
 
-| 设计点 | 文内口径 |
-|---|---|
-| 规模 | **85** 真实工作流任务 |
-| 六域 | AR 15 / DR 15 / EP 15 / HW 10 / SST 15 / TC 15 |
-| 难度 | Easy **25**（30%）· Medium **30**（35%）· Hard **30**（35%；TempestExtremes / CDO 等外部工具） |
-| 规格 | 自然语言目标 + 必用数据集/工具 + **严格输出契约**（文件名/格式）；含参考代码与人工报告 |
-| 评测 | 报告 1–10 分四维：**Readability / Scientific Rigor / Completeness / Visual Quality**；GPT-4o 多模态 LLM-as-judge，对专家参考 |
+85 个真实工作流任务，覆盖大气河、干旱、极端降水、热浪、海表温度、热带气旋六个领域；按难度分为单数据源的简单任务 25 个、多源或多步的中等任务 30 个、需动态调用外部工具的困难任务 30 个。每个任务规定自然语言目标、必须使用的数据与工具和严格的输出约定，并附参考代码与专家报告。报告由 GPT-4o 多模态裁判对照专家参考，按可读性、科学严谨性、完整性、可视化质量四维打 1–10 分。
 
-### 3.4 主结果（§5，Table 1–2）——评测字段主表
+### 3.4 结果（§5，Table 1–3）
 
-**基线（文内）：** GPT-5 baseline（best-of-N，N=4，沙箱执行选首个成功）；GitHub Copilot Agent Mode。文称两基线底层同为 GPT-5，以隔离「多智能体编排 vs 单模型+执行校验」。
+两个基线底层都是 GPT-5，作者称这样能隔离专长分工相对「单模型推理 + 执行校验」的作用：一个是 best-of-4 采样、取第一个能在沙箱跑通的代码，另一个是 GitHub Copilot 的 Agent 模式。
 
-**Table 1 · 分域 Report Quality（1–10，全文任务平均）：**
-
-| Domain | GPT-5 | Copilot | ClimateAgent |
+| 领域 | GPT-5 | Copilot | ClimateAgent |
 |---|---:|---:|---:|
-| Atmospheric River (AR) | 3.05 | 6.78 | **7.32** |
-| Drought (DR) | 7.87 | 6.87 | **8.57** |
-| Extreme Precipitation (EP) | 0.62 | 5.58 | **8.43** |
-| Heatwave (HW) | 3.98 | 8.30 | **9.15** |
-| Sea Surface Temperature (SST) | 4.28 | 8.10 | **8.88** |
-| Tropical Cyclone (TC) | 0.00 | 2.65 | **7.85** |
-| **All Tasks** | **3.26** | **6.27** | **8.32** |
+| 大气河 | 3.05 | 6.78 | 7.32 |
+| 干旱 | 7.87 | 6.87 | 8.57 |
+| 极端降水 | 0.62 | 5.58 | 8.43 |
+| 热浪 | 3.98 | 8.30 | 9.15 |
+| 海表温度 | 4.28 | 8.10 | 8.88 |
+| 热带气旋 | 0.00 | 2.65 | 7.85 |
+| 全部任务 | 3.26 | 6.27 | 8.32 |
 
-**Table 2 · 四维拆解：**
+ClimateAgent 报告生成成功率 100%；四维中完整性最低（7.75），科学严谨性最高（8.72）（Table 2）。基线在极端降水与热带气旋这类复杂领域几乎失效。GPT-5 基线在 35 个失败任务上的错误分类（Table 3）中，数组维度或键错误 9 个、数据请求错误 6 个，在有名目的类别中居前两位（另有杂项 8 个），正是 Data-Agent 与 Coding-Agent 自纠所针对的问题。
 
-| System | Readability | Sci. Rigor | Completeness | Visual Quality | Report Quality |
-|---|---:|---:|---:|---:|---:|
-| ClimateAgent | 8.40 | 8.72 | 7.75 | 8.41 | **8.32** |
-| GPT-5 | 3.48 | 3.41 | 2.8 | 3.34 | 3.26 |
-| Copilot | 6.68 | 6.89 | 5.62 | 5.87 | 6.27 |
+**人机一致性（附录 F，Table 8）**：专家分与 LLM 裁判分的平均绝对差，五个领域在 0.325–0.55 之间，大气河达 1.92，作者认为该领域的空间诊断与可视化更容易放大分歧。
 
-摘要与 §1/§5 另主张：**100%** 任务完成（生成报告）。复杂域（EP/TC）基线崩塌、ClimateAgent 仍维持 >7.8 是文的核心叙事。
+## 四、ClimateAgents：社会—气候动力学的研究助手
 
-**基线失败模式消融（§5.4，Table 3；GPT-5 在 35 个失败任务上分类）：** Data/Array Shape or Key **9**（26%）· Data Request **6**（17%）· Syntax/Indentation **4** · Timeout **4** · Type **4** · Misc **8**。文用 Fig.3–6 对照展示索引形状、ERA5 日期串、语法括号、经度对齐等自纠前后差异（细节跟图，本卡不复述代码配方）。
+**三层结构（§3）**：受 Minsky《心智社会》启发，智能来自众多有限能力智能体的组织化交互。感知层把文本、表格、图像转成结构化表示；推理层由 LLM 做推断、规划与协调；操作层调用检索、统计分析与可视化工具。实现基于 AutoGen 与 GPT-4 系列模型，共 11 个角色（Table 1），包括气候策略师、气候科学家、政策规划者、批评者、数据建模者、代码开发者、图表解读者、知识检索者与事实核查者等。
 
-**人机一致性（Appendix F，Table 8；\|s_expert − s_LLM\| 越小越好）：** AR **1.9167**（明显偏大）；DR **0.3250**；EP **0.5500**；HW **0.4250**；SST **0.4750**；TC **0.4750**。文解读：五域约 0.3–0.55，AR 可视化/空间诊断更易放大专家—裁判差。
+**案例（§4）**：对气候预测文献做主题聚类；在文献特征上做相关分析与回归，再交给政策解释模块；从全连接因果图出发用 CAM 剪枝得到候选因果结构，作者强调剪枝不能替代混杂控制；以世界银行的清洁燃料可及性与城市化指标演示多智能体问答。
 
-### 3.5 跟读注意
+**评测**：用 Stanford Agentic Reviewer 的七维量表评系统生成的报告，总分 6.4；实验严谨性一项最低（5 分），作者承认需要更强的实验验证。
 
-- 文把「通用 LLM agent / 静态脚本」批为缺气候 API 语境与柔性；本卡接受为**该文主张**，不外推到一切科学 Agent。
-- ChemCrow 仅出现在 related work，**不**因此把本卡并入 [[科研智能体]]。
-- 「100% completion」指文内协议下报告生成成功；不等价于「科学结论全正确」——Completeness **7.75** 仍低于 Rigor **8.72**。
+## 五、两篇对照
 
----
-
-## 四、ClimateAgents：社会—气候动力学多代理研究助手
-
-### 4.1 立轴（Abstract / §1）
-
-相对「窄指标预测模型」，ClimateAgents 主张：**可解释、可适配的多智能体助手**，把多模态检索、统计建模、文本分析与自动化推理接到同一研究工作流——假设生成、数据分析、证据检索、结构化报告。数据叙事侧强调 **United Nations / World Bank**（及后文 IPCC）等社会经济—气候指标；政策锚点提及 **UN SDG 13**。
-
-哲学资源：Marvin Minsky *The Society of Mind*——智能来自众多有限能力 Agent 的组织化交互，而非单体全知。
-
-### 4.2 三层 + AutoGen 角色表（§3，Table 1）
-
-**三层（文内）：**
-
-| 层 | 职责 |
-|---|---|
-| **Perception** | 文本 / 表 / 图像 → 结构化表示 |
-| **Reasoning** | 前沿 LLM：推断、规划、决策与协调 |
-| **Operation** | 检索、统计分析、可视化等外部工具执行 |
-
-**实现栈（文内）：** GPT-4 家族；**AutoGen**（UserProxyAgent / RetrieveAssistantAgent / MultimodalConversableAgent / AssistantAgent / GroupChatManager）；角色写在 system message。
-
-**Table 1 · 11 Agents（编号与角色名照录）：**
-
-| # | Agent | Role（文内摘要） |
+| 维度 | ClimateAgent | ClimateAgents |
 |---|---|---|
-| 1 | User | 发起任务、设目标、反馈 |
-| 2 | Climate Strategist | 全局策略与外部工具（情景/建模平台） |
-| 3 | Climate Scientist | 领域假设（碳汇、反馈环等） |
-| 4 | Dialogue Manager | 消息流与轮转协调 |
-| 5 | Policy Planner | 仿真式政策路径 |
-| 6 | Critic | 可行性与气候对齐评审 |
-| 7 | Data Modeler | 气候/环境数据统计洞察 |
-| 8 | Code Developer | 处理与可视化脚本 |
-| 9 | Plot Interpreter | 图解读 |
-| 10 | Knowledge Retriever | 报告/数据库证据 |
-| 11 | Fact Checker | 引用一致性与正确性校验 |
+| 问题 | 气候数据工作流自动化（获取 → 处理 → 分析 → 报告） | 社会—气候动力学探索与政策叙述 |
+| 编排 | 编排 / 规划 / 数据 / 编码四类智能体 + 持久上下文 | 感知 / 推理 / 操作三层 + 11 个角色 |
+| 数据接口 | CDS、ECMWF、ERA5、TempestExtremes 等 | 联合国、世界银行指标与 IPCC 报告 |
+| 评测 | 85 任务基准、报告四维分、人机一致性 | 自动评审分与案例 |
 
-规划流：User → Climate Strategist → Policy Planner；Dialogue Manager 穿插；执行期 Climate Scientist / Data Modeler / Plot Interpreter / Knowledge Retriever / Fact Checker / Code Developer 协作。
+## 六、意义
 
-### 4.3 结果叙事（§4）——案例型，非 Bench-85 式大表
+ClimateAgent 的贡献主要在工程层面：把气候数据 API 的参数语境、多候选脚本与迭代调试做成系统机制，使「跑不通」从常态变成少数，并配套了可复现的 85 任务基准与人机一致性检查。基线错误集中在数据请求与数组维度，与作者「通用智能体缺少气候数据接口语境」的诊断一致。ClimateAgents 把同样的多智能体思路扩到社会科学一侧，但评测仍停留在案例与自动评审。两篇的共同做法是把领域接口知识写进角色分工，并保留可审计的中间产物。
 
-| 小节 | 内容（文内） |
-|---|---|
-| Perception | Agent planner 对气候预测文献做主题聚类（模型族、区域/全球、公平、时间粒度、驱动因子、指标、预警 vs 长期政策等） |
-| Reasoning · Correlation | 文献分类 → 特征相关矩阵 → SVR / 决策树等 → MAE/RMSE/R² → 政策解释模块 |
-| Reasoning · Causation | 全连接因果图 → **CAM pruning**（跟 Rolland et al. score matching / additive noise 叙事）→ 专家校验；文强调 pruning **不替代**混杂控制 |
-| Operation | 清洁燃料可及性（如 `EG.CFT.ACCS.RU.ZS` / `.UR.ZS`）与城市化（`SP.URB.TOTL.IN.ZS`）等指标上的多 Agent 问答示例（Fig.5） |
+## 七、局限与待核实
 
-### 4.4 评测字段（§4.2）：Stanford Agentic Reviewer
+- **评测依赖 LLM 裁判**：ClimateAgent 的报告分来自 GPT-4o，大气河领域与专家分差距明显；100% 指报告生成成功，不等于结论都正确。
+- **ClimateAgents 证据弱**：没有定量基准，只有案例与一次自动评审；§4.2 写「the report produced by ClimateAgent」，与题名的 ClimateAgents 不一致，按上下文理解为该论文自身系统的报告；文中称代码托管在 GitHub，但没有给出地址。
+- **ClimAgent 已撤回**：[ClimAgent](https://arxiv.org/abs/2604.16922)（开放式气候建模与 ClimaBench）2026-05-29 的 v3 为撤回版本，理由是提交时未获全部合作者同意，本篇不引用其内容。
+- **版本**：本篇据 ClimateAgent v2（2026-09-14），未与 v1 比对。
 
-七维：originality · importance · support of claims · soundness of experiments · clarity · value to community · contextualization。文内给出：
+## 八、与相邻笔记的分工
 
-| 维度 | 分（文述） |
-|---|---|
-| originality / importance | **6** |
-| support of claims / contextualization | **7** |
-| clarity of writing | **8** |
-| soundness of experiments | **5**（最低；文自承需更强实验验证） |
-| **overall** | **6.4** |
-
-注意：正文写「assessment of the report produced by **ClimateAgent**」——与题目 **ClimateAgents** 撞名，属文内笔误风险；本卡按 **ClimateAgents 论文的自审**理解，不把它并入 §三系统。Fig.6/7 柱/矩阵以读图为准，未抽出的细分标「待核实读图」。
-
-### 4.5 局限（§5，文内）
-
-依赖输入数据质量与代表性；全球碳排放/气候模型假设未必迁移到异质区域；任务特化导致跨域迁移需大改；「awareness / 道德因果」文自认当前模型未达。未来方向：本地化异构数据、教育/公卫/城市韧性垂直扩展、符号+仿真+伦理建模等——**仅索引，不展开操作手册**。
-
----
-
-## 五、双主文对照（仅文内字段；不替选型拍板）
-
-| 维度 | ClimateAgent（主①） | ClimateAgents（主②） |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| 问题框 | 气候**数据科学工作流**自动化（获取→处理→分析→报告） | **社会—气候**动力学探索与政策相关叙事 |
-| 编排重心 | Orchestrate/Plan/Data/Coding + 持久 $C_i$ + API 自纠 | Perception/Reasoning/Operation + AutoGen 11 角色 |
-| 数据接口 | CDS / ECMWF / ERA5 / TempestExtremes 等 | UN / World Bank / IPCC 报告与指标；清洁燃料与城市化示例 |
-| 主评测 | Climate-Agent-Bench-85；报告四维 + 分域表；宣称 100% 完成 | Stanford Agentic Reviewer；overall **6.4**；案例图为主 |
-| 骨干 LLM（文内） | 与 GPT-5 基线对照；裁判 GPT-4o | GPT-4 家族 |
-| 代码 | 明确 GitHub URL | 「hosted on GitHub」无完整 URL |
-| 与本仓库 | 对照 [[天气气候基础模型]]：用同一「气候数据」词，对象是 **Agent 编排** 非 FM | 对照 [[科研智能体]]：同属科学域 Agent，但介质是**社会指标/政策**，非 ML 模板或化学工具 |
+| [[天气气候基础模型]] | 对照：两者都处理气候数据；那篇是格点场预报的基础模型，本篇是调用数据 API 的 LLM 工作流 | 模型结构与预报技巧 |
+| [[地球系统基础模型ESFM]] | 对照：那篇的地球系统基础模型是预报骨干，并把本篇列为多智能体编排一侧 | 地球系统模型训练与评测 |
+| [[科研智能体]] | 上游：通用科研智能体与 ChemCrow 式工具代理在该篇，ClimateAgent 在相关工作中引 ChemCrow 为先例 | AI Scientist 与 ChemCrow 细节 |
+| [[智能体工具与长程任务]] | 背景：LLM 加工具的多步任务 | MCP 与长程任务通史 |
+| [[代码智能体Harness史线]] | 对照：ClimateAgents 把 OpenHands、SWE-Agent 列为通用智能体先例；Coding-Agent 的调试循环与编码智能体同构 | 编码智能体 harness |
 
-选型建议：若问题是「把一句气候分析需求变成 CDS 下载 + xarray 图 + 报告」，看 **ClimateAgent** Bench-85；若问题是「社会经济指标与排放/政策的可解释多智能体探索」，看 **ClimateAgents** 三层+角色表；若问题是「格点预报 FM」，见 **[[天气气候基础模型]]**。以上按各文自报结果指路，不构成跨文优劣结论。
+## 九、延伸阅读
 
----
-
-## 六、附录索引：ClimAgent
-
-> 附录：开放式气候科学分析 Agent + ClimaBench；不与双主文对等展开。
-
-| 字段 | 文内口径（锚定 PDF） |
-|---|---|
-| 目标 | 超越气候 Q&A，做数据驱动的开放式建模与报告 |
-| Climate Environment (CE) | **150** specialized climate tools + **30** databases；自大量气候文献/子领域策展 |
-| 四阶段 | Problem Analysis → Climate Modeling（知识检索 + 任务特化优化 / Critic 循环）→ Computational Solving → Solution Reporting |
-| ClimaBench | 摘要贡献条写 **220** 题；§4.2 正文写 **320** tasks / 「scale of 320 tasks」——**文内口径冲突，并列照录，不擅自统一** |
-| 五类任务（正文） | data query · concept analysis · predictive analysis · causal inference · policy making |
-| 摘要增益主张 | 相对「original LLM solutions」**40.21%** improvement（solution rigorousness and practicality）——**摘要句**；细节跟主表 |
-| Table 1（节选，GPT-4o 骨干，Overall） | 2000–2024：ClimAgent **8.92** vs GPT-4o **6.29** / DS-Agent **7.91** / ResearchAgent **7.79** / Agent Laboratory **7.35** / DeepAnalyze **7.34**；2025：ClimAgent **8.47** vs GPT-4o **6.55** 等（全文见抽取） |
-| 评测四维 | AE · SC · PS · RBA（Analysis Evaluation / Solution Correction / Practicality and Scientificity / Result and Bias Analysis） |
-| 代码 | https://github.com/usail-hkust/ClimAgent |
-
-与双主文差一刀：ClimAgent 强调 **物理方程/工具检索的开放式建模**；ClimateAgent 强调 **业务气候 API 工作流鲁棒编排**；ClimateAgents 强调 **社会指标—政策多智能体**。三者不可互相替代。
-
----
-
-## 七、可复核清单与已知缺口
-
-**可复核：**
-1. 页数：**49 / 15 / 23**。
-2. ClimateAgent Table 1/2、Table 3、Table 8 与 PDF 一致；摘要 8.32 / 6.27 / 3.26 / 100% 一致。
-3. ClimateAgents Table 1 十一角色；Agentic Reviewer overall **6.4**、soundness **5** 与原文一致。
-4. ClimAgent CE「150 tools / 30 databases」、GitHub `usail-hkust/ClimAgent`、Table 1 Overall 数字与原文一致。
-
-**缺口：**
-- ClimateAgents **无**文内完整自有 GitHub URL。
-- ClimAgent **220 vs 320** 任务数冲突未在文内消解，不选边「纠正」。
-- 40.21% 仅摘要出现；未在原文中还原为 Table 1 的显式算术——引用时标「摘要主张」。
-- ClimateAgents §4.2 误写「ClimateAgent」——标笔误风险，不合并系统。
-- 不把 [[天气气候基础模型]] Aurora 参数量/技巧写进本卡，也不把 [[科研智能体]] 成本 <$15/篇 等数字挪来。
-- ClimateGPT 仅作前置对照。
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [ClimateAgent](https://arxiv.org/abs/2511.20109) §3、§5、附录 F | 四类智能体与自纠、主结果、人机一致性 |
+| 2 | [ClimateAgents](https://arxiv.org/abs/2603.13840) §3–4 | 三层结构、11 个角色与案例 |
+| 3 | [Relaxed-System-Lab/ClimateAgent README](https://github.com/Relaxed-System-Lab/ClimateAgent) | 代码与基准 |
+| 4 | [[天气气候基础模型]] | 气候数据的另一条 AI 路线 |

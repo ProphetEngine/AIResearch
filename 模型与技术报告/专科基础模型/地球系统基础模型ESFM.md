@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > **研究线**：**架构思想 / 数据接口（主）** + **文内预报字段（辅）**。
 > **范围与相邻笔记**：
 > - **≠ [[天气气候基础模型]]**：不重写 Aurora **1.3B** 骨干表、3D Perceiver + 3D Swin U-Net 层表、四域微调通史、Aurora 1.5 产品增量。本卡承认 ESFM **显式复用 Aurora 的 3D Swin UNet backbone**（文内引用 Bodnar et al. 2025），但只录 **ESFM 相对 Aurora 的接口增量**（逐变量 tokenization、NaN token、多分辨率 bin、axial attention、AdaLN-Zero 集合、掩码训练、KD 对齐），本卡不做 Aurora 复读。
-> - **≠ [[气候科学Agent]]**：不写成 ClimateAgent / ClimateAgents / ClimAgent 多代理编排、报告流水线、政策仿真。ESFM 是 **格点/站点场预报 FM**，不是 LLM Agent。
+> - **≠ [[气候科学Agent]]**：不写成 ClimateAgent / ClimateAgents 多代理编排、报告流水线、政策仿真。ESFM 是 **格点/站点场预报 FM**，不是 LLM Agent。
 > - **≠ [[SkySense遥感基础模型]]**：不写成 SkySense / SkySense++ / V2 遥感 **影像解译** EO FM。ESFM 吃的是大气/地表物理变量场与站点序列，不是高分光学+SAR 语义分割主轴。
 > - **≠ [[表格与时序基础模型]]**：不写成 TabPFN / TimesFM / Chronos 表格·通用时序 foundation。站点实验只是 ESFM 统一骨干下的 **点数据接口**，不是独立 tabular/TS FM 谱系。
 
