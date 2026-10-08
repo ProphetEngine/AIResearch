@@ -131,6 +131,8 @@ $$
 
 [SoftCoT](https://arxiv.org/abs/2502.12134) 同样避免微调主模型，但做法是用一个固定的小助手模型生成实例相关的 soft thought token，再经**需要训练的**投影层映射进被冻结的主 LLM 表示空间；Soft Thinking 连投影层也不训练，概念 token 直接取自主模型自身的输出分布与 embedding 矩阵。
 
+放在一条线上看，三篇是「连续思考所需训练逐步减少」的三步：[[潜空间推理Coconut]]（arXiv 2412.06769）用多阶段课程训练主模型，把 hidden state 回灌为下一输入；SoftCoT（arXiv 2502.12134）冻结主模型，只训练助手模型到主模型的投影层；Soft Thinking（arXiv 2505.15778）不做任何训练，直接用主模型自己的输出分布加权 embedding。
+
 ---
 
 ## 六、实证要点（少量数字，均取自原文）

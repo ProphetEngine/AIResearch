@@ -5,6 +5,10 @@ date: 2026-09-22
 lines: [架构思想, 数学原理]
 status: archived
 archived: 2026-09-22
+sources:
+ - https://arxiv.org/abs/1706.03762
+ - http://nlp.seas.harvard.edu/annotated-transformer/
+arxiv: ["1706.03762"]
 ---
 
 # Attention / Transformer 核心思想转折
@@ -107,7 +111,7 @@ $$
 
 论文配置：$h=8$，$d_k=d_v=d_{\mathrm{model}}/h=64$。单头维度变小，总算力与「满维单头」大致相当，但模型能**同时**从不同表示子空间、在不同位置上关注信息。消融（Table 3 行 A）显示：单头比最佳设置差约 0.9 BLEU；头数过多质量也会掉——多头是有用偏置，不是「头越多越好」。
 
-### 3.4 跟读小结（数学线）
+### 3.4 小结（数学线）
 
 先记住三步：**算相似度（点积）→ 用 $\sqrt{d_k}$ 稳住 softmax → 加权汇聚 V**；再记住多头是「同一套点积注意力，复制到多个投影子空间再拼接」。Annotated Transformer 用同一公式实现 `attention()` 与 `MultiHeadedAttention`，并在解码端用上三角 mask 把非法位置打成极大负数，等价于论文中的 $-\infty$ mask。
 
@@ -153,15 +157,13 @@ Transformer 把「可并行的全局注意力编码器 / 解码器」立成新�
 ### 局限与待核实
 
 - 摘要写英法 big 模型 **41.8 BLEU**，Table 2 亦为 41.8；但正文 §6.1 有一处写作 **41.0**——疑似笔误，引用时以摘要 / Table 2 为准，或对照官方 PDF 再核一次。
-- Annotated Transformer 实现里 LayerNorm 放在子层前（Pre-LN 风格注释），与论文公式书写的 Post-LN（先子层再 `LayerNorm(x+Sublayer(x))`）在代码顺序上不完全一致；跟读原论文思想时以论文公式为准，实现细节另册对照。
+- Annotated Transformer 实现里 LayerNorm 放在子层前（Pre-LN 风格注释），与论文公式书写的 Post-LN（先子层再 `LayerNorm(x+Sublayer(x))`）在代码顺序上不完全一致；理解原论文思想时以论文公式为准，实现细节另册对照。
 
 ## 相关笔记
 
-- [[注意力与Transformer核心思想]]
-- [[DecoderOnly与GPT路线]]
-- [[规模定律与预训练范式]]
-- [[混合专家架构]]
-- [[对齐脉络RLHF与偏好优化]]
-- [[推理时扩展TestTimeScaling]]
-- [[开源与闭源前沿模型谱系]]
-
+- [[DecoderOnly与GPT路线]]：本篇第五节说史线分叉为解码器栈与编码器栈两支；那篇接着讲解码器栈一支如何成为主流。
+- [[规模定律与预训练范式]]：那篇的 Kaplan 规模定律是在 Transformer 语言模型上拟合的，本篇讲的就是这副骨架。
+- [[混合专家架构]]：MoE 把本篇 2.4 的逐位置 FFN 换成多个专家加路由器，注意力部分不变。
+- [[注意力效率族MQA到MLA]]：本篇 3.3 的多头注意力在解码时要为每个头存 K/V；那篇讲 MQA、GQA、MLA 如何压这部分开销。
+- [[长上下文位置编码与系统侧]]：本篇 2.3 的正弦位置编码之后，那篇从 RoPE 讲起，接着讲如何把上下文窗口扩长、如何在系统侧供得起。
+- [[Transformer至今发展脉络]]：从 2017 年 Transformer 到 2026 年的主叙事总入口，本篇是那条线的起点。
