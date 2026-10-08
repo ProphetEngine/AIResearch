@@ -9,274 +9,129 @@ sources:
  - https://doi.org/10.1038/s41586-025-09833-y
 arxiv: ["2511.04662"]
 doi: ["10.1038/s41586-025-09833-y"]
-related: ["过程奖励模型PRM谱系", "GRPO与DAPO算法族", "DeepSeekR1推理训练深读", "推理时扩展TestTimeScaling"]
+related: ["过程奖励模型PRM谱系", "可验证过程监督", "过程可验证RL与Lean", "DeepSeekR1推理训练深读", "推理时扩展TestTimeScaling", "推理时树搜索ABMCTS", "对齐与强化学习发展时间线"]
 archived: 2026-09-22
 ---
 
 # Formal verification for LLM：VeriCoT + AlphaProof
 
-> **定位**：相对 [[过程奖励模型PRM谱系]]（PRM 过程奖励）与 [[GRPO与DAPO算法族]] / R1（可验证奖励 RL），本篇只补 **符号 / 证明器接地的正确性保证** 枢纽：
-> - **VeriCoT**：非数学域 NL CoT → FOL（SMT-LIB）+ Z3 逐步蕴涵/矛盾检查；
-> - **AlphaProof**：Lean 交互证明环境上的 AlphaZero 式 RL + 测试时 RL（TTRL）。
-> **研究线**：**架构思想（主）**——谁在仿什么、校验器接在哪；**数学原理（辅）**——FOL 蕴涵判定与 Lean 证明搜索里的状态/回报。
+> **主要来源**：[VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks](https://arxiv.org/abs/2511.04662)（Feng、Weir、Bostrom 等，宾夕法尼亚大学、亚马逊云科技，v1 2025-11-06，以下简称 VeriCoT）；[Olympiad-level formal mathematical reasoning with reinforcement learning](https://doi.org/10.1038/s41586-025-09833-y)（Hubert、Mehta、Sartran 等，Google DeepMind，Nature 第 651 卷，2025-11-12 在线发表，2026-03-19 刊期，以下简称 AlphaProof）（截至 2026-08-05）。
+> **研究线**：架构思想（主：外部形式系统接在推理的哪个位置、各自保证什么）；数学原理（辅：一阶逻辑的蕴涵判定，Lean 证明搜索中的状态、动作与累计奖励）
 > **范围与相邻笔记**：
-> - **不重写** [[过程奖励模型PRM谱系]] 的 PRM 标注流水线 / ORM vs PRM 谱系 / Math-Shepherd 自动逐步标签（本篇不写「逐步奖励模型怎么训」）。
-> - **不重写** [[GRPO与DAPO算法族]] 的 GRPO→DAPO 技巧清单，以及 [[DeepSeekR1推理训练深读]] 的 **R1 阶段表** / 规则奖励通史。
-> - **不重写** [[推理时扩展TestTimeScaling]] TTS 通史；AlphaProof 的 tree-search / TTRL 只作 **形式证明侧** 的 inference scaling，不串 o1/R1 产品叙事。
-> **主要来源**：[VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks](https://arxiv.org/abs/2511.04662)；[Olympiad-level formal mathematical reasoning with reinforcement learning](https://doi.org/10.1038/s41586-025-09833-y)（截至 2026-09-22）；VeriCoT 作者页 PDF 未另采。
+> - ≠ [[过程奖励模型PRM谱系]]：那篇训练神经打分器判断每步对错，本篇的逐步判定来自求解器或证明器。
+> - ≠ [[可验证过程监督]]：那篇用棋类引擎、算术规则与指南决策树核对中间声明，本篇要求把推理写成一阶逻辑或 Lean。
+> - ≠ [[过程可验证RL与Lean]]：那篇把 Lean 的报错变成训练期的 tactic 级奖励，本篇的 AlphaProof 用证明成败与长度做 AlphaZero 式强化学习。
+>
+> **意义**：LLM 的思维链终答可能对、中间步却错，神经裁判本身也不可全信。本篇两文把「正确」交给外部形式系统判定。VeriCoT 把法律、生物医学等非数学领域的自然语言推理逐步译成一阶逻辑，由 Z3 判断每步是否被前提蕴涵，并把用到的前提显式列出；通过核验的推理链比裸终答更可靠，核验信号还能用于自我修正和训练。AlphaProof 在 Lean 里做强化学习，由 Lean 内核检查每个证明，在约 8000 万道自动形式化题上训练，IMO 2024 解出 3 道非几何题，与 AlphaGeometry 2 合计 28/42 分，进入银牌区间。前者把形式核验推到开放领域，后者把它推到奥赛难度，代价分别是翻译失真与巨大的算力。
 
----
+## 一、问题背景
 
-## 一、材料元信息
+LLM 的推理靠思维链，但终答正确不等于推理正确，VeriCoT 举的例子是中间一步把某人的年龄推成「至多 15 岁」而不是「至多 18 岁」，终答仍然对（§1）。学习式过程奖励模型和 LLM 裁判可以给中间步骤打分，但它们自己也会错；只核对终答的规则奖励（如 DeepSeek-R1）又不管中间过程。形式系统提供了另一种信任根：一阶逻辑求解器可以判定蕴涵与矛盾，Lean 这样的证明助手由内核检查每个证明项。
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
-|---|---|---|---|
-| **主文 A** | Feng, Weir, Bostrom et al., *VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks* | arXiv:**2511.04662v1** \[cs.AI\] **6 Nov 2025**；`https://arxiv.org/abs/2511.04662`（**37** 页 letter；UPenn + AWS） | NL CoT → FOL/SMT-LIB；Z3 校验；自反思 / SFT / DPO |
-| **主文 B** | Hubert, Mehta, Sartran et al. (Google DeepMind), *Olympiad-level formal mathematical reasoning with reinforcement learning* | Nature **Vol 651** \| **19 March 2026** pp.607–…；doi:**10.1038/s41586-025-09833-y**；Received 3 Jun 2025 / Accepted 30 Oct 2025 / Published online **12 Nov 2025**；`https://doi.org/10.1038/s41586-025-09833-y`（**25** 页；CreationDate **2026-03-17** CST） | Lean 环境 RL；auto-formalization 课程；TTRL；IMO 2024 |
+两条路面对不同的难点。自然语言推理要先翻译成逻辑，翻译本身靠 LLM，可能出错；Logic-LM、LINC 已经把问题译成符号形式交给求解器，但关注的是解题而不是逐步核验原有的思维链。形式数学的证明本身就在 Lean 里，难点是数据少、搜索空间大：人工形式化的定理远少于自然语言数学题，tactic 空间是开放的文本。
 
-**备链：** VeriCoT 作者页 https://benjaminkiesl.github.io/publications/vericot_feng_et_al.pdf（本笔记主采 arXiv PDF，未另核镜像字节差）。
+## 二、脉络
 
-**一句话抓手：** 两文都用 **外部形式系统** 给 LLM 推理「落地」——VeriCoT 把开放域 CoT 钉到 **Z3 可判定的 FOL 片段** 并显式列出 NL 前提；AlphaProof 把证明过程钉到 **Lean 内核可验证的 tactic 轨迹**，用 RL 在百万级形式题上自学。相对 PRM（学一个打分器）与 outcome RLVR（终答 checker），这里的信号来自 **证明器/求解器**，不是另一套神经判别。
-
----
-
-## 二、议题边界：符号接地，不是又一部过程奖励 / RL 算法通史
-
-### 2.1 相对 [[过程奖励模型PRM谱系]] / [[GRPO与DAPO算法族]] / R1 只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 时间 | 工作 | 关键一步 |
 |---|---|---|
-| **[[过程奖励模型PRM谱系]] PRM** | 「过程对不对」是信任问题；验证器可喂 TTS / RL | 人类逐步标注、Math-Shepherd 续写金标、PRM800K、逐步 CE / 聚合规则 |
-| **[[GRPO与DAPO算法族]] GRPO/DAPO** | 「有可验证奖励就能做组相对 RL」的抽象槽位 | Clip-Higher、动态采样、token-level loss、Dr.GRPO 去偏公式 |
-| **[[DeepSeekR1推理训练深读]]** | R1 族用规则/可验证奖励做长 CoT（点名即可） | 冷启动 → 拒绝采样 → 二次 RL **阶段表** |
-| **[[推理时扩展TestTimeScaling]]** | 测试时加算力能抬解题率（AlphaProof Fig.4） | o1/R1 产品「势」叙事与非正式数学竞赛通史 |
+| 2020-09 | [GPT-f](https://arxiv.org/abs/2009.03393) | 把 Transformer 语言模型用于自动定理证明，在 Metamath 上找到被正式库收录的新证明 |
+| 2021-08 | [miniF2F](https://arxiv.org/abs/2109.00110) | 跨系统的奥赛级形式化基准，488 道题，覆盖 Lean、Metamath 等 |
+| 2022-05 | [HyperTree Proof Search](https://arxiv.org/abs/2205.11491) | 受 AlphaZero 启发的证明树搜索加在线训练 |
+| 2023-05 | [Logic-LM](https://arxiv.org/abs/2305.12295) | LLM 把自然语言问题译成符号形式，交给确定性求解器推理，并按求解器报错自我修正 |
+| 2023-06 | [LeanDojo](https://arxiv.org/abs/2306.15626) | 开源的 Lean 交互环境与数据，加检索前提的证明器 |
+| 2024-05 | [DeepSeek-Prover](https://arxiv.org/abs/2405.14333) | 自动形式化竞赛题，合成大规模 Lean 4 证明数据做微调 |
+| 2024-07 | AlphaProof（IMO 2024） | 本篇 AlphaProof 的赛时版本开发到 2024 年 7 月，与 AlphaGeometry 2 一起参赛 |
+| 2024-08 | [DeepSeek-Prover-V1.5](https://arxiv.org/abs/2408.08152) | 用证明助手反馈做强化学习，加蒙特卡洛树搜索变体 |
+| 2025-04 | [DeepSeek-Prover-V2](https://arxiv.org/abs/2504.21801) | 子目标分解的冷启动加强化学习，671B 版 miniF2F-test 88.9% |
+| 2025-11 | VeriCoT | 非数学领域思维链逐步译成一阶逻辑，Z3 核验蕴涵与矛盾 |
+| 2025-11 | AlphaProof 论文 | Lean 上的 AlphaZero 式强化学习加测试时强化学习 |
 
-### 2.2 两条形式接地轴（跟读口诀）
+## 三、VeriCoT：开放领域思维链的逐步核验
 
-`
-VeriCoT NL CoT 逐步 → SMT-LIB FOL → Z3（蕴涵 / 矛盾 / 不可译）
- 前提来自：上下文 / 常识 / 已证步骤；可选 LLM-as-Judge 审前提
- 域：ProofWriter / LegalBench-SARA / BioASQ（非竞赛数学）
+**算法**（§2、Algorithm 1）：对思维链的每一步依次做：
 
-AlphaProof 非形式题 →（auto-formalize）→ Lean 语句 → tactic RL + 树搜索
- 奖励：每步 tactic −1；多子目标取 min 回报（最长支）
- 域：miniF2F / formal-imo / Putnam；IMO 2024（+ AlphaGeometry 2）
-`
+1. **自动形式化**：用 LLM 把该步译成一阶逻辑公式（编码为 SMT-LIB，支持线性算术、未解释函数与量词等片段）；先在已有词汇表内翻译，不够再声明新函数或类型后重试，最多 3 次，失败记为「不可译」。
+2. **矛盾检查**：若已有知识蕴涵该步的否定，记为「矛盾」。
+3. **蕴涵检查**：若已有知识蕴涵该步，接受并并入知识。
+4. **补前提**：否则让 LLM 从上下文或常识生成候选前提，保留与已有知识相容的，再检查加上前提后能否推出该步；仍推不出则记为「无依据」。可选用 LLM 裁判审查前提是否能归到原文、常识是否可接受。
 
-| 维度 | **VeriCoT** | **AlphaProof** |
-|---|---|---|
-| 形式宿主 | SMT-LIB 片段 + **Z3** | **Lean 4** + Mathlib（内核最终校验） |
-| LLM 角色 | 自动形式化 + 前提生成 +（可选）judge；执行器 Claude-3.5-Sonnet-V2 | 证明网络（3B enc–dec）产 tactic/value；auto-formalizer 为 Gemini 系微调 |
-| 「正确」保证什么 | **形式化后的** $F_i$ 由前提集蕴涵；**不**保证 NL 原文与前提本身为真（§5） | Lean 内核接受的证明项（+ 仅用三个内建公理的终检）；几何另走 AG2 |
-| 训练用法 | 校验信号 → 自反思 / SFT 已校验 CoT / DPO 成对奖励 | 主 RL（~80k TPU-day）+ 推理时搜索 / TTRL |
-| 与 PRM 的差 | 逐步标签来自 **求解器判定**，不是再训一个过程 RM | 环境奖励来自 **证明成败/长度**，不是答案字符串匹配 |
+推理链有效，当且仅当能从上下文推出一组自洽的前提，使每一步的形式化都被它们蕴涵。蕴涵与一致性判定都交给 Z3。
 
----
+**设定**（§3）：核验器由 Claude-3.5-Sonnet-V2 执行，微调学生为 Qwen2.5-7B-Instruct。数据集为 ProofWriter（逻辑推理）、BioASQ（生物医学问答）与 LegalBench-SARA（税法条文推理）。指标为通过率（能被核验的比例）、精度（通过核验者中终答正确的比例）、VCAR（既通过核验又答对的比例）与任务准确率。
 
-## 三、站 1：VeriCoT — NL CoT 的神经符号校验
+**结果**（Table 1，未做自我修正，%）：
 
-### 3.1 问题与主张（Abstract / §1）
-
-- CoT 终答可对、中间步可错（Fig.1 法定年龄例：「at most 15」vs 「at most 18」）。
-- 缺口：同时满足 (1) 覆盖 **整条 CoT 逐步**；(2) **形式化每一步对上下文的接地**；(3) 在 **非 code/math** 域用校验信号改进模型。
-- 主张：VeriCoT 是据作者所知 **首个** 面向非数学/代码域 CoT 的神经符号校验器。
-
-### 3.2 算法骨架（Alg.1 / §2）
-
-给定上下文（问题 + 可选对话史 + 源文档）与 CoT 步骤 $C_1,\ldots,C_n$：
-
-1. 初始化 $F_0=\emptyset$，$P_0=\emptyset$，`errors`=$\emptyset$。
-2. 对每步 $C_i$：
- - **(a) Autoformalization（§2.2）** → FOL 公式 $F_i$；失败 → `untranslatable`。
- - **(b) Consistency**：若 $F_{i-1}\models \neg F_i$ → `contradiction`。
- - **(c) Entailment**：若 $F_{i-1}\models F_i$ → 接受并并入知识。
- - **(d) Premise generation（§2.3）**：否则从上下文/常识生成 $P_i$，检查 $F_{i-1}\not\models\neg P_i$；可选 **LLM-as-Judge（§2.4）** 审前提是否可归因；若 $F_{i-1}\cup\{P_i\}\not\models F_i$ → `ungrounded`。
-3. 返回 $P_n,F_n,$ errors。
-
-**有效 CoT 的充要口径（文内）：** 能从 NL 上下文推出一组自洽 FOL 前提 $\mathcal{P}$，使每步形式化 $F_i$ 满足 $\mathcal{P}\models F_i$。
-
-**三类错误（反馈给自反思/蒸馏）：**
-
-| 标签 | 含义 |
-|---|---|
-| **Ungrounded** | 找不到充分且不矛盾的加强前提使 $F_{i-1}\cup\{P_i\}\models F_i$ |
-| **Contradiction** | $F_{i-1}\models\neg F_i$ |
-| **Untranslatable** | 超出支持的 FOL 片段，或多次尝试后仍有语法错误 |
-
-**求解器：** 公式编码为 **SMT-LIB**（线性算术、未解释函数、量词等片段）；一致性/蕴涵用 **Z3**。
-
-### 3.3 自动形式化与前提（§2.2–2.4）
-
-**两阶段 autoformalization（均用 LLM）：**
-
-1. 在已有词汇表约束下生成「SMT-LIB + 对齐元数据」中间表示；
-2. 不足则 `declare-fun` / `declare-sort` 扩展词汇，再重试；**最多 3 次**，否则标不可译 / 丢弃该前提。
-
-**前提生成：** 多候选 NL 前提 → 各自形式化 → 保留与 $F_{i-1}$ 可满足者 → 合取为 $P_i$；新声明语义未写入前提时再生一轮。
-
-**LLM-as-Judge：** 上下文前提 → 是否可归因到源文本；常识前提 → 在给定上下文/目标步下是否可接受（另可评「是否必要」）。
-
-**跟读例（§2.1，SARA 福利资格）：**
-$F_1$ 出生年+同住 → 从问题抽 $P_1$；$F_2:\mathrm{age}\le 18$ ← 常识 $P_2:\forall x,y.\,\mathrm{age}(x,y)\le y-\mathrm{birthYear}(x)$；$F_3$ 资格规则 ← 文档更强前提 $P_3$（<21）；$F_4:\mathrm{Qualifies}(\mathrm{charlie})$ 由已有知识推出。若写「≤15」则与 $P_2$ 矛盾。
-
-### 3.4 实验设置与主表（§3）
-
-| 项 | 文内设定 |
-|---|---|
-| VeriCoT 执行 LLM | **Claude-3.5-Sonnet-V2**（API） |
-| 微调学生 | **Qwen2.5-7B-Instruct**；监督蒸馏自 Claude |
-| 数据集（Table 5） | ProofWriter train **5000** / test **400**；BioASQ **5049** / **340**（Task 12b Phase B）；LegalBench-SARA test **367**（Entailment 272 + Numeric 95） |
-| 基线 | Explanation-Refiner（ER）；Direct SMT Baseline（DSB）；VeriCoT-NoPrem |
-
-**指标：** Pass Rate（可验证比例）；Precision（已验证中终答正确率）；**VCAR**（既验证又正确）；Task Acc（任务正确率）。
-
-**Table 1（校验，无自反思；%）摘录：**
-
-| 数据集 | 方法 | Pass | Prec | VCAR | Task Acc |
+| 数据集 | 方法 | 通过率 | 精度 | VCAR | 任务准确率 |
 |---|---|---:|---:|---:|---:|
-| ProofWriter | ER | 14.8 | 83.3 | 12.3 | 75.8 |
-| | DSB | 10.0 | 96.1 | 9.5 | 74.8 |
-| | VeriCoT-NoPrem | 3.3 | 100 | 3.3 | 75.8 |
-| | **VeriCoT** | **45.2** | **94.1** | **42.5** | 75.8 |
-| BioASQ | ER | 1.5 | 80.0 | 1.2 | 81.4 |
-| | DSB | 5.9 | 72.2 | 4.2 | 75.7 |
-| | **VeriCoT** | **25.3** | **84.3** | **21.3** | 81.4 |
-| LegalBench-SARA | ER | 6.8 | 92.0 | 6.3 | 80.0 |
-| | DSB | 4.8 | 94.1 | 4.5 | 77.7 |
-| | **VeriCoT** | **15.2** | **87.0** | **13.2** | 80.0 |
+| ProofWriter | 最强基线 Explanation-Refiner | 14.8 | 83.3 | 12.3 | 75.8 |
+| | VeriCoT | 45.2 | 94.1 | 42.5 | 75.8 |
+| BioASQ | 最强基线 Direct SMT | 5.9 | 72.2 | 4.2 | 75.7 |
+| | VeriCoT | 25.3 | 84.3 | 21.3 | 81.4 |
+| LegalBench-SARA | 最强基线 Explanation-Refiner | 6.8 | 92.0 | 6.3 | 80.0 |
+| | VeriCoT | 15.2 | 87.0 | 13.2 | 80.0 |
 
-要点（§3.3）：Pass / VCAR 全面高于基线；**Precision consistently > Task Acc** → 通过校验的 CoT 比「裸终答」更可靠的正确性信号。失败以 **Ungrounded** 为主（过度假设）；自反思后 Valid↑、Ungrounded/Contradiction↓，Untranslatable 比例几乎不变（Fig.2）。
+精度在三个数据集上都高于任务准确率，说明通过核验的推理链是比裸终答更可靠的正确性信号。失败以「无依据」为主，即推理做了未声明的假设（§3.3、Fig.2）。LLM 裁判认为生成的上下文前提有 87%–96% 可归到原文（Table 2）。
 
-**Table 2（LLMaj 前提质量，%）摘录：** 上下文可归因约 **87–96**；可接受常识约 **84–93**；「必要」常识约 **77–81**。
+**三种用法**（§3.4）：
 
-### 3.5 校验信号的三用途（§3.4）— 点到为止，不抄 DPO 通史
+- **透明**：显式列出的自然语言前提加逻辑公式，便于人审。
+- **推理时自我修正**：把逐步形式化、错误类型与求解器结果反馈给模型改写，通过率平均提高 12.3 个百分点（相对 46.4%），VCAR 平均提高 9.5 个百分点（相对 41.1%）。
+- **训练**（Table 4，Qwen2.5-7B）：只用通过核验的蒸馏推理链做 SFT，比随机蒸馏的终答准确率高；在此基础上用「通过与否」构造偏好对做 DPO，通过率再提高 4.3 个百分点（相对 18.4%），VCAR 提高 3.4 个百分点（相对 17.7%）。
 
-1. **透明性：** 显式 NL 前提 + FOL，便于人审。
-2. **推理时自反思：** 失败则把逐步形式化、错误类型、求解器结果（及可选 LLMaj）喂回模型改写 CoT。
- - 文称：Pass 平均 **+12.3 abs / +46.4% rel**；VCAR 平均 **+9.5 abs / +41.1% rel**（Abstract 亦写 ~46% / ~41% relative）。
- - Table 3：VeriCoT-Base / -w LLMaj 在三数据集上 Pass/VCAR 绝对提升最强；w LLMaj 仅略优于 Base（求解器错误信号已够信息）。
-3. **SFT + DPO（Table 4，Qwen2.5-7B）：**
- - 仅用 **通过校验（+LLMaj）** 的蒸馏 CoT 做 SFT，相对随机蒸馏，终答准确率平均约 **+3%**（文述 ii vs iii）。
- - 在 SFT 上再 DPO（chosen=再采样仍通过 / rejected=失败）：Pass **+4.3 abs（+18.4% rel）**，VCAR **+3.4 abs（+17.7% rel）**——即 Abstract 的「逻辑一致 CoT +18% relative」。
+## 四、AlphaProof：Lean 上的强化学习
 
-**与 Lean 系「Theorem Prover-as-a-Judge」（Leang et al. 2025）的划界（§4）：** 对方把陈述钉在 **已有符号库（如 mathlib）** → 偏数学；VeriCoT 把陈述钉在 **从 NL 推断的前提** → 开放域。
+**环境**（Methods）：状态是 Lean 的证明状态（假设与剩余目标），动作是一条 tactic 文本，环境执行 tactic 并检查无错、不含占位证明且类型正确。每用一条 tactic 奖励为 −1，偏好短证明；遇到必须全部解决的多个子目标时，累计奖励取各子目标累计奖励的最小值（即最长的那一支），鼓励把目标拆成难度均衡的子目标。环境另提供把目标变为其否定的操作，用来证伪。
 
-### 3.6 局限（§5，必读）
+**智能体**（Fig.1）：30 亿参数的编码器–解码器 Transformer 证明网络，编码器读证明状态，解码器作策略采样 tactic，价值头估计期望累计奖励；搜索是 AlphaZero 式的树搜索，用与或结构处理多子目标，用采样动作应对开放的 tactic 空间。
 
-自动形式化与前提推断都依赖 LLM → 可能误译或引入不当前提；支持的 SMT-LIB 子集也可能表达不了原文。因此 VeriCoT **证明的是「形式化后的 CoT 相对推断前提的逻辑后承」**，**不能**保证 NL CoT 或前提本身为真。
+**训练**（Fig.2a）：先在约 3000 亿 token 的代码与数学文本上预训练，再用约 30 万条 Mathlib 人工状态–tactic 对做 SFT。主强化学习阶段，基于 Gemini 微调的自动形式化模型把约 100 万道自然语言题译成约 8000 万道 Lean 题；调度器随机指派每道题去证明或证伪，共约 8 万 TPU 日（相当于 4000 块 TPU 用 20 天）。形式化不必忠实于原题，只要得到合法的形式命题，就是有效的训练实例。
 
----
+**推理时扩展**（Fig.4）：一是加大树搜索，从每题 2 TPU 分钟增到 12 TPU 小时，formal-imo 与 PutnamBench-test 的解题率提高 10 个百分点以上；二是测试时强化学习（TTRL），围绕目标题生成大量相关变体（简化、推广等），对这批变体再做聚焦的强化学习，比 12 TPU 小时的搜索再提高 15 个百分点，代价是每题数百 TPU 日。
 
-## 四、站 2：AlphaProof — Lean 上的形式证明 RL
-
-### 4.1 问题与主张（开篇）
-
-- 非形式 LLM 数学强，但缺少能 **保证推理正确** 的形式校验；终答核对 / 不可信逐步比对不够。
-- Lean 等把数学变成可交互、可验证环境；RL（AlphaZero 谱系）可在可验证环境里自学。
-- **AlphaProof**：AlphaZero 启发的 agent，在 **数百万 auto-formalized** 题上 RL；难题用 **TTRL**（推理时对目标题生成大量变体再 RL）。
-- **IMO 2024：** 作核心推理引擎，解出 5 道非几何题中的 **3** 道（含最难 P6）；与 **AlphaGeometry 2** 合解 6 题中的 4 题，得分 **28/42**，银牌区间（官方金牌线差 1 分）；作者称据其所知为 AI **首次** 达任何奖牌级。
-
-### 4.2 Lean RL 环境（主文 + Methods）
-
-| RL 要素 | 定义 |
-|---|---|
-| **状态 $s_t$** | Lean 证明状态（假设 + 剩余目标）；观测为 tactic state 的 pretty-print 字符串 |
-| **动作 $a_t$** | 一条 Lean **tactic**（文本） |
-| **转移** | 环境执行 tactic；须无错、不用 `sorry`、类型正确（临时用 private `internalSorry` 关未处理目标以检查） |
-| **回合结束** | 找到内核可接受的完整证明，或算力耗尽 |
-| **奖励** | 每应用一步 tactic：$r_t=-1$（偏好短证明） |
-| **回报 $G_t$** | 至终止的奖励和；**多独立子目标（AND）时取各子目标回报的 min**（= 最长/最难支），而非求和——激励子目标难度均衡；价值对应 $-T_{\mathrm{steps}}$（最长支 tactic 数） |
-| **证伪** | 自定义 tactic + 私有公理把目标变为其否定，仍使最终证明可被内核检查 |
-
-**终检：** 独立跑 Lean CLI 对完整 `.lean` 文件；并检查仅依赖 Lean 三公理（命题外延、全局选择、商类型可靠性）。
-
-### 4.3 证明网络 + 树搜索（Fig.1）
-
-- **Proof network：** **30 亿** 参数 encoder–decoder Transformer；encoder 读 tactic state；decoder = **policy**（并行采样 $K$ 条 tactic）；value head 在 encoder 上，**类别分布**估期望回报。
-- **树搜索：** AlphaZero / Sampled MuZero 变体；节点=状态，边=tactic；**AND–OR** 结构处理多子目标（AND 上回传取 min $V$）；开放 tactic 空间用 **采样动作 + progressive sampling**。
-- 执行闭环：网络提议 → Lean 执行出子状态 → value 引导加深有希望的分支。
-
-### 4.4 训练三阶段 + 课程规模（Fig.2a）
-
-| 阶段 | 内容（文内数量） |
-|---|---|
-| Pretrain | ~**3000 亿** token 代码+数学文本，next-token |
-| SFT | ~**30 万** Mathlib 人工 state–tactic 对 |
-| **Main RL** | Gemini 系 auto-formalizer：~**100 万** 非形式题 → ~**8000 万** 形式 Lean 题；matchmaker 随机指派 **证明或证伪**；~**80,000 TPU-day**（文例：4000 TPU × 20 天量级） |
-
-要点：auto-formalization **不必忠实于原文**——只要得到合法形式语句，即可作 RL 实例。经验来自成功证明 **与** 证伪。训练中训练集 proved/disproved 比例上升；held-out（miniF2F-valid / formal-imo / PutnamBench-test）solve rate 随 RL 上升，且同样 solve rate 所需仿真次数下降（Fig.3）。
-
-### 4.5 推理时扩展：搜索 vs TTRL（Fig.2b / Fig.4）
-
-| 机制 | 做什么 | 算力刻度（文） |
-|---|---|---|
-| **加大树搜索** | 同一主 RL agent，加仿真预算 | 例：2 TPU-min → 12 TPU-hour：formal-imo / PutnamBench-test **+>10 abs pp** |
-| **TTRL** | 围绕目标题生成形式变体（简化/推广等；Fig 示 ~**40 万** 变体量级）再跑聚焦 AlphaZero 式 RL | 例：相对 12 TPU-hour 搜索，再 **+~15 abs pp**（formal-imo / Putnam）；横轴为 **数百 TPU-day / 题** |
-
-### 4.6 基准与 Table 1（摘录）
-
-评测均为 **人工 Lean 形式化**：校正版 **miniF2F**；**formal-imo**（历史 IMO **非几何**，因 Olympiad 几何 Mathlib 限制）；**PutnamBench**（偶数年 1990+ 为 PutnamBench-test）。全程数据隔离（Methods）。
+**基准**（Table 1；miniF2F 用作者校正过的版本，formal-imo 是内部形式化的历届 IMO 非几何题共 258 道）：
 
 | 设定（每题平均推理算力） | miniF2F-test | formal-imo | PutnamBench-test |
 |---|---:|---:|---:|
-| AlphaProof · 2 TPU minutes | 96.3% | 33.2% | 27.9% |
-| AlphaProof · 12 TPU hours | 97.7% | 43.7% | 39.4% |
-| + TTRL · 50 TPU days | 97.5% | 53.9% | 45.5% |
-| + TTRL · 500 TPU days | **99.6%** | **58.3%** | **56.1%** |
+| AlphaProof，2 TPU 分钟 | 96.3% | 33.2% | 27.9% |
+| AlphaProof，12 TPU 小时 | 97.7% | 43.7% | 39.4% |
+| 加 TTRL，50 TPU 日 | 97.5% | 53.9% | 45.5% |
+| 加 TTRL，500 TPU 日 | 99.6% | 58.3% | 56.1% |
+| DeepSeek-Prover-V2（此前最优） | 88.9% | – | 5.3% |
 
-对照（表内「此前 SOTA」摘录）：DeepSeek-Prover-V2 miniF2F-test **88.9%** / Putnam **5.3%**；Kimina-Prover Preview **80.7%** / **1.6%**。文强调 miniF2F 版本校正后与他法 **不可直接逐点比**；Putnam 按公开证明在统一 test split 上重算。
+TTRL 后 formal-imo 分科为数论 75.7%、代数 72.6%、组合 20.3%。
 
-TTRL 后 formal-imo 分科（主文）：数论 **75.7%**、代数 **72.6%**、组合 **20.3%**。
+**IMO 2024**：几何题 P4 交给 AlphaGeometry 2；其余五题赛后由专家立即人工形式化为 Lean。「求出所有……」类题先用 Gemini 1.5 Pro 加 Python 工具生成数百个候选答案，AlphaProof 快速证伪错误候选，再用 TTRL 证明正确的那个。AlphaProof 证出代数与数论的 P1、P2、P6，每题需 2–3 天 TTRL；组合题 P3、P5 未解。合计 28/42 分，处于银牌区间，比金牌线低 1 分。
 
-### 4.7 IMO 2024 管线（主文）
+## 五、意义
 
-- 几何 **P4** → **AlphaGeometry 2**；其余五题专家 **立即** 人工 Lean 形式化。
-- 「找所有…」类：Gemini 1.5 Pro + Python 工具少样本产数百候选答案 → AlphaProof **快速证伪**错误候选 → TTRL 证明正确候选。
-- **证明：** P1、P2、P6（代数/数论）；各约 **2–3 天** TTRL；组合 **P3、P5 未解**。
-- 合计 4/6 题、**28/42**；P6 为 2024 最难题（文称仅 5 名选手解出）。
-- 局限自陈：主 RL / TTRL 算力远超人类赛时；组合与开放域数学仍弱；后续目标降算力门槛、提供交互探索工具。
+两文给出了「形式化接地」的两个端点。VeriCoT 面向开放领域：它不保证结论为真，但把推理依赖的前提逐条摆出来，并用求解器给出可重复的逐步判定，可以接到自我修正、SFT 数据筛选和偏好训练上。AlphaProof 面向形式数学：证明一旦被 Lean 内核接受就是正确的，强化学习可以在这个可信环境里大规模自学，测试时强化学习则表明「对单题继续训练」是比加大搜索更强的推理时扩展方式。相对学习式过程奖励模型与只核对终答的强化学习，两者的信号都来自外部形式系统而不是另一个神经网络；它们的短板也都集中在形式化这一步，即自然语言到逻辑的翻译是否忠实、自然语言题到 Lean 命题的转换是否可得。
 
----
+## 六、局限与待核实
 
-## 五、对照综合：证明器接地的两种「正确」
+- **VeriCoT 证明的是相对前提的逻辑后承**（§5）：自动形式化与前提推断都依赖 LLM，可能误译或引入不当前提，所支持的 SMT-LIB 片段也可能表达不了原文。因此通过核验只说明形式化后的推理链被推断出的前提所蕴涵，不保证自然语言原文或前提本身为真。VeriCoT 只有 v1，代码未见公开。
+- **VeriCoT 的覆盖率低**：即便用最好的方法，三个数据集上能通过核验的推理链只有 15.2%–45.2%（Table 1），多数推理链得不到判定。
+- **AlphaProof 的算力与可复现性**：主强化学习约 8 万 TPU 日，最难的题每题需数天 TTRL，远超人类赛时；作者承认这一规模的领域训练多数学术团队难以承担。公开的只有伪代码与超参数，formal-imo 是内部基准，miniF2F 是校正版本，作者提醒与他法的 miniF2F 数字不可直接逐点比较，PutnamBench 上他法的分数是按公开证明在作者的测试划分上重算的。
+- **AlphaProof 的覆盖面**：几何题依赖 Mathlib 的限制而交给 AlphaGeometry 2，组合题仍弱（formal-imo 组合 20.3%）；IMO 题目由专家人工形式化，不是端到端从自然语言出发。
+- **刊期与日期**：Nature 页面列出在线发表 2025-11-12、记录版本 2026-03-13、刊期 2026-03-19。本篇引用卷期，AlphaProof 的事实按刊期计。
 
-| | **VeriCoT** | **AlphaProof** |
+## 七、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **接地对象** | 开放域 NL 推理链 | 形式数学证明过程 |
-| **机器信任根** | Z3 对 SMT-LIB 片段的可满足/蕴涵 | Lean 内核（+ CLI 终检） |
-| **神经部分仍可能错在哪** | 翻译失真、坏前提、表达力外（§5） | auto-formalization 保真度、几何外包、TTRL 算力墙 |
-| **对仓库谱系的补位** | 给 [[过程奖励模型PRM谱系]]「过程对不对」一条 **非 PRM** 的逐步验真路径；给法律/生物医学 CoT 可检查前提 | 给 [[GRPO与DAPO算法族]]「可验证奖励」一条 **Lean 环境** 的极致实例；TTS 是搜索/TTRL 而非 PRM Best-of-N |
-| **不要混用的口号** | 「通过 VeriCoT ≠ NL 事实为真」 | 「银牌级 ≠ 人类时限内可复现」 |
+| [[过程奖励模型PRM谱系]] | 对照：「过程对不对」由神经打分器还是由求解器判定 | PRM 的标注与训练 |
+| [[可验证过程监督]] | 同属确定性核验：那篇的核验器是领域规则，不要求形式化 | 棋类、算术与医学指南的规则奖励 |
+| [[过程可验证RL与Lean]] | 同用 Lean：那篇把阐述报错变成训练期的稠密奖励，AlphaProof 只用证明成败与长度 | tactic 级奖励设计 |
+| [[DeepSeekR1推理训练深读]] | 对照：R1 的规则奖励只核对终答，本篇的核验落到每一步或整条证明 | R1 训练流程 |
+| [[推理时扩展TestTimeScaling]] | AlphaProof 的加大搜索与 TTRL 是形式证明上的推理时扩展 | 推理时扩展的方法谱系 |
+| [[推理时树搜索ABMCTS]] | 同为「树搜索加外部校验」：那篇的校验来自测例，AlphaProof 来自 Lean 内核 | 推理时树搜索算法 |
+| [[对齐与强化学习发展时间线]] | 时间线的 VeriCoT 与 AlphaProof 两个 2025-11 节点即本篇 | 对齐与强化学习通史 |
 
-**跟读小结：**
-想要 **非形式域** 的逐步逻辑卫生 → VeriCoT（显式前提 + Z3）。
-想要 **数学命题** 的机器可检证明 → AlphaProof（Lean + RL + TTRL）。
-二者都把「正确性」从 **另一神经网络的分数** 挪到 **外部形式系统**；PRM / GRPO 笔记里的配方在此 **只作槽位，不重写**。
+## 八、延伸阅读
 
----
-
-## 六、可复查锚点
-
-| 主张 | 锚 |
-|---|---|
-| VeriCoT arXiv / 页数 | 2511.04662v1； 37 页 |
-| Z3 + SMT-LIB | §2 末；Barrett et al. 2016；de Moura & Bjørner 2008 |
-| Table 1 Pass：PW 45.2 / Bio 25.3 / SARA 15.2 | §3.3 Table 1 |
-| 自反思 +46.4% / +41.1% rel（Pass / VCAR） | §3.4 正文；Abstract 约 46% / 41% |
-| DPO 后 Pass +18.4% rel | §3.4；Abstract「18%」 |
-| AlphaProof Nature doi / 卷期 | 10.1038/s41586-025-09833-y；Nature Vol 651, 19 Mar 2026 |
-| ~1M→~80M 形式题；~80k TPU-day 主 RL | Fig.2 / 主文 Training & Main RL |
-| 3B 网络；$r_t=-1$；AND 上 min return | 主文 Prover / Methods Lean environment |
-| Table 1 TTRL 500d：99.6 / 58.3 / 56.1 | Table 1 |
-| IMO 2024：3 非几何 + AG2→4/6，28/42 | 主文 Performance at the 2024 IMO |
-
-**未写入本笔记（避免越界）：** PRM800K / Math-Shepherd 标签生成细节；GRPO 目标公式与 DAPO 四技；R1-Zero→R1 阶段表。
-
-## 相关笔记
-
-- [[多智能体辩论]]
-- [[形式化验证与LLM]]
-- [[GPToss模型卡深读]]
-- [[计算机使用智能体]]
-- [[ToRL工具集成强化学习]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [VeriCoT](https://arxiv.org/abs/2511.04662) §2、Algorithm 1 | 逐步形式化、补前提与三类错误 |
+| 2 | [VeriCoT](https://arxiv.org/abs/2511.04662) §3.4、§5 | 核验信号的三种用法与局限 |
+| 3 | [AlphaProof](https://doi.org/10.1038/s41586-025-09833-y) Methods 中的 Lean 环境与主强化学习 | 状态、动作、累计奖励与证伪机制 |
+| 4 | [AlphaProof](https://doi.org/10.1038/s41586-025-09833-y) Fig.4、Table 1 | 搜索与 TTRL 两种推理时扩展 |
+| 5 | [Logic-LM](https://arxiv.org/abs/2305.12295) | 自然语言译成符号形式交给求解器的早期做法 |
