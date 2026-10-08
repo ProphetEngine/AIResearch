@@ -9,7 +9,7 @@ sources:
  - https://arxiv.org/abs/2609.08149
  - https://arxiv.org/abs/2310.06770
 arxiv: ["2509.16941", "2609.08149"]
-related: ["代码智能体Harness史线", "评测与排行榜可靠性", "科研智能体", "智能体工具与长程任务", "开端性与发现基础模型", "评测污染可靠性鸿沟", "奖励黑客与涌现失对齐", "RL算力缩放与环境扩展"]
+related: ["代码智能体Harness史线", "评测与排行榜可靠性", "科研智能体", "智能体工具与长程任务", "开端性与发现基础模型", "评测数据污染检测与可靠性", "奖励黑客与涌现失对齐", "RL算力缩放与环境扩展"]
 aux_scale: "https://labs.scale.com/papers/swe-bench-pro"
 data_pro: "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro"
 code_pro: "https://github.com/scaleapi/SWE-bench_Pro-os"
@@ -132,7 +132,7 @@ Pro 主表用 SWE-Agent 与 2025-09 的模型切片；Pro Verified 用 AgentComp
 |---|---|---|
 | [[代码智能体Harness史线]] | 该篇讲给 agent 什么动作面，本篇讲用什么题、在什么环境下给它打分；两篇只把 SWE-Agent 与 mini-swe-agent 当作统一 scaffold | ACI 设计、OpenHands 架构与消融 |
 | [[评测与排行榜可靠性]] | Pro 的三分集与 Verified 的反泄漏环境，是该篇「分数是否可信」问题在代码修复上的具体做法 | 榜单可靠性的一般讨论与系统卡数字 |
-| [[评测污染可靠性鸿沟]] | copyleft 与私有仓采集是应对训练数据污染的设计；评测时泄漏是另一种不同于训练污染的失真 | 污染检测方法 |
+| [[评测数据污染检测与可靠性]] | copyleft 与私有仓采集是应对训练数据污染的设计；评测时泄漏是另一种不同于训练污染的失真 | 污染检测方法 |
 | [[开端性与发现基础模型]] | DGM 以 SWE-bench Verified 作自改代码的验证信号，本篇说明这类信号可能被琐碎题与泄漏影响 | DGM 的开端探索机制 |
 | [[科研智能体]] | 两者都让 agent 改代码，但该篇是科研闭环，本篇是 issue 到补丁的修复 | AI Scientist 与 ChemCrow |
 | [[智能体工具与长程任务]] | Pro 的长程修复是工具环长程任务在软件工程上的评测实例 | 工具协议与旗舰产品环 |

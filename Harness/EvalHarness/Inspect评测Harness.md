@@ -22,7 +22,7 @@ related:
  - "智能体工具与长程任务"
  - "VendingBench经营长程评测"
  - "AIControl协议与Scheming倾向"
- - "评测污染可靠性鸿沟"
+ - "评测数据污染检测与可靠性"
  - "NemotronCC数据策展"
 github: "https://github.com/UKGovernmentBEIS/inspect_ai"
 docs: "https://inspect.aisi.org.uk/"
@@ -143,7 +143,7 @@ Task 定义 → task_with() → .env 环境变量 → eval() / 命令行
 | [[WorfBench工作流基准]] | 该篇是一个具体的 agent 基准，这类基准可由 Inspect 这样的运行时承载 | WorFEval 匹配算法与主表 |
 | [[VendingBench经营长程评测]] | 该基准的 agent 循环基于 inspect-ai 搭建，是 Inspect 承载长程 agent 评测的实例 | 经营环境设计与结果 |
 | [[AIControl协议与Scheming倾向]] | 该篇的 ControlArena 构建于 Inspect，是安全评测侧的下游实例 | 控制协议与 scheming 结论 |
-| [[评测污染可靠性鸿沟]] | 该篇讨论污染与可靠性鸿沟，并把 Inspect 列为评测 harness 一侧的承接对象 | 污染检测方法 |
+| [[评测数据污染检测与可靠性]] | 该篇讨论污染与可靠性鸿沟，并把 Inspect 列为评测 harness 一侧的承接对象 | 污染检测方法 |
 | [[NemotronCC数据策展]] | 该篇用 lm-eval-harness 做数据消融评测，是第二节脉络中静态基准框架的使用实例 | 数据策展流程 |
 
 ## 六、局限与待核实

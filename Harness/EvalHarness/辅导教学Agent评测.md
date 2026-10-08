@@ -12,7 +12,7 @@ aux:
  - https://github.com/eth-lre/mathtutorbench
  - https://huggingface.co/datasets/tutorbench/tutorbench
 arxiv: ["2502.18940", "2510.02663", "2605.14322"]
-related: ["LearnLM教育辅导", "合成用户仿真", "评测与排行榜可靠性", "评测污染可靠性鸿沟", "智能体工具与长程任务", "Inspect评测Harness"]
+related: ["LearnLM教育辅导", "合成用户仿真", "评测与排行榜可靠性", "评测数据污染检测与可靠性", "智能体工具与长程任务", "Inspect评测Harness"]
 retrieval_cutoff: 2026-09-29
 timezone: Asia/Shanghai (CST)
 ---
@@ -138,7 +138,7 @@ timezone: Asia/Shanghai (CST)
 | [[LearnLM教育辅导]] | LearnLM 是训练侧的教学法对齐工作，本篇是它的评测侧；只取它作为被测模型的成绩与被复用的 Ped. IF prompt | 教学法后训练配方、Gemini 模型卡 |
 | [[合成用户仿真]] | TeachArena Stage 2 的学习者模拟器是合成用户思路在教学场景的应用；只取「学习者画像 + 轨迹打分」契约 | τ-bench / ToolEmu 的用户策略与风险仿真 |
 | [[评测与排行榜可靠性]] | 评审漂移、只报总分的风险是该篇通用问题在辅导评测里的具体表现 | 榜单可靠性的一般讨论 |
-| [[评测污染可靠性鸿沟]] | MathTutorBench 承认 GSM8k 解题已饱和或受污染，只把它作「专长—教学法平衡」指示器；污染本身见该篇 | 污染检测方法 |
+| [[评测数据污染检测与可靠性]] | MathTutorBench 承认 GSM8k 解题已饱和或受污染，只把它作「专长—教学法平衡」指示器；污染本身见该篇 | 污染检测方法 |
 | [[Inspect评测Harness]] | 三篇是领域基准，若要统一复跑需要该篇那样的运行时承载 | 评测框架原语 |
 | [[智能体工具与长程任务]] | TeachArena Stage 3 是长程工具任务的一个教学领域实例 | 通用工具环与长程任务史 |
 
