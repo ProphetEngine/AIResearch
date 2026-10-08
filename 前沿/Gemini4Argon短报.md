@@ -21,6 +21,7 @@ timezone: Asia/Shanghai (CST)
 
 > **主要来源**：[Gemini 4 Argon: our next era of frontier intelligence](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)；[Gemini 4 Argon Model evaluation](https://storage.googleapis.com/deepmind-media/gemini/gemini_4_argon_model_evaluation.pdf)；[Fairwind Program](https://deepmind.google/fairwind-program/)（截至 2026-10-01）。下文「博文」指上列发布页；「评测 PDF」指 Model evaluation（方法与结果配套，**不是** Model Card / System Card）；「Fairwind 页」指 Fairwind Program 官方页。
 > **研究线**：评测字段（官方绝对分与 harness 限定）· Fairwind 分阶段放量与受信侧 cyber 护栏语境 · 输出上限与 introductory 价
+> **为何重要**：Argon 把输出上限从 Gemini 2.5 / 3.x 的 64K 抬到 1M，先经 Fairwind 向受信防御者放量（对其可去掉 cyber 护栏），公开 API 尚无日期，且只配评测 PDF、不出模型卡；是前沿网安能力先交给防御方、分阶段放量的一个案例。
 > **范围与相邻笔记**：
 > - ≠ [[GPT61Sol系统卡短报]]：本篇不写 Sol / DevDay；DeepSWE 等只引 Google 官方分与方法，不以 Sol 相对叙述覆盖 Argon。
 > - ≠ [[MiMoV26智能体强化学习短报]]：本篇不写 MiMo 的 RL batch / multi-harness / 开源环境专史；不把 MiMo 分与 Argon 拼成同一实验。
@@ -28,6 +29,8 @@ timezone: Asia/Shanghai (CST)
 > - ≠ [[网络防御基准]] / [[Prompt注入架构防御]] / [[安全论证SafetyCases]]：本篇只点到防御侧评测与 IPI / Frontier Safety Framework 结论级表述，不展开基准任务构造或安全论证通史。
 > - ≠ [[ClaudeSonnet55系统卡短报]] / [[ClaudeOpus55系统卡短报]]：本篇不重做 Anthropic 系统卡；对照分仅在评测 PDF / 博文已列处出现。
 > - ≠ [[Gemma4技术报告深读]]：本篇不写 Gemma 4 开源报告。
+
+**背景**：Gemini 2.5 与 3.x 各型号按技术报告或模型卡发布，输入 1M、输出上限 64K（[[Gemini25技术报告深读]]、[[Gemini3Pro模型卡深读]]、[[Gemini37Flash模型卡深读]]）；Argon 是其后 Gemini 4 代的 frontier 旗舰。
 
 **一句话**：Gemini 4 Argon 是 Google / DeepMind 宣布的 Gemini 4 代 frontier 旗舰；经 Fairwind 向受信 cyber defenders 分阶段放量，主张长程软件工程、企业知识工作与网络防御；输出上限抬至 **1M** tokens；introductory API 价为每百万 token 输入 **$2** / 输出 **$10**。公开 Developer API 价目与模型文档截至本稿仍未挂名，下一阶段 paid API / Google AI Ultra **无确定日期**。
 
@@ -70,8 +73,7 @@ timezone: Asia/Shanghai (CST)
 | LVBench | **91.7%** | 自称 SOTA（长视频理解）；评测 PDF：**self-computed without tools**；Gemini 用 **1 FPS**（他厂帧数因 API 限制不同） | 博文；评测 PDF · Multimodal |
 | CWE-bench v1 | **68%** | 并列第一（漏洞修复能力）；评测 PDF：取自公开榜，按 **pass@1** 排名、**pass@4** 破平 | 博文；评测 PDF · Cybersecurity |
 
-- 评测 PDF 通例：Argon 分多为 **pass@1**（另有注明除外）；经 Gemini API、最高 thinking 设置；小榜多次试验取平均以减压方差（Methodology）。
-- 能力日期措辞：方法节写 capabilities as of **September, 2026**；Results 节写 as of **October, 2026**（与博文 Sep 30 同属日历边沿；短报不另设第二发布日）。
+- 评测 PDF 通例：Argon 分多为 **pass@1**，经 Gemini API、最高 thinking 设置，小榜多次试验取平均（Methodology）；能力日期方法节写 September 2026、Results 节写 October 2026。
 
 ## 四、安全与 Fairwind 治理要点
 
@@ -85,7 +87,7 @@ timezone: Asia/Shanghai (CST)
 ### Fairwind 部署语境
 
 - 对**受信防御者**与 Google 内部团队，博文写将释放 **without cyber guardrails** 的 Argon，以便用满防御侧能力——这是**受信、分阶段放量**语境下的护栏放宽，**不是**「通用无护栏公开模型」。
-- Fairwind 页治理要点：仅允许防御 / 学术研究用途的双用途任务（如授权威胁模拟、逆向、恶意软件分析）；用户级认证、抗钓鱼 MFA 与访问控制；Argon 仅可授予内部网络安全、事件响应或渗透测试团队并追踪使用；禁止分享、再分发或转售访问；对申请组织做尽职调查。
+- Fairwind 页治理要点：只允许防御与学术研究用途的双用途任务；访问仅授予伙伴组织内部的网络安全、事件响应或渗透测试团队，配用户级认证与使用追踪，禁止转让访问，并对申请组织做尽职调查。
 - 防御侧结果级索引：Wiz 经 Scan for Good 使用 Argon；博文称其在医疗机构使用的医疗软件中发现此前 frontier 模型未检出的严重暴露风险（不展开利用细节）。相对 3.8 Flash Cyber，博文另称内部综合漏洞榜与 Wiz 黑盒渗透榜上有发现面 / 漏洞识别 / PoC 验证方面的提升（结论级，不复述步骤）。
 
 ## 五、与相邻笔记的分工
@@ -97,7 +99,7 @@ timezone: Asia/Shanghai (CST)
 | [[Gemini3Pro模型卡深读]] / [[Gemini37Flash模型卡深读]] / [[Gemini25技术报告深读]] | Gemini 族入口；旧代「输出 64K」对照语境 | 重写 3.x / 2.5 正文 |
 | [[Gemma4技术报告深读]] | — | Gemma 4 开源报告 |
 | [[网络防御基准]] | 「防御侧评测」读者入口 | SecOps 狩猎任务构造与该基准模型表 |
-| [[Prompt注入架构防御]] / [[安全论证SafetyCases]] | IPI / FSF 术语交叉 | 注入防御架构或 FSF 通史；Argon 无独立 FSF PDF 时不编造 CCL 结论 |
+| [[Prompt注入架构防御]] / [[安全论证SafetyCases]] | IPI / FSF 术语交叉 | 注入防御架构或 FSF 通史；Argon 无独立 FSF 报告，本篇不写 CCL 结论 |
 | [[ClaudeSonnet55系统卡短报]] / [[ClaudeOpus55系统卡短报]] | 评测 PDF 已列的 Opus / Fable 等对照列身份 | 重做 Anthropic 系统卡 |
 
 ## 六、局限与待核实

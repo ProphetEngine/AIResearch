@@ -11,7 +11,7 @@ related: ["智能体长程记忆", "GRPO与DAPO算法族", "ToRL工具集成强�
 archived: 2026-09-22
 ---
 
-# Memory-R1：RL 记忆维护策略（相对 13 增量）
+# Memory-R1：RL 记忆维护策略（相对 [[智能体长程记忆]] 的增量）
 
 > **定位**：记忆维护主题轴 **弱档增量**——相对 **[[智能体长程记忆]]**（MemGPT 分页 OS / A-Mem 卡片盒网络）的「外置记忆怎么分层、怎么长结构」，本篇只收 **「记什么 / 改什么 / 删什么 / 不动」可否被 outcome RL 学会**。
 > **研究线**：**架构思想（主）**——双 agent（Memory Manager + Answer Agent）+ `{ADD, UPDATE, DELETE, NOOP}` 动作面；**评测字段（辅）**——LoCoMo / MSC / LongMemEval 上相对 Mem0、MemoryOS、A-Mem、Memory-SFT 的 F1 / BLEU-1 / Judge。
