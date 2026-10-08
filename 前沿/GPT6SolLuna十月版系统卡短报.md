@@ -12,7 +12,7 @@ sources:
  - https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt
  - https://community.openai.com/t/announcing-gpt-6-sol-and-gpt-6-luna-in-the-api-codex-and-chatgpt/1399925
  - https://deploymentsafety.openai.com/
-related: ["GPT6Astra系统卡深读", "GPT56系统卡深读", "GPT6.1Sol系统卡短报", "ClaudeSonnet55系统卡短报"]
+related: ["GPT6Astra系统卡深读", "GPT56系统卡深读", "GPT61Sol系统卡短报", "ClaudeSonnet55系统卡短报"]
 retrieval_cutoff: 2026-10-08
 timezone: Asia/Shanghai (CST)
 ---
@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 > **范围与相邻笔记**：
 > - ≠ [[GPT6Astra系统卡深读]]：本篇不写 Astra 护栏体系与评测方法学；系统卡 §8 的评测说明指回 Astra 卡，本篇只引十月版数字。
 > - ≠ [[GPT56系统卡深读]]：本篇不写 GPT-5.6 族专史与护栏细节；十月版沿用 GPT-5.6 护栏，本篇只记沿用这一结论。
-> - ≠ [[GPT6.1Sol系统卡短报]]：GPT-6.1 Sol 是挂在 Astra 卡下的附录模型，在 ChatGPT Work 与 Codex 提供；本篇与它只对照网安档位，不比数字。
+> - ≠ [[GPT61Sol系统卡短报]]：GPT-6.1 Sol 是挂在 Astra 卡下的附录模型，在 ChatGPT Work 与 Codex 提供；本篇与它只对照网安档位，不比数字。
 
 **一句话**：2026-10-07 起，GPT-6 Sol 与 GPT-6 Luna 的十月版进入 ChatGPT 对话，官方称取代对话中的 GPT-5.6 Sol 与 GPT-5.6 Luna（系统卡 §1）；官方称十月版吸收了 Astra 的安全进展并更新安全训练（§1），Preparedness 判定与 GPT-5.6 对应型号一致（§8），网安评测上 Sol 与 GPT-5.6 Sol 相当、没有明显能力提升（§8.1.2）；系统卡只有安全与 Preparedness 内容，未报告通用能力评测。
 
@@ -53,7 +53,7 @@ Intelligent UI 随本次推送一同上线：官方称 GPT-6 经训练可用文�
 | 护栏 | 沿用 GPT-5.6 系统卡为 GPT-5.6 Sol/Luna 部署的同一套护栏 | 官方称判定与 GPT-5.6 对应型号一致 | 系统卡 §1、§8 |
 
 - **Luna 未做 Critical 测试的理由**：官方称 GPT-6 Luna 在全部 High 能力评测上都低于 GPT-5.6 Sol，因此不需单独做 Critical 测试（§8.1.1）。
-- **与 GPT-6.1 Sol 的档位差**：[[GPT6.1Sol系统卡短报]] 记录 GPT-6.1 Sol 按 Cyber Critical 处理；十月版 Sol/Luna 为 Cyber High、低于 Critical。
+- **与 GPT-6.1 Sol 的档位差**：[[GPT61Sol系统卡短报]] 记录 GPT-6.1 Sol 按 Cyber Critical 处理；十月版 Sol/Luna 为 Cyber High、低于 Critical。
 
 ## 三、回退清单
 
@@ -130,7 +130,7 @@ ExploitBench 测的是，在没有参考 exploit 的情况下，模型能否依�
 |---|---|---|---|
 | 2026-09-03 | GPT-6 Astra 系统卡发布 | — | Deployment Safety Hub 目录；[[GPT6Astra系统卡深读]] |
 | 2026-09-22 | GPT-6 Sol、GPT-6 Luna 九月版发布 | ChatGPT Work、Codex（Plus、Pro、Business、Enterprise、Edu）与 API；Free/Go 可在桌面应用试用 Luna | 九月版社区公告 |
-| 2026-09-29 | GPT-6.1 Sol，以 Astra 系统卡附录形式发布 | ChatGPT Work、Codex | Deployment Safety Hub 目录；[[GPT6.1Sol系统卡短报]] |
+| 2026-09-29 | GPT-6.1 Sol，以 Astra 系统卡附录形式发布 | ChatGPT Work、Codex | Deployment Safety Hub 目录；[[GPT61Sol系统卡短报]] |
 | 2026-10-07 | 十月版 Sol 进入 ChatGPT 对话（付费档）；Luna 自 10-08 起面向 Free/Go | ChatGPT 对话 | 系统卡 §1；社区公告 |
 
 **四点观察**
@@ -145,7 +145,7 @@ ExploitBench 测的是，在没有参考 exploit 的情况下，模型能否依�
 |---|---|---|
 | [[GPT6Astra系统卡深读]] | Astra 发布日；SEC-Bench Pro 中 Astra 对照分（十月版系统卡所列） | Astra 护栏体系、评测方法学、Cyber Critical 判定通史 |
 | [[GPT56系统卡深读]] | 「护栏沿用 GPT-5.6」结论；十月版系统卡所列 GPT-5.6（August）对照分 | GPT-5.6 族专史与护栏细节 |
-| [[GPT6.1Sol系统卡短报]] | 网安档位对照（Critical vs High）；发布日 | GPT-6.1 Sol 能力与安全数字；不与十月版数字并列 |
+| [[GPT61Sol系统卡短报]] | 网安档位对照（Critical vs High）；发布日 | GPT-6.1 Sol 能力与安全数字；不与十月版数字并列 |
 
 ## 九、局限与待核实
 
@@ -169,4 +169,4 @@ ExploitBench 测的是，在没有参考 exploit 的情况下，模型能否依�
 | 九月版公告 | Announcing GPT-6 Sol and GPT-6 Luna in the API, Codex and ChatGPT | OpenAI 开发者社区，2026-09-22 | https://community.openai.com/t/announcing-gpt-6-sol-and-gpt-6-luna-in-the-api-codex-and-chatgpt/1399925 |
 | 九月版博文 | Introducing GPT-6 Sol and Luna | OpenAI；正文未读到（403） | https://openai.com/index/introducing-gpt-6-sol-and-luna/ |
 | 目录 | OpenAI Deployment Safety Hub | 系统卡目录 | https://deploymentsafety.openai.com/ |
-| 相邻笔记 | [[GPT6Astra系统卡深读]] · [[GPT56系统卡深读]] · [[GPT6.1Sol系统卡短报]] | 库内 | — |
+| 相邻笔记 | [[GPT6Astra系统卡深读]] · [[GPT56系统卡深读]] · [[GPT61Sol系统卡短报]] | 库内 | — |

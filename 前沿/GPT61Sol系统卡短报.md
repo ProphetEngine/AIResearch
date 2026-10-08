@@ -2,7 +2,7 @@
 date: 2026-09-30
 status: archived
 archived: 2026-09-30
-topic: GPT6.1Sol系统卡短报
+topic: GPT61Sol系统卡短报
 title: "GPT-6.1 Sol System Card（addendum · 前沿短报）"
 lines: [评测字段]
 sources:

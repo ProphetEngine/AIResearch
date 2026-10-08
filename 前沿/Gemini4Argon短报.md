@@ -12,7 +12,7 @@ sources:
  - https://deepmind.google/fairwind-program/
  - https://deepmind.google/models/model-cards/
  - https://ai.google.dev/gemini-api/docs/pricing
-related: ["GPT6.1Sol系统卡短报", "MiMoV26智能体强化学习短报", "Gemini3Pro模型卡深读", "Gemini37Flash模型卡深读", "Gemini25技术报告深读", "网络防御基准", "Prompt注入架构防御", "安全论证SafetyCases", "ClaudeSonnet55系统卡短报", "ClaudeOpus55系统卡短报", "Gemma4技术报告深读"]
+related: ["GPT61Sol系统卡短报", "MiMoV26智能体强化学习短报", "Gemini3Pro模型卡深读", "Gemini37Flash模型卡深读", "Gemini25技术报告深读", "网络防御基准", "Prompt注入架构防御", "安全论证SafetyCases", "ClaudeSonnet55系统卡短报", "ClaudeOpus55系统卡短报", "Gemma4技术报告深读"]
 retrieval_cutoff: 2026-10-01
 timezone: Asia/Shanghai (CST)
 ---
@@ -22,7 +22,7 @@ timezone: Asia/Shanghai (CST)
 > **主要来源**：[Gemini 4 Argon: our next era of frontier intelligence](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)；[Gemini 4 Argon Model evaluation](https://storage.googleapis.com/deepmind-media/gemini/gemini_4_argon_model_evaluation.pdf)；[Fairwind Program](https://deepmind.google/fairwind-program/)（截至 2026-10-01）。下文「博文」指上列发布页；「评测 PDF」指 Model evaluation（方法与结果配套，**不是** Model Card / System Card）；「Fairwind 页」指 Fairwind Program 官方页。
 > **研究线**：评测字段（官方绝对分与 harness 限定）· Fairwind 分阶段放量与受信侧 cyber 护栏语境 · 输出上限与 introductory 价
 > **范围与相邻笔记**：
-> - ≠ [[GPT6.1Sol系统卡短报]]：本篇不写 Sol / DevDay；DeepSWE 等只引 Google 官方分与方法，不以 Sol 相对叙述覆盖 Argon。
+> - ≠ [[GPT61Sol系统卡短报]]：本篇不写 Sol / DevDay；DeepSWE 等只引 Google 官方分与方法，不以 Sol 相对叙述覆盖 Argon。
 > - ≠ [[MiMoV26智能体强化学习短报]]：本篇不写 MiMo 的 RL batch / multi-harness / 开源环境专史；不把 MiMo 分与 Argon 拼成同一实验。
 > - ≠ [[Gemini3Pro模型卡深读]] / [[Gemini37Flash模型卡深读]] / [[Gemini25技术报告深读]]：本篇不重写 3.x / 2.5 模型卡或技术报告；仅作 Gemini 族谱系入口与旧代输出上限对照。
 > - ≠ [[网络防御基准]] / [[Prompt注入架构防御]] / [[安全论证SafetyCases]]：本篇只点到防御侧评测与 IPI / Frontier Safety Framework 结论级表述，不展开基准任务构造或安全论证通史。
@@ -92,7 +92,7 @@ timezone: Asia/Shanghai (CST)
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| [[GPT6.1Sol系统卡短报]] | 读者已知的 DeepSWE / AutomationBench 评测名 | Sol / DevDay 专史；不以 Sol 相对差覆盖 Argon 77.9 |
+| [[GPT61Sol系统卡短报]] | 读者已知的 DeepSWE / AutomationBench 评测名 | Sol / DevDay 专史；不以 Sol 相对差覆盖 Argon 77.9 |
 | [[MiMoV26智能体强化学习短报]] | DeepSWE 作为长程 SWE 评测名；mini-swe 作为 harness 名 | MiMo RL 配方、开源 7k 环境与 MiMo 自家 DeepSWE 分 |
 | [[Gemini3Pro模型卡深读]] / [[Gemini37Flash模型卡深读]] / [[Gemini25技术报告深读]] | Gemini 族入口；旧代「输出 64K」对照语境 | 重写 3.x / 2.5 正文 |
 | [[Gemma4技术报告深读]] | — | Gemma 4 开源报告 |
