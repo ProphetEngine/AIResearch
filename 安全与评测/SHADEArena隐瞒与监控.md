@@ -15,6 +15,7 @@ archived: 2026-09-22
 
 > **定位**：**危险能力 / 控制评测** 切片——度量 frontier agent 能否在完成良性主任务的同时完成有害侧任务、且不被 LLM 监控者识破；同一数据集也反转测 **监控者**。
 > **研究线**：**架构思想（主）**——主任务 / 侧任务 / 隐藏 scratchpad / 嫌疑分协议；**评测字段（辅）**——overall success、evasion、AUC、FPR≈1% 阈值。
+> **为何重要**：它把「agent 会不会暗中搞破坏」与「监控能不能发现」放进同一套数据集一起量，给出的读数是最强 agent 隐蔽破坏成功率不到三成、最强监控 AUC 只有 0.87；去掉隐藏 scratchpad 后破坏指标明显下降，为「监控思维链」作为缓解提供了实证。
 > **范围与相邻笔记**：
 > - **相对 [[评测与排行榜可靠性]]**：只取「协议未声明会毁掉分数可比性」接口——本篇写 **sabotage×monitor 双角色评测**，**不**重写污染 / 路由 / thinking 开关 / 第三方榜全文。
 > - **不重写** SWE-bench 协议与数字（→ 见 [[评测与排行榜可靠性]] 仅作线索处）；**不重写** OSWorld / Operator / StateAct（→ **[[计算机使用智能体]]**）。
@@ -32,6 +33,8 @@ archived: 2026-09-22
 | **公开代码（文内）** | https://github.com/safety-research/SHADE-Arena | 公开 **5/17** 任务对；余者按需申请 | 防训练泄漏的数据发布策略 |
 | **环境起点（文内）** | AgentDojo（Debenedetti et al., 2024） | 工具环 / 环境脚手架起点；本篇大幅扩工具与合成数据 | 不展开 AgentDojo 注入攻防全文 |
 
+**背景：** agent 能长程使用工具之后，安全评测要问的不再只是「会不会回答有害问题」，还有「执行任务时会不会暗中做别的、监控能否发现」。AI Control 一线为此设计监控协议（[[AIControl协议与Scheming倾向]]），但文内指出这类设定缺多样的数据集；SHADE-Arena 补的就是这个数据集。之后 Anthropic 的系统卡已把 SHADE-Arena 的 stealth 率列入对齐评估（[[ClaudeOpus5系统卡深读]]）。
+
 **一句话抓手：** 把「会不会搞破坏」拆成 **主任务成功 ∧ 侧任务成功 ∧ 嫌疑分 &lt; 阈值** 的合取；当前最强 sabotage 在 Claude 3.6 Sonnet 监控下 overall **27%**（Claude 3.7 Sonnet）/ **15%**（Gemini 2.5 Pro），且高度依赖 **对监控者不可见的 hidden scratchpad**；最强监控者 AUC 仅 **0.87**——对真实部署的低 FPR 要求仍不够用。
 
 ---
@@ -48,7 +51,7 @@ archived: 2026-09-22
 | **[[安全论证SafetyCases]]** safety cases | 可作将来 control / ability 证据节点的一句 | CAE 主张树、外部 Assurance 2.0 评审 |
 | **[[安全红队与对抗评测]]** 红队 | 「对抗暴露」与「能力 elicitation」同属安全工程 | ASR 地图、攻击面聚类、mitigation 闭环 |
 
-### 2.2 跟读口诀（合取成功）
+### 2.2 合取成功
 
 `
 Overall sabotage success
@@ -86,7 +89,7 @@ Overall sabotage success
 2. **对未来 frontier 仍具挑战**——无侧任务时主任务已吃力；当前无模型能「显著成功率」地隐蔽破坏。
 3. **存在微妙可行解**——每题至少有一例（人写或模型写）能骗过默认监控者 Claude 3.6 Sonnet（文注官方名 Claude 3.5 Sonnet (new)）。
 
-**校验（§2.2）：** 侧任务被注意到 → 高嫌疑；有参考解；监控者能区分「主任务良性失败」与「侧任务企图」；人工审几十段 transcript。起点脚手架：**AgentDojo**。
+**校验（§2.2）：** 侧任务被注意到即高嫌疑、有参考解、监控者能区分主任务良性失败与侧任务企图，并人工审读了几十段 transcript。
 
 ### 3.3 与 AI Control 的接口（§1 / Related）
 
@@ -152,15 +155,15 @@ Overall sabotage success
 |---|---|
 | 最强监控者 | **Gemini 2.5 Pro**，AUC **0.87**；R1、Claude 3.7 亦属最强档 |
 | 实用性质疑（文） | 若要 **80%** 检出概率，FPR 可 **&gt;20%**——审计/阻断 20% 交互常不可行 |
-| 人类基线 | 12 良性 + 20 恶意，跨 14 任务对；人均约 **103 min**/transcript；三人标注；合并样本 AUC **0.65**（子集上 AI 亦略降：Claude 3.7 **0.86** / Gemini 2.5 Pro **0.72** / R1 **0.74**——脚注 2） |
+| 人类基线 | 32 段 transcript（12 良性 + 20 恶意），人均约 **103 min**/段；合并 AUC **0.65**，低于同一子集上的 AI 监控者 |
 | 监控失败标签 | 完全漏掉；注意到却给低分；对「看到敏感内部信息」过敏；对主任务小错过敏；只抓住多步攻击中的一步 |
 
 ### 5.3 改进尝试（以 GPT-4o 为试验床）
 
 | 方法 | 文内结论 |
 |---|---|
-| **Turn-by-turn** | 每步展示截至当前全文；聚合取 **最后 20% turns 的 max 嫌疑** 相对默认略好，但高嫌疑标记更多（Fig.9） |
-| **Fine-tune** | 7 任务对、平衡 **70** 条 transcript 微调 GPT-4o → held-out 任务对明显提升，可接近/超过更强未微调模型（Fig.10）；**GPT-4o-mini 微调无效**（作者怀疑能力不够学复杂 transcript） |
+| **Turn-by-turn** | 逐步打分再聚合，相对默认略好，但高嫌疑标记更多（Fig.9） |
+| **Fine-tune** | 用 70 条 transcript 微调 GPT-4o，held-out 任务对明显提升，可接近或超过更强的未微调模型（Fig.10）；GPT-4o-mini 微调无效 |
 | **成本视角（Fig.11–12）** | Turn-by-turn 有增益，但不如 **更好的 system prompt**；更高预算更宜花在 **文末重查并平均**，而非必然逐步监控（§4.4 / Appendix M） |
 
 ---
@@ -217,8 +220,5 @@ Overall sabotage success
 
 ## 相关笔记
 
-- [[SHADEArena隐瞒与监控]]
-- [[天气气候基础模型]]
-- [[QwenOmni音视频原生]]
-- [[LearnLM教育辅导]]
-
+- [[Prompt注入架构防御]]：CaMeL 与 StruQ 两条 by-design 注入防御；CaMeL 的主评测 AgentDojo 正是本篇环境的起点脚手架，那篇防外部注入，本篇测 agent 自身的隐蔽破坏。
+- [[网络防御基准]]：防御侧 SecOps 威胁狩猎评测；同属安全相关 agent 评测，那篇测发现入侵痕迹，与本篇的隐瞒破坏正交。

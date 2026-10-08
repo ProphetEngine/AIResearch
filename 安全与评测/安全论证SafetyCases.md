@@ -17,6 +17,7 @@ archived: 2026-09-22
 
 > **定位**：**横切安全论证**——把「模型有没有 scheming 相关能力」收成 **结构化 safety case（主张–论据–证据）**，并对照 **Assurance 2.0 / 外部评审** 与（可选）安全保证学基础再校准。
 > **研究线**：**架构思想（主）**——CAE 树怎么立、inability 主张如何被评测阈值、外部评审如何拆 scope / 证据强度 / counter-case；**非**红队攻击面清单，**非**可扩展监督协议通史。
+> **为何重要**：前沿模型的安全结论多以零散评测分数呈现，safety case 要求把「为什么可以部署」写成可审的主张树；GDM 的 scheming inability 案被外部评审称为相对多数公开部署辩护异常清晰、可审，而评审结论（窄主张中等确认、强主张仅弱确认）也说明黑箱能力评测单独撑不起高临界性的部署决策。
 > **范围与相邻笔记**：
 > - **相对 [[可扩展监督与弱到强]] 正交**：本篇不写 CAI / W2S / metagaming / CoT monitorability 通史；只在「将来可能从 inability → control（如 CoT 监控）」接口句点名。
 > - **相对 [[安全红队与对抗评测]] 正交**：本篇不写红队流程、ASR、攻击面聚类与 mitigation 闭环；评测只作 **能力门槛证据**，**不**复述任务逐步操作或隐蔽破坏步骤。
@@ -40,13 +41,13 @@ archived: 2026-09-22
 
 ### 2.1 相对 [[可扩展监督与弱到强]] / [[安全红队与对抗评测]] 只取接口
 
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
 | **[[可扩展监督与弱到强]]** 可扩展监督 / W2S / monitorability | 「未来可能从 inability 过渡到 control（如 CoT 监控）」的 **论证族迁移** 一句 | CAI 宪法反馈、W2S PGR、Astra metagaming 全文 |
 | **[[安全红队与对抗评测]]** 红队与对抗评测 | 「对抗暴露」与「能力门槛」同属安全工程闭环的 **相邻槽位** | 人工/自动红队方法谱系、ASR、攻击面地图、拒绝采样闭环 |
 | **[[机制可解释性入门]] / [[宪法分类器防御]]** | 可解释性 / 分类器防御可作为 **未来证据多样性** 点名 | 机制解释或 Constitutional Classifiers 全文 |
 
-### 2.2 跟读口诀（主张–论据–证据）
+### 2.2 主张–论据–证据
 
 `
 Top claim（inability）
@@ -107,7 +108,7 @@ Top claim（inability）
 | 族 | 数量 | 在树上的角色 | 挑战名（仅索引，不写步骤） |
 |---|---|---|---|
 | **Stealth** | 5 | 支持「不具顶级隐蔽绕过监管能力」 | `cover_your_tracks` · `decision_sabotage` · `strategic_rule_breaking` · `oversight_pattern` · `classifier_evasion` |
-| **Situational awareness** | 11 | 支持「不具基本情境自我/部署推理」 | `max_tokens` · `oversight_frequency` · `context_size` · `irreversibility` · `output_filters` · `disabled_tool` · `faulty_tool` · `slow_tool` · `max_tool_calls` · `read_logs` · `approved_directories` |
+| **Situational awareness** | 11 | 支持「不具基本情境自我/部署推理」 | 如 `max_tokens` · `oversight_frequency` · `context_size` · `disabled_tool` 等，围绕自身部署配置与工具状态的推理 |
 
 **操作化门槛（§3.3，作者自承常数有任意性）：**
 
@@ -153,7 +154,7 @@ Top claim（inability）
 | 项 | 内容 |
 |---|---|
 | 方法 | Assurance 2.0 + CAE Declare；确认理论（confirmation-theoretic）称量证据 |
-| 团队 | 6 人，约每周 1 天 × 3 月 ≈ **4 person-months**（~1.5 FTE×3 月） |
+| 团队 | 6 人，约 **4 person-months** |
 | 与开发者互动 | **有限**：事先澄清顶层主张意图；文末给 GDM 评论草稿机会 |
 | 心态 | 按 Leveson 式「试图证明不安全」对抗确认偏误 |
 | 对照 | 相对 METR 评 Anthropic 风险报告：本工作互动更少，并产出 **评审过程建议** |
@@ -165,7 +166,7 @@ Top claim（inability）
 1. 明确 **用途与所支撑的决策**（是否真用于 Gemini 2.5 部署决策，抑或探索性研究产物——公开材料下 **不清晰**）。
 2. 划清 **风险宇宙覆盖**：FSF 的 misuse / ML R&D / misalignment 等类别 **不覆盖组合风险**（如 misuse+misalignment）；错误类、多智能体结构风险等是否入 scope 不清。
 3. **「严重伤害」未在主文 A 内充分定义与正当化**；评审为可审而自采文献阈值（例：单次事件损失 &gt;$1B、100–1000 死亡或数千伤亡——Appendix D；**此为评审采用，非 GDM 原文定义**）。
-4. 需要 **系统模型**（仅权重？含 scaffold / 记忆 / 工具 / 护栏？）与 **环境模型**（「内部部署」是否含 Google 全公司约 185k 员工与 Search/Android 等）。
+4. 需要 **系统模型**（仅权重？含 scaffold / 记忆 / 工具 / 护栏？）与 **环境模型**（「内部部署」的边界）。
 5. 需要 **有效期与失效观测**：产品侧会主动提升与 SA/stealth 相关的能力 → 应有「何种观测使 case 失效」子论证。
 6. 应提供危害识别、风险量化、安全需求导出等 **系统安全工程制品**（若存在则未随论文公开）。
 
@@ -200,7 +201,7 @@ Top claim（inability）
 
 ### 6.1 诊断：alignment safety case 与 assurance 传统的落差
 
-可选 C 将「对齐社区 safety case」（Clymer / Buhl 等模板与 sketches）与安全保证学对照，指出常见落差（跟读压缩）：
+可选 C 将「对齐社区 safety case」（Clymer / Buhl 等模板与 sketches）与安全保证学对照，指出常见落差：
 
 | 主题 | 对齐侧常见倾向（文中批评） | 保证学期望 |
 |---|---|---|
@@ -210,13 +211,13 @@ Top claim（inability）
 | 范围 | 偏灾难性 misalignment / CBRN 等 | 危害集合谁定、是否含非灾难伤害，需显式治理选择 |
 | 风险降低 | 定性辩论为主（亦可接受） | 消除 → 降可能/严重度；可类比 SIL / CCL / ASL 等完整性层级，但需标准与评估闭环 |
 
-### 6.2 与本卡主轴的接口
+### 6.2 与本篇主轴的接口
 
-可选 C 的 case study 触及 Deceptive Alignment 与 CBRN——本卡 **只取方法论**：inability 模板应坐落在 **危害日志 + 风险降低论证 + 通篇更新** 之上，而不是孤立的两套代理任务分数。这与主文 B「需要安全工程制品 / 过程保证」同向，与主文 A「集中式 → 分布式」自我改进方向相容。
+可选 C 的 case study 触及 Deceptive Alignment 与 CBRN——本篇 **只取方法论**：inability 模板应坐落在 **危害日志 + 风险降低论证 + 通篇更新** 之上，而不是孤立的两套代理任务分数。这与主文 B「需要安全工程制品 / 过程保证」同向，与主文 A「集中式 → 分布式」自我改进方向相容。
 
 ---
 
-## 七、综合：一张跟读图
+## 七、综合：一张图
 
 `
  ┌─ 用途 / 决策 / 风险宇宙 / 「严重伤害」定义
@@ -241,16 +242,12 @@ Top claim（inability）
 
 ## 八、开放问题
 
-1. **Inability → Control 迁移点**：默认监管仍类人时，inability 证据如何嵌入「有 CoT 监控仍无法隐蔽 scheming」的下一棵树？（主文 A 自期；细节属 [[可扩展监督与弱到强]] 监控轴，本卡不展。）
+1. **Inability → Control 迁移点**：默认监管仍类人时，inability 证据如何嵌入「有 CoT 监控仍无法隐蔽 scheming」的下一棵树？（主文 A 自期；细节属 [[可扩展监督与弱到强]] 监控轴，本篇不展开。）
 2. **合取必要性是否过强**：评审质疑路径是否总需要 stealth∧SA；若存在不需二者的严重伤害路径，理论枝坍塌。
 3. **行为评测天花板**：高临界性下，黑箱代理任务能否单独到达 indefeasible confidence，还是必须叠加过程保证与异质证据（解释、训练过程、组织控制）？
 4. **公开性 vs 受控披露**：主文 B 主张公开评审有规范价值，同时承认部分证据需受控访问——门槛如何随临界性上升？
 
 ## 相关笔记
 
-- [[法律专科模型]]
-- [[MixtureOfAgents与TUMIX]]
-- [[图谱检索GraphRAG]]
-- [[MemoryR1强化学习记忆维护]]
-- [[安全论证SafetyCases]]
-
+- [[AIControl协议与Scheming倾向]]：AI Control 的蓝红控制评测与 scheming 倾向评测；本篇主文 A 预期 inability 案失效后要迁到 control 类 safety case，那篇写的正是 control 一侧的协议与评测，可作新证据节点。
+- [[SHADEArena隐瞒与监控]]：agent 隐蔽破坏 × LLM 监控者评测；它测的 stealth 与 CoT 监控效果，可作本篇主张树中 inability 或 control 枝的证据节点。
