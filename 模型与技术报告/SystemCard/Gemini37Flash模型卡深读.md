@@ -39,6 +39,7 @@ Gemini 的 Flash 线定位于成本与延迟优先的主力型号。2.5 代起 G
 | 2025-11 | Gemini 3 Pro 模型卡（2026-05 更新） | 3 代旗舰；FSF 2025 年 9 月版，主表以 CCL 为主 | [[Gemini3Pro模型卡深读]] |
 | 2026（未收） | Gemini 3.6 Flash 模型卡 | 该卡的直接依赖；架构、数据、政策均指向它 | 该卡 |
 | 2026-08-13 | Gemini 3.7 Flash 模型卡 | 该卡；FSF 2026 年 4 月版 | 该卡 |
+| 2026-09-02 | Gemini 3.8 Flash | 基于 3.7 Flash 的 Gemini 3 族迭代，六周内第三个 Flash 版本；同时发布的 3.8 Flash Cyber 变体只经 Fairwind 计划向受信防御方开放 | [官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/)、[模型卡](https://deepmind.google/models/model-cards/gemini-3-8-flash/) |
 | 2026-09-30 | Gemini 4 Argon | Gemini 4 代旗舰，输出上限由 3.x 的 64K 升到 1M | [[Gemini4Argon短报]] |
 
 ## 三、产品字段

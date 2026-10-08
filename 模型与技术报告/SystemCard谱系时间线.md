@@ -49,6 +49,7 @@ Google 的闭源 Gemini 线从 2.5 代的长篇技术报告，转为 10 页左�
 - **2025-11** · Gemini 3 Pro 模型卡：10 页产品与安全卡，公开稀疏 MoE 加原生多模态的骨架和 FSF 各域「未达 CCL」，不给参数量与训练规模（[发布博文](https://blog.google/products-and-platforms/products/gemini/gemini-3/)） · [[Gemini3Pro模型卡深读]]
 - **2026-07** · Gemma 4 技术报告：开放权重族的架构、效率与量化字段，与闭源 Gemini 卡分线公开（[arXiv:2607.02770](https://arxiv.org/abs/2607.02770)） · [[Gemma4技术报告深读]]
 - **2026-08** · Gemini 3.7 Flash 模型卡：9 页增量卡，多数字段指向 3.6 Flash 卡；FSF 升级到 2026 年 4 月版，并引入 TCL 与生化、网安「预警」（alert）表述（[模型卡页](https://deepmind.google/models/model-cards/gemini-3-7-flash/)） · [[Gemini37Flash模型卡深读]]
+- **2026-09** · Gemini 3.8 Flash：基于 3.7 Flash 的 Gemini 3 族迭代，六周内第三个 Flash 版本；同时发布的 3.8 Flash Cyber 变体只经 Fairwind 计划向受信防御方开放（[官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/)、[模型卡](https://deepmind.google/models/model-cards/gemini-3-8-flash/)）
 - **2026-09** · Gemini 4 Argon：没有独立的模型卡或系统卡，只配 5 页评测文件，经 Fairwind 计划先向受信网络防御方分阶段放量（[官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)） · [[Gemini4Argon短报]]
 
 ## xAI
