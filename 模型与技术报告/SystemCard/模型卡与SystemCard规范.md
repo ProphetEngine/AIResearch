@@ -1,5 +1,5 @@
 ---
-title: Model Card / System Card 规范（字段谱系与归档建议）
+title: Model Card / System Card 规范（字段谱系与体裁差异）
 topic: 模型卡与SystemCard规范
 date: 2026-09-22
 lines: [架构思想]
@@ -22,7 +22,7 @@ archived: 2026-09-22
 > - System Card 系：[[GPT5系统卡深读]]、[[GPT51SystemCard附录]]、[[GPT52SystemCard更新]]、[[GPT56系统卡深读]]、[[GPT6Astra系统卡深读]]、[[GPT6.1Sol系统卡短报]]、[[GPT6SolLuna十月版系统卡短报]]；[[ClaudeOpus41系统卡附录深读]]、[[ClaudeOpus45系统卡深读]]、[[ClaudeOpus5系统卡深读]]、[[ClaudeFable与Mythos51]]、[[ClaudeOpus55系统卡短报]]、[[ClaudeSonnet55系统卡短报]]、[[ClaudeHaiku55系统卡短报]]
 > - Model Card 系：[[Gemini3Pro模型卡深读]]、[[Grok4模型卡深读]]、[[GPToss模型卡深读]]、[[Gemini37Flash模型卡深读]]
 > - [[MOC_模型与技术报告]]
-> **范围与相邻笔记**：本篇写「文档体裁 → 字段接口 → 归档最小集」。
+> **范围与相邻笔记**：本篇写「文档体裁 → 字段接口」。
 > - ≠ 上列 System Card 系与 Model Card 系各篇：本篇不写各厂卡的能力/安全数字与案例正文。
 
 ---
@@ -50,11 +50,10 @@ Mitchell et al.（§1）指出：当时没有标准化流程，用来沟通**已
 
 研究会归档规范要求「官方 URL + 日期 + 是否 thinking/工具」等；仓库已有多份 System / Model Card PDF 与 TR 深读卡，但缺「**学术起源 → HF 实践 → 厂商 System Card**」的规范短笔记，便于归档员与评测议题共建字段。
 
-因此本笔记只做三件事：
+因此本笔记只做两件事：
 
 1. 固定 Mitchell / HF 的**经典字段谱系**；
-2. 对照相邻卡笔记的实践，标出 System Card 相对 Model Card 的**体裁差异**（不重写正文）；
-3. 给出研究会**归档最小字段建议**（可与 [[评测与排行榜可靠性]] / [[安全红队与对抗评测]] 交叉，不替代各 TR 卡）。
+2. 对照相邻卡笔记的实践，标出 System Card 相对 Model Card 的**体裁差异**（不重写正文）。
 
 ---
 
@@ -152,73 +151,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-## 四、归档字段建议（服务归档，不替代 TR 正文）
-
-下列为**深读卡元信息**建议最小集。设计原则：能回答「这是哪份官方工件、评了什么面、能否与别家横比」，且覆盖归档规范要求的「官方 URL + 日期 + thinking/工具」。取值一律来自 PDF/官网或标「未公开 / 待核实」。
-
-### 4.1 工件身份（每张卡必填）
-
-| 字段 | 说明 | 取值提示（据相邻卡笔记实践） |
-|------|------|------------------------|
-| `doc_title` | 封面/元数据标题 | 如 “GPT-5 System Card”；注意元数据 Title 可能误标 Preview（见 GPT-5.6 TR） |
-| `doc_genre` | 体裁枚举 | `model_card` \| `system_card` \| `system_card_addendum` \| `system_card_update` \| `tech_report` \| `hf_readme` |
-| `org` / `model_family` / `model_ids` | 组织、家族、具体型号标签 | 含变体：main/thinking、API vs Web、Pro/Flash 等——**以卡内表为准** |
-| `cover_date` / `last_updated` / `changelog_dates` | 封面日、修订日、Changelog | 多时区时转 Asia/Shanghai 标注；CreationDate 与封面不一致时**以封面/正文为准** |
-| `official_url` / `pdf_url` | 官方页与 PDF | 无独立 PDF 则写明「仅网页 / GitHub MODEL_CARD」 |
-| `page_count` / `official_url` / `pdf_url` | 页数、官方页与 PDF URL | 据封面/官网 |
-| `relation_to_prior` | 相对前卡关系 | `standalone` \| `addendum_of:<id>` \| `update_of:<id>` \| `preview_of:<id>` |
-| `supersedes` / `superseded_by` | 版本链 | 对应 HF `new_version` 思想；厂商卡用文字链也可 |
-
-### 4.2 系统与能力表面（评测/智能体议题共用）
-
-| 字段 | 说明 |
-|------|------|
-| `has_thinking` / `thinking_controllable` | 是否披露 thinking / extended thinking / Deep Think；是否用户可控（effort 等） |
-| `has_tools` / `tool_surfaces` | 工具、浏览、计算机使用、MCP、连接器等——**只记卡内出现的表面名** |
-| `routing_or_unified_system` | 是否统一系统/路由器/多模型编排（GPT-5 系） |
-| `context_window_claimed` | 仅当卡内或同套官方卡写明；否则「未公开」 |
-| `modality` | 文/图/音/视等输入输出（Gemini 卡 I/O 节；他卡类推） |
-| `capability_tables_present` | 是否含通用能力榜（Anthropic Opus 4.5 有；Grok 4 主卡几乎无——见该 TR） |
-| `decontamination_discussed` | 是否讨论去污（Claude Opus 4.5 §2.2 等）——服务 [[评测与排行榜可靠性]] |
-
-### 4.3 安全与治理（红队 / 评测共建）
-
-| 字段 | 说明 |
-|------|------|
-| `governance_framework` | Preparedness / RSP+ASL / FSF / RMF\|FAIF / 其他 / 未声明 |
-| `risk_tier_or_asl` | 卡内明确档位或 ASL 结论；无则空 |
-| `eval_axes` | 多值标签，建议受控词表：`disallowed_contentjailbreakprompt_injectionhallucinationdeceptionsycophancybias_fairnesschild_safetyhealthagentic_safetydual_use_biodual_use_cybercbrnmodel_welfarered_team_external` …（**按卡内实际章节勾选**） |
-| `mitigations_stack_mentioned` | 是否描述训练拒答 / 系统提示 / 过滤器 / 监控等（只记有无与节号，不写可复现攻击步骤） |
-| `external_red_team` | 是否有外部红队/第三方评估叙述 |
-| `safeguards_removed_for_dual_use` | 双用途评测是否声明「移除 safeguards 后」（Grok 卡明确写法）——横比时必读 |
-
-### 4.4 Mitchell / HF 对齐检查清单（开源权重或短卡尤相关）
-
-归档员可对「自称 Model Card」的工件快速打勾（是/部分/无/不适用）：
-
-1. Model Details（开发者、日期、版本、类型、许可、联系）
-2. Intended Use + Out-of-scope
-3. Factors（相关因素 vs 实际评测因素）
-4. Metrics + 不确定性
-5. Evaluation Data / Training Data 可见性
-6. 分群或至少子群结果（Unitary / Intersectional）
-7. Ethical / Bias-Risks-Limitations
-8. Caveats / Recommendations
-9. （HF）YAML：`licensedatasetspipeline_tagbase_modelmodel-index` 等
-
-**前沿 SC 常「部分」满足 3–6**（有大量安全评测，但不是 Mitchell 式交叉人口统计主轴）——勾选时不要把「有 BBQ」自动等同「完成 Factors 全谱」。
-
-### 4.5 研究会深读卡（TR-*）建议固定开头表
-
-与现有 TR 笔记一致，每张专项卡文首保留：
-
-`标题 | 机构 | 封面/修订日 | 页数 | 官方 PDF URL | 官方落地页 | 体裁 | 相对前卡关系 | 治理框架 | thinking/工具表面（原文有则填）`
-
-正文切片仍按「对齐 / 推理 / 架构…」主题分工，**本笔记不规定能力数字怎么摘**。
-
----
-
-## 五、误区
+## 四、误区
 
 1. **「System Card = 加长版 Model Card」**
  页数变长只是表象；一级目录已从「分群报告」转向「威胁模型 + 治理框架 +（可选）能力」。用 Mitchell 九段去硬套 GPT/Claude SC 会漏掉 Preparedness/RSP/agentic 主轴。
@@ -230,7 +163,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
  YAML 服务发现与小部件；Mitchell §4.7 要求的 unitary/intersectional 结果仍须在正文（或另文）给出。`model-index` 分数≠分群公平分析。
 
 4. **「把各厂 SC 安全表直接纵向比出谁更安全」**
- 协议、是否去 safeguard、语言覆盖、自评 vs 外部、Preview vs GA 均可能不同（Grok 4.1 对旧卡英文-only refusal 的修正；Addendum 与 Update 的「largely the same」）。横比前先填 §4.3 的 `eval_axes` 与协议备注。参见 [[评测与排行榜可靠性]]、[[安全红队与对抗评测]]。
+ 协议、是否去 safeguard、语言覆盖、自评 vs 外部、Preview vs GA 均可能不同（Grok 4.1 对旧卡英文-only refusal 的修正；Addendum 与 Update 的「largely the same」）。横比前先对齐评测轴与协议备注。参见 [[评测与排行榜可靠性]]、[[安全红队与对抗评测]]。
 
 5. **「归档只要最新卡，旧卡可删」**
  TOXICITY v1→v5 示例与 Claude/OpenAI Changelog 均表明：**差分本身是证据**。应保留版本链（`relation_to_prior` / `superseded_by`），而不是只留最新 PDF。
@@ -246,7 +179,7 @@ Model Card 的「接口」是：**用途边界 × 因素分解 × 可复现评�
 
 ---
 
-## 六、引用与官方路径
+## 五、引用与官方路径
 
 ### 主源
 
