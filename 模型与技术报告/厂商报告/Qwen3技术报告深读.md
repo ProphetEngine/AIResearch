@@ -249,4 +249,5 @@ Table 21（Qwen3-8B，自同一 off-policy 检查点起，仅数学/代码查询
 - [[开源与闭源前沿模型谱系]]
 - [[AI基础设施总览]]
 - [[MoE路由与负载均衡]]：本篇的不用共享专家与全局批均衡，在那篇与 DeepSeekMoE 的共享专家路线并列对照。
+- [[OnPolicy蒸馏OPD范式]]：本篇 3.7 节 Strong-to-Weak Distillation 的 on-policy 阶段（Table 21：AIME'24 74.4，约 1,800 GPU 时，对比 RL 17,920）被那篇当作 OPD「约 RL 十分之一算力」结论的出处，OPD 的方法谱系与复现见那篇。
 
