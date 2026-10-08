@@ -233,4 +233,5 @@ Anthropic. System Card: Claude Opus 4.5. November 2025
 - [[ClaudeOpus41系统卡附录深读]]
 - [[ClaudeOpus45系统卡深读]]
 - [[MOC_模型与技术报告]]
+- [[奖励黑客与涌现失对齐]]：本篇附录 Table 5.B 的奖励黑客数字，在那篇与 Opus 4.5 卡对同一模型给出的不同数字并列，并说明两卡评测说明的差异。
 

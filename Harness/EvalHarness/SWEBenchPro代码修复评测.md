@@ -285,6 +285,7 @@ timezone: Asia/Shanghai (CST)
 
 - **[[代码智能体Harness史线]]**：需要「动作面 / 沙箱 SDK」时跳转；本卡不重写。
 - **[[评测与排行榜可靠性]]**：需要「thinking / pass@k / 系统卡协议」通史时跳转；本篇只讲 Pro 族字段。
+- **[[奖励黑客与涌现失对齐]]**：本篇 4.1 的 anti-hacking 环境（堵 Git 历史、隐藏测试、公网托管等泄漏通道）是 RL 编码环境加固的工程实例；奖励黑客的整体谱系与缓解见那篇。
 - **[[科研智能体]] / [[开端性与发现基础模型]]**：科学发现或开端自改进若用 SWE 作验证信号，只引用本卡指标，不反向重写 Pro 构造。
 - **未覆盖**：held-out 858 公开对照；Java/C++ 扩展；与 SWE-bench-Live / ProMax / DeepSWE 的协议对齐表（Verified Related work 已索引，本篇不展开）。
 

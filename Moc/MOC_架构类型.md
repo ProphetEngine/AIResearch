@@ -17,6 +17,7 @@ status: active
 
 - [[DecoderOnly与GPT路线]]
 - [[混合专家架构]]
+- [[MoE路由与负载均衡]]
 - [[Transformer至今发展脉络]]
 - [[扩散语言模型]]
 - [[AdaptiveSpec与Goose]]
@@ -28,6 +29,7 @@ status: active
 - [[注意力与Transformer核心思想]]
 - [[检索式注意力]]
 - [[原生稀疏注意力NSA]]
+- [[线性注意力与状态空间模型谱系]]
 - [[混合Mamba与注意力架构设计菜谱]]
 - [[注意力效率族MQA到MLA]]
 - [[长上下文与注意力效率时间线]]

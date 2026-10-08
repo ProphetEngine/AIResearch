@@ -50,6 +50,7 @@ note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用
 |---|---|---|
 | **[[AI基础设施总览]]** AI Infra「势」 | 「算力—通信—显存」链上的 **通信库** 一环；NCCL 作对照基线一句 | Megatron 列/行切、FA2、vLLM 分页、FP8 配方全文 |
 | **[[混合专家架构]]** MoE 稀疏史 | EP = 专家分片 → 每层 **数据依赖 all-to-all** | Switch/Mixtral/V3 路由损失、容量因子、总参/激活参通史 |
+| **[[分布式训练并行策略]]** 训练并行总览 | 专家并行在五种并行中的位置：EP 与 PP、ZeRO 组合时每层两次 all-to-all，是本篇通信需求的来源 | 并行组合法则与流水线调度 |
 | **[[DeepSeekV3训练与MoE基建]]** | DualPipe chunk 里「all-to-all dispatch/combine」是 **调度动机**；DeepEP 对齐 group-limited gating 的工程实现 | DualPipe 气泡公式表、训练超参、FP8 块量化细则、报告通信小节全文重写 |
 | **[[DeepSeekV4技术报告深读]]** | 同左：不整节搬通信配方 | 同上 |
 

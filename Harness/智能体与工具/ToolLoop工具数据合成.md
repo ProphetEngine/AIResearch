@@ -56,6 +56,7 @@ timezone: Asia/Shanghai (CST)
 | 相邻笔记 | 本卡只取 | 本卡不写 |
 |---|---|---|
 | **[[ToRL工具集成强化学习]] ToRL** | 「工具调用可以是可学习策略」这一直觉相邻 | 解释器进 RL rollout、code ratio、AIME 无工具 vs 有工具对照全文 |
+| **[[RL算力缩放与环境扩展]]** | 对照：本篇离线合成轨迹供 SFT，那篇写在线可交互的 RL 环境扩展 | RL 算力曲线与环境合成规模 |
 | **[[智能体工具与长程任务]]** | BFCL / 工具增强是产品能力切片的上游数据问题 | MCP 史、System Card 长程、extended thinking with tools |
 | **[[代码智能体Harness史线]]** | 「格式/执行失败要被看见」的工程直觉 | SWE-agent 命令面、OpenHands 四包 SDK、生产失败率 |
 | **经典合成（Self-Instruct / APIGen）** | generate-then-filter 是文内反面教材与 Table 对照 | 各家数据集构造通史 |

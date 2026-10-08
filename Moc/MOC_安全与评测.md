@@ -30,6 +30,7 @@ status: active
 - [[安全论证SafetyCases]]
 - [[SHADEArena隐瞒与监控]]
 - [[AIControl协议与Scheming倾向]]
+- [[奖励黑客与涌现失对齐]]（与 [[MOC_对齐与强化学习]] 双挂）
 - [[网络防御基准]]
 - [[恶意软件分析评测]]
 - [[LLM水印]]

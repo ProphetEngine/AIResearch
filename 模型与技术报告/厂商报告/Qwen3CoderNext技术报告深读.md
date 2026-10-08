@@ -157,6 +157,8 @@ timezone: Asia/Shanghai (CST)
 **Reinforced Reward Hacking Blocker（§4.2.4，关键）**
 标准去 remote/branch/tag 不足：后期 agent 会 `git remote add` / `clone` / `curl` 拉未来提交（Fig.7）。策略：工具调用若同时含 **github.com/{repo} 类链接** 与 **网络关键词（git/curl/wget）** → 拦截并显式反馈。文称人工抽查后 hacking 基本消除；RL 中平均交互轮次由约 **50 → 130**（长程能力涌现，Fig.7 左）。
 
+这一拦截属于环境加固；奖励黑客的一般谱系、向失对齐的泛化与其他缓解手段见 [[奖励黑客与涌现失对齐]]。
+
 **模板跟随评测 Table 2（Avg）：** Qwen3-Coder-Next **92.7**（五 scaffold）；对照 DeepSeek-V3.2 **93.7**、Gemini-3-pro **87.0**、Claude-sonnet-4-5 **85.4** 等——本篇只列数字。
 
 ### 5.3 Expert Distillation（§4.2.5）

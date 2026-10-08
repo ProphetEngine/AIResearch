@@ -75,6 +75,7 @@ MiMo-V2.6 把 Agentic RL 写成「算力三维放大」：**更大 batch + 更�
 1. **把「扩 RL」拆成可核对的三轴**：不只堆 GPU，而是 batch 吞吐、环境/harness 多样性、grader 算力（≈Pro RL 成本的 1/8）一起上；对「agent 长程任务只靠 pass/fail」给出可消融的反例（GAR）。
 2. **Multi-harness 作为一等公民**：用可控 mini-harness 换跨框架泛化，held-out 生产 harness 同步涨——比「只在自家脚手架上刷分」更接近真实部署。
 3. **开源包可复现小规模闭环**：7k 环境 + Distill-9B + RL 代码，让社区验证「同一配方是否在小模型上也涨」，而不必复刻万卡主 run。
+4. **RL 扩展的工业案例**：本篇的成本拆分与环境规模，在 [[RL算力缩放与环境扩展]] 中与 DeepSeek-V3.2 等案例并列对照。
 
 ## 关键结果锚点（不宜外推为全面 SOTA）
 

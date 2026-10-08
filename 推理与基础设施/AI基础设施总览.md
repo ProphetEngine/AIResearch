@@ -212,6 +212,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 ## 相关笔记
 
 - [[混合专家架构]]：Switch → Mixtral → DeepSeek-V3 的 MoE 史线；本篇 2.4 的专家并行与 all-to-all 正是这条架构线在训练系统上的代价。
+- [[分布式训练并行策略]]：本篇第二节只讲 Megatron 三种并行及其与专家并行的衔接；那篇补齐 ZeRO、上下文并行与 3D/4D 组合法则，是训练并行的完整地图。
 - [[长上下文位置编码与系统侧]]：从长上下文出发：位置编码决定模型认不认得更长位置，KV 管理决定服不服得起；那篇第三节也讲 PagedAttention / vLLM，本篇则从 Infra 全栈看同一机制。
 - [[注意力效率族MQA到MLA]]：MQA → GQA → MLA 压每 token 的 KV 体积；本篇 4.3 末把它列为与分页、低精度相乘的三层之一。
 - [[连续批处理与Orca]]：iteration-level scheduling 专线；本篇 4.2 只提到 PagedAttention 与它共设计，那篇讲请求级与 iteration-level 的吞吐 / 延迟边界，以及与分页互补而非替代。

@@ -288,6 +288,8 @@ timezone: Asia/Shanghai (CST)
 5. Table 2/3—评测口径与 harness 脚注
 6. 辅博文：产品可用、案例、局限（与 TR 交叉，不以博文覆盖 Table）
 
+**相关专题：** [[线性注意力与状态空间模型谱系]] 把 KDA 放进线性注意力与状态空间模型的谱系，并与 Qwen、MiniMax 的混合比例对照；[[MoE路由与负载均衡]] 把 Quantile Balancing 放进从 Switch 到无辅助损失偏置的路由演进中。
+
 ---
 
 ## 九、局限与待核实
