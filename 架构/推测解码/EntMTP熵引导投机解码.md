@@ -2,217 +2,101 @@
 title: "投机解码新变体：EntMTP（熵引导 MTP / 动态草稿树）"
 topic: EntMTP熵引导投机解码
 date: 2026-09-22
-lines: [架构思想, 延迟/接受率字段]
+lines: [架构思想, 评测字段]
 status: archived
 sources:
  - https://arxiv.org/abs/2606.27550
 arxiv: ["2606.27550"]
-related: ["推理引擎生态", "EAGLE3投机解码"]
+related: ["推理引擎生态", "EAGLE3投机解码", "MTP训练范式", "AdaptiveSpec与Goose", "投机解码发展时间线"]
 archived: 2026-09-22
 ---
 
 # 投机解码新变体：EntMTP（熵引导 MTP / 动态草稿树）
 
-> **定位**：EntMTP——在 **[[推理引擎生态]]** 已立投机「草稿—校验」基线、**[[EAGLE3投机解码]]** 已补 **EAGLE-3**（training-time test + 多层特征融合）之后，只写近窗 **EntMTP**（*Entropy Guided Multi-Token Prediction*，arXiv **2606.27550**）：**训练免费**的运行时调度器，按局部可预测性在 **预编译 TopologyBank** 上切换草稿树拓扑。
-> **研究线**：**架构思想（主）**——离线吞吐 Pareto 前沿 → TopologyBank → 熵/路径价值驱动的 per-step 选树；**延迟 / 接受率字段（辅）**——相对 Hydra / Medusa **默认树** 的 tok/s、ρ、τ（Table 1）。
+> **主要来源**：[EntMTP: Accelerating LLM Inference with Entropy Guided Multi Token Prediction](https://arxiv.org/abs/2606.27550)（Carrie Chen，Cornell，v1）（截至 2026-07-03）。
+> **研究线**：架构思想（按局部可预测性选草稿树，主）· 评测字段（相对 Hydra / Medusa 默认树的吞吐与接受长度，辅）
 > **范围与相邻笔记**：
-> - **≠ [[推理引擎生态]]**：不写 Leviathan / Chen / Lookahead 通史与引擎选型全文；「草稿—并行校验、同分布」只当接口一句。
-> - **≠ [[EAGLE3投机解码]]**：不重写特征回归解除、多层融合、SGLang 大 batch 表；本文仅借用文中 **EAGLE-2 path value** 作为调度特征定义。
-> - **Hydra / Medusa / Lookahead**：本篇不展开，只作本 PDF 对照列与默认树基线；细节回指 **[[推理引擎生态]] / [[EAGLE3投机解码]]**。
+> - ≠ [[推理引擎生态]]：本篇不写「草稿—并行校验、分布不变」的框架，投机解码共用背景见该篇第三节。
+> - ≠ [[MTP训练范式]]：本篇不写 MTP 头与损失怎么训；EntMTP 不改任何权重。
+> - ≠ [[EAGLE3投机解码]]：本篇不写 EAGLE 系草稿头，只借用 EAGLE-2 的 path value 作调度特征。
+>
+> **意义**：EntMTP 说明多 token 预测头的推理收益里，有相当一部分被「整段生成共用一张静态树」浪费了；不训练、不放松接受条件，只按上下文的可预测性在几张预先挑好的树之间切换，就能在 Hydra 默认树上再拿到约 8%–14% 的吞吐。
+
+**一句话**：现有 MTP 头（Medusa / Hydra 路线）推理时锁死一张草稿树，验证算力与推测深度不随上下文熵变化；EntMTP 离线为每个任务挑出吞吐 Pareto 前沿上的几张树，在线按 path value 估计的局部可预测性逐步切换——低熵处用大而深的树，高熵处用小而浅的树。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 字段 | 核实值（PDF） |
-|---|---|
-| 标题 | *EntMTP: Accelerating LLM Inference with Entropy Guided Multi Token Prediction* |
-| 作者 | Carrie Chen（Cornell University；`cc2864@cornell.edu`） |
-| arXiv | **2606.27550v1** \[cs.CL\]（**25 Jun 2026**） |
-| 官方 PDF | `https://arxiv.org/abs/2606.27550`（**7** 页 letter；arXiv GenPDF） |
-| HTML | https://arxiv.org/html/2606.27550v1（备链） |
-| 代码 | 正文 / 摘要 **未给出** GitHub 链接 |
+MTP 头挂在目标模型最终隐状态上，用树状候选做稀疏校验，是「自投机」的默认路线。现有基础与开源 MTP 整段生成共用同一张树拓扑，推测深度和验证算力是常数（摘要、§1）。但自然语言的熵分布不均：低熵段落可以多步草稿，高熵处应当保守。
 
-**一句话抓手：** 现有 MTP 头（Medusa / Hydra 路线）推理期锁死 **一张静态草稿树**——验证算力与推测深度不随上下文熵变化；EntMTP **不改**目标权重、**不松** Hydra 式接受条件，只在离线挑好的 **任务特异 Pareto 树** 上做 **O(1) 拓扑切换**，把推测深度对齐到局部可预测性。
+论文还发现，能预测接受长度的特征随任务而变（附录 A、Figure 3）：ShareGPT 上近期接受历史最强（EMA 与接受长度相关系数 0.49），GSM8K、HumanEval 上熵类特征相对更强但相关系数绝对值不超过 0.22。单一拓扑难以在各种分布上都 Pareto 最优。
 
----
+## 二、脉络
 
-## 二、议题边界：只写「熵→选树」，不写投机通史 / EAGLE-3
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
+| 节点 | 内容 | 来源 |
 |---|---|---|
-| **[[推理引擎生态]] 投机通史** | 「廉价草稿 + 目标并行校验、边际分布不变」 | Leviathan / Chen 证明、Lookahead、引擎对比全文 |
-| **[[EAGLE3投机解码]]** | EAGLE-2 **path value** $V_i$ 可作置信度代理（文 §2.2 / §4） | training-time test、低/中/高融合、SGLang Table 3–4 |
-| **文内 Hydra / Medusa** | 默认树 tok/s 与「静态拓扑」诊断 | 独立成篇的 Hydra/Medusa 方法课、头结构设计通史 |
+| 投机采样 | 草稿 + 并行校验，分布不变 | [[推理引擎生态]] 第三节 |
+| Medusa、Hydra | 在目标模型上挂多 token 预测头，用固定草稿树校验 | [[推理引擎生态]] 第三节；EntMTP §2 |
+| 离线选树（Ankner、Cai 等） | 在任务数据上离线搜索一张最优静态树 | EntMTP §3 |
+| EAGLE-2 动态树 | 用草稿置信在线展开、剪枝节点 | [[EAGLE3投机解码]]；EntMTP §2.2 |
+| EntMTP（2026） | 离线建多张前沿树，在线按 path value 在树间切换 | EntMTP |
 
-### 2.2 文内立轴：静态树为何与自然语言错位（摘要 / §1）
+## 三、核心思想：熵引导选树
 
-跟读压缩（非通史）：
+**离线：吞吐前沿（§3）。** 先在预算内贪心加节点，得到接受长度前沿；再对前沿上的树实测端到端 tok/s（含 prefill），丢掉被支配的拓扑，得到吞吐前沿。吞吐最高的那张树就是静态的任务最优树（记 $\mathrm{EntMTP}^*$）。每个任务用 100 条提示校准。
 
-1. MTP 头挂在目标 **最终 hidden**，用树状候选做稀疏校验——**自投机**默认路线。
-2. 现有基础/开源 MTP **整段生成共用一张树拓扑** → 推测深度与验证算力 **常数**。
-3. 自然语言熵不匀：**低熵**区可多步草稿；**高熵**区应保守。
-4. 附录 A / Fig.3：接受长度的可预测特征 **随任务变**——ShareGPT 上近期接受历史强（EMA $r=0.49$）；GSM8K / HumanEval 上熵类特征相对更强，但 $|r|\le 0.22$——单拓扑跨分布难 Pareto 最优。
+**TopologyBank（§4）。** 前沿上的每张树预先编译好注意力掩码、位置偏移与取回索引。推理时换树只是字典里的指针交换，不重建掩码、不重编内核，论文称每步开销小于 0.1 ms。
 
-EntMTP 回答：**把任务依赖当信号**——离线建吞吐前沿，在线按状态在前沿上切换。
-
----
-
-## 三、架构思想：离线前沿 → TopologyBank → 运行时策略
-
-### 3.1 离线两段：接受前沿 → 吞吐前沿（§3）
-
-沿用 Ankner / Cai 的「任务上离线选树」两段，但强调 **吞吐重排** 与 **任务特异**：
-
-| 阶段 | 做法（跟读） |
-|---|---|
-| **接受前沿** | Algorithm 1：贪心加节点至预算 $B$；对所有一跳增广 $T\cup\{\nu\}$ 做 **一次联合树 self-rollout**，按路径 mask 估 mean accept length；并列打破：更小 child-rank 和、更浅深度 |
-| **校准** | 100 prompts / 任务；$T=0.7$；posterior threshold $0.09$；$\alpha=0.3$；256-token rollouts |
-| **偏差** | §3.1.1：联合树打分略乐观；Appendix B 用候选树 **自身** proposal / mask / KV 更新做 canonical self-rollout——偏置 $\le\pm 3.3\%$，**前沿拓扑不变** |
-| **吞吐前沿** | 对接受前沿端到端测 wall-clock **tok/s**（含 prefill）；丢掉被支配拓扑；**吞吐最大树** → $\mathrm{EntMTP}^*$ 的静态任务最优树 |
-
-Fig.1–2（HumanEval）：深度-4、节点 $\ge 23$ 时深度-4 树主导全局 Pareto；再映射到吞吐空间重排。GSM8K / ShareGPT 同协议见 Appendix C Fig.4–5。
-
-### 3.2 TopologyBank：切换 = O(1) 指针交换（摘要 / §4 Cost）
-
-每个前沿树预编译：
-
-- attention mask
-- position offsets
-- gather / retrieve indices（文：`generate hydra buffers`）
-
-推理期换树 = **字典指针交换**，无 mask 重建、无 kernel 重编。策略读出标量 $s$：对 $D\le 4$ 做 cumulative product + 一次 `.item()` sync，文称 **每步 $<0.1\,\mathrm{ms}$**。
-
-### 3.3 调度特征：path-value 标量 $s$（§4）
-
-不用另训模块。在校验器最后位置，用 **基座 top-1** $p_0$ 与各 Hydra 头 top-1 $p_d$：
+**调度特征（§4）。** 不训练额外模块。在校验器最后位置，用基座 top-1 概率 $p_0$ 与各 Hydra 头 top-1 概率 $p_d$ 算 path value：
 
 $$
-g_d = p_0 \prod_{i=1}^{d} p_i,\qquad
-s = \max(p_0, g_1,\ldots,g_D)
+g_d = p_0 \prod_{i=1}^{d} p_i,\qquad s = \max(p_0, g_1,\ldots,g_D)
 $$
 
-文称 $s$ 与期望接受长度单调相关：头链深层质量高时 $s\to 1$，大树才值得付验证成本。摘要亦写可用「EAGLE-2 path value」或「base top-1」等现成特征。
+论文称 $s$ 与期望接受长度单调相关：头链深层的质量高时 $s$ 接近 1，大树才值得付验证成本。
 
-### 3.4 三种训练免费策略（摘要 / §4 Policy）
+**三种策略（§4）。** $\mathrm{EntMTP}^*$ 整段固定任务最优树；$\mathrm{EntMTP}_\tau$ 在保守的小树与激进的大树间按阈值切换，带迟滞防抖；$\mathrm{EntMTP}\text{-}l$ 把 $s$ 分段映射到多张树。阈值在同一校准集上一维扫描得到。
 
-| 记号 | 行为 |
-|---|---|
-| $\mathrm{EntMTP}^*$ | **静态**：整段生成固定为该任务吞吐最优树（已优于 published default） |
-| $\mathrm{EntMTP}_\tau$ | **二值 + 迟滞**：保守树 $T_-$（小/浅）↔ 激进树 $T_+$（大、depth-4）；$s>\tau_{\mathrm{on}}$ 上切，$s\le\tau_{\mathrm{off}}$ 回切，$\tau_{\mathrm{off}}\le\tau_{\mathrm{on}}$ 抑抖动；默认可 $\tau_{\mathrm{on}}=\tau_{\mathrm{off}}=\tau$ |
-| $\mathrm{EntMTP}\text{-}l$ | **阈值阶梯**：把 $s$ 分成 $K$ 段，映射到 $T_1,\ldots,T_K$ |
+## 四、结果
 
-$\tau$ 在与树搜索 **同一 100-prompt 校准集** 上一维扫描；候选 $\tau\in\{0.001,0.005,0.01,0.02,0.05\}$。
+设定（§5）：Vicuna-7B v1.3 + Hydra 校验栈，单卡 A100、FP16，HumanEval / GSM8K / ShareGPT 各 100 条提示，计时含 prefill。论文称续写困惑度与基座相差不超过 0.02 nats，属无损。
 
-跟读口径：
+| 任务（Table 1） | Hydra 默认树 tok/s | $\mathrm{EntMTP}_\tau$ tok/s | 相对自回归 |
+|---|---|---|---|
+| HumanEval | 109.0 | **124.7** | 3.26× |
+| GSM8K | 102.4 | **112.0** | 3.13× |
+| ShareGPT | 109.0 | **117.5** | 3.47× |
 
-`
-离线：贪心树 → 接受前沿 → self-rollout 去偏 → 吞吐 Pareto → TopologyBank
-在线：每步算 s（path value）→ π 选树索引 → O(1) 换 mask/indices → 照常 draft–verify
-`
+增益来源（§6.1）：大部分来自静态任务树本身——$\mathrm{EntMTP}^*$ 比 Hydra 默认树快 7.1%–13.2%，草稿节点只有 28 / 46 / 30 个，默认树为 63 个，主要靠降低每步验证成本；在线调度在此之上再加 0.5%–2.1%，GSM8K 最多，论文解释为高熵推理步换成保守树后省下了验证周期。
 
----
+## 五、意义
 
-## 四、评测设定与无损声明（§5）
+EntMTP 把「推测深度应随上下文可预测性变化」做成零训练、几乎零开销的运行时调度。它的分解结果同样有启发：多数收益来自「选对任务树、减少验证节点」，真正逐步自适应的部分只多出 0.5%–2.1%。这提醒评估动态树方法时要把静态树优化与在线调度的贡献分开。
 
-| 项 | 文内设定 |
-|---|---|
-| 基座 | Vicuna-7B v1.3 |
-| 草稿/校验栈 | `ankner/hydra-vicuna-7b-v1.3`（Hydra verifier） |
-| 硬件 | 单卡 **A100**，FP16 |
-| 共享超参 | $T=0.7$；$\epsilon=0.09$；$\alpha=0.3$；max input 1400；max gen 256 |
-| 篮子 | 每任务 **100** prompts（seed 123）：HumanEval-val / GSM8K-val / ShareGPT（Vicuna unfiltered） |
-| 计时 | 含 prompt **prefill**；一次 warm-up 后排除 JIT/KV 分配 |
-| 无损 | 不微调原 LLM、不放松 Hydra 典型接受条件；续写困惑度相对基座 **$\le 0.02$ nats**（§5.1）；相对 Hydra 响应 perplexity **$0.022$ 内**（§1） |
+## 六、局限与待核实
 
-**指标：**
+- 论文未给出代码仓。
+- 摘要点名 LitBench，但主表 Table 1 只有三个任务，LitBench 只出现在附录的特征日志中，没有吞吐数字。
+- $\mathrm{EntMTP}\text{-}l$ 阶梯策略没有完整消融，主结果是 $\mathrm{EntMTP}^*$ 与 $\mathrm{EntMTP}_\tau$。
+- 只测了单卡、bs=1、Vicuna-7B；多卡、大 batch 与其他基座未覆盖。
+- 正文写相对 Hydra 在 HumanEval 上 +14.0%，按 Table 1 的 tok/s 算为约 14.4%，本篇以表为准。
 
-- $\rho$：相对同设定 vanilla AR 的 wall-clock **输出 tok/s** 加速比
-- $\tau$：每轮 draft–verify **平均接受长度**（硬件无关，隔离拓扑质量）
+## 七、与相邻笔记的分工
 
-摘要另点名 LitBench；**主表 Table 1 仅三任务**（HumanEval / GSM8K / ShareGPT）。LitBench 出现在 Appendix A 特征日志规模（约 320k step rows），**无 Table 1 同行数字**，故本卡不列 LitBench tok/s。
-
----
-
-## 五、延迟 / 接受率字段（Table 1 + §6 分解）
-
-### 5.1 Table 1 精读（照录）
-
-| benchmark | method | tok/s | $\rho$ | $\tau$ |
-|---|---|---|---|---|
-| HumanEval | Vanilla Vicuna | 38.2 | 1.00× | 1.00 |
-| | Medusa (default) | 91.2 | 2.38× | 2.87 |
-| | Hydra (default) | 109.0 | 2.85× | 3.06 |
-| | $\mathrm{EntMTP}^*$ | 123.4 | 3.21× | 3.28 |
-| | $\mathrm{EntMTP}_\tau$ | **124.7** | **3.26×** | 3.20 |
-| GSM8K | Vanilla | 33.7 | 1.00× | 1.00 |
-| | Medusa (default) | 87.4 | 2.59× | 2.51 |
-| | Hydra (default) | 102.4 | 2.87× | 2.86 |
-| | $\mathrm{EntMTP}^*$ | 109.7 | 3.07× | 3.08 |
-| | $\mathrm{EntMTP}_\tau$ | **112.0** | **3.13×** | 3.02 |
-| ShareGPT | Vanilla | 35.4 | 1.00× | 1.00 |
-| | Medusa (default) | 94.6 | 2.72× | 2.86 |
-| | Hydra (default) | 109.0 | 2.89× | 3.06 |
-| | $\mathrm{EntMTP}^*$ | 116.9 | 3.42× | 2.97 |
-| | $\mathrm{EntMTP}_\tau$ | **117.5** | **3.47×** | 2.99 |
-
-§1 叙述对齐：GSM8K **+9.4%** vs Hydra；HumanEval **+14.0%**（表算 $124.7/109.0-1\approx 14.4\%$，以表 tok/s 为准跟读）；ShareGPT **+7.8%**。摘要区间：**相对 Hydra 约 1.09–1.15×**；相对 Medusa **峰值 $\sim 1.36\times$**（HumanEval：$124.7/91.2\approx 1.37$）。
-
-**batch size = 1**：文称 $\mathrm{EntMTP}_\tau$ 在三任务上同时压过 Hydra、Medusa 默认与 $\mathrm{EntMTP}^*$。
-
-### 5.2 增益从哪来（§6.1）
-
-| 贡献块 | 文内分解 |
-|---|---|
-| **静态 $\mathrm{EntMTP}^*$ vs Hydra default** | **+7.1–13.2%** tok/s；草稿节点 **$\ge 2\times$ 更少**（HumanEval / GSM8K / ShareGPT：**28 / 46 / 30** vs Hydra default **63**）；相对 Medusa default **+7.7–32.4%** |
-| 结构 | 多半来自 **更小任务树 → 降每步验证成本**；另 **0–7%** 来自优化拓扑抬高 $\tau$（HumanEval $\tau: 3.06\to 3.28$；ShareGPT 略降 $\tau$ 仍净赚 tok/s） |
-| **调度残差 $\mathrm{EntMTP}_\tau$ vs $^*$** | 再 **+0.5–2.1%**；GSM8K 最大（**+2.1%**）——高熵推理步混入保守树，回收验证周期且不损接受长度 |
-
----
-
-## 六、与 EAGLE-2「动态树」的一句话差（不展开 EAGLE-3）
-
-| | EAGLE-2（文 §2.2 简述） | **EntMTP** |
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| 动态对象 | 用草稿置信度 **在线展开/剪枝节点**（同一草稿机制内） | 在 **预编译的多张固定拓扑** 间切换 |
-| 训练 | 特征级草稿模型（EAGLE 系） | **训练免费**调度；树来自 Hydra 头栈上的离线搜索 |
-| 本卡关系 | 只借 **path value** 公式作 $s$ | **不**复述 EAGLE-3 训练期改动（→ [[EAGLE3投机解码]]） |
+| [[推理引擎生态]] | 投机解码共用背景（草稿—校验、分布不变、Medusa）在那篇第三节，EntMTP 是在 Medusa / Hydra 这类多头草稿上的调度增量 | 引擎选型、经典框架证明 |
+| [[MTP训练范式]] | 两篇都谈 MTP 与熵，但那篇改训练损失与头对齐，EntMTP 不改权重、只在推理时选树 | AdaMTP、MTP-D、OCC 的训练配方 |
+| [[EAGLE3投机解码]] | EntMTP 的调度特征沿用 EAGLE-2 的 path value；EAGLE 系在同一草稿机制内在线展开节点，EntMTP 在多张固定拓扑间切换 | training-time test、多层特征融合 |
+| [[AdaptiveSpec与Goose]] | AdaptiveSpec 同样无训练、按草稿置信每步改树形，但在一个三元组区间里连续插值，并在 EAGLE-3 上实现 | margin 校验、各向异性树 |
+| [[投机解码发展时间线]] | EntMTP 列在该时间线的投机与多 token 预测族中 | 族谱全表 |
 
----
+## 八、延伸阅读
 
-## 七、延伸阅读
-
-1. **问题** ← MTP 静态树与熵不均匀错位；接受信号还 **任务特异**。
-2. **离线** ← 贪心接受前沿 → self-rollout 去偏 → **吞吐 Pareto** → 少而精的树银行。
-3. **在线** ← TopologyBank **O(1)** 换树；$s=\max$ path value；$\tau$ 迟滞二值或阶梯。
-4. **数字** ← $\mathrm{EntMTP}_\tau$：HumanEval **124.7** tok/s（**3.26×** AR）、GSM8K **112.0**（**3.13×**）、ShareGPT **117.5**（**3.47×**）；相对 Hydra default 约 **+8–14%**。
-5. **无损** ← 困惑度贴基座 / Hydra；增益来自 **调度与更小任务树**，非改接受规则。
-
----
-
-## 八、局限与待核实
-
-- 官方代码仓：PDF **未给**。
-- LitBench **主表 tok/s**：摘要点名，Table 1 无行 → 缺数不补。
-- $\mathrm{EntMTP}\text{-}l$ 阶梯的完整 K 路消融表：正文以 $\mathrm{EntMTP}^*$ / $\mathrm{EntMTP}_\tau$ 为主结果。
-- 多卡 / 大 batch / 非 Vicuna-7B：超出本 7 页主设定。
-- Hydra / Medusa / Lookahead / EAGLE-3 **方法全文** → **[[推理引擎生态]] / [[EAGLE3投机解码]]**；本卡对照列到此为止。
-
----
-
-## 九、一句话收束
-
-相对 [[推理引擎生态]] 的投机基线与 [[EAGLE3投机解码]] 的 EAGLE-3 训练增量，EntMTP 可研切片是：**在 Hydra 式 MTP 栈上，用任务吞吐 Pareto + TopologyBank，把「熵/路径价值 → 选哪张预编译草稿树」做成几乎零开销的训练免费调度，从而在不改分布的前提下挤出约 1.1× 相对默认 Hydra 树的 tok/s。**
-
----
-
-## 相关笔记
-
-- [[DiffusionForcing族]]
-- [[WorfBench工作流基准]]
-- [[合成对齐数据Magpie]]
-- [[EntMTP熵引导投机解码]]
-- [[DuoAttention与KVzip]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [EntMTP](https://arxiv.org/abs/2606.27550) §1、附录 A | 静态树与熵分布的错位；特征随任务变 |
+| 2 | 同上 §3–4 | 吞吐前沿、TopologyBank、path value 与三种策略 |
+| 3 | 同上 Table 1、§6.1 | 结果与增益分解 |
+| 4 | [[MTP训练范式]] | MTP 头本身怎么训 |

@@ -7,225 +7,105 @@ status: archived
 sources:
  - https://arxiv.org/abs/2503.01840
  - https://github.com/SafeAILab/EAGLE
- - https://papers.nips.cc/paper_files/paper/2025/file/c7b5a35ea98b62512a869c19ea7b03cb-Paper-Conference.pdf
+ - https://papers.nips.cc/paper_files/paper/2025/hash/c7b5a35ea98b62512a869c19ea7b03cb-Abstract-Conference.html
 arxiv: ["2503.01840"]
-related: ["推理引擎生态", "AI基础设施总览", "投机解码发展时间线"]
+related: ["推理引擎生态", "投机解码发展时间线", "AdaptiveSpec与Goose", "EntMTP熵引导投机解码", "MTP训练范式"]
 archived: 2026-09-22
 ---
 
 # EAGLE-3 投机解码增量切片（相对推理引擎生态）
 
-> **定位**：EAGLE-3 投机解码切片——在 **[[推理引擎生态]]** 已立的投机解码**基线**（Leviathan / Chen / Medusa / Lookahead 与引擎选型轴）之上，只补 **EAGLE-3** 相对 **EAGLE / EAGLE-2** 的可核对增量。
-> **研究线**：**AI Infra（主）** + **数学原理（接受长度 / 推测接受率，辅）**。
+> **主要来源**：[EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test](https://arxiv.org/abs/2503.01840)（Li、Wei、Zhang、Zhang，v3；NeurIPS 2025 [论文页](https://papers.nips.cc/paper_files/paper/2025/hash/c7b5a35ea98b62512a869c19ea7b03cb-Abstract-Conference.html)）；[SafeAILab/EAGLE](https://github.com/SafeAILab/EAGLE)（截至 2026-07-03）。
+> **研究线**：AI Infra（草稿头设计，主）· 数学原理（接受长度与多步接受率，辅）
 > **范围与相邻笔记**：
-> - **≠ [[推理引擎生态]]**：不重写投机解码通史与 Leviathan / Chen / Medusa / Lookahead 正文；本篇不复述「草稿—校验」框架证明。
-> - **≠ [[AI基础设施总览]]**：不重写 PagedAttention、Radix、PD 分离全文；SGLang 只写论文给出的 **EAGLE-3 吞吐表**，不重写引擎架构。
-> - 不把 Table 1 中 Medusa / Lookahead / Hydra 等对照列展开成谱系课（数字仅作「相对 EAGLE-2」旁证时点到）。
+> - ≠ [[推理引擎生态]]：本篇不写「草稿—并行校验、分布不变」的框架与 Medusa / Lookahead，投机解码共用背景见该篇第三节。
+> - ≠ [[AdaptiveSpec与Goose]]：本篇不写在 EAGLE-3 草稿器之上做的运行时树形与有损校验。
+> - ≠ [[MTP训练范式]]：本篇不写与主模型联训的多 token 预测头。
+>
+> **意义**：EAGLE-3 让 EAGLE 系草稿头能随训练数据扩大持续获益：去掉特征回归约束、训练时模拟多步推理之后，加速比随训练数据增加而上升，投机解码的草稿侧由此有了缩放路径；它也常被后续工作当作强基线和草稿器（如 AdaptiveSpec）。
+
+**一句话**：EAGLE 系在特征层做草稿，但扩大训练数据几乎不涨速；EAGLE-3 用两点改动解决——training-time test（训练时把草稿自己的输出喂回去，对齐推理时的多步输入）和多层特征融合（用目标模型低、中、高层特征代替只用顶层特征）。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 字段 | 核实值（PDF / arXiv API） |
-|---|---|
-| 标题 | *EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test* |
-| 作者 | Yuhui Li, Fangyun Wei, Chao Zhang, Hongyang Zhang（Peking University / Microsoft Research / University of Waterloo / Vector Institute） |
-| arXiv | **2503.01840v3** \[cs.CL\]（published **2025-03-03**；updated **2025-04-23**） |
-| 官方 PDF | `https://arxiv.org/abs/2503.01840`（**12** 页 A4；CreationDate **2025-04-24** CST） |
-| 可选镜像 | NeurIPS 2025 Conference PDF：https://papers.nips.cc/paper_files/paper/2025/file/c7b5a35ea98b62512a869c19ea7b03cb-Paper-Conference.pdf |
-| 代码 | https://github.com/SafeAILab/EAGLE（摘要末句） |
-| 相对 [[推理引擎生态]] | [[推理引擎生态]]「待核实」明示：EAGLE / EAGLE-2 须单独 PDF 后再补 → **本篇即该增量** |
+EAGLE 复用目标模型顶层特征（LM head 之前），在特征空间自回归出草稿，再用目标 LM head 得到草稿 token；EAGLE-2 加上按草稿置信剪枝的动态草稿树。论文观察到：把训练数据相对 ShareGPT 放大到 8 倍，EAGLE 的加速比和接受长度几乎是平线（Figure 1）。
 
-**一句话抓手：** EAGLE 系在特征层做草稿；扩数据却几乎不涨速。EAGLE-3 用 **training-time test** 去掉特征回归约束、改直接预测 token，并把目标模型 **低/中/高层特征融合** 喂给草稿头——从而出现「数据↑ → 加速比↑」的 scaling 曲线（Figure 1），相对 EAGLE-2 约 **1.4×** 延迟加速，并在 **SGLang** 大 batch 仍给出正吞吐增益。
+论文的归因（§1、Figure 3–4）有两层：
+1. EAGLE 的损失里有特征预测项 $l_{\text{fea}}$，要求草稿输出贴近目标顶层特征，这个额外约束限制了草稿模型的表达力。
+2. 只删掉 $l_{\text{fea}}$ 还不够：训练时草稿的输入都是真特征，推理第二步起输入却是草稿自己的输出，分布偏移让后续步的接受率崩掉。
 
----
+## 二、脉络
 
-## 二、相对 [[推理引擎生态]] / EAGLE-2 的增量立轴（不展开通史）
+| 节点 | 内容 | 来源 |
+|---|---|---|
+| 投机采样（2022–2023） | 草稿 + 并行校验，输出分布不变 | [[推理引擎生态]] 第三节 |
+| Medusa | 在目标模型上挂多个解码头出草稿 | [[推理引擎生态]] 第三节 |
+| EAGLE | 顶层特征上自回归的草稿头 + 树注意力校验 | EAGLE-3 §2 |
+| EAGLE-2 | 上下文感知的动态草稿树，EAGLE-3 沿用 | EAGLE-3 §2 |
+| HASS | 保留特征预测、缓解特征误差累积 | EAGLE-3 §3.2 |
+| EAGLE-3（2025） | 去掉特征约束 + training-time test + 多层特征融合 | EAGLE-3 |
+| 运行时方法（2026） | 以 EAGLE-3 为草稿器调树形与校验 | [[AdaptiveSpec与Goose]] |
 
-| 已覆盖（[[推理引擎生态]]） | 本篇只补 |
-|---|---|
-| 投机采样「草稿—并行校验、同分布」思想；Medusa / Lookahead 等入口 PDF | **不**重写；Table 1 有对照列时只录 EAGLE-2 vs EAGLE-3 |
-| 引擎选型：vLLM / SGLang / TRT-LLM；投机为 decode 轴因子 | **SGLang 集成表**（§4.3 Table 3–4）；vLLM Table 5 仅作附录交叉一句 |
-| EAGLE 倍率出处 | 倍率全部出自官方 PDF 摘要 / Table 1–4 |
+## 三、思想一：training-time test
 
-**EAGLE → EAGLE-2 → EAGLE-3（论文自述，一句链）：**
+做法（§3.2、Figure 3 下）：训练时就执行「测试步」。草稿头输出一个不受约束的向量 $a$，过目标 LM head 得到草稿 token；下一步把 $a$（而不是尚未校验的真特征）与新 token 的嵌入拼起来继续喂给草稿头。训练损失只留 token 预测项。这样训练分布覆盖了推理时「前缀是真特征、后面是自预测向量」的混合输入。
 
-- **EAGLE**：复用目标模型 **顶层特征**（LM head 前），在特征空间自回归，再用目标 LM head 出草稿 token；树状草稿 + tree attention 校验（§2.2；细节不展开）。
-- **EAGLE-2**：在 EAGLE 上加 **上下文感知动态草稿树**（用草稿置信度近似接受率并剪枝）；EAGLE-3 **兼容并沿用**该树技术（§2.2 末、贡献列表）。
-- **EAGLE-3 两刀**：① 去掉特征预测损失 $l_{\mathrm{fea}}$，训练期模拟多步生成（**training-time test**）；② 输入改为 **低/中/高** 层融合特征 $g$，不再锁死顶层 $f$（摘要 + §3）。
+模拟第二、三步时，自预测 token 与训练数据 token 的依赖呈树状，注意力掩码随之改成稀疏模式（Figure 6）。
 
----
+与 HASS 的区别（§3.2）：HASS 仍做特征预测、输入仍是顶层特征，动机是减少特征误差累积；EAGLE-3 的动机是去掉不必要的约束、提高表达力，输出不必拟合顶层特征。
 
-## 三、Training-time test（训练期「测」多步）
+证据（Figure 7，MT-bench，LLaMA-Instruct 3.1 8B）：$n$-$\alpha$ 指输入含 $n$ 个自预测向量时的接受率。EAGLE 随 $n$ 增大明显下降，EAGLE-3 几乎不变。
 
-### 3.1 问题：为何扩数据救不了原 EAGLE
+## 四、思想二：多层特征融合
 
-摘要 / §1 观察：把训练数据相对 ShareGPT 放大，**EAGLE 加速比与接受长度几乎不涨**（Figure 1 平线）；EAGLE-3 才出现上升曲线。
+为什么不能只用顶层（§1）：LM head 满秩时，顶层特征基本只编码「下一个」token 的分布，用它预测再下一个 token 信息不足。去掉 $l_{\text{fea}}$ 后，草稿输出不必再贴近顶层特征，才可以改用中间层特征。
 
-论文归因（§1 + Figure 3 上/中）：
+管线（§3.1、Figure 5）：在 prefill 或上一轮校验的目标前向中记录低、中、高三层特征 $l,m,h$（各为目标隐维 $k$），拼接后经全连接层压回 $k$ 维得到融合特征 $g$；$g$ 与已采样 token 的嵌入再经全连接层送入**单层** Transformer decoder，输出 $a$，过目标 LM head 采样草稿 token。尚未校验的位置没有真 $g$，用上一步的 $a$ 代替，与 training-time test 一致。论文未给出三层的具体层号。
 
-1. EAGLE 损失含 **特征预测** $l_{\mathrm{fea}}$ + **token 预测** $l_{\mathrm{token}}$；特征拟合是额外约束，限制草稿模型表达力，难吃数据。
-2. 仅去掉特征约束、仍用「真特征序列训练、推时塞入自预测特征」：第一步接受率 $0\textrm{-}\alpha$ 会升，但 Step 1 输出 $\hat a_{t+1}$ 远离真特征 $f_{t+1}$，Step 2 输入分布偏移 → $1\textrm{-}\alpha$ 崩（Figure 4）。
+消融（Table 2，LLaMA-Instruct 3.1 8B，Speedup / τ）：
 
-### 3.2 做法：训练时把「测试步」嵌进去
-
-**Training-time test**（Figure 3 底 + §3.2）：训练中执行测试步——草稿头产出无约束向量 $a$，再 **反馈** 进草稿模型继续训，使训练分布覆盖推理时「前缀真特征 + 后续自预测 $a$」的混合输入。
-
-跟读口径（中文）：
-
-`
-目标前向 → 得到可用的融合特征 g（或训练数据位置上的真特征）
- ↓
-草稿 decoder 一步 → 输出 a，LM head → 草稿 token
- ↓
-下一步把 a（而非尚未校验的真 g）拼上 token embedding 再喂草稿
- ↓
-训练 loss 只盯 token 侧（去掉 l_fea），多步模拟与推理对齐
-`
-
-**注意力掩码**（Figure 6）：原生一步用标准下三角；模拟第二/三步时，草稿自预测 token 与训练数据 token 的依赖呈树状，掩码改成「对角 + 指向原始训练 key」的稀疏模式；论文建议对应对位置用向量点积算注意力，避免稠密 matmul 浪费（§3.2）。
-
-**与 HASS 划界（论文原话动机不同，§3.2）：** HASS 仍做特征预测、保留 $l_{\mathrm{fea}}$、输入仍须顶层特征，动机是缓解特征误差累积；EAGLE-3 动机是 **去掉不必要约束以提升表达力**，输出不必拟合顶层特征。本篇不展开 HASS 算法细节。
-
-### 3.3 接受率证据（相对「训练–推理不一致」）
-
-Figure 7（MT-bench，LLaMA-Instruct 3.1 8B）：$n\textrm{-}\alpha$ = 输入含 $n$ 个自估计特征/向量、且此前草稿均被目标接受时的接受率。EAGLE 随 $n$ 上升接受率显著下降；**EAGLE-3 几乎不掉**——论文将其归为 training-time test 有效（§4.1）。
-
----
-
-## 四、多层特征融合（low / mid / high → $g$）
-
-### 4.1 为何不能只啃顶层
-
-§1：全秩 LM head 下，顶层特征与「下一 token logits」一一对应；**仅凭顶层去预测「下下个」token** 信息不足。去掉 $l_{\mathrm{fea}}$ 后，才允许改用中间层特征（不再强迫输出靠近顶层 $f$）。
-
-### 4.2 推理管线中的融合（§3.1 / Figure 5）
-
-在 prefill 或上一轮校验的目标模型前向中，记录 **低 / 中 / 高** 层特征序列 $l,m,h$（各为 $k$ 维，$k=$ 目标 hidden size）：
-
-1. $\mathrm{concat}(l,m,h)\in\mathbb{R}^{3k}$
-2. **FC** 压回 $k$ 维 → 融合特征 $g$
-3. 将 $g$ 与已采样 token 的 embedding $e$ 再经 FC 压到 $k$，送入 **单层** Transformer decoder（草稿核心），输出 $a$
-4. $a$ 过 **目标 LM head** 采样得到草稿 token
-
-多步时：尚未被目标校验的位置 **没有** 真 $g$，用上一步草稿输出 $a$ 顶替，再与新 token embedding 拼接（与 training-time test 一致）。
-
-**未公开：** 正文写 low/middle/high，**未**给出具体层下标（如第几层）。
-
-### 4.3 消融：两刀都必要（Table 2）
-
-目标：LLaMA-Instruct 3.1 8B；相对 EAGLE-2 逐步加件：
-
-| Method | MT-bench Speedup / τ | GSM8K Speedup / τ |
+| 配置 | MT-bench | GSM8K |
 |---|---|---|
 | EAGLE-2 | 3.16× / 4.05 | 3.39× / 4.24 |
-| \+ remove fea con（去特征约束） | 3.82× / 5.37 | 3.77× / 5.22 |
-| \+ fused features（ours） | **4.40× / 6.13** | **4.48× / 6.23** |
+| 去掉特征约束 | 3.82× / 5.37 | 3.77× / 5.22 |
+| 再加多层融合（EAGLE-3） | **4.40× / 6.13** | **4.48× / 6.23** |
 
-论文结论：去约束与融合特征 **各自** 抬升接受长度与加速比（§4.2）。
+两点改动各自都抬升接受长度和加速比。
 
----
+## 五、结果要点
 
-## 五、相对 EAGLE-2 的加速轴（论文数字）
+- **相对 vanilla 与 EAGLE-2**：论文称加速比 3.0×–6.5×，相对 EAGLE-2 提升 20%–40%（摘要写约 1.4×）；峰值在 HumanEval，Vicuna 13B 上 6.47×、平均接受长度 7.54（§4.1、Table 1，temperature 0）。
+- **数据缩放**：训练数据从 1 倍到 8 倍 ShareGPT，EAGLE-2 近乎平台、EAGLE-3 持续上升（Figure 1）。训练数据为 ShareGPT 与 UltraChat-200K，响应由目标模型重新生成。
+- **生产框架**：SGLang 团队在单卡 H100、链长 3、不用树的设定下测得 batch size 64 时 EAGLE-3 仍有 1.38× 吞吐，而 EAGLE 在 batch 24 起已低于 1×（§4.3、Table 3）。投机解码常被认为大 batch 下无用，这一组数字是反例。
 
-### 5.1 摘要级主张（照录）
+## 六、意义
 
-- 加速比最高约 **6.5×**（相对 vanilla 自回归）。
-- 相对 EAGLE-2 约 **1.4×** 改进（摘要；贡献条另写：约 **8×** 于 EAGLE 的训练数据下，batch size 1 延迟 **1.4×** over EAGLE-2）。
-- §4.1：约 **3.0×–6.5×** vs vanilla；相对 EAGLE-2 约 **20%–40%** 提升。
+EAGLE-3 把「草稿头训练」从固定约束下的拟合问题改成可随数据缩放的问题：两点改动都不改目标模型、不放松接受条件，因此仍是无损加速。它在 SGLang 等引擎中落地后，常被后续投机解码研究当作强基线和草稿器宿主，例如 2026 年的 AdaptiveSpec 就直接建立在它之上。
 
-### 5.2 Table 1 精读：EAGLE-2 vs EAGLE-3（Temperature=0，Mean 列）
+## 七、局限与待核实
 
-| Target | EAGLE-2 Mean Speedup / τ | EAGLE-3 Mean Speedup / τ |
+- 低、中、高三层的具体层号与全连接层初始化，论文未给出，需读代码仓。
+- 405B、671B 级目标模型作者声明未测；TRT-LLM 与新版 vLLM 下的表现超出论文主表。
+- vLLM 对照表（§4.4、Table 5）正文写 RTX3090、表题写 A100，论文内部不一致。
+- 数字以 arXiv v3 为准（v3 即最新版）；NeurIPS 相机就绪版是否逐字相同未核对。
+
+## 八、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| Vicuna 13B | 4.22× / 4.83 | **5.51× / 6.62** |
-| LLaMA-Instruct 3.1 8B | 3.23× / 4.11 | **4.44× / 6.23** |
-| LLaMA-Instruct 3.3 70B | 2.85× / 3.78 | **4.12× / 5.88** |
-| DeepSeek-R1-Distill-LLaMA 8B | 3.26× / 3.92 | **4.16× / 5.84** |
+| [[推理引擎生态]] | 投机解码共用背景（decode 受带宽束缚、草稿—校验框架、Medusa / Lookahead）在那篇第三节，本篇是其后 EAGLE 系草稿头的增量 | 引擎选型、经典框架证明 |
+| [[投机解码发展时间线]] | EAGLE-3 列在该时间线的投机与多 token 预测族中 | 族谱全表 |
+| [[AdaptiveSpec与Goose]] | AdaptiveSpec 以 EAGLE-3 为草稿器和静态基线，在其上每步调树形、放宽校验；Goose 是无草稿头的对照路线 | margin 校验、各向异性树 |
+| [[EntMTP熵引导投机解码]] | EntMTP 借用 EAGLE-2 的 path value 作为选树特征，是同一「草稿置信驱动树形」思路在 MTP 头上的变体 | TopologyBank、Hydra 栈评测 |
+| [[MTP训练范式]] | 两者都训练草稿头：EAGLE-3 是独立的特征级草稿模型，那篇的 MTP 头与主模型联训；FastMTP 兼容 EAGLE 式递归草稿 | MTP 损失与头对齐 |
 
-单点峰值（正文）：HumanEval 上 EAGLE-3 可达约 **6.5×**、平均接受长度最高约 **7.5**（§4.1；Vicuna 13B HumanEval 行：6.47× / 7.54）。DSL 8B 在 GSM8K 最高加速——论文归因草稿还用了 **OpenThoughts-114k-math**（§4.1）。
+## 九、延伸阅读
 
-**指标定义（§ Metrics，无损前提）：** 不改目标权重；严格投机接受条件 → **不评生成质量**。汇报：
-
-- **Speedup**：相对 vanilla AR 实测加速比
-- **τ**：每轮草稿–校验平均接受 token 数
-- **$n\textrm{-}\alpha$**：链状草稿下的接受率（测接受率时不用树）
-
-Temperature=1 时 Table 1 仍给 EAGLE-2/3；对 Medusa 等「放宽接受、不保证无损」的方法，论文声明 **不与 EAGLE-3 比 temperature=1**（Table 1 题注）——本篇不展开那些方法。
-
-### 5.3 数据 scaling（Figure 1）
-
-横轴：相对 ShareGPT 的数据倍数（1 / 2 / 4 / 8）。EAGLE-2：加速与接受长度近乎平台；EAGLE-3：随数据上升。训练数据：ShareGPT + UltraChat-200K（约 68K / 464K 条）；响应用 **目标模型生成** 而非固定语料（Implementation）。GPU 约束下未测 405B / 671B（§4 Models）。
-
----
-
-## 六、SGLang 集成叙述（生产框架吞吐）
-
-> 本节只录论文 §4.3 与 Acknowledgement；**不**重写 SGLang Radix/FSM（→ [[推理引擎生态]]）。
-
-### 6.1 设定与声明
-
-- 环境：**SGLang v0.4.4**；单卡 **H100**；目标 **LLaMA-Instruct 3.1 8B**；数据集 **MT-Bench**。
-- 实验由 **SGLang 团队**完成（Acknowledgement：James Liu, Ke Bao, Yineng Zhang, Lianmin Zheng, Ying Sheng 等合并与评测）。
-- **本部分未用树结构**；**链长设为 3**（§4.3）。基线：SGLang **无**投机 = 1.00×。
-
-### 6.2 大 batch 吞吐（Table 3）
-
-| Batch size | 2 | 4 | 8 | 16 | 24 | 32 | 48 | 56 | 64 |
-|---|---|---|---|---|---|---|---|---|---|
-| EAGLE | 1.40× | 1.38× | 1.23× | 1.02× | 0.93× | 0.94× | 0.88× | 0.99× | 0.99× |
-| **EAGLE-3** | **1.81×** | **1.82×** | **1.62×** | **1.48×** | **1.39×** | **1.32×** | **1.38×** | **1.34×** | **1.38×** |
-
-摘要 / §4.3：EAGLE 在 bs≈24 已损吞吐；**EAGLE-3 在 bs=64 仍约 1.38×（+38%）**。叙事抓手：投机常被质疑「大 batch 没用甚至负优化」——在高度优化的 SGLang 上，EAGLE-3 仍给出正增益（§4.3 开篇讨论访存墙 vs 算力冗余随 batch 变小）。
-
-### 6.3 Batch size = 1 吞吐（Table 4，同 H100 / MT-bench）
-
-| Method | Throughput (bs=1) |
-|---|---|
-| SGLang（无投机，1×H100） | 158.34 tokens/s |
-| SGLang + EAGLE-2 | 244.10 tokens/s |
-| SGLang + EAGLE-3 | **373.25 tokens/s** |
-
-相对无投机：373.25 / 158.34 ≈ **2.36×**（算术核对，论文未单列该比值）；相对 EAGLE-2：373.25 / 244.10 ≈ **1.53×**（同，仅供跟读）。
-
-### 6.4 与 vLLM 表的交叉（非本篇主轴）
-
-§4.4 Table 5 另给 vLLM 大 batch 对照（链长最大 2、无树、MT-Bench）。正文写结果在 **RTX3090**，表题写 **A100**——**论文内部硬件表述不一致，照录不调和**；详细数字不占本篇主表。选型含义仍落在 [[推理引擎生态]]：「投机因子 × 引擎实现」需版本锁定后再比。
-
----
-
-## 七、延伸阅读
-
-1. **EAGLE 扩数据不涨速** ← 特征预测约束 + 多步分布偏移。
-2. **Training-time test** ← 训练时把自预测 $a$ 喂回，对齐推理；去 $l_{\mathrm{fea}}$。
-3. **多层融合** ← $\mathrm{FC}(\mathrm{concat}(l,m,h))\to g$，再单层 decoder 出 $a$。
-4. **相对 EAGLE-2** ← Table 1 Mean 全面更高；摘要约 1.4×；HumanEval 峰值 ~6.5×。
-5. **SGLang** ← 团队实测；bs=64 仍 1.38×；bs=1 上 373 tokens/s vs EAGLE-2 的 244。
-
----
-
-## 八、局限与待核实
-
-- 低/中/高层的 **具体层索引**与 FC 初始化：PDF 未给 → 读代码仓库再补。
-- EAGLE-3 在 TRT-LLM / 更新版 vLLM 默认图与接受率曲线：超出本 PDF 主表。
-- 405B / 671B：作者声明未测。
-- NeurIPS 相机就绪与 arXiv v3 是否逐字同文：未逐字核对，本笔记数字以 arXiv v3 PDF 为准。
-
----
-
-## 九、一句话收束
-
-相对 [[推理引擎生态]] 的投机**基线**，EAGLE-3 的可研增量不在「再讲一遍草稿校验」，而在：**用 training-time test 拆掉特征回归枷锁，用低/中/高融合特征抬草稿表达力，让加速比重新吃上数据 scaling，并在 SGLang 大 batch 上交出仍为正的吞吐表**。
-
----
-
-## 相关笔记
-
-- [[EAGLE3投机解码]]
-- [[代码智能体Harness史线]]
-- [[扩散语言模型]]
-- [[硬件软件协同部署]]
-- [[隐私与机器遗忘]]
-- [[推理引擎生态]]
-- [[AI基础设施总览]]
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [EAGLE-3](https://arxiv.org/abs/2503.01840) Figure 1、3–5、§3 | 数据缩放曲线；training-time test 与融合管线 |
+| 2 | 同上 Table 2、Figure 7 | 两点改动的消融；多步接受率不衰减 |
+| 3 | [SafeAILab/EAGLE](https://github.com/SafeAILab/EAGLE) | 实现与层号 |
+| 4 | [[AdaptiveSpec与Goose]] | 以 EAGLE-3 为草稿器的运行时扩展 |
