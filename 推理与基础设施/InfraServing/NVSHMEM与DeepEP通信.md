@@ -164,7 +164,7 @@ README 没有给出 V2 相对 V1 的性能数字，本篇因此不写倍数。V2
 | [[混合专家架构]] | 那篇讲专家为何稀疏激活，本篇讲稀疏激活带来的 all-to-all 如何落到通信底层 | 路由损失、容量因子、MoE 史 |
 | [[MoE路由与负载均衡]] | 那篇的路由决定每个 token 送往哪些专家、跨几个节点，也就决定了本篇 dispatch / combine 的 all-to-all 流量与失衡 | 路由算法与负载均衡损失 |
 | [[DeepSeekV3训练与MoE基建]] | 那篇的「IB 到同 index GPU、再 NVLink 转发」正是 DeepEP 高吞吐路径的两段式 | DualPipe、FP8 配方、SM 配额 |
-| [[DeepSeekV4技术报告深读]] | 那篇 §四 的专家并行细粒度重叠建在同类 dispatch/combine 之上，本篇讲其下层通信 | V4 的融合管线与 MegaMoE |
+| [[DeepSeekV4技术报告深读]] | 那篇 3.5 节的专家并行细粒度重叠建在同类 dispatch/combine 之上，本篇讲其下层通信 | V4 的融合管线与 MegaMoE |
 | [[MegaScaleInfer与UltraEP]] | 那篇的 M2N 库拿 DeepEP 作对照，UltraEP 集成的是 DeepEP 分支，本篇讲被对照与被集成的这一层 | 部署搜索、热度均衡 |
 | [[硬件软件协同部署]] | 那篇讲 NVLink 域与互联代际，本篇讲在这种互联上怎样用设备侧通信走满带宽 | 硬件规格与选型 |
 | **[[分布式训练并行策略]]** 训练并行总览 | 专家并行在五种并行中的位置：EP 与 PP、ZeRO 组合时每层两次 all-to-all，是本篇通信需求的来源 | 并行组合法则与流水线调度 |

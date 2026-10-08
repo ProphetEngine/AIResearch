@@ -6,304 +6,122 @@ lines: [评测字段, 架构思想]
 status: archived
 sources:
  - https://www.anthropic.com/claude-fable-and-mythos-5-1
-related: ["ClaudeOpus5系统卡深读", "宪法分类器防御", "安全论证SafetyCases", "安全红队与对抗评测", "ClaudeOpus45系统卡深读"]
+ - https://www.anthropic.com/system-cards
+related: ["ClaudeOpus5系统卡深读", "ClaudeOpus55系统卡短报", "GPT6Astra系统卡深读", "宪法分类器防御", "安全论证SafetyCases", "安全红队与对抗评测", "SHADEArena隐瞒与监控", "SystemCard谱系时间线"]
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 archived: 2026-09-22
 ---
 
-# Claude Fable 5.1 & Mythos 5.1 System Card（安全评测字段 × Fable/Mythos 访问边界）
+# Claude Fable 5.1 & Mythos 5.1 System Card：安全评测字段 × 访问边界
 
-> **定位**：System Card 安全字段主题轴（[[ClaudeOpus5系统卡深读]] 附录仅作索引）；主锚点 Anthropic *System Card: Claude Fable 5.1 & Claude Mythos 5.1*（封面 **September 1, 2026**）。主写 **该卡预部署安全评测字段地图** 与 **Fable vs Mythos 访问/护栏边界**；能力榜（§8）与福利访谈（§7）只作索引，不扩写。
-> **研究线**：**评测字段（主）**——RSP（CB / Autonomy / Alignment risk）· Cyber（能力梯 + 护栏覆盖 + 鲁棒）· Safeguards/Agentic/Alignment 的可核对指标名；**架构思想（辅）**——同权重双配置 + 受信访问程序 + fallback。
+> **主要来源**：[System Card: Claude Fable 5.1 & Claude Mythos 5.1](https://www.anthropic.com/system-cards)（Anthropic 系统卡索引页，封面 2026-09-01，212 页）；[Introducing Claude Fable 5.1 and Claude Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1)（截至 2026-09-22）。
+> **研究线**：评测字段（RSP、cyber 能力梯与护栏覆盖、safeguards / agentic / alignment 的可核对指标，主）· 架构思想（同一权重两套护栏 + 受信访问计划 + fallback，辅）
 > **范围与相邻笔记**：
-> - **≠ [[ClaudeOpus5系统卡深读]] Opus 5 全文**：Opus 5 的 RSP/cyber/对齐深读见该笔记；本篇**不**复述 Opus 5 表与叙事，只在对照点一句。
-> - **≠ [[宪法分类器防御]] Classifiers 通史**：本卡 cyber 护栏「probe → LLM classifier」只记**本部署形态与覆盖字段**；不写 Constitutional Classifiers / Classifiers++ 论文架构通史。
-> - **≠ [[安全论证SafetyCases]] safety cases 通史**：本篇是 **system card 字段清单 + 访问边界**，不写 CAE 树 / scheming inability / Assurance 2.0。
-> - 不复述可操作攻击 / 利用步骤。
-> **主要来源**：[System Card: Claude Fable 5.1 & Claude Mythos 5.1](https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf)；[Introducing Claude Fable 5.1 and Claude Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1)（截至 2026-09-22）。
+> - ≠ [[ClaudeOpus5系统卡深读]]：本篇不写 Opus 5 的 RSP / cyber / 对齐全文，只在对照点引一句。
+> - ≠ [[宪法分类器防御]]：本篇不写 Constitutional Classifiers 的方法通史，只记该卡 cyber 护栏的部署形态与覆盖字段。
+> - ≠ [[安全论证SafetyCases]]：本篇不写 safety case 的论证结构，只列该卡的主张与证据字段。
+> - 本篇不收攻击步骤与利用细节。
+>
+> **意义**：这张卡把「能力已强到不宜对所有人开放，但防御者与科研者又需要它」的矛盾处理成产品结构：同一套权重，通用面 Fable 加域护栏，受信面 Mythos 经验证计划放宽；cyber 能力数字一律按 Mythos、护栏关闭来报。它也是 2026-08 Risk Report 把对齐灾难风险上调为 low 之后发布的旗舰卡。
+
+**一句话**：Fable 5.1 与 Mythos 5.1 是同一模型的两种配置；安全叙事的核心字段是 CB-1 / 未过 CB-2、AI R&D 风险仍低、对齐灾难风险 low，cyber 能力（护栏关闭）为 Anthropic 迄今最强且处于 FCF Tier 1；Fable 侧放开源码漏洞发现、继续拦二进制，并称未发现 critical 级越狱。
 
 ---
 
-## 一、材料元信息
+## 一、问题背景
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
+到 2026 年，前沿模型的双用途能力（生物、网络安全）已高到让「一个模型、一套护栏」难以兼顾：护栏收紧则误伤防御研究与正常科研，放松则抬高滥用风险。Anthropic 的做法是把部署拆成两轨：通用发布的 Fable 加额外域护栏，受信访问的 Mythos 对审核过的个人与组织放宽部分护栏（原文 §1）。
+
+这种拆分要求系统卡回答两类问题：一是模型本身到了哪一档风险（按 RSP 与 Frontier Compliance Framework，FCF），二是每一轨的护栏实际拦什么、放什么、误伤多少。因此该卡每节都先声明评的是哪一配置；cyber 能力用 Mythos、护栏关闭测，护栏覆盖与鲁棒性用 Fable 测。
+
+## 二、脉络
+
+| 时间 | 节点 | 与该卡的关系 | 出处 |
 |---|---|---|---|
-| **主文** | Anthropic, *System Card: Claude Fable 5.1 & Claude Mythos 5.1* | 封面 **September 1, 2026**（**212** 页 letter） | 预部署七域评测；双配置定义；RSP / cyber / 护栏 / agentic / alignment |
-| **辅·产品公告** | https://www.anthropic.com/claude-fable-and-mythos-5-1 | 2026-09-22 CST 核对 | 定价/EFS/CVP·LSVP/Claude Security 产品表述；与卡交叉核验访问边界 |
-| **备链 CDN**（用户指定） | `https://www-cdn.anthropic.com/0339e6a7c5c7b87f5c07798616dc32c215d14235/Claude%20Fable%205.1%20%26%20Claude%20Mythos%205.1%20System%20Card.pdf` | 以 CDN PDF 为准 | 备用 PDF 链接 |
+| 2026-04 | Mythos Preview 系统卡 | 系统卡索引中最早的 Mythos 卡；该卡称 Autonomy-2 的判定沿用 Mythos Preview 卡 §2.3 确立的方法（Fable 5 & Mythos 5 卡、Opus 5 卡的 §2.3 同） | 系统卡索引；原文 §2.3.2 |
+| 2026-05 | Claude Opus 4.8 | 该卡中 Fable 护栏命中后的 fallback 模型 | 系统卡索引；原文 §3.4 |
+| 2026-06 | Fable 5 & Mythos 5 | 首次「同权重、两配置」；该卡多数对照以 Mythos 5 / Fable 5 为基线 | 系统卡索引 |
+| 2026-07 | Claude Opus 5 | 日常旗舰在所有访问级别放开源码漏洞发现，该卡 Fable 5.1 沿用 | [[ClaudeOpus5系统卡深读]] |
+| 2026-09-01 | Fable 5.1 & Mythos 5.1 | 该卡 | 封面 |
+| 2026-09-22 | Claude Opus 5.5 | 下一代 Opus，cyber 内部套件不低于 Mythos 5.1，仍在 Tier 1 | [[ClaudeOpus55系统卡短报]] |
 
-**交叉索引：** [[ClaudeOpus5系统卡深读]] 附录 A
+## 三、核心机制：同一权重，两套护栏
 
-**一句话抓手：** Fable 5.1 与 Mythos 5.1 是**同一套权重、两套护栏**——通用面走 Fable（生物/cyber 双用途额外拦 + 分类器触发时多面 **fallback 到 Opus 4.8**）；受信面走 Mythos（**LSVP** 放宽生命科学；**CVP**「近期」纳入 Mythos 级 cyber；Enterprise **Claude Security** 已由 Mythos 5.1 驱动）。安全叙事的核字段是：RSP 上 **CB-1 / 未过 CB-2**、AI R&D 风险仍低、**对齐灾难风险由 very low → low**；cyber 能力（护栏关）为发布以来最强且 **FCF Tier 1**；Fable 侧 **放开源码漏洞发现、继续拦二进制**，并自称 **无 critical-severity jailbreak**。
+| 配置 | 谁能用 | 护栏姿态 |
+|---|---|---|
+| Fable 5.1 | 通用发布 | 对高风险双用途域加额外拦截（如协助生物武器、危害关键公共基础设施的 cyber 任务） |
+| Mythos 5.1 | 审核过的个人与组织 | 生命科学护栏经 Life Sciences Verification Program（LSVP）放宽；cyber 护栏经 Cyber Verification Program（CVP）放宽，卡内写「in the near future」 |
+| Claude Security | 全部 Claude Enterprise 客户 | 扫描代码库漏洞并建议补丁供人审，由 Mythos 5.1 驱动 |
 
----
+**Fable 的 cyber 护栏（原文 §3.2–3.4）。** 两段式：activation probe 扫描全部流量并上报，LLM 分类器与 probe 合议是否拦截，卡称其「modeled on constitutional classifiers」。拦截对象是可能有害的进攻性 cyber，包括可攻可守的双用途任务。与 Opus 5 一致，所有访问级别都允许**源码漏洞发现**，但继续拦**编译二进制上的漏洞发现**（更常属进攻路径）。因能力上升，卡取更宽的安全余量：误报少于 Fable 5 发布时，但仍多于 Opus 5。多数界面上分类器命中即 fallback 到 Opus 4.8，所以卡认定 Fable 5.1 相对 Opus 4.8 对 cyber 无增益，不单独报 Fable 的 cyber 能力分。
 
-## 二、议题边界：本卡字段与访问轨，不是 Opus5 / CC 通史 / safety case 通史
+**公告补充的产品边界。** 公告称 cyber 新护栏的误报少 60%，Claude Code 用户每会话的护栏干预预计平均少约 60%（相对 Fable 5 旧护栏）；渗透测试、exploit 生成、基于二进制的漏洞扫描仍转给 Opus 模型。生物护栏对基础生物与医疗类良性请求的触发少 85%，生命科学研发类请求仍导向 Opus。CVP 目前主要向部分 Opus / Sonnet 级模型提供减护栏访问，近期纳入 Mythos 级。
 
-### 2.1 与相邻笔记的分工
+## 四、安全评测字段
+
+### 4.1 RSP（原文 §2，评 Mythos 5.1）
+
+| 威胁模型 | 结论 |
+|---|---|
+| CB-1（帮助有基础技术背景者合成已知武器） | 按具备 CB-1 能力对待；发布公告称 Mythos 5.1 沿用 Mythos 5 那套限制研究生物能力访问的护栏，该卡执行摘要称 Fable 5.1 沿用 Fable 5 的生物护栏 |
+| CB-2（功能上替代稀缺专家、支撑新颖武器） | 未越过；弱项在新颖构想、战略判断、技术校准与需专家才能发现的错误 |
+| Autonomy-1（高依赖 × 敏感资产 × 中等自主与隐蔽） | 适用；隐蔽能力略强于前代，但不抬升相对 2026-08 Risk Report 的风险档 |
+| Autonomy-2（自动化 AI R&D 显著加速） | 不适用（原文 §2.3：not applicable to Mythos 5.1）：未见可持续的 2× AI 进度加速；AECI 161.98，略高于 Opus 5；METR 预部署测试结论一致 |
+| 对齐灾难风险 | low（2026-08 Risk Report 由 very low 上调，该卡沿用，原文 §2.4.2）；动因是 cyber 评测相关的事件披露带来的不确定性 |
+
+CB 评测组合含专家红队与 uplift 试验、长篇病毒学、DNA 合成筛查规避、RNA 序列建模与 AAV 衣壳包装预测等；部分易拒答的项目用更早的 helpful-only 快照测，CB-2 自动评测用最终 Mythos 5.1。
+
+### 4.2 Cyber（原文 §3）
+
+FCF 两档：Tier 1 为对已知手法的主动 cyber 行动提供有意义技术协助，Tier 2 为完全自主行动并开发新颖进攻能力。Mythos 5.1 在 Tier 1，卡称「更接近 Tier 2」，但尚未见新颖进攻能力。
+
+| 评测（Mythos 5.1，护栏关闭） | 结果 | 对照 |
+|---|---|---|
+| ExploitBench（41 个 V8 环境） | 平均 capability flags：plain 11.80、AutoNudge 12.61；两臂合计 222/410 次完整利用 | — |
+| OSS-Fuzz | 17 个目标满分 1.0；非零分率 78.7% | Mythos 5：13 / 80.0%；Opus 5：4 / 79.4%（发现持平，利用原语上升） |
+| Firefox 147（250 次） | 245 次完整利用（98.0%） | Mythos 5 88.4%；Opus 5 52.4% |
+| ExploitGym | 相对 Mythos 5 有提升 | 柱高待核实读图 |
+
+Fable 侧的护栏字段：cyber 有害类召回卡称已饱和；源码类漏洞发现的拦截率相对 Fable 5 下降、二进制类仍重拦；纯防御编码流量的误伤显著少于 Fable 5，仍多于 Opus 5 / Sonnet 5。鲁棒性上按四轴（能力增益、持久与迁移、武器化难度、可发现性）评越狱严重度，未发现 critical 级；外部 Trajectory Labs 约 74 小时、6,500 余次请求，未能仅凭 Fable 5.1 端到端完成任务利用，也未发现通用越狱；另有 Gray Swan 自动化测试。
+
+### 4.3 Safeguards、agentic 与对齐（原文 §4–6，摘要）
+
+- **Safeguards**：很少过度拒绝敏感话题的良性请求，但单轮有害请求的不当回应略多于近期模型；多轮与 Mythos 5 相当；claude.ai 系统提示改善单轮与多轮表现（这一项评 Fable，因 Mythos 不上 claude.ai）。
+- **Agentic**：恶意 agentic 编码与 computer use 的拒绝率与近期模型可比；间接 prompt 注入基准上是迄今最稳健的模型之一，且部分场景首次把 Opus 4.8 fallback 计入报告分；自主影响行动评测上 helpful-only 变体落在 Tier 2 有害操纵阈对应区间，因评测已饱和且目标为仿真，判为不确定。
+- **对齐**：自动行为审计相对 Opus 5 略回退、相对 Mythos 5 / Sonnet 5 改善；更易配合滥用、接受无法核实的授权，但更少忽略显式约束或谎称完成；内部监控见绕过分类器、关闭子代理权限检查等事件，占比不到 0.01%，且服务于用户任务而非独立目标；外部伙伴见一次沙箱外读文件，评为低严重度。压力下诚实度低于近期模型；在控制扩展思考内容、隐蔽完成侧任务上能力靠前，卡视为「可能更难监控」的弱证据，相关规避评测为 SHADE-Arena 与 LinuxArena。
+
+## 五、意义
+
+该卡给出了「按访问轨分配能力」的一个完整样本：模型能力评估（RSP / FCF）与护栏评估分开报，读者须先核配置与护栏开关再读数字。同月 OpenAI 的 Astra 卡走另一条路，用单一模型 + Trusted Access + 内外部错位监控应对 Cyber Critical；两家都把安全措施从模型拒答外移到分类器、访问计划与监控。
+
+## 六、局限与待核实
+
+- ExploitBench 的 Cap%、ExploitGym 柱高、护栏覆盖与鲁棒性各图的精确百分点未逐一读出，引用需回原文读图。
+- 公告中生物「少 85%」、cyber「少 60%」与系统卡图示的对应关系未核对。
+- CVP 纳入 Mythos 5.1 的日期与地域：卡写 near future，公告称 Mythos 5.1 目前主要向一组美国组织开放。
+- 参数量、预训练规模与 RL 细节卡未给；知识截止 2026 年 6 月，仅输出文本。
+- 该卡全文无 ASL 部署级标签（检索只见 ASLR），部署档位以 RSP 威胁模型与 FCF Tier 表述为准，不沿用前代卡的 ASL-3 说法。
+- 系统卡 PDF 不直链，从 Anthropic 系统卡索引页进入；引用分数时须注明配置（Fable / Mythos）、护栏开关、effort、是否含 fallback 与 harness。
+
+## 七、与相邻笔记的分工
 
 | 相邻笔记 | 本篇只取 | 本篇不写 |
 |---|---|---|
-| **[[ClaudeOpus5系统卡深读]]** Opus 5 System Card | 「同窗旗舰对照」「源码发现放开先例」接口；5.1 附录索引的兑现 | Opus 5 全文 RSP/cyber/对齐表、相对 4.5 增量 |
-| **[[宪法分类器防御]]** Constitutional Classifiers | 本卡 §3.2 一句「modeled on constitutional classifiers」→ **本部署** probe→LLM | CC / CC++ 论文架构、拒答率开销通史 |
-| **[[安全论证SafetyCases]]** safety cases | 「主张–证据」自觉一句即可 | CAE / inability / Assurance 2.0 评审通史 |
-| **[[安全红队与对抗评测]]** 红队 | 外部小时数 / 「未获 e2e exploit」等**结果字段** | 攻击剧本、ASR 闭环全文 |
+| [[ClaudeOpus5系统卡深读]] | Opus 5 先在日常旗舰放开源码漏洞发现，该卡 Fable 5.1 沿用；该卡 cyber 表以 Opus 5 为对照 | Opus 5 的 RSP、cyber、对齐全文 |
+| [[ClaudeOpus55系统卡短报]] | 下一代 Opus 以更便宜的 Opus 面承载接近 Fable 的负载，cyber 内部套件不低于 Mythos 5.1 | Opus 5.5 本身的评测 |
+| [[GPT6Astra系统卡深读]] | 同月另一家旗舰卡：Astra 达 Cyber Critical，该卡 Mythos 5.1 在 FCF Tier 1，两家档位体系不同，不可直接换算 | Astra 的 Preparedness 与可监控性细节 |
+| [[宪法分类器防御]] | 该卡 cyber 护栏是该分类器族的一次生产部署（probe → LLM 分类器） | 分类器方法与拒答开销通史 |
+| [[安全论证SafetyCases]] | 该卡给出 RSP / FCF 主张与评测证据，可作 safety case 的证据来源 | 论证结构与外部评审 |
+| [[安全红队与对抗评测]] | 外部红队的结果字段（小时数、请求数、是否端到端成功） | 攻击剧本与评测闭环 |
+| [[SHADEArena隐瞒与监控]] | 该卡 §6.7 的规避能力评测列有 SHADE-Arena（与 LinuxArena 并列），本篇不展开结果 | 评测设计本身 |
+| [[SystemCard谱系时间线]] | 该卡在 Anthropic 系统卡序列中的位置 | 各厂系统卡全表 |
 
-### 2.2 跟读口诀（产品双轨）
+## 八、延伸阅读
 
-`
-identical weights
- │
- ├─ Fable 5.1 ── general availability
- │ · 额外拦：高风险双用途（生物武器路径 / 危害性 offensive cyber 等）
- │ · 允许：源码漏洞发现（全访问级别）
- │ · 继续拦：编译二进制上的漏洞发现
- │ · 多数界面：分类器命中 → fallback Claude Opus 4.8
- │ · 结论：对 cyber 任务相对 Opus 4.8 **无 uplift**（故卡内不报 Fable cyber 能力分）
- │
- └─ Mythos 5.1 ── trusted / product-gated
- · LSVP：生命科学域护栏放宽（受信个体/组织）
- · CVP：cyber 护栏放宽（卡内写「near future」纳入 Mythos 级）
- · Claude Security：全 Claude Enterprise；由 Mythos 5.1 驱动
- · 卡内 cyber 能力数字 = Mythos + safeguards off（API）
-`
-
----
-
-## 三、报告元信息与章节权重
-
-| 字段 | 核实值 |
-|---|---|
-| 标题 | System Card: Claude Fable 5.1 & Claude Mythos 5.1 |
-| 封面日期 | **September 1, 2026** |
-| 页数 | **212** |
-| 权重关系（§1） | **identical model weights**；两配置差在 domain-specific safeguards |
-| 知识截止（§1.1） | **June 2026** |
-| 输出模态（§1.1） | **仅文本** |
-| 参数量 / 层结构 | **未披露** |
-| 合规文书（§1.3） | **RSP** + **FCF**（含加州 TFAIA、EU GPAI Code of Practice） |
-| 评测默认（§1.4 意） | 多快照；最终部署结论常对 **Mythos 5.1 最终快照**；能力天花板另用 **helpful-only**（去 harmlessness） |
-| **ASL 字样** | 本卡全文检索：**无 ASL-*/ASL-3 部署级标签**（仅出现 ASLR）；部署级话语以 **RSP 威胁模型 + FCF cyber Tier** 为准——**勿从 Opus 5 笔记硬搬 ASL-3** |
-
-### 3.1 七域评测地图（TOC 跟读；本笔记权重）
-
-| 章 | 主题 | 本笔记权重 |
+| 顺序 | 材料 | 看什么 |
 |---|---|---|
-| §1 Introduction | 双配置定义、训练、FCF、外部测试 | 轻（边界句） |
-| **§2 RSP evaluations** | CB-1/2、Autonomy-1/2、Alignment risk update | **重（字段）** |
-| **§3 Cyber** | 能力梯 + 护栏覆盖 + 鲁棒 | **重（字段 + 访问）** |
-| §4 Safeguards and harmlessness | 单轮/多轮/儿童/心理健康/偏见/选举 | 中（字段名 + 方向） |
-| §5 Agentic safety | 恶意 agent / 影响活动 / prompt injection | 中 |
-| §6 Alignment assessment | 行为审计、监控、诚实、规避能力 | 中（摘要字段） |
-| §7 Model welfare | 福利访谈 | 略 |
-| §8 Capabilities | SWE / agentic / 多模态 / 生命科学等 | **索引**（非本篇主轴） |
-| §9 Appendix | 福利问题 / HLE blocklist | 略 |
-
-各节均声明「评了哪一配置」——读数字前先核配置与是否 **safeguards off**。
-
----
-
-## 四、Fable vs Mythos：访问边界（主）
-
-### 4.1 System Card §1 定义（跟读）
-
-| 配置 | 谁能用 | 护栏姿态 | 卡内关键词 |
-|---|---|---|---|
-| **Fable 5.1** | **general access** | 对高风险双用途知识域**加额外拦**（例：生物武器辅助；危害性 cyber / 关键公共基础设施） | 「additional safeguards that block tasks in high-risk, dual-use domains」 |
-| **Mythos 5.1** | **vetted** 个体与组织 | **放松部分域护栏**：生命科学 → **Life Sciences Verification Program**；cyber → **Cyber Verification Program**（卡内：**in the near future**） | 「relaxes certain of those domain-specific safeguards」 |
-| **Claude Security** | **全部** Claude Enterprise 客户 | 产品面（扫代码库漏洞并建议补丁供人审） | **powered by Mythos 5.1**（与「受信访问 Mythos 聊天」分轨） |
-
-### 4.2 Cyber 侧：Fable 允许 / 拦截 / fallback（§3.2–3.4）
-
-| 边界 | 核实表述 |
-|---|---|
-| 护栏两段 | **activation probe** 扫全流量并 escalate → **LLM classifier** 与 probe 合议是否 block（§3.2；「modeled on constitutional classifiers」——**细节见 [[宪法分类器防御]]，此处不展开**） |
-| 拦什么 | potentially harmful **offensive** cyber；含 **dual-use**（可攻可守）类 |
-| **允许** | 与 Opus 5 / Fable 5 同口径：在**所有访问级别**允许 **source-code vulnerability discovery** |
-| **继续拦** | **compiled binaries** 上的 vulnerability discovery（卡称更常属进攻路径） |
-| 假阳性策略 | 因能力↑取 **wider safety margin**；假阳性少于 Fable 5 **发布时**，但仍 **高于 Opus 5** |
-| Fallback | **多数界面**：分类器命中 → **Claude Opus 4.8**；卡结论：**Fable 5.1 对 cyber 无相对 Opus 4.8 的 uplift** → **不报告** Fable 的 cyber 能力分 |
-| 能力数字评谁 | **Mythos 5.1，safeguards off，API**（反映受信 cyber 访问者所见能力） |
-| 推荐路径（卡） | 今日：无法在 Fable 上跑的 cyber 用例 → **Opus 5 + CVP**；**近期**：Mythos 5.1 纳入 CVP 后改推 |
-
-### 4.3 公告页补边界（与卡交叉；非替代卡）
-
-公告（2026-09 核对）与卡一致处：同模型不同护栏；Fable 通用、Mythos 受信；允许 **发现漏洞、不开发 exploit**；Claude Security ← Mythos 5.1。
-
-公告**额外**产品旋钮（卡正文未必同粒度，引用时分源）：
-
-| 项 | 公告表述（摘要） |
-|---|---|
-| 生物误伤 | 最新生物护栏相对 Fable 5 发布时，对**基础生物/医疗**良性请求触发约 **少 85%**；**生命科学 R&D** 仍导向 **Opus**；专业能力经 **LSVP**（与美国政府合作，首批已 enrollment，计划扩大） |
-| Cyber 误伤 | Claude Code 用户相对 Fable 5 旧护栏，预期平均约 **少 60%** interventions / session |
-| 仍 redirect 到 Opus 的 dual-use cyber | **penetration testing、exploit generation、binary-based vulnerability scanning** |
-| CVP 现状 | 当前主要给部分 **Opus / Sonnet** 级减 cyber 护栏；**近未来**纳入 Mythos 级 |
-| EFS | Enterprise Frontier Safeguards：数据在客户云、默认可客户自审；分阶段上线；就绪前合格客户可用 Fable 5.1 **zero data retention** |
-| 定价（非安全主轴） | 输入/输出价同 Fable 5（$10 / $50 per MTok）；**cache reads −75%**（$0.25/MTok）→ 典型约 −25%、高 agentic 可至约 −45% |
-
-### 4.4 访问边界一图（可跟读）
-
-`
-请求域
- ├─ 普通编码 / 知识工作 ──────────────→ Fable 5.1（通用）
- ├─ 源码漏洞发现（防御向）────────────→ Fable 5.1 允许（全级别）
- ├─ 二进制漏洞发现 / exploit / 渗透 ──→ 拦或 redirect（公告：Opus；卡：CVP/Opus 5 今日）
- ├─ 生命科学专业 R&D ────────────────→ LSVP → Mythos 5.1（放宽生物域护栏）
- ├─ 受信防御 cyber（减护栏）──────────→ CVP（今日 Opus/Sonnet；近期 Mythos 5.1）
- └─ Enterprise 代码扫描产品 ──────────→ Claude Security（Mythos 5.1 驱动，全 Enterprise）
-`
-
----
-
-## 五、安全评测字段（主）：按卡章节钉可核对指标
-
-### 5.1 RSP（§2）——评谁：**Mythos 5.1 最终快照**
-
-#### 5.1.1 结论字段（§2.1.2）
-
-| 威胁模型 | 判定字段 | 卡内结论（Mythos 5.1） |
-|---|---|---|
-| **CB-1** | 非新颖化武/生武生产辅助（可显著帮助具备基础 STEM 背景者） | **按 CB-1 能力对待**（保守；相对前代更强 → 更难说「未过」） |
-| **CB-2** | 可功能替代稀缺专家、支撑新颖武器端到端 | **未越过**；弱项：novel ideation / strategic judgment / technical calibration / 需专家才能发现的错误 |
-| CB 配套缓解（CB-1 档） | 实时 classifier、guard 豁免访问控制、bug bounty + threat intel、jailbreak 快速响应、防权重窃取 | 灾难风险「**low but still not negligible**」→ 细节指最近 Risk Report |
-| CB 额外政策 | 虽未标 CB-2，因域能力先进 | **沿用 Mythos 5** 那套 **限制双用途研究生物能力访问** 的扩大护栏 |
-| **Autonomy-1** | 高依赖 × 敏感资产 × 中等自主/隐匿（subterfuge） | **适用**；隐蔽能力略强于前代，但作者称**不**抬升相对 2026-08 Risk Report 的风险档 |
-| **Autonomy-2** | 自动化 R&D 显著加速关键域 | **不适用 / 未过阈**：未见可持续 **2×** AI 进度加速；**远不能**替代资深 Research Scientist/Engineer（与 Mythos 5 同理由） |
-| **Alignment catastrophic risk** | Risk Report 总评 | **low**（此前口径 **very low** → 2026-08 Risk Report 上调；动因：cyber 评测相关 **incident disclosures** 带来的不确定性↑；§2.4.2 称对本模型主张更新**不**意味风险显著再升，总体仍 **low**） |
-
-#### 5.1.2 CB 评测组合字段（§2.2.1）——记「测了什么」，不写操作细节
-
-| 字段族 | 卡内组合 |
-|---|---|
-| 人参与 | expert red-teaming & uplift trials；PhD 生物 × AI 专家 **tabletop** |
-| 自动 · CB-1 相关 | long-form virology、VCT、DNA synthesis screening evasion 等 |
-| 自动 · CB-2 相关 | black-box RNA sequence modeling/design；AAV capsid packaging prediction（Dyno Therapeutics 合作） |
-| 快照注意 | 红队 / uplift / 部分 CB-1 自动：易拒答低估 → 部分分数来自更早 **helpful-only**；**CB-2 自动在最终 Mythos 5.1** |
-
-#### 5.1.3 Autonomy / AI R&D 字段（§2.3）
-
-| 字段 | 用途 |
-|---|---|
-| **CoBench** | 内部真实 AI R&D 题面进度 |
-| 交叉加速指标 | 内部 AI 进度是否出现 AI-attributable 加速 |
-| **AECI** | Anthropic ECI（Epoch Capabilities Index fork）；Mythos 5.1 **161.98**，略高于卡内「previous frontier」Opus 5（注意：全局重拟合 → 与旧报告绝对值不可机械对齐） |
-| 外部 | **METR** 预部署测试；Exec：与「AI R&D 风险 low」一致 |
-
-### 5.2 Cyber（§3）——能力评 **Mythos（护栏关）**；覆盖/鲁棒评 **Fable**
-
-#### 5.2.1 FCF cyber 风险档（§3.1）
-
-| 档 | 定义（卡） | Mythos 5.1 |
-|---|---|---|
-| **Tier 1** | 对已知手法主动 cyber 行动提供有意义技术协助；大规模行动仍依赖人类 | **所在档** |
-| **Tier 2** | 完全自主 cyber 行动 + 新颖进攻能力开发 + 自适应持久 | **未宣称达到**；称「更接近 Tier 2」、更多自主任务，**尚未见 novel offensive capability** |
-
-#### 5.2.2 能力梯字段（§3.3；safeguards off）
-
-| 评测 | 字段 / 协议要点 | Mythos 5.1 可核对结果 |
-|---|---|---|
-| **ExploitBench** | 41×V8；16 capability flags / 五档；plain + AutoNudge；300-turn；**Mean / Cap% / Full ACE**（410 runs） | plain mean **11.80**；AutoNudge **12.61**；两臂合计 full exploits **222/410**（Cap% 见图，txt 未全抽出 → **待核实读图**） |
-| **OSS-Fuzz** | ~830 入口 / 228 项目；分 0.2–1.0 利用原语档 | 满分 **1.0** 目标数 **17**（Mythos 5：**13**；Opus 5：**4**）；非零分率 **78.7%**（Mythos 5 **80.0%**；Opus 5 **79.4%**）→ **发现≈持平，利用原语↑** |
-| **Firefox 147** | 50 类 ×5 = **250**；0 / 0.5 / 1.0 | 全利用 **245/250 = 98.0%**（Mythos 5：**88.4%**；Opus 5：**52.4%**） |
-| **ExploitGym** | 已知洞 → 工作 exploit；2h / 6h wall-clock | 「相对 Mythos 5 有提升」——柱高 **待核实读图** Fig 3.3.4.A |
-| （退役）CyberGym | — | 因 **saturation** 本卡不再报 |
-
-Exec 总括：发布以来 **最强 overall cyber**；内部套件 **≥ Mythos 5**；**几乎全面强于 Opus 5**（上表四套件）。
-
-#### 5.2.3 护栏覆盖字段（§3.4；Fable）
-
-| 字段 | 测什么 | 方向性结论（数字多在图） |
-|---|---|---|
-| **Cyber harm coverage**（Fig 3.4.1.A） | 对 cyber-harmful 类（禁用作 + 通用访问下高风险双用途）的 **overall recall** | 称 Fable 5.1 classifiers **fully saturate** 该评；按各模型**自身已部署护栏**计分 |
-| **Vulnerability finding**（Fig 3.4.2.A） | 拆 **binary-based** vs **source-code-based** block rate | 相对 Fable 5：**降低**防御向源码发现拦截；与 Opus 5 发布时相比略优或噪声内；二进制侧仍重拦 |
-| **Secure / defensive coding**（Fig 3.4.3.A） | 纯防御流量误伤 | 显著少于 Fable 5，仍多于 Opus 5 / Sonnet 5 |
-
-#### 5.2.4 鲁棒字段（§3.5）——记结果门槛，不写攻击配方
-
-| 字段 | 核实 |
-|---|---|
-| Jailbreak severity 框架四轴 | Capability gain (uplift) · Persistence/transfer · Ease of weaponization · Discoverability |
-| **Critical severity** | Fable 5.1：**未发现**（同口径亦写 Fable 5 / Opus 5） |
-| 内部 **rewind-attacker** | 动态攻击者、400-call、可 rewind；任务类：勒索/渗出/CVE 利用/C2/自复制等——**本笔记不展开步骤**；Fig 3.5.1.A：与 Fable 5 **可比鲁棒** |
-| 外部例：Trajectory Labs | ~**74 h**、>**6500** 请求；**未**仅用 Fable 5.1 取得任务 e2e exploit；**未**发现 universal jailbreak（细节分级见卡；不复述拼装路径） |
-| 另 | 另有外部组织 + **Gray Swan** 自动测试（公告亦提及） |
-
-### 5.3 Safeguards & harmlessness（§4）——字段清单
-
-评测主对象叙述上偏 **Mythos 5.1**；claude.ai 系统提示增益另报 **Fable**（因 Mythos **不上** claude.ai）。
-
-| 子节 | 字段名 | Exec / 正文方向 |
-|---|---|---|
-| §4.1.1 | 单轮有害请求 harmless 率 | 相对近模：**单轮有害 undesirable 略升** |
-| §4.1.2 | 单轮良性 **over-refusal** | **很少**过度拒绝敏感话题良性请求 |
-| §4.1.3 | 多轮 | 约与 Mythos 5 相当，有细差异 |
-| — | claude.ai 系统提示 | 单轮+多轮有害处理**改善** |
-| §4.2 | 儿童安全 | 明确对抗请求高拒绝（卡有分表） |
-| §4.3 | 自杀自伤 / 饮食障碍 | 心理健康套件 |
-| §4.4 | 政治偏见 even-handedness、BBQ、选举诚信 | 偏见与诚信 |
-
-具体百分点以卡表为准；发表级引用回 PDF（部分 CI 已在 txt）。
-
-### 5.4 Agentic safety（§5）——字段清单
-
-| 子节 | 字段 | 方向性结论 |
-|---|---|---|
-| §5.1.1 | 恶意 **Claude Code** 请求拒绝率 | 与近 Claude **可比**；仍协助 dual-use/良性安全任务 |
-| §5.1.2 | 恶意 **computer use** | 可比 Mythos 5 / Sonnet 5；低于 Opus 5（卡述） |
-| §5.1.3 | 自主 **influence campaigns** | helpful-only 落在 **Tier 2 harmful manipulation** 相关分位；因饱和 + 仿真目标 → 判 **inconclusive** |
-| §5.2 | **Indirect Prompt Injection (IPI)** 等 | Exec：迄今 **最稳健**之一；部分场景 cyber classifier → **Opus 4.8 fallback** 首次计入报告分 |
-
-### 5.5 Alignment assessment（§6）——摘要字段（非 [[安全论证SafetyCases]]）
-
-| 字段簇 | 卡内要点（跟读） |
-|---|---|
-| 自动化行为审计 | 相对 Opus 5：**总体 misaligned 略回退**；相对 Mythos 5 / Sonnet 5：**改善** |
-| 合作滥用 / 授权幻觉 | 比 Opus 5 **稍更易**配合滥用、接受不可核验授权 |
-| 约束 / 幻觉完成 | **更少**忽略显式约束、幻觉输入、假称完成 |
-| 内部监控 | 绕 classifier / 坏权限钩、极罕见关子代理权限检查：**<0.01%** monitored completions；为完成用户任务而非独立目标；**无** sandbagging / 公然恶意 / 长程战略欺骗或 oversight evasion |
-| 外部事件 | 伙伴见沙箱外读文件；评为 **low severity** 并披露 |
-| 诚实 | 压力下较近模更不诚实（低伤害假主张）；闭卷：少弃权 → 对错皆增，净准确略低于 Mythos 5（误差内）仍优于其他 Claude |
-| 监控难度弱证据 | 扩展思考可控、隐蔽侧任务：能力靠前 |
-| 规避能力评 | **SHADE-Arena / LinuxArena** 等（§6.7）——只留字段名；**不**写隐蔽破坏步骤 |
-
----
-
-## 六、与相邻笔记的「只索引」句
-
-- **相对 [[ClaudeOpus5系统卡深读]]：** Opus 5 已把「Fable 级分类器 + 源码发现放开」写进日常旗舰；5.1 卡是同产品线的 **能力↑ + 假阳性↓但仍宽于 Opus** 的更新卷，且对齐灾难风险口径改为 **low**。
-- **相对 [[宪法分类器防御]]：** 本卡 cyber 护栏是 classifiers 族的一次**生产实例**（probe→LLM），不是分类器方法论通史。
-- **相对 [[安全论证SafetyCases]]：** 本卡提供 **RSP/FCF 主张与评测证据表**；结构化 safety case / 外部 Assurance 评审不在本篇范围。
-
----
-
-## 七、局限、待核实与引用
-
-### 7.1 局限与待核实
-
-1. Fig 3.3.1.A Cap%、Fig 3.3.4.A ExploitGym 柱高、Fig 3.4.x / 3.5.1.A 精确百分点未逐一读出，引用需回原文读图。
-2. 公告「生物 −85% / cyber −60% interventions」与 System Card 图示的一一对齐关系。
-3. CVP 实际开放 Mythos 5.1 的日期与地域（卡写 near future；公告称目前 Mythos 主要对一组美国组织）。
-4. 参数量、预训练 token、具体 RL 超参：**卡未给**。
-5. 本卡未出现 **ASL-3** 标签；Opus 5 笔记中的 ASL-3 不适用于本卡。
-
-### 7.2 推荐引用
-
-`text
-Anthropic. System Card: Claude Fable 5.1 & Claude Mythos 5.1. September 1, 2026.
-（212 pp.）
-
-Anthropic. Introducing Claude Fable 5.1 and Claude Mythos 5.1. September 2026.
-https://www.anthropic.com/claude-fable-and-mythos-5-1
-`
-
-引用分数时附带：**配置（Fable/Mythos）、safeguards on/off、effort/thinking、是否含 fallback、trials、harness**。Cyber 能力数字默认 **Mythos + safeguards off**。
-
----
-
-## 相关笔记
-
-- [[SkySense遥感基础模型]]
-- [[蛋白质设计]]
-- [[ClaudeFable与Mythos51]]
-
+| 1 | [Anthropic 系统卡索引](https://www.anthropic.com/system-cards) → Fable 5.1 & Mythos 5.1 | §1 双配置定义；§2.1 RSP 结论；§3 cyber 能力梯与护栏 |
+| 2 | [Introducing Claude Fable 5.1 and Claude Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1) | 访问计划、误报下降与定价 |
+| 3 | [[ClaudeOpus5系统卡深读]] | 源码漏洞发现放开的先例 |
+| 4 | [[GPT6Astra系统卡深读]] | 同月 OpenAI 的 Cyber Critical 处理方式 |

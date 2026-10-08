@@ -222,3 +222,5 @@ Overall sabotage success
 
 - [[Prompt注入架构防御]]：CaMeL 与 StruQ 两条 by-design 注入防御；CaMeL 的主评测 AgentDojo 正是本篇环境的起点脚手架，那篇防外部注入，本篇测 agent 自身的隐蔽破坏。
 - [[网络防御基准]]：防御侧 SecOps 威胁狩猎评测；同属安全相关 agent 评测，那篇测发现入侵痕迹，与本篇的隐瞒破坏正交。
+- [[GPT6Astra系统卡深读]]：实证：Astra 卡解读 action-only 监控高分时指出，部分高分来自模型「藏得更差」（如 ShadeArena 中用 hex / base64 写注释），不等于故意混淆减少；Astra 的 Preparedness 与监控全文见那篇。
+- [[ClaudeFable与Mythos51]]：采用：Fable 5.1 / Mythos 5.1 卡 §6.7 的规避能力评测列有 SHADE-Arena 与 LinuxArena；该卡的护栏与 RSP 判定见那篇。

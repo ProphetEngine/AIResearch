@@ -150,6 +150,7 @@ Setting 覆盖代码破坏、基础设施、数据投毒、评测破坏、SHADE 
 | [[安全论证SafetyCases]] | 证据去向：控制评测与倾向评测可作为安全论证的证据节点；inability 案失效后预期迁到 control 类论证 | CAE 主张树与外部评审 |
 | [[可扩展监督与弱到强]] | 前提对照：W2S 与 CAI 默认被监督模型不会主动对抗，AI Control 改在「模型可能故意颠覆」的前提下设计协议 | W2S、CAI 与监控轴全文 |
 | [[Inspect评测Harness]] | 工程底座：ControlArena 与 Hopman 等的场景都构建在 Inspect 上 | Inspect 的任务、求解器与日志设计 |
+| [[GPT6Astra系统卡深读]] | 前沿部署实例：Astra 卡的全轨迹错位监控（检查 CoT 与动作，严重时可干预或暂停任务）和阻断式对齐评测，对应本篇 3.3 节监控、关停一类的控制协议 | Astra 的 Preparedness 与可监控性数字 |
 
 一句话分界：Control 假设颠覆、评**协议**；SHADE 构造**环境**、评隐蔽破坏与监控能力；Safety Cases 把评测与其他证据编成可评审的**论证**。
 

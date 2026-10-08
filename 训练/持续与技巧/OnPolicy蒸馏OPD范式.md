@@ -31,6 +31,7 @@ archived: 2026-09-28
 | [[上下文蒸馏]] | 「条件行为可进参数」是相邻接口；OPCD / DiSC 属**上下文→参数** | Snell / OPCD / DiSC 配方与评测表 |
 | [[合成对齐数据Magpie]] | 「偏好 / 指令数据从哪来」不属本范式 | Magpie / ActiveUltraFeedback 数据流水线 |
 | [[GRPO与DAPO算法族]] / [[Nemotron3Ultra技术报告深读]] | OPD 与 KL 约束 RL、多教师后训的**一句交叉** | GRPO 损失推导；Nemotron 后训技术报告全文 |
+| [[DeepSeekV4技术报告深读]] | 工业实例：V4 先按领域 SFT → GRPO 训出专家，再让学生在自身采样上以反向 KL 对齐超过 10 个教师，做多教师 OPD 合并，取代 V3.2 的混合 RL 合并阶段 | V4 架构与后训练全文 |
 
 **范围与相邻笔记：** OPD ≠ [[上下文蒸馏]]（上下文内化）；OPD ≠ [[合成对齐数据Magpie]]（对齐数据合成）。
 
