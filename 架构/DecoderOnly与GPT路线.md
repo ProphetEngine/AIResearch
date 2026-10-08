@@ -120,7 +120,7 @@ GPT-3 论文把评估场景明确分成：
 | **GPT-2（2019）** | Radford et al., *Language Models are Unsupervised Multitask Learners*；OpenAI: [Better language models](https://openai.com/index/better-language-models/) | 目标叙事从「预训练+微调」转向 **零样本多任务**：WebText 上的下一词预测涌现初步的问答/翻译/摘要等能力；最大公开型号 **1.5B** 参数；强调容量对零样本迁移关键。发布策略上曾分阶段放模型（安全顾虑）——属产品/治理转折，亦强化「LM 已强到需管控」的社会叙事。 |
 | **GPT-3（2020）** | Brown et al., [arXiv:2005.14165](https://arxiv.org/abs/2005.14165) | **Few-shot / in-context learning** 成为主角：175B、300B tokens；系统比较 0/1/few-shot；在多项任务上逼近或超过当时部分微调 SOTA（如 TriviaQA closed-book few-shot 等，细节见论文表）。架构上公开仍跟 GPT-2 配方并加 sparse attention。污染与偏见、社会影响专章进入「必写」。 |
 | **InstructGPT / 对齐转折（2022）** | Ouyang et al., *Training language models to follow instructions with human feedback*（[arXiv:2203.02155](https://arxiv.org/abs/2203.02155)） | 公开叙事：仅靠变大不足以让模型「按用户意图行事」；**SFT + RLHF** 提升真实用户提示上的偏好胜率。ChatGPT（官方称基于 GPT-3.5 系）把对齐后的 Decoder-only 推成消费级产品——**「架构收敛」之后是「目标函数/后训练收敛」**。GPT-3.5 与 ChatGPT 的精确底座参数：**待核实**（需对照当时 OpenAI 说明，非 GPT-4 报告核心披露）。 |
-| **GPT-4（2023-03）** | 官方页 [GPT-4](https://openai.com/index/gpt-4-research/)；[GPT-4 Technical Report](https://arxiv.org/abs/2303.08774) / [cdn PDF](https://cdn.openai.com/https://arxiv.org/abs/2303.08774) | 仍宣称 **Transformer-style、下一 token 预训练**；新增 **图文多模态输入、文本输出**；强调专业/学术考试表现（如模拟律师资格考试约前 10% 百分位，对比叙述中 GPT-3.5 约后 10%）；**RLHF 后训练**；**可预测扩展** Infra；**故意不公开** 模型尺寸、硬件、算力、数据与训练细节。产品形态上，通用助手 + API 成为默认，Decoder-only（外加视觉前端）成为产业默认假设。 |
+| **GPT-4（2023-03）** | 官方页 [GPT-4](https://openai.com/index/gpt-4-research/)；[GPT-4 Technical Report](https://arxiv.org/abs/2303.08774) | 仍宣称 **Transformer-style、下一 token 预训练**；新增 **图文多模态输入、文本输出**；强调专业/学术考试表现（如模拟律师资格考试约前 10% 百分位，对比叙述中 GPT-3.5 约后 10%）；**RLHF 后训练**；**可预测扩展** Infra；**故意不公开** 模型尺寸、硬件、算力、数据与训练细节。产品形态上，通用助手 + API 成为默认，Decoder-only（外加视觉前端）成为产业默认假设。 |
 
 **收敛一句话**：架构上从「三种 Transformer 用法并存」收束到「因果 Decoder 做通用接口」；目标上从「为每个基准微调」收束到「预训练续写 + 提示/少样本 + 指令与偏好对齐」；披露上从 GPT-3 的相对透明缩放表，收到 GPT-4 的能力与安全报告。
 
@@ -154,7 +154,7 @@ GPT-3 论文把评估场景明确分成：
 1. **型号细节**：GPT-1 层数与参数量（约 12 层、约 1.17 亿）来自二手来源；GPT-3.5 / ChatGPT 的底座参数未见官方披露，均待对照官方 PDF。
 2. **GPT-4 不可核**：技术报告不公开架构、模型大小、硬件、训练算力、数据构造与训练方法；外传参数量不能当事实。考试百分位等能力数字是报告自述。
 3. **in-context learning 的解释**：GPT-3 自己把「推理时真正学会新任务」还是「识别预训练中见过的模式」列为开放问题；「涌现」只宜读作平滑提升加若干质变观感。
-4. **材料口径**：GPT-3 要点依据 arXiv 摘要页全文抓取与论文表格；引用 3 的「官方 CDN PDF」链接拼成了 `cdn.openai.com/https://arxiv.org/...`，地址异常，正确 CDN 地址待核。
+4. **材料口径**：GPT-3 要点依据 arXiv 摘要页全文抓取与论文表格。
 
 ## 七、引用
 
@@ -162,7 +162,7 @@ GPT-3 论文把评估场景明确分成：
 
 1. Brown et al. (2020). *Language Models are Few-Shot Learners*. https://arxiv.org/abs/2005.14165 ；PDF: https://arxiv.org/pdf/2005.14165
 2. OpenAI (2023). GPT-4 官方介绍页. https://openai.com/index/gpt-4-research/
-3. OpenAI (2023). *GPT-4 Technical Report*. https://arxiv.org/abs/2303.08774 ；官方 CDN PDF: https://cdn.openai.com/https://arxiv.org/abs/2303.08774
+3. OpenAI (2023). *GPT-4 Technical Report*. https://arxiv.org/abs/2303.08774
 4. Radford et al. (2018). *Improving Language Understanding by Generative Pre-Training*. https://openai.com/index/language-unsupervised/ ；PDF: https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf
 5. Radford et al. (2019). *Language Models are Unsupervised Multitask Learners*. https://openai.com/index/better-language-models/ ；PDF: https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
 6. Ouyang et al. (2022). *Training language models to follow instructions with human feedback*. https://arxiv.org/abs/2203.02155
