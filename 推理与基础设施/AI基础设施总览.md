@@ -16,7 +16,9 @@ archived: 2026-09-22
 - Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention* (arXiv:2309.06180；下文称 vLLM / PagedAttention 论文)。
 - DeepSeek-AI, *DeepSeek-V3 Technical Report* (arXiv:2412.19437；下文称 V3 报告) **§3 Training Framework / FP8 / Inference**。
 
-本笔记以 **AI Infra** 为主线、**架构思想** 为辅线：跟读「算力—通信—显存—精度」如何被拆开再协同。
+本笔记以 **AI Infra** 为主线、**架构思想** 为辅线，看「算力—通信—显存—精度」如何被拆开再协同。
+
+**为何重要**：这几层决定同一份模型能训多大、能服多少并发。Megatron 在 512 GPU 上维持 76% 扩展效率；vLLM 剖析出既有系统 KV 内存只有约 20.4%–38.2% 真正存了 token 状态，分页后近零浪费；DeepSeek-V3 用 FP8 与 DualPipe 把 671B MoE 的全流程压到约 2.788M H800 GPU hours。
 
 ---
 
@@ -28,7 +30,7 @@ archived: 2026-09-22
 2. **序列长度平方**：注意力 runtime / 显存随 $N$ 二次增长；标准实现还要把 $S=QK^\top$、$P=\mathrm{softmax}(S)$ 物化到 HBM（FA2 §1、§2.2）。
 3. **推理侧动态 KV**：自回归 decode 下 KV cache 随请求动态涨缩，占满显存就卡死 batch，吞吐上不去（vLLM §1；13B 模型在 A100 40GB 上 KV 约可占内存布局的 ~30%，权重约 65%——图 1 叙述）。
 
-因此「谁能训更大 / 更长 / 更便宜地服更大并发」，不再只是算法论文的附录，而是与架构选型（稀疏 MoE、MLA、量化）绑死的**系统—硬件联合设计**。跟读抓手可以记成一条链：
+因此「谁能训更大 / 更长 / 更便宜地服更大并发」，不再只是算法论文的附录，而是与架构选型（稀疏 MoE、MLA、量化）绑死的**系统—硬件联合设计**。可以概括成一条链：
 
 > **训练并行（切参数 / 切层 / 切数据）→ 注意力核（IO-aware，少搬 HBM）→ 推理 KV 管理（分页，近零浪费）→ 低精度与网络拓扑协同（FP8、all-to-all、NVLink/IB）**。
 
@@ -66,23 +68,22 @@ Transformer 一层 = 自注意力 + 两层 MLP。Megatron §3 对 MLP 的 GEMM $
 ### 2.3 原文规模与效率数字（仅报告文中数字）
 
 - 单卡强基线：约 **1.2B** 参数，单块 **NVIDIA V100 32GB**，整应用维持 **39 TeraFLOPs**，约峰值的 **30%**（DGX-2H 配置叙述，摘要 / §1）。
-- 扩展：约 **8.3B** 参数，**512 GPU**，**8-way** 模型并行，维持最高约 **15.1 PetaFLOPs**，相对单卡基线 **76%** 扩展效率（摘要、§1、Figure 1）。
-- 弱扩展叙事：约 **每 GPU 1B** 参数量级的 8-way 模型并行；再叠 **64-way** 数据并行（Figure 1 说明）。
+- 扩展：约 **8.3B** 参数，**512 GPU**（8-way 模型并行 × 64-way 数据并行，约每 GPU 1B 参数的弱扩展），维持最高约 **15.1 PetaFLOPs**，相对单卡基线 **76%** 扩展效率（摘要、§1、Figure 1）。
 
 精度侧：混合精度 + 动态 loss scaling，以利用 V100 Tensor Cores（§4.2）。BERT 类模型上，Megatron 另强调 **LayerNorm 放置**对「变大不掉点」至关重要（摘要、贡献列表）——这是架构细节对 Infra 扩展叙事的反作用。
 
 ### 2.4 与专家并行（EP）的衔接：从「切矩阵」到「切专家 + 切网络」
 
-Megatron 原文主战场是稠密 Transformer 的 **TP(+DP)**，尚未展开当代细粒度 MoE 的跨节点 all-to-all。跟读当代时，把并行维度扩成：
+Megatron 原文主战场是稠密 Transformer 的 **TP(+DP)**，尚未展开当代细粒度 MoE 的跨节点 all-to-all。看当代系统时，把并行维度扩成：
 
 - **TP**：仍切注意力 / 稠密线性的大矩阵（通信相对「结构化」：all-reduce）。
 - **PP**：切层；气泡与激活驻留是主矛盾。
 - **DP / ZeRO**：切优化器状态与梯度。
 - **EP**：把不同专家放在不同 GPU/节点；token 经 **dispatch / combine（all-to-all）** 流动——通信量可与算力同量级。
 
-V3 报告给出一条可跟读的「后 Megatron」组合（§3.2）：训练用 **16-way PP + 64-way EP（跨 8 节点）+ ZeRO-1 DP**，并写明通过显存优化 **不使用昂贵的 TP** 即可训 V3。跨节点 EP 下，报告称算通比恶化到约 **1:1**，于是用 **DualPipe** 把单个 forward/backward chunk 拆成 `attention | all-to-all dispatch | MLP | all-to-all combine`（反向再拆 input/weight），双向灌 micro-batch，力图把 all-to-all 与 PP 通信**藏进计算**（§3.2.1、Figure 4–5）。网络侧：节点间 IB、节点内 NVLink；NVLink 带宽叙述为约 **160 GB/s**，约 IB（**50 GB/s**）的 **3.2×**；配合「每 token 最多发往 **4** 个节点」的路由限制，使 IB 与 NVLink 传输重叠（§3.2.2）。
+V3 报告给出一条公开的「后 Megatron」组合（§3.2）：训练用 **16-way PP + 64-way EP（跨 8 节点）+ ZeRO-1 DP**，并写明通过显存优化 **不使用昂贵的 TP** 即可训 V3。跨节点 EP 下，报告称算通比恶化到约 **1:1**，于是用 **DualPipe** 把单个 forward/backward chunk 拆成 `attention | all-to-all dispatch | MLP | all-to-all combine`（反向再拆 input/weight），双向灌 micro-batch，力图把 all-to-all 与 PP 通信**藏进计算**（§3.2.1、Figure 4–5）。网络侧：节点间 IB、节点内 NVLink；NVLink 带宽叙述为约 **160 GB/s**，约 IB（**50 GB/s**）的 **3.2×**；配合「每 token 最多发往 **4** 个节点」的路由限制，使 IB 与 NVLink 传输重叠（§3.2.2）。
 
-**跟读抓手**：Megatron 解决的是「一层矩阵怎么切才少同步」；MoE 时代的 Infra 还必须回答「专家散落在多机时，**通信能否被算力盖住**」——DualPipe / 定制 all-to-all 是对后者的公开答案，不是对前者的否定。
+**要点**：Megatron 解决的是「一层矩阵怎么切才少同步」；MoE 时代的 Infra 还必须回答「专家散落在多机时，**通信能否被算力盖住**」——DualPipe / 定制 all-to-all 是对后者的公开答案，不是对前者的否定。
 
 ---
 
@@ -111,9 +112,9 @@ FA2 §2.3 转述 FlashAttention：
 
 ### 3.3 FlashAttention-2：三条「更好的并行与划分」
 
-摘要与 §3 的三项改动（跟读时可逐条对照 Algorithm 1）：
+摘要与 §3 的三项改动（可逐条对照 Algorithm 1）：
 
-1. **减少 non-matmul FLOPs**（§3.1）：GPU 上 matmul（Tensor Core）远快于一般 FLOP。A100 例：FP16/BF16 matmul 理论峰值约 **312 TFLOPs/s**，非 matmul FP32 仅约 **19.5 TFLOPs/s**——约 **16×** 代价差。算法微调 online softmax 更新，使更多时间花在 matmul 上，输出不变。
+1. **减少 non-matmul FLOPs**（§3.1）：GPU 上 matmul（Tensor Core）远快于一般 FLOP，A100 上两者理论峰值约差 **16×**（312 vs 19.5 TFLOPs/s）。算法微调 online softmax 更新，使更多时间花在 matmul 上，输出不变。
 2. **沿序列维并行**（§1、§3）：除 batch、head 外，对**单个 head** 也按序列长度拆到不同 thread block，提高长序列（常伴随小 batch）时的 occupancy。
 3. **block 内 warp 划分**（§1、§3）：减少 warp 间经 shared memory 的通信与读写。
 
@@ -135,13 +136,7 @@ FA2 §2.3 转述 FlashAttention：
 
 vLLM §1–§3：自回归服务可拆 **prompt（prefill）** 与 **autoregressive generation（decode）**。Prefill 可矩阵并行，相对吃得饱算力；decode 逐步依赖已缓存 K/V，常呈 **memory-bound**，GPU 算力闲置。提吞吐要靠 **batch 多请求**，但 KV 动态增长且长度先验未知。
 
-既有系统常把每条请求的 KV 放在**连续**预留块（按最大长度，如 2048），导致三类浪费（Figure 2–3）：
-
-- **预留未用**（reserved）；
-- **内部碎片**（实际长度远短于最大长度）；
-- **外部碎片**（不同预留尺寸）。
-
-剖析显示：现有系统 KV 内存中真正存 token 状态的比例可低至约 **20.4%–38.2%**（§1、Figure 2）。复杂解码（并行采样、beam search）本可共享前缀 KV，连续布局也难以做块级共享。
+既有系统常把每条请求的 KV 放在**连续**预留块（按最大长度，如 2048），导致预留未用、内部碎片（实际长度远短于最大长度）、外部碎片（预留尺寸不一）三类浪费（Figure 2–3）。剖析显示：现有系统 KV 内存中真正存 token 状态的比例可低至约 **20.4%–38.2%**（§1、Figure 2）。复杂解码（并行采样、beam search）本可共享前缀 KV，连续布局也难以做块级共享。
 
 ### 4.2 PagedAttention：把 OS 分页搬进注意力
 
@@ -153,7 +148,7 @@ vLLM §1–§3：自回归服务可拆 **prompt（prefill）** 与 **autoregress
 2. **块级共享**：同请求多序列 / 跨请求可共享物理块（beam、并行采样）；
 3. 与 **iteration-level scheduling**、抢占式调度共设计（系统概述 Figure 4）。
 
-**原文吞吐表述**：相对 FasterTransformer、Orca 等，同延迟水平下流行 LLM 吞吐约 **2–4×**；更长序列、更大模型、更复杂解码时更明显（摘要、§1）。跟读时注意：这是论文评估区间，不是「任意部署保证 2–4×」。
+**原文吞吐表述**：相对 FasterTransformer、Orca 等，同延迟水平下流行 LLM 吞吐约 **2–4×**；更长序列、更大模型、更复杂解码时更明显（摘要、§1）。注意：这是论文评估区间，不是「任意部署保证 2–4×」。
 
 ### 4.3 量化 / 低精度：训练 FP8 与推理部署（DeepSeek-V3 公开要点）
 
@@ -161,7 +156,7 @@ V3 把「精度」写进 Infra 主文，而不是附录技巧：
 
 **规模与代价（报告摘要 / Table 1）**：总参 **671B**，每 token 激活 **37B**；全流程约 **2.788M H800 GPU hours**（预训练 2664K + 上下文扩展 119K + 后训练 5K）。架构侧复用 **MLA**（降 KV）与 **DeepSeekMoE**（细粒度专家）；Infra 侧宣称首次在极大规模上验证 **FP8 混合精度预训练**可行性。
 
-**FP8 混合精度框架（§3.3）**（公开要点，跟读用）：
+**FP8 混合精度框架（§3.3）**（公开要点）：
 
 - 多数高密度 **GEMM（Fprop / Dgrad / Wgrad）走 FP8**，输出可为 BF16/FP32；相对 BF16，理论算力叙述为约 **翻倍**（§3.3.1）。
 - **保留高精度**的模块：embedding、输出头、MoE gating、normalization、**attention**；master weight / 梯度 / 优化器状态更高精度（§3.3.1）。
@@ -216,16 +211,12 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 
 ## 相关笔记
 
-- [[注意力与Transformer核心思想]]
-- [[DecoderOnly与GPT路线]]
-- [[规模定律与预训练范式]]
-- [[混合专家架构]]
-- [[对齐脉络RLHF与偏好优化]]
-- [[推理时扩展TestTimeScaling]]
-- [[开源与闭源前沿模型谱系]]
-- [[长上下文位置编码与系统侧]]
-- [[多模态架构脉络]]
-- [[注意力效率族MQA到MLA]]
-- [[LLaMA开源生态里程碑]]
-
-
+- [[混合专家架构]]：Switch → Mixtral → DeepSeek-V3 的 MoE 史线；本篇 2.4 的专家并行与 all-to-all 正是这条架构线在训练系统上的代价。
+- [[长上下文位置编码与系统侧]]：从长上下文出发：位置编码决定模型认不认得更长位置，KV 管理决定服不服得起；那篇第三节也讲 PagedAttention / vLLM，本篇则从 Infra 全栈看同一机制。
+- [[注意力效率族MQA到MLA]]：MQA → GQA → MLA 压每 token 的 KV 体积；本篇 4.3 末把它列为与分页、低精度相乘的三层之一。
+- [[连续批处理与Orca]]：iteration-level scheduling 专线；本篇 4.2 只提到 PagedAttention 与它共设计，那篇讲请求级与 iteration-level 的吞吐 / 延迟边界，以及与分页互补而非替代。
+- [[PrefillDecode分离与统一服务]]：本篇 4.3 记 V3 把 prefill 与 decode 分阶段部署；那篇以 TaiChi 为主文，讲两阶段是否分实例、如何再统一的调度轴。
+- [[KV缓存量化与压缩]]：本篇 4.3 末把 serving 收益拆成 KV 布局、每 token KV 体积、位宽三层；那篇专讲第三层里 KV 的非对称量化与误差轴。
+- [[DeepSeekV3训练与MoE基建]]：V3 报告的配方与机制深读；本篇只取 DualPipe、FP8、分阶段部署几项，细节和数字对表看那篇。
+- [[NVSHMEM与DeepEP通信]]：本篇 2.4 说跨节点 EP 下 all-to-all 通信可与算力同量级；那篇讲 DeepEP 如何在 NVSHMEM 设备侧通信上自建 dispatch / combine。
+- [[推理引擎生态]]：vLLM / SGLang / TRT-LLM 选型地图；以本篇 4.2 的 PagedAttention 为基线，不重写分页本身。

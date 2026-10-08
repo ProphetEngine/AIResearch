@@ -1,5 +1,5 @@
 ---
-title: "Continuous batching / iteration-level scheduling 理论边界（8 · Orca 专线）"
+title: "Continuous batching / iteration-level scheduling 理论边界（Orca 专线）"
 topic: 连续批处理与Orca
 date: 2026-09-22
 lines: [AI Infra]
@@ -14,7 +14,8 @@ archived: 2026-09-22
 
 # Continuous batching / iteration-level scheduling 理论边界（Orca 专线）
 
-> **定位**：Infra 子题——钉死 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
+> **定位**：Infra 子题——划清 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
+> **为何重要**：请求级调度下，早结束的请求回不了包、晚到的请求要等整批结束。Orca 把调度粒度改到单次 iteration，在 175B、相近归一化延迟下相对 FasterTransformer 吞吐从 0.185 提到 6.81 req/s（36.9×，合成异构负载）。vLLM 论文已把这种 fine-grained batching 当作既有背景，业界口语称 continuous batching。
 > **研究线**：**AI Infra（主）**。
 > **与相邻笔记的分工**：[[推理引擎生态]] / [[AI基础设施总览]] 以 vLLM·SGLang·TRT-LLM **选型地图**与 PagedAttention 为主；Orca 在彼处仅为次级交叉。本篇 **只做理论边界 / Orca 专线**，不重写引擎选型表、PagedAttention 分页算法正文、投机解码通史。
 > **交叉基线**：vLLM（Kwon et al., arXiv:2309.06180）**仅作对照**——其 Discussion 明确 iteration-level scheduling 与 PagedAttention **互补**，不替代。
@@ -188,13 +189,5 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
 
 ## 相关笔记
 
-- [[Gemini37Flash模型卡深读]]
-- [[KV缓存量化与压缩]]
-- [[连续批处理与Orca]]
-- [[机制可解释性入门]]
-- [[世界模型与VJEPA]]
-- [[SpeechLLM语音语言模型]]
-- [[视觉语言动作谱系]]
-- [[智能体长程记忆]]
-- [[可扩展监督与弱到强]]
-
+- [[PrefillDecode分离与统一服务]]：本篇第四节说 PD 分离与 continuous batching 正交；那篇（TaiChi）把 Orca 与 chunked prefill 列为聚合一端的基线，讲两阶段分不分池、如何再统一。
+- [[EAGLE3投机解码]]：投机解码一侧的增量切片；对应本篇第四节的「串行步维」，与「批里有哪些序列」是不同旋钮，可同开同关。

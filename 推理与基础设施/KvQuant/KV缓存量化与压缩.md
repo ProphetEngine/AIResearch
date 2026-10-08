@@ -36,7 +36,7 @@ archived: 2026-09-22
 
 **与仓库边界：** [[长上下文位置编码与系统侧]] / [[推理引擎生态]] 已谈窗口与引擎；本篇只补「**把已有 K、V 张量压到更低比特**」这一正交手段——不替代稀疏注意力、不替代 eviction。
 
-### 1.2 误差轴抓手（读两文前先立）
+### 1.2 误差轴
 
 解码注意力（KIVI 式 1）：$A=\mathrm{Softmax}(t_Q X_K^\top)$，$t_O=A X_V$。
 
@@ -63,9 +63,7 @@ archived: 2026-09-22
 ### 2.1 核心设计：非对称轴 + 残差窗解决流式 per-channel
 
 1. **Key → per-channel group-wise**；**Value → per-token group-wise**（§3.1–3.2）。
-2. **流式障碍：** 新 token 的 Key 无法立刻完成「跨 token 的 channel 统计」。做法：把 Key（及 Value）拆成
- - **Grouped** $X_{K_g}/X_{V_g}$：每 $G$ token 成组后量化存低比特；
- - **Residual** $X_{K_r}/X_{V_r}$：最近至多 $R$ token **保留全精度**；满窗则量化并拼回 grouped（§3.3；Fig 3；App. Algorithm 1）。
+2. **流式障碍：** 新 token 的 Key 无法立刻完成「跨 token 的 channel 统计」。做法：把 Key（及 Value）拆成 **Grouped**（每 $G$ token 成组后量化存低比特）与 **Residual**（最近至多 $R$ token 保留全精度，满窗再量化并拼回 grouped）两部分（§3.3；Fig 3；App. Algorithm 1）。
 3. Attention logits 用 tiled / mix-precision matmul：$A_g$ 对量化 Key，$A_r$ 对残差 FP Key，再 concat（式 3）。
 4. Prefill：层间仍传 **精确** K/V；**仅缓存侧**保留量化 KV（§3.3）。
 
@@ -150,9 +148,7 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 在 **估算** KV 体积前提下（Table 7–8）：
 
-- LLaMA-7B **nuq2**：单卡 A100-80GB 可撑约 **1M** ctx（KV ≈ 64 GB 量级）；
-- 8 卡系统可估算到约 **10M**；
-- LLaMA-65B：**nuq2-1%** 等配置用于「单卡 32K」等体积账（权重 4-bit + KV 压缩的组合叙述，见 App. A）。
+LLaMA-7B **nuq2** 单卡 A100-80GB 约 **1M** ctx（KV ≈ 64 GB 量级），8 卡系统估算到约 **10M**；LLaMA-65B 用 **nuq2-1%** 等配置做「单卡 32K」体积账（权重 4-bit + KV 压缩，见 App. A）。
 
 **读法：** 这是 **显存可行性估算 + PPL/检索评测**，不是声称已开源 10M 产品服务；Passkey / RULER 等另表（§4；与 KIVI 对照时注明 GQA 支持差异）。
 
@@ -184,11 +180,11 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 1. **学术非对称 INT/NUQ** 证明：误差由 **K/V 算子角色 + RoPE + outlier** 决定，不是「一律 per-token 4-bit」口号。
 2. **V4.1** 在已稀疏/复用的 main KV 上再做 **硬件友好 FP4 QAT**，并显式留下 SWA 高精——是 **架构压缩 × 格式压缩** 的部署解，不是对 KIVI/KVQuant 的逐条复刻。
-3. RoPE 前后结论 **相反方向都有文献支持**：KVQuant（开源 RoPE 模型、标定路径）vs V4.1（自家 QAT + 解码开销权衡）。跟读时以 **各自问题设定** 为准，禁止合成「统一最优 RoPE 时机」。
+3. RoPE 前后结论 **相反方向都有文献支持**：KVQuant（开源 RoPE 模型、标定路径）vs V4.1（自家 QAT + 解码开销权衡）。以 **各自问题设定** 为准，不合成「统一最优 RoPE 时机」。
 
 ---
 
-## 五、误区（跟读用）
+## 五、误区
 
 1. **「KV 量化 = 权重量化缩小版」** — 流式追加、无法随便 GPTQ；K/V 下游算子不同，轴必须非对称（KIVI OB1–3）。
 2. **「一律 per-token 最贴自回归」** — 实现方便，但对 Key 的通道 outlier 在 ≤2–3 bit 会炸 attention（两文 Fig/表）。
@@ -218,13 +214,7 @@ LLaMA-7B 摘录（baseline PPL **5.68**，fp16 KV **64.0 GB** @128K）：
 
 ## 相关笔记
 
-- [[Gemini37Flash模型卡深读]]
-- [[KV缓存量化与压缩]]
-- [[连续批处理与Orca]]
-- [[机制可解释性入门]]
-- [[世界模型与VJEPA]]
-- [[SpeechLLM语音语言模型]]
-- [[视觉语言动作谱系]]
-- [[智能体长程记忆]]
-- [[可扩展监督与弱到强]]
-
+- [[DuoAttention与KVzip]]：本篇误区 5 把 KV 压缩分成少存 token、少存层或 entry、低比特存 entry 三类；那篇讲前两类里的头级分工与 query-agnostic 驱逐，两文都称可与量化叠加。
+- [[SpinQuant与ARCQuant量化]]：部署侧权重·激活 PTQ，与本篇 KV 量化同属量化三角；那篇的 NVFP4（g=16，E2M1+E4M3）格式可对照本篇第四节 V4.1 的类 NVFP4 main KV。
+- [[注意力效率族MQA到MLA]]：MQA / GQA / MLA 从架构上减少每 token 的 KV；本篇误区 5 说它与低比特量化正交，可以相乘。
+- [[AI基础设施总览]]：本篇是总览 4.3 末「KV 布局 × 每 token KV 体积 × 位宽」三层中位宽一层的专线。
