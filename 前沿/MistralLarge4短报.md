@@ -10,20 +10,23 @@ sources:
  - https://docs.mistral.ai/models/mistral-large-4-0
  - https://huggingface.co/mistralai/Mistral-Large-4.0-1T05-A52B
  - https://thenextweb.com/news/mistral-releases-large-4-a-1-trillion-parameter-open-weight-ai-model
-related: ["Gemini4Argon短报", "ClaudeOpus55系统卡短报", "GPT6Astra系统卡深读", "AgenticRL景观与能力模块", "MiMoV26智能体强化学习短报", "开源与闭源前沿模型谱系", "Mistral3公告短卡"]
+ - https://mistral.ai/news/mistral-3/
+ - https://docs.mistral.ai/models/mistral-large-3-25-12
+ - https://arxiv.org/abs/2601.08584
+related: ["Gemini4Argon短报", "ClaudeOpus55系统卡短报", "GPT6Astra系统卡深读", "AgenticRL景观与能力模块", "MiMoV26智能体强化学习短报", "开源与闭源前沿模型谱系"]
 retrieval_cutoff: 2026-10-08
 timezone: Asia/Shanghai (CST)
 ---
 
 # Mistral Large 4（前沿短报）
 
-> **主要来源**：[Introducing Mistral Large 4](https://mistral.ai/news/mistral-large-4/)；[Mistral Large 4 模型文档](https://docs.mistral.ai/models/mistral-large-4-0)；[Mistral-Large-4.0-1T05-A52B](https://huggingface.co/mistralai/Mistral-Large-4.0-1T05-A52B)（截至 2026-10-08）。下文「博文」指 Mistral 发布博文，「文档」指模型文档，「HF 页」指 Hugging Face 预告页。
+> **主要来源**：[Introducing Mistral Large 4](https://mistral.ai/news/mistral-large-4/)；[Mistral Large 4 模型文档](https://docs.mistral.ai/models/mistral-large-4-0)；[Mistral-Large-4.0-1T05-A52B](https://huggingface.co/mistralai/Mistral-Large-4.0-1T05-A52B)（截至 2026-10-08）。下文「博文」指 Mistral 发布博文，「文档」指模型文档，「HF 页」指 Hugging Face 预告页；前代 Mistral 3 据 [Introducing Mistral 3](https://mistral.ai/news/mistral-3/)、[Mistral Large 3 模型文档](https://docs.mistral.ai/models/mistral-large-3-25-12) 与 [Ministral 3](https://arxiv.org/abs/2601.08584) 论文。
 > **研究线**：前沿模型 · 开源权重 · 网络安全能力与拒答的取舍
 > **范围与相邻笔记**：
 > - ≠ [[Gemini4Argon短报]]：两者只对照发布路径，不复述 Argon 的能力与 Fairwind 细则。
 > - ≠ [[ClaudeOpus55系统卡短报]]、[[GPT6Astra系统卡深读]]：本篇只借用两家的护栏叙事作对照，不复述其系统卡。
 > - ≠ [[AgenticRL景观与能力模块]]、[[MiMoV26智能体强化学习短报]]：ML4 只作为异步 RL 基础设施的工业实例，方法论见这两篇。
-> - ≠ [[开源与闭源前沿模型谱系]]、[[Mistral3公告短卡]]：本篇不复述开源权重谱系与 Large 3 公告。
+> - ≠ [[开源与闭源前沿模型谱系]]：本篇不复述开源权重谱系。
 > - 本篇不是系统卡短报：ML4 目前没有技术报告，也没有 System Card。
 > **意义**：ML4 是欧洲厂商推出的约 1T 总参开源权重模型（权重尚待开放），走「API 预览、放权重前受控红队、月底开放权重」的路径；它把网安能力当作卖点，并批评服务商层面的拒答，与闭源厂商以护栏和受信访问管控网安能力的路线形成对照。
 
@@ -31,7 +34,17 @@ timezone: Asia/Shanghai (CST)
 
 ## 一、背景与发布形态
 
-Mistral 的上一代旗舰 Large 3 于 2025-12-02 发布，为 41B 激活、675B 总参的稀疏 MoE，公告称采用 Apache 2.0（见 [[Mistral3公告短卡]]）。ML4 把总参推到约 1T，发布方式是先开放 API 预览、月底再放权重。
+### 1.1 前代：Mistral 3（2025-12-02）
+
+- **组成**：Mistral 3 包括面向边缘与本地的 Ministral 3（3B / 8B / 14B dense）与旗舰 Mistral Large 3，全系采用 Apache 2.0（公告）。
+- **Large 3**：稀疏 MoE，41B 激活、675B 总参，在 3000 张 NVIDIA H200 上从零训练，是 Mistral 自 Mixtral 系列以来的第一个 MoE；后训练后具备图像理解与多语言对话能力。公告称它在 LMArena 开源非推理模型类首发排第 2（开源模型总榜第 6），发布 base 与指令微调两版，称推理版「coming soon」。模型文档标 granular MoE、多模态、上下文 256k。
+- **部署**：公告称与 vLLM、Red Hat 合作发布 NVFP4 checkpoint，可在 Blackwell NVL72 系统或单个 8×A100 / 8×H100 节点上用 vLLM 运行；本篇不把它延伸为通用部署保证。
+- **Ministral 3**：每个尺寸都有 base、instruct、reasoning 三个版本，均具图像理解能力，定位边缘与本地部署（公告）。
+- **技术文档**：公告末尾链接的论文只覆盖 Ministral 3（arXiv 首版 2026-01-13），Large 3 没有独立技术报告，更深的训练与评测细节待核实。论文要点：用 Cascade Distillation（迭代剪枝 → 蒸馏 → 再剪枝）从 Mistral Small 3.1 派生 3 个尺寸 × 3 个版本共 9 个 dense 模型；训练量 1–3T tokens；上下文最长 256k（reasoning 版 128k）；14B Base 在部分基准上接近 Mistral Small 3.1 Base，参数少 40% 以上；架构为 decoder-only Transformer + GQA；视觉编码器是从 Mistral Small 3.1 复制并冻结的 410M ViT。以上均为论文自报。
+
+### 1.2 ML4 的发布形态
+
+ML4 相对 Large 3 把总参从 675B 推到约 1T、激活从 41B 增到 52B，发布方式改为先开放 API 预览、月底再放权重；Large 3 发布即开放权重。
 
 - **当前形态**：API 公开预览，可在 Mistral Studio 试用；文档标 Public Preview · Open · v26.10，发布日期未标具体时刻（博文页头、「Le Chonk」节；文档）。
 - **许可**：文档只标「Open」，未给出具体许可条款（文档）。
@@ -88,19 +101,7 @@ Mistral 的上一代旗舰 Large 3 于 2025-12-02 发布，为 41B 激活、675B
 - **网安能力与拒答的取舍**：闭源系统卡以护栏、分类器和受信访问管控网安能力（见 [[ClaudeOpus55系统卡短报]]、[[GPT6Astra系统卡深读]]）。Mistral 则称服务商层面的拒答可能阻碍合法的漏洞研究与事件响应，主张让组织 "under their own policies" 运行网安工作（博文「Forged in Europe. Built for AI sovereignty.」节），同时称其对恶意网安提示的拒答率高于开源同类。
 - **欧洲主权算力**：官方称提供由 Mistral 端到端运营、"independently of other digital service providers and under European law" 的欧洲部署（博文「Forged in Europe. Built for AI sovereignty.」节），算力仍在扩建（博文「What comes next」节）。
 
-## 九、与相邻笔记的分工
-
-| 相邻笔记 | 本篇只取 | 本篇不写 |
-|---|---|---|
-| [[Mistral3公告短卡]] | 前代：Large 3 的发布日、规模与许可 | Large 3 与 Ministral 3 公告本身 |
-| [[开源与闭源前沿模型谱系]] | 所在谱系：开源权重与闭源前沿的整体格局 | 谱系各代模型 |
-| [[Gemini4Argon短报]] | 发布路径对照：闭源分阶段放量与开源放权重 | Argon 的能力与 Fairwind 细则 |
-| [[ClaudeOpus55系统卡短报]] | 网安治理对照：闭源厂商以护栏与受信访问管控网安能力 | Opus 5.5 系统卡内容 |
-| [[GPT6Astra系统卡深读]] | 网安治理对照：同上，OpenAI 一侧 | Astra 系统卡内容 |
-| [[AgenticRL景观与能力模块]] | 方法背景：异步 RL 所在的 Agentic RL 研究线 | Agentic RL 能力模块地图 |
-| [[MiMoV26智能体强化学习短报]] | 同期工业实例：另一份公开到工程层面的大规模异步 RL 配方 | MiMo-V2.6 的 batch、grader 与 harness 设计 |
-
-## 十、局限与待核实
+## 九、局限与待核实
 
 1. **没有技术报告和系统卡**：架构、更多基准和后训练方法要等权重开放时公布；本篇不作架构推测。
 2. **权重日期和许可证未定**：博文写「月底」，HF 页写 10-31（Current ETA），媒体写 10-27；文档许可证只标「Open」，具体条款未公布。
@@ -108,7 +109,19 @@ Mistral 的上一代旗舰 Large 3 于 2025-12-02 发布，为 41B 激活、675B
 4. **自选对比与 harness**：对比模型由官方选定，编码类评测未公布 harness，不能与其他笔记的分数横比。例如 Gemini 4 Argon 的 DeepSWE v1.1 77.9% 基于 mini-swe harness，与本篇的 61.7% 口径不同。
 5. **官方说法未独立核实**：闭源模型「因拒答而近 0」的归因、拒答率「高于所有开源模型」、B3「未见更高」都是官方说法，测试设置未完整公开；82% 是 AA Cyber Index 中一项测试的得分，不是指数总分。
 6. **口径并存**：总参 1T / 1.05T、激活 49B / 52B 并存；1M 上下文只见于文档。
-7. **媒体与博文不一致**：The Next Web 写约 4,000 张 GPU、Dense 200 两者都是 42%，与博文的 3,800 张、42% 对 41% 不同；本篇以博文为准。
+7. **前代材料**：Large 3 没有独立技术报告，Ministral 3 论文的数字均为自报；Large 3 推理版的后续发布情况本篇未核。
+8. **媒体与博文不一致**：The Next Web 写约 4,000 张 GPU、Dense 200 两者都是 42%，与博文的 3,800 张、42% 对 41% 不同；本篇以博文为准。
+
+## 十、与相邻笔记的分工
+
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[开源与闭源前沿模型谱系]] | 所在谱系：开源权重与闭源前沿的整体格局 | 谱系各代模型 |
+| [[Gemini4Argon短报]] | 发布路径对照：闭源分阶段放量与开源放权重 | Argon 的能力与 Fairwind 细则 |
+| [[ClaudeOpus55系统卡短报]] | 网安治理对照：闭源厂商以护栏与受信访问管控网安能力 | Opus 5.5 系统卡内容 |
+| [[GPT6Astra系统卡深读]] | 网安治理对照：同上，OpenAI 一侧 | Astra 系统卡内容 |
+| [[AgenticRL景观与能力模块]] | 方法背景：异步 RL 所在的 Agentic RL 研究线 | Agentic RL 能力模块地图 |
+| [[MiMoV26智能体强化学习短报]] | 同期工业实例：另一份公开到工程层面的大规模异步 RL 配方 | MiMo-V2.6 的 batch、grader 与 harness 设计 |
 
 ## 十一、延伸阅读
 

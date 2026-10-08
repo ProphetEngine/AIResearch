@@ -249,7 +249,7 @@ Appendix C 注明：Table 3 的 IF-Eval 来自 **intermediate** 模型，将更�
 - [[Grok4模型卡深读]]
 - [[Kimik15技术报告深读]]
 - [[KimiK2技术报告深读]]
-- [[Llama4待核实备忘]]
-- [[Mistral3公告短卡]]
+- [[LLaMA开源生态里程碑]]：开放权重一侧的文档对照；Llama 4 没有论文式技术报告和 PDF 模型卡，只有博文与 Markdown 模型卡（见该篇第五节）。
+- [[MistralLarge4短报]]：开放权重一侧的另一文档对照；Mistral Large 3 与 Large 4 都没有独立技术报告（见该篇 1.1 节与局限节）。
 - [[MOC_模型与技术报告]]
 

@@ -13,7 +13,7 @@ related:
  - "Gemma4技术报告深读"
  - "Qwen3技术报告深读"
  - "DeepSeekV3训练与MoE基建"
- - "Llama4待核实备忘"
+ - "LLaMA开源生态里程碑"
  - "混合专家架构"
  - "对齐脉络RLHF与偏好优化"
  - "推理时扩展TestTimeScaling"
@@ -30,7 +30,7 @@ timezone: Asia/Shanghai (CST)
 > - **≠ [[Nemotron3Ultra技术报告深读]]**：不写成 **Nemotron 3 Ultra**（Hybrid Mamba–Transformer MoE、工业开源性能旗舰）全文；本卡轴是 **数据+配方透明的研究可复现旗舰**，与 [[Nemotron3Ultra技术报告深读]] 对照一句即可。
 > - **≠ [[GPToss模型卡深读]]**：不重写 **gpt-oss** Model Card（OpenAI 开源权重 MoE + harmony / effort / MXFP4）；本卡无 MXFP4 / harmony 主轴。
 > - **≠ [[Gemma4技术报告深读]]**：不重写 **Gemma 4** TR（Google Apache 开源权重族 / PLE / QAT）；本卡是 AI2 dense 7B/32B + Dolma/Dolci 全栈。
-> - **≠ Qwen / DeepSeek / Llama 相邻笔记**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[Llama4待核实备忘]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），不把其架构/训练配方抄入本卡当 Olmo 主张。
+> - **≠ Qwen / DeepSeek / Llama 相邻笔记**：[[Qwen3技术报告深读]]、[[DeepSeekV3训练与MoE基建]]、[[LLaMA开源生态里程碑]] 仅作 **对照基线名**（文内 Table 亦列 Qwen 3 / DS-R1 等），不把其架构/训练配方抄入本篇当 Olmo 主张。
 > 正文品牌写 **Olmo 3**（封面/标题）；历史线对照写 **OLMo 2**（文内原样）。
 
 ---
@@ -282,7 +282,7 @@ Verifier 扩到 math / code / IF / general chat（含 LM-judge）。
 
 - **[[Nemotron3Ultra技术报告深读]]**：工业开源性能旗舰对照（Nemotron 3 Ultra）——同主题并行，不互相重写。
 - **[[GPToss模型卡深读]] / [[Gemma4技术报告深读]]**：另两路「开源权重卡」样本。
-- [[Qwen3技术报告深读]] / [[DeepSeekV3训练与MoE基建]] / [[Llama4待核实备忘]]：基线与 pending 位。
+- [[Qwen3技术报告深读]] / [[DeepSeekV3训练与MoE基建]] / [[LLaMA开源生态里程碑]]：对照基线所属的模型家族；Llama 4 的官方材料与型号见 LLaMA 篇第五节。
 - **[[对齐脉络RLHF与偏好优化]] / [[推理时扩展TestTimeScaling]]**：偏好优化与 test-time thinking 通史接口。
 - 同主题过程监督 / 工具环（[[可验证过程监督]] / [[ToolLoop工具数据合成]]）可作 RLVR / function-calling **下游用法**交叉，本篇不展开。
 

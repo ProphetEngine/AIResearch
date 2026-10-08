@@ -57,11 +57,11 @@ Google 的闭源 Gemini 线从 2.5 代的长篇技术报告，转为 10 页左�
 
 ## Meta
 
-- **2025-04** · Llama 4 只以博文发布，没有 Llama 1–3 那样的论文式技术报告，也没有独立 PDF 模型卡，开放权重旗舰的文档披露明显收缩（[官方博文](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)） · [[LLaMA开源生态里程碑]] · [[Llama4待核实备忘]]
+- **2025-04** · Llama 4 只以博文发布，没有 Llama 1–3 那样的论文式技术报告，也没有独立 PDF 模型卡，开放权重旗舰的文档披露明显收缩（[官方博文](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)） · [[LLaMA开源生态里程碑]]
 
 ## Mistral
 
-- **2025-12** · Mistral 3 发布边缘端 Ministral 3 与旗舰 Mistral Large 3，全系 Apache 2.0；配套论文只覆盖 Ministral 3（arXiv 首版 2026-01）（[官方博文](https://mistral.ai/news/mistral-3/)） · [[Mistral3公告短卡]]
+- **2025-12** · Mistral 3 发布边缘端 Ministral 3 与旗舰 Mistral Large 3，全系 Apache 2.0；配套论文只覆盖 Ministral 3（arXiv 首版 2026-01）（[官方博文](https://mistral.ai/news/mistral-3/)） · [[MistralLarge4短报]]
 - **2026-10** · Mistral Large 4：约 1T 总参（权重仓库标 1.05T）、52B 激活的原生多模态 MoE，以 API 公开预览发布，没有技术报告与系统卡，开放权重前先与网安机构做受控红队（[官方博文](https://mistral.ai/news/mistral-large-4/)） · [[MistralLarge4短报]]
 
 ## DeepSeek
