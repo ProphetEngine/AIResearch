@@ -4,264 +4,125 @@ topic: 注意力效率族MQA到MLA
 date: 2026-09-22
 lines: [架构思想, 数学原理]
 status: archived
+sources:
+ - https://arxiv.org/abs/2305.13245
+ - https://arxiv.org/abs/2405.04434
+ - https://arxiv.org/abs/2412.19437
+related: ["注意力与Transformer核心思想", "长上下文位置编码与系统侧", "KV缓存量化与压缩", "AI基础设施总览", "线性注意力与状态空间模型谱系", "混合Mamba与注意力架构设计菜谱", "原生稀疏注意力NSA", "检索式注意力", "混合专家架构", "DeepSeekV3训练与MoE基建", "DeepSeekV4技术报告深读", "LLaMA开源生态里程碑", "开源与闭源前沿模型谱系", "长上下文与注意力效率时间线"]
 archived: 2026-09-22
 ---
 
 # 注意力效率族：MHA → MQA/GQA → MLA
 
-入口论文 / 报告：
+> **主要来源**：[GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints](https://arxiv.org/abs/2305.13245)（Ainslie、Lee-Thorp、de Jong 等，Google Research，v3 2023-12-23，以下简称 GQA 论文）；[DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model](https://arxiv.org/abs/2405.04434)（DeepSeek-AI，v5 2024-06-19，以下简称 V2 报告）；[DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437)（DeepSeek-AI，v2 2025-02-18，以下简称 V3 报告）（截至 2026-04-26）。
+> **研究线**：架构思想（主：在保留多头查询的前提下减少要缓存的 K/V）；数学原理（辅：每 token 的 KV 缓存量随头数、组数与压缩维怎样变化）
+> **范围与相邻笔记**：
+> - ≠ [[注意力与Transformer核心思想]]：缩放点积与多头注意力本身在那篇，本篇只写解码时 K/V 怎样共享或压缩。
+> - ≠ [[长上下文位置编码与系统侧]]：那篇写 KV 的分页管理与位置外推，本篇从模型结构上减少每个 token 的 KV。
+> - ≠ [[线性注意力与状态空间模型谱系]]：那篇用固定大小的状态替代 KV 缓存，本篇仍是 softmax 注意力。
+>
+> **意义**：自回归解码每一步都要把全部已缓存的 K/V 从显存读一遍，瓶颈是带宽而不是算力，标准多头注意力（MHA）的缓存又按头数放大。这条线的思路是保留多头查询、只在 K/V 侧动手：MQA 让所有头共享一组 K/V，缓存缩小到 1/H，但质量下降、训练不稳；GQA 让每组头共享一组，在两者之间插值，并且可以用原预训练 5% 的算力从 MHA 检查点改造得到，T5-XXL 上 GQA-8 的速度接近 MQA、质量接近 MHA。DeepSeek 的 MLA 换了一条路：把 K/V 联合压成一个低维潜向量再缓存，V2 报告称其缓存量只相当于 2.25 组的 GQA，质量却强于 MHA，V3 沿用。此后 GQA 与 MLA 都进入了开放模型（见分工表中的模型谱系），也出现了把现有模型改造成 MLA 的方法。
 
-- Ainslie et al., *GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints* (arXiv:2305.13245；下文称 GQA 论文)。MQA 原始动机可追溯至 Shazeer (2019) *Fast Transformer Decoding: One Write-Head Is All You Need*（GQA 论文引用）。
-- DeepSeek-AI, *DeepSeek-V3 Technical Report* (arXiv:2412.19437；下文称 V3 报告) **§2.1.1 Multi-Head Latent Attention**。MLA 架构在报告中明确归功于 DeepSeek-V2（DeepSeek-AI, 2024c）；V3 在 Transformer 框架内**复用并简述**该机制。
+## 一、问题背景
 
-本笔记以**架构思想**为主线、**数学直觉**为辅线；公式、机制与实验数字均据上述文本。MQA 的「单 KV 头」定义以 GQA 论文对 Shazeer (2019) 的转述为准。
+GQA 论文开篇写明瓶颈（§1）：自回归解码的主要开销是每一步都要加载解码器权重和全部注意力 K/V，属于显存带宽开销。序列越长、并发越大，KV 缓存占的显存和每步要搬的字节都线性增长。MHA 中每个头有独立的 K 与 V，每层每 token 要缓存的量与头数成正比，这就是后续变体要动的部分。
 
----
+Shazeer 在 2019 年提出 MQA：所有头共享一组 K/V，解码快得多，质量只略有下降。GQA 论文指出 MQA 的两个问题（§1、§2.2）：大模型通常头数更多，从 H 个头砍到 1 个，容量削减过猛；张量并行时单个 K/V 头会在各分片上重复存放，造成浪费。此外，为了速度单独训一个 MQA 模型，代价也不小。
 
-## 一、问题：推理 KV 显存与吞吐如何逼出注意力变体
+## 二、脉络
 
-自回归解码时，每生成一步都要读入已缓存的 **Key / Value**，并与当前步的 Query 做注意力。GQA 论文开篇把瓶颈写得很直白（§1）：
+| 时间 | 工作 | 关键一步 |
+|---|---|---|
+| 2017-06 | [Attention Is All You Need](https://arxiv.org/abs/1706.03762) | 提出 Transformer 与多头注意力，每个头独立的 Q、K、V |
+| 2019-11 | [MQA](https://arxiv.org/abs/1911.02150) | 所有头共享一组 K/V，减轻增量解码时反复加载 K/V 的带宽开销，质量略降 |
+| 2022-11 | [Efficiently Scaling Transformer Inference](https://arxiv.org/abs/2211.05102) | 在 PaLM 540B 上分析推理分片，配合合适的分片，MQA 的低显存让上下文可扩大 32 倍 |
+| 2023-05 | GQA | 每组查询头共享一组 K/V，在 MHA 与 MQA 之间插值；可从 MHA 检查点少量续训得到 |
+| 2024-05 | DeepSeek-V2（MLA） | K/V 低秩联合压缩为潜向量后缓存，配解耦 RoPE |
+| 2024-12 | DeepSeek-V3 | 671B MoE 沿用 MLA |
+| 2025-02 | [TransMLA](https://arxiv.org/abs/2502.07864)、[MHA2MLA](https://arxiv.org/abs/2502.14837) | 把已训练好的 GQA 或 MHA 模型改造成 MLA：TransMLA 压缩 LLaMA-2-7B 93% 的 KV 缓存；MHA2MLA 只用 0.3%–0.6% 的数据恢复性能 |
 
-> Autoregressive decoder inference is a severe bottleneck for Transformer models due to the **memory bandwidth overhead** from loading decoder weights and **all attention keys and values at every decoding step**.
+## 三、MQA 与 GQA：共享 K/V
 
-要点不是「算力不够」，而是**带宽**：序列越长、batch / 并发越大，KV cache 占用的显存与每次 decode 要搬动的字节数都线性膨胀，容易把 GPU 卡在「等数据」而不是「算矩阵」。
+**接线**（GQA 论文 §2.2、Figure 2）：把 H 个查询头分成 G 组，每组共享一个 key 头和一个 value 头。GQA-1 就是 MQA，GQA-H 就是 MHA。从 MHA 到 MQA，KV 缓存缩小为 1/H；GQA 缩小为 G/H。查询侧保留多头，从不同角度读上下文；K/V 侧跨头复用，直接减少要缓存和加载的份数。作者预期这个折中对大模型尤其合适：大模型头数多，MQA 的削减更激进，而 KV 缓存随模型维度线性增长、计算量随维度平方增长，带宽开销所占比例会变小。
 
-经典 **Multi-Head Attention (MHA)**（Vaswani et al., 2017）里，每个注意力头都有独立的 K、V。头数 $H$ 一多，每层、每个已生成 token 要缓存的 K/V 体积就按头数放大——这正是后续变体要动刀的对象。
+**从 MHA 检查点改造**（§2.1）：把各头的 K、V 投影矩阵按组取平均（mean-pool），比只取第一个头或随机初始化效果好；然后用原预训练配方续训一小段。主实验续训原步数的 5%，约 600 TPUv3 chip-days（§3.1）。
 
-工程上的压力可以概括成三条（均是对原文动机的归纳，非新实验）：
+**作用范围**（§3.1）：MQA 与 GQA 只加在解码器自注意力和交叉注意力上，不用于编码器自注意力，因为编码器并行计算，带宽通常不是瓶颈。
 
-1. **显存**：KV cache 与「层数 × 序列长度 ×（K/V 头数）× 头维」成正比；长上下文与大并发直接顶满显存。
-2. **吞吐**：decode 阶段算量相对小，带宽开销更显眼；GQA 论文强调的是「加载 K/V」带来的 memory bandwidth overhead。
-3. **质量—速度张力**：少存一点 K/V 往往意味着少一点表达容量。MQA 把所有 query 头共用**一对** K/V 头，能大幅降带宽，但论文指出可能带来 **quality degradation** 与 **training instability**（摘要与 §1、Appendix A）。
+**主结果**（Table 1，T5.1.1，每样本推理时间，TPUv4）：
 
-因此注意力效率族的主线不是换掉「缩放点积注意力」本身，而是：**在尽量保住多头 query 表达力的前提下，减少必须驻留与反复加载的 K/V 表示**——从「每头一份 K/V」（MHA），到「全局一份」（MQA），到「每组一份」（GQA），再到「低秩联合压缩后再展开」（MLA）。
-
----
-
-## 二、架构思想：MHA → MQA → GQA 的共享键值逻辑与取舍
-
-### 2.1 一张图里的三种接线（GQA 论文 Figure 2）
-
-GQA 论文用同一套语言对比三种机制（§2.2 / Figure 2）：
-
-| 机制 | Query 头 | Key / Value 头 | 与其它机制的关系 |
-|------|----------|----------------|------------------|
-| **MHA** | $H$ | $H$（每头独立） | 满配容量，KV cache 最大 |
-| **MQA** | $H$ | **1**（全体 query 共享） | GQA 的端点：GQA-1 ≡ MQA |
-| **GQA** | $H$ | **$G$**（每组 query 共享一对 K/V） | 插值；GQA-$H$ ≡ MHA |
-
-形式化表述（据 §2.2）：
-
-- 把 $H$ 个 query 头分成 $G$ 组；**每一组共享一个 key 头与一个 value 头**。
-- **GQA-$G$**：组数为 $G$。
-- **GQA-1**（单组 → 单对 K/V）≡ **MQA**；**GQA-$H$**（组数等于头数）≡ **MHA**。
-
-**共享键值的逻辑**：Query 侧仍保留多头，以便从不同「视角」去读上下文；Key/Value 侧则做**跨头（或跨组）复用**，直接砍掉必须缓存与加载的 K/V 份数。从 MHA 到 MQA，论文写明（§2.2）：
-
-> Going from MHA to MQA reduces $H$ key and value heads to a single key and value head, **reducing the size of the key-value cache … by a factor of $H$**.
-
-### 2.2 为何不止于 MQA：插值与大模型比例
-
-只做 MQA 有两层代价（§1、§2.2）：
-
-1. **容量砍得太狠**：大模型通常会**加大头数**，于是「$H\to 1$」相对容量与带宽的削减更激进。
-2. **分片浪费**：大模型常用张量并行等分片时，**单个** K/V 头往往被复制到各 partition（论文引 Pope et al., 2022）；GQA 用多个 K/V 头可以减轻这类浪费。
-
-因此 GQA 的设计意图是：**在质量与速度之间插值**——中间组数比 MQA 质量高、比 MHA 更快；并让「带宽/容量削减比例」在模型变大、头数变多时仍可控制（§2.2）。
-
-**作用范围**：论文明确 **GQA 不用于 encoder 自注意力**（encoder 并行算完，memory bandwidth 通常不是主瓶颈）；实验里 MQA/GQA 加在 **decoder 自注意力与 cross-attention**（§3.1）。
-
-### 2.3 另一条贡献：从 MHA checkpoint「uptrain」到 MQA/GQA
-
-除提出 GQA 外，论文给出实用配方（摘要、§2.1）：
-
-1. **转换 checkpoint**：把各头的 K、V 投影矩阵 **mean-pool** 成目标结构所需的头（MQA 合成 1 头；GQA 按组内 mean-pool）。消融显示 mean-pool 优于「只留第一头」或「随机初始化」（Figure 4）。
-2. **继续预训练一小段**：在同一套预训练配方上再训原步数的比例 $\alpha$；主实验取 **$\alpha=0.05$（5%）**，约 600 TPUv3 chip-days（§3.1）。
-
-动机：不必为「要质量」和「要速度」各训一个完整模型；可用少量算力把已有 MHA 权重迁到多查询族。
-
-### 2.4 实验取舍（仅报告文中数字，不外推）
-
-主结果（Table 1，T5.1.1，XXL 上 5% uptrain；时间单位为文中 *Time per sample*，TPUv4）：
-
-| 模型 | $T_{\mathrm{infer}}$ (s) | Average |
-|------|----------------------------|---------|
+| 模型 | 推理时间（秒） | 平均分 |
+|---|---:|---:|
 | MHA-Large | 0.37 | 46.0 |
 | MHA-XXL | 1.51 | 47.2 |
-| MQA-XXL（uptrain） | 0.24 | 46.6 |
-| **GQA-8-XXL（uptrain）** | **0.28** | **47.1** |
+| MQA-XXL（改造） | 0.24 | 46.6 |
+| GQA-8-XXL（改造） | 0.28 | 47.1 |
 
-解读与文中一致（§3.2 / Figure 3）：uptrained MQA 已相对 MHA-Large 更快且平均分更高；**GQA-8 速度接近 MQA，平均质量接近 MHA-XXL**。组数消融（Figure 6）：从 1（MQA）增到 8 组，推理开销增加有限；再往 MHA 方向加组，代价上升。作者选 **8 组**作折中。
+改造后的 MQA-XXL 已比 MHA-Large 更快、分数更高；GQA-8 速度接近 MQA，质量接近 MHA-XXL。组数从 1 增到 8 时推理只略微变慢，再往 MHA 方向增加，代价上升，作者取 8 组（§3.3）。附录 A：从零训练的 MQA 预训练时频繁出现损失尖峰，在长输入任务上微调会立即发散；改造得到的 MQA 稳定一些但方差大；改造得到的 GQA 表现稳定。
 
-**稳定性**（Appendix A）：从零训的 MQA 在预训练易尖峰、长输入微调易发散；uptrained MQA 仍方差大；**uptrained GQA 在其实验中表现稳定**。
+## 四、MLA：低秩联合压缩
 
-**论文自述局限**（Limitations）：Rouge 等指标不完整；未与「从头训练的 XXL GQA」对比；实验主要在 **encoder–decoder**；作者预期在 **decoder-only**（无独立 cross-attn）上 GQA 相对 MQA 的优势可能更明显——此为文中推测，非其主表实证。
+**做法**（V2 报告 §2.1.2–2.1.3）：
 
----
+- 每个 token 的层输入先下投影成一个低维潜向量，K 与 V 共用；需要时再上投影出多头的 K 与 V。推理时只缓存这个潜向量。
+- K 的上投影矩阵可以吸收进 Q 的投影，V 的上投影可以吸收进输出投影，推理时甚至不必把 K、V 显式算出来。
+- RoPE 与这种吸收不兼容：位置相关的旋转矩阵会夹在两个矩阵之间，无法合并，前缀的 key 就得每步重算。于是另设一组带 RoPE 的查询和一个所有头共享的 RoPE key，与压缩部分拼接。缓存的是潜向量加这个共享 RoPE key。
+- Q 侧也做低秩压缩，目的是降低训练时的激活显存，不影响 KV 缓存。
 
-## 三、MLA（DeepSeek）：低秩联合压缩思想（以 V3 报告为准）
+**每 token 的 KV 缓存**（V2 报告 Table 1，`l` 为层数，`n_h` 为头数，`d_h` 为每头维度，`n_g` 为组数）：
 
-### 3.1 定位：不是「再少几个 KV 头」，而是「先压成低维再展开」
+| 机制 | 每 token 缓存元素数 | 报告给的能力 |
+|---|---|---|
+| MHA | `2 n_h d_h l` | 强 |
+| GQA | `2 n_g d_h l` | 中 |
+| MQA | `2 d_h l` | 弱 |
+| MLA | 潜向量维度加 RoPE 维度，乘 `l`，约 `4.5 d_h l` | 更强 |
 
-V3 报告 §2.1.1 开宗明义：DeepSeek-V3 的注意力采用 **MLA**；并写明其核心是：
+V2 中潜向量维度取每头维度的 4 倍、RoPE 维度取一半，所以缓存量等于只有 2.25 组的 GQA（§2.1.3）。V3 报告的取值（§4.2）：128 头，每头 128 维，KV 压缩维 512，查询压缩维 1536，解耦 RoPE 每头 64 维；与 V2 一样在压缩潜向量后加 RMSNorm。
 
-> the **low-rank joint compression** for attention keys and values to reduce Key-Value (KV) cache during inference.
+**对比实验**（V2 报告附录 D）：
 
-与 GQA「减少 K/V **头的个数**」不同，MLA 把每个 token 的 K/V 信息先压进一个**共享的低维潜向量**，推理时主要缓存这个紧凑表示（外加解耦的 RoPE 键），需要时再 **up-project** 回多头 K/V。报告称该设计在 DeepSeek-V2 已充分验证，V3 继续采用（§2.1）。
+- 7B 稠密模型、1.33T token、参数对齐到约 7B 时，MHA 在 BBH、MMLU、C-Eval、CMMLU 上都明显强于 GQA（8 组）和 MQA，例如 MMLU 为 45.2、41.2、37.9（Table 8）。
+- MoE 模型上作者称 MLA 优于 MHA（小模型的 C-Eval 一项 MLA 略低，50.9 对 51.6），KV 缓存只有 MHA 的 14%（约 16B 总参）和 4%（约 250B 总参）；例如大模型每 token 缓存 34.6K 对 860.2K 个元素，MMLU 59.0 对 57.5（Table 9）。
+- 整体上，DeepSeek-V2 相对 DeepSeek 67B 把 KV 缓存减少 93.3%，最大生成吞吐提高到 5.76 倍（摘要）。
 
-符号（报告原文）：嵌入维 $d$，头数 $n_h$，每头维 $d_h$；第 $t$ 个 token 的层输入 $\mathbf{h}_t\in\mathbb{R}^d$。
+## 五、意义
 
-### 3.2 KV 侧：联合下投影 + 上投影 + 解耦 RoPE
+这条线把注意力的效率问题从「算得快」转向「存得少、读得少」。MQA 与 GQA 表明了查询需要多头、K/V 却可以共享，GQA 又给出一个可调的旋钮和低成本的改造路径，所以能在已有模型上快速推广。MLA 说明共享头数不是唯一的压缩维度：把 K/V 压成潜向量，再用矩阵吸收避免解码时展开，缓存可以比 GQA 更小而质量不降，代价是要专门处理 RoPE。与分页管理、低比特量化、稀疏检索相比，这几种方法改的是模型结构本身，彼此可以叠加。
 
-报告给出（式 (1)–(5)）：
+## 六、局限与待核实
 
-$$
-\mathbf{c}_t^{KV} = W^{DKV}\mathbf{h}_t
-$$
+- **GQA 论文的范围**（Limitations）：实验只在编码器–解码器的 T5 上做，摘要任务用 Rouge 评价，作者自认这个指标不完整；没有与从零训练的 GQA-XXL 比较。作者预期 GQA 在纯解码器模型上相对 MQA 的优势更大，这只是推测，文中没有实验。v3 与 v1 的数字一致；abs 页注记 v3 为 EMNLP 2023 录用版，补了相关工作。
+- **MLA 的证据都来自 DeepSeek**：V2 报告的 MLA 与 MHA 对比、MHA 与 GQA 对比都是作者自己的模型与基准；7B 稠密对比中 GQA 明显弱于 MHA，与 GQA 论文「质量接近 MHA」的结论不同，两者的设定（从零训练与改造、纯解码器与编码器–解码器、评测集）都不一样，不能直接对照。
+- **93.3% 的口径**：对照对象是 DeepSeek 67B，不是同规模的 MHA 或 GQA 模型；附录 D.2 的 14% 与 4% 才是同架构下 MLA 与 MHA 的直接比较。
+- **V3 报告只复述机制**：§2.1.1 写 MLA 公式，§4.2 给取值，没有新的消融；本篇的对比数字都取自 V2 报告。
+- **缓存元素数不等于字节数**：实际占用还取决于数据类型与推理框架的实现方式。
 
-$$
-[\mathbf{k}_{t,1}^{C};\ldots;\mathbf{k}_{t,n_h}^{C}] = \mathbf{k}_t^{C} = W^{UK}\mathbf{c}_t^{KV}
-$$
+## 七、与相邻笔记的分工
 
-$$
-\mathbf{k}_t^{R} = \mathrm{RoPE}(W^{KR}\mathbf{h}_t)
-$$
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[注意力与Transformer核心思想]] | 前置：那篇 3.3 的多头注意力在解码时要为每个头存 K/V，本篇写怎样压这部分 | 缩放点积与多头注意力 |
+| [[长上下文位置编码与系统侧]] | 互补：那篇按块分页管理 KV，本篇减少每个 token 的 KV | 分页与位置外推 |
+| [[KV缓存量化与压缩]] | 互补：那篇降低每个元素的比特数，与本篇的结构压缩正交 | KV 量化 |
+| [[AI基础设施总览]] | 那篇 4.3 把结构压缩、分页、低精度列为相乘的三层 | 推理基础设施全景 |
+| [[线性注意力与状态空间模型谱系]] | 另一条降本路线：那篇用固定大小的状态替代 KV 缓存 | 线性注意力与 SSM |
+| [[混合Mamba与注意力架构设计菜谱]] | 并列：那篇保留少量注意力层、其余换成 Mamba，减少的是注意力层数；本篇压缩每层的 KV，两者可叠加 | 混合比例与摆放 |
+| [[原生稀疏注意力NSA]] | 另一条降本路线：那篇只算一部分 token，并按 GQA 的分组设计内核 | 可训练稀疏注意力 |
+| [[检索式注意力]] | 另一条降本路线：那篇不改结构，推理时只读检索到的 KV | 推理期检索 |
+| [[混合专家架构]] | 那篇 2.3 说 MLA 与 MoE 正交：MoE 管 FFN，MLA 管 KV | MoE |
+| [[DeepSeekV3训练与MoE基建]] | 那篇在 V3 整套配方里列 MLA 的取值 | V3 训练与基建 |
+| [[DeepSeekV4技术报告深读]] | V4 的 CSA、HCA 底层用共享 KV 的 MQA，是本篇共享族的延伸 | V4 架构 |
+| [[LLaMA开源生态里程碑]] | LLaMA 初代用标准多头注意力，之后的 KV 压缩演进在本篇 | LLaMA 生态 |
+| [[开源与闭源前沿模型谱系]] | 那篇第六节对照表列出 DeepSeek-V3 用 MLA、Qwen3 用 GQA，第五节写近一年注意力选型的分化 | 模型谱系 |
+| [[长上下文与注意力效率时间线]] | 时间线的 2019-11（MQA）、2023-05（GQA）、2024-05（MLA）三个节点 | 长上下文通史 |
 
-$$
-\mathbf{k}_{t,i} = [\mathbf{k}_{t,i}^{C};\,\mathbf{k}_t^{R}]
-$$
+## 八、延伸阅读
 
-$$
-[\mathbf{v}_{t,1}^{C};\ldots;\mathbf{v}_{t,n_h}^{C}] = \mathbf{v}_t^{C} = W^{UV}\mathbf{c}_t^{KV}
-$$
-
-要点（据报告文字与式注）：
-
-- $\mathbf{c}_t^{KV}\in\mathbb{R}^{d_c}$ 是 K 与 V **共用**的压缩潜向量；$d_c\ll d_h n_h$。
-- $W^{DKV}$ 下投影；$W^{UK},W^{UV}$ 分别上投影出多头 compressed keys / values。
-- **位置信息**：另用 $W^{KR}$ 产生**解耦**的 RoPE key $\mathbf{k}_t^{R}$，再与各头的 $\mathbf{k}_{t,i}^{C}$ 拼接成最终 key。这是为了在低秩压缩设定下仍能注入旋转位置编码（报告引 Su et al., 2024）。
-- **推理缓存**：报告强调生成时只需缓存图中蓝框向量——即 **$\mathbf{c}_t^{KV}$ 与 $\mathbf{k}_t^{R}$**——从而显著减小 KV cache，并称性能可与标准 MHA 相当（§2.1.1）。
-
-### 3.3 Query 侧：同样低秩压缩（主为训练激活显存）
-
-式 (6)–(9)：先 $W^{DQ}$ 得到 $\mathbf{c}_t^{Q}$，再上投影出 compressed queries，并对 RoPE 分支做解耦；最终 $\mathbf{q}_{t,i}=[\mathbf{q}_{t,i}^{C};\,\mathbf{q}_{t,i}^{R}]$。报告写明 query 压缩的目的是 **reduce the activation memory during training**（与 KV 压缩服务推理缓存是不同目标）。
-
-注意力输出仍是标准多头加权（式 (10)–(11)），softmax 缩放维为 $\sqrt{d_h+d_h^{R}}$（因 key/query 拼接了 RoPE 维）。
-
-### 3.4 V3 中的 MLA 超参（§4.2，可核对规模直觉）
-
-报告给出 DeepSeek-V3 配置：
-
-- $n_h=128$，$d_h=128$
-- KV 压缩维 $d_c=512$；query 压缩维 $d_c'=1536$
-- 解耦 RoPE 每头维 $d_h^{R}=64$
-- 另：压缩潜向量后接额外 RMSNorm，并在宽度瓶颈处乘额外缩放因子（与 DeepSeek-V2 相同做法）
-
-**架构思想一句话**：GQA 族通过「**少存几份完整头维的 K/V**」省缓存；MLA 通过「**每 token 只存低维联合潜码（+短 RoPE key），用时再展开成多头**」省缓存，并试图用低秩结构保住接近 MHA 的表达。
-
-> **边界说明（待核实）**：V3 报告对 MLA **复述机制与超参**，并声明性能可比 MHA；**未在本文展开**与 MHA/GQA 的逐项消融表或逐层 KV 字节对比。更细的 MLA 消融与动机展开在 DeepSeek-V2 技术报告（文中引用 DeepSeek-AI, 2024c）。本笔记不把 V2 未读章节中的数字写进来。
-
----
-
-## 四、数学辅线：头数 / 组数与 KV cache 规模的直觉关系
-
-以下只建立**数量级直觉**，帮助跟读「为何改接线能省显存」；具体实现还会受 dtype、分页、是否存 RoPE 前后、实现是否吸收投影等影响。
-
-### 4.1 按「每层、每 token」计的 K/V 驻留规模（示意）
-
-设每头内容维为 $d_h$，K 与 V 都缓存：
-
-| 机制 | 需缓存的「头份数」直觉 | 每层每 token 量级（示意） |
-|------|------------------------|---------------------------|
-| MHA | $H$ 份 K + $H$ 份 V | $\propto 2\,H\,d_h$ |
-| GQA | $G$ 份 K + $G$ 份 V | $\propto 2\,G\,d_h$ |
-| MQA | 1 份 K + 1 份 V | $\propto 2\,d_h$ |
-| MLA（V3 表述） | 潜向量 $\mathbf{c}^{KV}$ + 解耦 $\mathbf{k}^{R}$ | $\propto d_c + d_h^{R}$（报告：此二者需缓存） |
-
-因此：
-
-- **MHA → MQA**：cache 体量约除以 $H$（GQA 论文原句）。
-- **MHA → GQA**：约除以 $H/G$（或说变为 MHA 的 $G/H$）。
-- **组数旋钮**：$G$ 从 1 调到 $H$，在「最省」与「最满配」之间滑动——这就是 GQA「插值」的数学含义。
-
-### 4.2 代入 V3 超参做对照（仅算术，非报告对比表）
-
-若用同一套 $n_h=128,\,d_h=128$ 想象「若是满配 MHA」：每层每 token 约 $2\times 128\times 128=32768$ 个数。
-按报告「只缓存 $\mathbf{c}^{KV}$ 与 $\mathbf{k}^{R}$」：$d_c+d_h^{R}=512+64=576$ 个数。
-比值约 $32768/576\approx 57\times$ 量级——**说明「联合低秩压缩」相对满配多头缓存可以非常省**；但这是对报告缓存声明的直接算术，**不是** V3 文中给出的官方加速比，也未计入实现细节。
-
-若想象 GQA 取 $G=8$、仍用 $d_h=128$：约 $2\times 8\times 128=2048$ 个数/层/token，介于 MQA（$2\times 128$）与 MHA（$32768$）之间——与 GQA「插值」叙事一致。
-
-### 4.3 和「算力」不是同一回事
-
-- **Prefill（预填充）**：往往算力更重；KV 写入一次后供后续复用。
-- **Decode**：每步小算力、反复读 KV → **带宽与显存**更致命。
-
-GQA 论文还提醒：更大模型上，KV cache 随模型维近似线性，而 FLOPs/参数随维平方增长，故「注意力带宽」相对权重计算的比重会变化（§2.2）——这也是为何「绝对最优 $G$」会随规模漂移，需要经验折中（其选 GQA-8）。
-
-### 4.4 MLA 拼接维上的一点形式细节
-
-最终注意力 logits 使用拼接后的 q/k，缩放分为 $\sqrt{d_h+d_h^{R}}$（式 (10)）。直觉上：RoPE 通道与 content 通道维数相加后，再做标准缩放点积——跟读时不要误用「只按 $d_h$ 缩放」。
-
----
-
-## 五、常见误区与引用
-
-### 5.1 常见误区
-
-1. **「MQA/GQA 改的是注意力公式」**
- 误。缩放点积形式未变；变的是 **K/V 是否跨 query 头共享**（以及由此少存多少 cache）。
-
-2. **「GQA 一定全面强于 MQA」**
- 在 GQA 论文的 T5 uptrain 设定下，GQA-8 平均质量更接近 MHA-XXL、速度接近 MQA；但最优 $G$、是否 from-scratch，文中并未穷尽，且 Limitations 提醒指标与设定边界。
-
-3. **「MLA = 一种 GQA」**
- 误。GQA 减少的是 **KV 头个数**；MLA 是对 K/V（及训练时 Q）做 **低秩联合压缩 + 推理时缓存潜向量与解耦 RoPE key**。二者同属「降 KV 代价」，机制不同。
-
-4. **「V3 报告里有完整的 MLA vs GQA 对比表」**
- 就本文所读 §2.1.1 / §4.2 而言：**没有**展开该对比表；MLA 细节与验证指向 DeepSeek-V2。勿把社区二手表当成 V3 原文。
-
-5. **「KV cache 公式可以忽略 RoPE / 实现吸收」**
- 报告明确 MLA 还要缓存 $\mathbf{k}^{R}$；实现若把部分投影吸收进矩阵，字节数会变。第四节算术只用于直觉。
-
-6. **「Encoder 也必须上 GQA」**
- GQA 论文明确未对 encoder self-attention 使用 GQA，理由是 encoder 并行计算时带宽通常非主瓶颈。
-
-### 5.2 引用（跟读用）
-
-- Ainslie, J., Lee-Thorp, J., de Jong, M., Zemlyanskiy, Y., Lebrón, F., & Sanghai, S. (2023). *GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints*. arXiv:2305.13245. PDF: `https://arxiv.org/abs/2305.13245`
-- DeepSeek-AI. (2024/2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437. §2.1.1 MLA；§4.2 超参。PDF: `https://arxiv.org/abs/2412.19437`
-- Shazeer, N. (2019). *Fast Transformer Decoding: One Write-Head Is All You Need*. arXiv:1911.02150.（MQA 源头，经 GQA 论文引用）
-- Vaswani, A., et al. (2017). *Attention Is All You Need*.（标准 MHA）
-- DeepSeek-AI. (2024). DeepSeek-V2 技术报告（V3 文中作 DeepSeek-AI, 2024c）——**MLA 原始验证与更细消融；本笔记未展开精读**。
-
-### 5.3 局限与待核实
-
-- 精读 DeepSeek-V2 中 MLA 专章：与 MHA/GQA 的消融、缓存字节表、训练稳定性叙述。
-- MQA 原始论文（Shazeer 2019）中的「one write-head」表述与实现约束。
-- 当代 decoder-only 开源模型（LLaMA 等）默认 GQA 组数与推理栈中的具体 KV layout（非本两篇正文范围）。
-- V3 实现是否在推理中吸收 $W^{UK}/W^{UV}$ 等（影响「576 维」直觉是否等于实际存储）。
-
----
-
-*架构主线据 GQA 全文 + V3 §2.1.1；数学辅线为 cache 规模直觉，算术示例已标明非官方对比表。*
-
-## 相关笔记
-
-- [[注意力与Transformer核心思想]]
-- [[DecoderOnly与GPT路线]]
-- [[规模定律与预训练范式]]
-- [[混合专家架构]]
-- [[对齐脉络RLHF与偏好优化]]
-- [[推理时扩展TestTimeScaling]]
-- [[开源与闭源前沿模型谱系]]
-- [[长上下文位置编码与系统侧]]
-- [[多模态架构脉络]]
-- [[AI基础设施总览]]
-- [[注意力效率族MQA到MLA]]
-- [[LLaMA开源生态里程碑]]
-- [[线性注意力与状态空间模型谱系]]：另一条降本路线：本篇在 softmax 注意力内压缩每 token 的 KV，那篇用固定大小的状态替代 KV 缓存。
-- [[DeepSeekV3训练与MoE基建]]：本篇第三节用 V3 报告 §2.1.1 讲 MLA；V3 的 MLA 取值放在整套训练配方里看，见那篇。
-- [[DeepSeekV4技术报告深读]]：V4 的 CSA / HCA 底层用 shared-KV MQA，是本篇 KV 共享族在压缩稀疏注意力上的延伸。
-
-
+| 顺序 | 材料 | 看什么 |
+|---|---|---|
+| 1 | [GQA 论文](https://arxiv.org/abs/2305.13245) §2、Table 1 | 分组接线、检查点改造与速度–质量折中 |
+| 2 | [V2 报告](https://arxiv.org/abs/2405.04434) §2.1、Table 1 | MLA 的压缩、矩阵吸收、解耦 RoPE 与缓存对比 |
+| 3 | [V2 报告](https://arxiv.org/abs/2405.04434) 附录 D | MHA、GQA、MQA 与 MLA 的消融 |
+| 4 | [MQA](https://arxiv.org/abs/1911.02150) | 共享 K/V 的原始提出 |
+| 5 | [MHA2MLA](https://arxiv.org/abs/2502.14837) | 把现有模型改造成 MLA 的做法 |

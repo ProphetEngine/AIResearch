@@ -7,229 +7,178 @@ status: archived
 sources:
  - https://arxiv.org/abs/2412.06769
 arxiv: ["2412.06769"]
-related: ["推理时扩展TestTimeScaling", "推理时树搜索ABMCTS", "机制可解释性入门", "SiLVR与ChainOfFrames"]
+related: ["推理时扩展TestTimeScaling", "推理时树搜索ABMCTS", "SoftThinking连续概念空间推理", "机制可解释性入门", "SiLVR与ChainOfFrames", "对齐与强化学习发展时间线"]
 github: "https://github.com/facebookresearch/coconut"
-openreview_pdf: "https://openreview.net/pdf?id=KrWSrrYGpT"
 补链索引: ["AGCLR 2606.07720（概念瓶颈）"]
 archived: 2026-09-22
 ---
 
 # Latent reasoning：Coconut（Chain of Continuous Thought）
 
-> **定位**：连续潜空间推理——相对 **[[推理时扩展TestTimeScaling]]**（语言空间 CoT / 采样 / 树搜索式 TTS 通史）补一块独立的 **连续潜空间推理** 切片：FAIR/Meta 的 **Coconut**（*Training Large Language Models to Reason in a Continuous Latent Space*，arXiv **2412.06769v4**）把 **last hidden state** 直接反馈为下一输入嵌入，在连续空间做隐式多路径搜索。
-> **研究线**：**架构思想（主）**——「continuous thought」回路 + 多阶段课程如何把语言 CoT 内化为潜推理；**评测字段（辅）**——相对 CoT / No-CoT / iCoT / pause 的准确率—生成 token 权衡（GSM8k / ProntoQA / ProsQA）。
+> **主要来源**：[Training Large Language Models to Reason in a Continuous Latent Space](https://arxiv.org/abs/2412.06769)（Hao、Sukhbaatar、Su 等，FAIR at Meta / UCSD，v4 2026-08-23；abs 页注记 COLM 2025 录用）（截至 2026-08-23）。
+> **研究线**：架构思想（主）——把最后一层隐状态直接回灌为下一步输入的「连续思维」回路，以及把语言思维链逐步换成连续思维的多阶段课程；评测字段（辅）——相对 CoT、No-CoT、iCoT、pause token 的准确率与生成 token 数权衡（GSM8k / ProntoQA / ProsQA）。
 > **范围与相邻笔记**：
-> - **≠ [[推理时扩展TestTimeScaling]]**：不写 o1/R1 产品通史、语言 CoT 提示/RL 训练配方；只取「语言空间推理有瓶颈 → 换到连续空间」这一接口。
-> - **≠ [[推理时树搜索ABMCTS]] AB-MCTS**：不写外层 **显式 token/答案树** + Thompson sampling；Coconut 的「BFS」是 **潜表示内并行编码多候选**，无外层搜索控制器。
-> - **≠ 机制可解释性**：不写 SAE / 电路 / 归因图通史；文中对 latent 的 probe（把 continuous thought 解码成候选概念概率）只作 **行为解释证据**，不作 MI 方法论展开。
-> - AGCLR 仅作补链点名，本卡不展开。
+> - ≠ [[推理时扩展TestTimeScaling]]：那篇写语言空间思维链、采样与搜索的通史，本篇只写训练式的连续潜空间推理。
+> - ≠ [[推理时树搜索ABMCTS]]：那篇是外层显式树搜索，本篇的候选保留在连续思维内部。
+> - ≠ [[SoftThinking连续概念空间推理]]：那篇是不训练的连续概念解码，本篇训练模型在连续空间推理。
+>
+> **意义**：Coconut 把「推理必须写成词」这一前提拿掉，并在需要规划的逻辑任务上给出证据：连续表示可同时保留多条候选路径、推迟决定，用更少的生成 token 达到或超过语言思维链的准确率。
 
----
+## 一、问题背景：语言空间为何未必是最好的推理介质
 
-## 一、材料元信息
+主文 §1 的三点动机：
 
-| 材料 | 标识 | 链接 / 元数据 | 角色 |
+1. **算力均匀分配**：每个 token 的计算量大致相同，但思维链里多数 token 只为语句通顺，少数关键规划步却极难。
+2. **语言约束**：提示模型写更短的思维链，或像 Quiet-STaR 那样在关键 token 前多想，都仍在语言空间内。
+3. **理想形态**：推理时不受语言约束，需要时再把结果译回语言。
+
+Coconut 的回答：去掉「隐状态 → 词 → 嵌入」这一映射环，让连续思维端到端可微。
+
+## 二、发展脉络
+
+| 时间 | 工作 | 贡献 |
+|---|---|---|
+| 2022-01 | [Chain-of-Thought Prompting](https://arxiv.org/abs/2201.11903) | 生成中间推理步骤显著提升大模型在算术、常识、符号推理上的表现（摘要） |
+| 2023-05 | [Tree of Thoughts](https://arxiv.org/abs/2305.10601) | 在语言「思维」单元上做显式的多路径探索、自评、前瞻与回溯（摘要）；Coconut 的潜空间搜索与之对照 |
+| 2023-10 | [Pause tokens](https://arxiv.org/abs/2310.02226) | 在输入后追加可学习的 pause token，让模型在给出答案前多做计算（摘要）；Coconut 的基线之一 |
+| 2023-11 | [Implicit CoT via Knowledge Distillation](https://arxiv.org/abs/2311.01460) | 不显式写出推理步，而是从显式思维链教师蒸馏出在各层隐状态间「纵向」进行的隐式推理（摘要） |
+| 2024-03 | [Quiet-STaR](https://arxiv.org/abs/2403.09629) | 让模型在每个 token 处生成解释后文的理由以改进预测（摘要），仍在语言空间 |
+| 2024-05 | [From Explicit CoT to Implicit CoT](https://arxiv.org/abs/2405.14838) | 从显式思维链模型出发逐步删去中间步骤再微调，使模型内化推理（摘要）；即主文的 iCoT 基线，也是其课程设计的来源 |
+| 2024-12 | [Coconut](https://arxiv.org/abs/2412.06769)（v1） | 把最后一层隐状态作为下一步输入嵌入，在连续空间推理 |
+| 2025-02 | [Recurrent Depth](https://arxiv.org/abs/2502.05171) | 通过循环迭代一个模块在潜空间隐式推理、扩展测试时计算，无需专门的推理数据（摘要）；主文 C.2 列为可与 Coconut 结合的潜空间预训练方向之一 |
+| 2025-05 | [Soft Thinking](https://arxiv.org/abs/2505.15778) | 不训练、在推理期用概率加权的连续概念代替离散 token |
+| 2026-06 | [AGCLR](https://arxiv.org/abs/2606.07720) | 指出 Coconut 的「概念瓶颈」：每一轮的中间隐状态被覆盖，推理加深后丢失早先算出的事实；HotpotQA 上原始 Coconut 10.4% EM，不如 CoT 的 11.0%；用带读、写、遗忘门的持久残差记忆补救（摘要） |
+
+脉络上，iCoT 一系把显式推理步「内化」为隐式计算，Coconut 进一步让每一步推理有一个可回灌的连续向量；此后的工作分别从潜空间预训练（Recurrent Depth）、免训练解码（Soft Thinking）与记忆保持（AGCLR）三个方向延伸。
+
+## 三、核心机制
+
+### 3.1 语言模式与潜模式回路（§3）
+
+标准语言模型中，位置 t 的最后一层隐状态 h_t 经输出层得到下一个词的分布，再取该词的嵌入作为下一步输入。Coconut 用特殊标记 `<bot>` 与 `<eot>` 界定潜模式区间，区间内：
+
+- 下一步输入不再是词嵌入，而是上一位置的最后一层隐状态（已过最终归一化）；
+- 区间内不要求把隐状态映回词表，但仍可计算词表分布，供第四节的探针使用。
+
+即：思维链是「词 → 词」的回路，Coconut 是「向量 → 向量」的回路，需要时再输出语言。
+
+### 3.2 多阶段课程（Figure 2）
+
+训练数据带语言推理步骤。初始阶段做普通的思维链监督微调；第 k 阶段把前 k 个语言推理步换成 k×c 个连续思维（c 是每个语言步对应的连续思维数，`<bot>` / `<eot>` 不计入），语言链短于 k 步时全部删去。损失只算连续思维之后剩余文本的负对数似然，问题与连续思维部分被屏蔽；阶段切换时重置优化器状态（沿用 iCoT）。
+
+主文强调：目标不是让连续思维压缩被删掉的那句语言，而是便于预测后续推理，所以连续表示可以比语言更高效。
+
+若某阶段有 n 个连续思维，训练需要 n+1 次前向（每次产生一个新思维，最后一次计算剩余文本损失）。KV 缓存能省去重复计算，但多次前向的串行性限制了并行，主文把训练效率列为开放问题。
+
+### 3.3 推理时何时进出潜模式
+
+问题 token 之后立即插入 `<bot>`。`<eot>` 有两种做法：在连续思维上训练一个二分类器让模型自己决定何时结束，或固定长度填充；两者效果相当，实验默认用固定长度（§3）。
+
+### 3.4 与显式树搜索的区别
+
+| | 语言空间 / 外层树（ToT、AB-MCTS 等） | Coconut 的潜空间搜索 |
+|---|---|---|
+| 候选存在何处 | 离散 token 或答案节点，由外层算法展开 | 同一个连续思维向量中同时编码多个候选 |
+| 是否有显式搜索控制器 | 有（beam、MCTS、采样策略） | 无，行为来自训练目标 |
+| 训练信号 | 常需轨迹、奖励或外部打分 | 语言思维链课程 + 对剩余文本的交叉熵 |
+
+## 四、连续空间为何像隐式树搜索（ProsQA）
+
+### 4.1 ProsQA
+
+主文新提的数据集 ProsQA（Proof with Search Question-Answering）：每题是概念间逻辑关系构成的有向无环图，以自然语言陈述，要求找出合法推理路径。相比 ProntoQA，图中干扰分支更多，规划与搜索压力更大（附录 A）。图结构均值（Table 2）：节点 23.0、边 36.0、最短路径长 3.8、最短路径条数 1.6。规模（Table 3）：训练 / 验证 / 测试为 17,886 / 300 / 500。底座为预训练 GPT-2。
+
+### 4.2 改变潜步数：同一套权重，不同潜深度
+
+推理时强制使用 k ∈ {0, …, 6} 个连续思维，其余推理用语言写出。主文 §4.1 按最终答案对错和推理过程类别（正确路径、更长路径、幻觉、错误目标等）统计。正文结论：语言思维链常幻觉出不存在的边或走向错误目标；连续思维越多，答案准确率与正确过程比例越高，幻觉和错误目标越少。
+
+案例（Figure 4）：思维链在死路后幻觉出 *Every yumpus is a rempus*；Coconut k=1 走到无关节点；k=2 解对。
+
+### 4.3 探针：连续思维编码并行候选与隐式价值
+
+在中间连续思维之后强制切回语言，读出下一个概念的预测概率（概念内各 token 条件概率之积），视为隐式价值函数（§4.3）。同一案例中，第一步「lempus」价值最高（0.33）；第二步最高价值给了「grimpus」的孩子「rorpus」（0.87），并未沿 lempus 贪心走下去。主文称这类似广度优先搜索：连续表示可同时编码多条候选路径，避免语言思维链过早承诺。
+
+Figure 6 的图注说明：第一步 top-1/2/3 候选的累积价值曲线间距大（探索宽），第二步收窄（更聚焦）。§4.4 定义节点高度为到任一叶节点的最短距离，正文结论是高度越低的节点价值估计越准确、越确定，推迟确定性决策因此有利于区分正误路径。
+
+## 五、实验结果
+
+### 5.1 设置（§5.1–§5.2）
+
+- GSM8k：c=2，初始阶段加 3 个阶段，再加一个阶段删去剩余全部语言链；训练数据为 Deng et al. (2023) 的合成数据，训练集 385,620 条（Table 3）。
+- ProntoQA / ProsQA：c=1，初始阶段加 6 个阶段，末阶段为纯连续思维。
+- 共同：在末阶段训练到 50 epoch，按验证准确率选检查点，贪心解码。
+- 基线：CoT、No-CoT、iCoT、Pause token；Coconut 消融：去掉课程（w/o curriculum）、同课程但不加连续思维（w/o thought）、用 pause token 代替连续思维（pause as thought）。
+
+### 5.2 主结果（Table 1；准确率 % / 生成 token 数）
+
+| 方法 | GSM8k | ProntoQA | ProsQA |
 |---|---|---|---|
-| **主文** | Hao, Sukhbaatar, Su, Li, Hu, Weston, Tian（FAIR at Meta / UCSD）, *Training Large Language Models to Reason in a Continuous Latent Space* | arXiv:**2412.06769v4** \[cs.CL\] **23 Aug 2026**；页眉 *Last updated: August 25, 2026*；`https://arxiv.org/abs/2412.06769`（**18** 页 letter） | 一手：范式、课程、ProsQA 潜搜索分析、主表 |
-| **镜像** | OpenReview PDF | https://openreview.net/pdf?id=KrWSrrYGpT | 备用链接；本笔记数字以 arXiv 官方 PDF 为准 |
-| **代码** | facebookresearch/**coconut** | https://github.com/facebookresearch/coconut（文首页） | 复现入口；本卡不 walkthrough |
-
-**一句话抓手：** 把「推理状态」从 **词 token 序列** 换成 **可微的连续向量回路**——$h_t$ 不经 LM head 解码，直接当下一输入嵌入；再靠 **多阶段课程** 逐步用 $c$ 个 continuous thoughts 顶替语言推理步，让模型在潜空间里 **并行保留多条下一跳**，呈现类似 BFS 的规划行为。
-
----
-
-## 二、议题边界：连续潜推理，不是语言 CoT / 外层树 / MI 通史
-
-### 2.1 相对相邻笔记只取接口
-
-| 相邻笔记 | 本卡只取 | 本卡不写 |
-|---|---|---|
-| **[[推理时扩展TestTimeScaling]] / 语言 CoT** | 「逐步生成中间过程能抬解题率」；CoT 把输出回路回输入、加深有效深度（文引 Feng et al. 作动机） | o1/R1 产品线、RL 长 CoT、采样/共识/打分重排通史 |
-| **[[推理时树搜索ABMCTS]] AB-MCTS** | 「规划任务需要宽探索、勿过早钉死一条路径」（抽象对照） | GEN 节点、Thompson sampling、TreeQuest、答案级外层 MCTS |
-| **机制可解释性 MI** | 「可对内部表征做 probe / 干预式读出」（文 §4.3 用 softmax 读候选概念） | SAE、电路、归因图、monosemanticity 史线 |
-
-### 2.2 文内立轴：语言空间为何可能不是最优推理介质
-
-文 §1 三点（跟读压缩，非神经科学展开）：
-
-1. **算力均匀分配**：每 token 预算近似相同，但 CoT 里大量 token 只为流畅，关键规划步却极难。
-2. **语言约束**：提示「写短 CoT」或 Quiet-STaR 式「关键 token 前多想」仍落在语言空间。
-3. **理想形态**：推理时不受语言约束，**必要时再译回语言**。
-
-Coconut 的回答：**删掉 hidden↔token 的映射环，让连续 thought 端到端可微。**
-
-### 2.3 与「显式树搜索」的一句话差
-
-| | 语言/外层树（ToT、AB-MCTS 等） | **Coconut 潜「BFS」** |
-|---|---|---|
-| 候选存在何处 | 离散 token / 答案节点，外层算法展开 | **同一 continuous thought 向量内叠加多候选** |
-| 是否显式搜索控制器 | 有（beam / MCTS / 采样策略） | **无**；从训练目标涌现 |
-| 训练信号 | 常需轨迹/奖励或外部分数 | 语言 CoT 课程 + 对剩余文本的 CE |
-
----
-
-## 三、架构思想：语言模式 ↔ 潜模式回路
-
-### 3.1 记号与核心改动（文 §3）
-
-标准 LM（文记法）：
-
-$$
-H_t = \mathrm{Transformer}(E_t),\quad
-M(x_{t+1}\mid x_{\le t})=\mathrm{softmax}(W h_t)
-$$
-
-其中 $E_t$ 为 token 嵌入序列，$h_t=H_t[t,:]$ 为位置 $t$ 的 last hidden state。
-
-**Coconut：** 在潜模式区间用特殊标记 `<bot>` / `<eot>` 界定；若潜推理在 $i$ 与 $j$ 之间（$x_i=\texttt{<bot>}$, $x_j=\texttt{<eot>}$），则对 $i<t<j$：
-
-- **下一输入不再是 $e(x_t)$，而是上一位置的 $h_{t-1}$**（已过最终 norm，幅值可控）；
-- $M(x_{t+1}\mid\cdot)$ 在潜区间 **不定义**（不强制映回词表）；但 $\mathrm{softmax}(W h_t)$ 仍可算，供 §5/§4 探针。
-
-跟读：**CoT = 词→词回路；Coconut = 向量→向量回路，必要时再出语言。**
-
-### 3.2 多阶段课程（Figure 2；灵感自 iCoT / Deng et al. 2024）
-
-问题设定：给定问题，经推理生成答案。训练数据带 **语言 CoT 步骤**。
-
-| 阶段 | 做法 |
-|---|---|
-| 初始 | 普通语言 CoT SFT |
-| 第 $k$ 阶段 | 把 CoT 的 **前 $k$ 个语言推理步** 换成 $k\times c$ 个 continuous thoughts（`<bot>`/`<eot>` 不计入 $c$） |
-| 损失 | 对问题与 latent thoughts **mask**；只对 continuous thoughts **之后剩余文本** 做 NLL |
-| 优化器 | 阶段切换时 **reset optimizer state**（跟随 Deng et al.） |
-
-关键澄清（文原话级）：目标 **不是** 让 continuous thought **压缩**被删掉的那句语言，而是 **方便预测后续推理**——因此潜表示可以比人类语言更高效。
-
-实现细节（非手册）：若当前阶段排了 $n$ 个 latent thoughts，做 $n+1$ 次前向（每次出一个新 thought，最后一次算剩余文本损失）；可用 KV cache 省重复算，但多次前向的串行性限制并行——文称训练效率仍是开放问题。
-
-### 3.3 推理期何时进出潜模式
-
-- 解题设定下：问题 token 后立刻插 `<bot>`。
-- `<eot>` 两种策略：（a）在 latent thoughts 上训二分类器自主结束；（b）**固定长度 padding**。文称两者相当，实验默认 **(b)**。
-
----
-
-## 四、连续空间为何能「隐式树搜索」（ProsQA）
-
-### 4.1 ProsQA：需要规划的逻辑 QA
-
-文新提 **ProsQA**（Proof with Search Question-Answering）：每题是概念间逻辑关系的 **DAG**，用自然语言陈述；要求找合法路径判定关系。相对 ProntoQA，DAG 带来更多干扰分支，**规划/搜索压力更大**（细节 Appendix A）。
-
-图结构统计（Table 2，均值）：节点 **23.0**、边 **36.0**、最短路径长 **3.8**、最短路径条数 **1.6**。
-
-数据规模（Table 3）：ProsQA train/val/test = **17,886 / 300 / 500**（ProntoQA 9,000/200/800；GSM8k 合成训集约 385,620 / 500 / 1319）。
-
-底座：**预训练 GPT-2**；lr $1\times10^{-4}$，effective batch **128**；ProsQA 最大推理步 6 → 训练阶段数 $N=6$；每阶段 5 epoch，末阶段留到总 **50** epoch；取末阶段验证最佳 checkpoint。
-
-### 4.2 用 `<eot>` 位置插值：同权重、不同潜深度
-
-推理时强制 Coconut 使用 $k\in\{0,\ldots,6\}$ 个 continuous thoughts，再让模型用语言吐出剩余链——**同一套权重**，只改推理期潜步数。度量两套：
-
-1. **最终答案对错**（主指标，亦用于 §5）；
-2. **过程类别**：Correct Path / Longer Path / Hallucination / Wrong Target；对只出答案者另计 Correct/Incorrect Label（六类互斥，§4.1）。
-
-Figure 3 定性结论（文述，无另造点估计）：相对语言 CoT 易幻觉不存在边或走向错误目标，**增加 continuous thoughts → 答案准确率与正确过程比例上升，Hallucination / Wrong Target 下降**。
-
-案例（Figure 4）：CoT 卡死末端后幻觉边 *Every yumpus is a rempus*；Coconut $k=1$ 走到无关节点；**$k=2$ 正解**。
-
-### 4.3 探针：latent = 并行多候选 + 非贪心「价值」
-
-做法：在中间 continuous thought 之后 **强制改回语言**，读出下一概念的预测分布（概念概率 = 其内各 token 条件概率之积），视为 **隐式价值函数**。
-
-同一案例（Figure 5）：
-
-- 第一步：「lempus」价值最高（**0.33**），候选含 Alex 的直接孩子；
-- 第二步：最高落在「grimpus」的孩子「rorpus」（**0.87**），**并未沿第一步最高的 lempus 贪心走下去**。
-
-文称这类似 **BFS**：连续表示可同时编码多条候选路径，避免语言 CoT 的过早确定性承诺；且该模式不限个例，支撑「更大 $k$ 持续改进」。
-
-Figure 6：第一步 top-1/2/3 累积价值曲线间距大（宽探索）；第二步间距收窄（更聚焦）。Figure 7：节点 **height**（到叶最短距离）越低，对正确/错误节点的价值估计越干净——解释「为何推迟确定性决策有利规划」。
-
----
-
-## 五、评测字段：三数据集主表与效率权衡
-
-### 5.1 训练配置摘要（§5.1）
-
-| 数据 | $c$ | 阶段设计（压缩） |
-|---|---|---|
-| **GSM8k** | **2** | 初始 + 3 阶段；再加一阶段仍用 $3\times c$ thoughts 但 **删光剩余语言链**（消化 >3 步长尾）；初始 6 epoch，其后每阶段 3 epoch |
-| **ProntoQA / ProsQA** | **1** | 初始 + **6** 阶段（最大步数 6）；末阶段纯 continuous thoughts；每阶段 5 epoch |
-| 共性 | — | 标准日程后留在末阶段至 **50** epoch；按验证准确率选 ckpt；推理 latent 步数对齐末阶段；**greedy** |
-
-GSM8k 训练用 Deng et al. (2023) 合成数据（文 §5.1）。
-
-### 5.2 基线与消融
-
-- **CoT / No-CoT**
-- **iCoT**（Deng et al. 2024）：逐步删掉链首 token，「内化」后推理直接出答案
-- **Pause token**（Goyal et al.）：问答之间插与 Coconut 同数量的 `<pause>`，无推理链监督
-
-Coconut 变体：**w/o curriculum**（直接末阶段）；**w/o thought**（同课程但不加 latent）；**pause as thought**（用 pause 顶替 continuous thought，同课程）。
-
-### 5.3 Table 1 主结果（官方 PDF；Acc. % ±；# Tokens）
-
-| Method | GSM8k Acc / #Tok | ProntoQA Acc / #Tok | ProsQA Acc / #Tok |
-|---|---|---|---|
-| CoT | 42.9±0.2 / **25.0** | 98.8±0.8 / **92.5** | 77.5±1.9 / **49.4** |
+| CoT | 42.9±0.2 / 25.0 | 98.8±0.8 / 92.5 | 77.5±1.9 / 49.4 |
 | No-CoT | 16.5±0.5 / 2.2 | 93.8±0.7 / 3.0 | 76.7±1.0 / 8.2 |
-| iCoT | 30.0∗ / 2.2 | 99.8±0.3 / 3.0 | 98.2±0.3 / 8.2 |
+| iCoT | 30.0* / 2.2 | 99.8±0.3 / 3.0 | 98.2±0.3 / 8.2 |
 | Pause Token | 16.4±1.8 / 2.2 | 77.7±21.0 / 3.0 | 75.9±0.7 / 8.2 |
 | **Coconut** | **34.1±1.5 / 8.2** | **99.8±0.2 / 9.0** | **97.0±0.3 / 14.2** |
 | – w/o curriculum | 14.4±0.8 / 8.2 | 52.4±0.4 / 9.0 | 76.1±0.2 / 14.2 |
 | – w/o thought | 21.6±0.5 / 2.3 | 99.9±0.1 / 3.0 | 95.5±1.1 / 8.2 |
 | – pause as thought | 24.1±0.7 / 2.2 | 100.0±0.1 / 3.0 | 96.6±0.8 / 8.2 |
 
-∗ iCoT 的 GSM8k 数字来自 Deng et al. (2024)（表注）。
+\* iCoT 的 GSM8k 数字取自 Deng et al. (2024)（表注）。
 
-**跟读要点（文 §5.3）：**
+要点（§5.3）：
 
-1. **链式 latent 提升表达力**：GSM8k 上 Coconut **34.1%** ≫ No-CoT **16.5%**，并超过同策略的 pause-as-thought / w/o-thought；也超过 iCoT 的 30.0%。$c: 0\to1\to2$ 稳步升（Figure 8-II）；$c=3$ 时略降且方差升，末阶段一次塞入三 thoughts 触发 loss spike（Appendix C.1）。
-2. **比语言 CoT 更省 token（逻辑任务）**：ProntoQA / ProsQA 上 Coconut **准确率 ≥ CoT 且 #Tokens 显著更少**（9.0 vs 92.5；14.2 vs 49.4）。GSM8k **未超过** CoT 的 42.9%，但 Figure 8-I 显示：相对「逐步内化语言步」的 CoT 变体，用 2 个 continuous thoughts 顶替每步时，**少生成 token 时掉点更缓**——更好准确率—效率权衡。
-3. **课程几乎必需**：w/o curriculum ≈ 甚至劣于 No-CoT（GSM8k 14.4）；说明仅靠 QA 梯度 **学不出** 有效 latent 推理，需语言链引导的多阶段课程。
-4. **解码探针（Figure 9）**：第一个 continuous thought 解码常对应数学题中的 **中间变量**——支持「潜表示是更密的推理载体」。
+1. **连续思维串联提升表达力**：GSM8k 上 Coconut 34.1%，远高于 No-CoT 的 16.5%，也高于同策略的 pause as thought、w/o thought 和 iCoT；c 从 0 到 1 到 2 准确率稳步上升，c=3 时略降、方差变大，训练日志显示末阶段一次加入三个连续思维会使训练损失骤升（附录 C.1）。
+2. **逻辑任务上更省 token**：ProntoQA、ProsQA 上 Coconut 准确率不低于 CoT，生成 token 数少得多（9.0 对 92.5，14.2 对 49.4）。GSM8k 上未超过 CoT 的 42.9%，但正文称：相比逐步内化语言步的做法，每步换成两个连续思维时，少生成 token 带来的掉点明显更缓。
+3. **课程几乎必需**：去掉课程后不比 No-CoT 好（GSM8k 14.4），仅靠问答的梯度学不出有效的潜推理。
+4. **解码探针**：解码第一个连续思维，常对应数学题计算中的中间变量（Figure 9）。
 
-### 5.4 墙钟时间（Appendix B，A100，bs=1，秒/题）
+### 5.3 墙钟时间（附录 B，A100，batch size 1，秒 / 题）
 
-| Method | GSM8k | ProntoQA | ProsQA |
+| 方法 | GSM8k | ProntoQA | ProsQA |
 |---|---|---|---|
 | No-CoT | 0.03 | 0.03 | 0.08 |
 | CoT | 0.26 | 0.85 | 0.47 |
-| Coconut | **0.09** | **0.11** | **0.15** |
+| Coconut | 0.09 | 0.11 | 0.15 |
 
-文称墙钟大致与新生成 token 数成正比（与 Table 1 一致）。
+主文称墙钟时间大致与新生成的 token 数成正比。
 
-### 5.5 更大模型（Appendix C.2，GSM8k，$c=1$）
+### 5.4 更大模型（附录 C.2，GSM8k，c=1）
 
-| Model | no-CoT | Coconut |
+| 模型 | No-CoT | Coconut |
 |---|---|---|
-| Llama 3.2-3B | 26.0 | **31.7** |
-| Llama 3-8B | 42.2 | **43.6** |
+| Llama 3.2-3B | 26.0 | 31.7 |
+| Llama 3-8B | 42.2 | 43.6 |
 
-相对 GPT-2 主实验，增益 **更小**；文猜测大模型语言预训练更重，迁到潜推理更难，并强调需 **面向推理的 latent pretraining** 才可能普遍超过语言 CoT（点名 Geiping et al. 2025、Barrault et al. 2024、Gladstone et al. 2025 为可整合方向——本卡不展开）。
+增益小于 GPT-2 主实验。主文推测大模型经过大量语言预训练，转向潜推理更难，并认为要普遍超过语言思维链，需要面向推理的潜空间预训练。
 
----
+## 六、意义
 
-## 六、刻意不写 / 开放问题（文内自陈）
+Coconut 是「训练模型在连续空间推理」这一方向的代表工作：它给出了可训练的连续思维回路与课程，并用 ProsQA 上的探针把「连续表示保留多条候选、推迟决定」变成可观察的现象，解释了它为何在规划类逻辑任务上用更少 token 达到 iCoT、CoT 的水平。此后的 Soft Thinking、AGCLR 以及视频侧的 TORM 都以它为参照（见第二节与第八节）。
 
-- **不写**：完整 iCoT / pause-token / ToT / RAP 复述；ProsQA 构图 Alg.1 逐步伪代码；训练并行优化实现；把 probe 写成 MI 方法论文。
-- **开放**：无语言链监督的 latent 学习；训练多次前向的效率；$c$ 更大时的细粒度课程；语言骨架 + 潜空间填槽的混合推理；扩展到预训练尺度。
-- **补链**：**AGCLR（2606.07720）** 作概念瓶颈相关索引；文末引用的 Zhu et al. 2025a/b（叠加态理论与训练动态）可作后续理论跟读，本卡不展开公式。
+## 七、局限与待核实
 
----
+1. **规模与任务**：主结果基于 GPT-2；Llama 3-8B 上 Coconut 43.6、No-CoT 42.2；GSM8k 上仍不及语言思维链（34.1 对 42.9）。
+2. **合成任务区分度有限**：ProntoQA 上 w/o thought（99.9）与 pause as thought（100.0）都不低于 Coconut，ProsQA 上 iCoT（98.2）高于 Coconut（97.0）；主文也承认这些任务中模型的计算容量可能不是瓶颈（§5.3）。
+3. **依赖语言链监督**：去掉课程即失效；无语言链监督的潜推理学习、训练中多次前向的效率，主文列为开放问题。
+4. **概念瓶颈**：后续工作 AGCLR 报告，HotpotQA 上原始 Coconut（10.4% EM）不如 CoT（11.0%），GSM8K 上性能随课程加深而下降（摘要），说明连续思维会覆盖早先的中间结果。
+5. **定义不一致**：节点「高度」在 Figure 5 图注中定义为到任一叶节点的最长距离，在 §4.4 正文中为最短距离；本篇按 §4.4 写，v1 至 v4 均如此。
+6. **版本差异**：v1（2024-12-09）的 Table 1、附录 B 墙钟时间与 ProsQA 图统计与 v4 相同，但没有附录 C.2 的 Llama 实验，探针案例只给第一步各候选的价值，第二步只作定性描述（无 0.87）；v3（2025-11-03）补入上述内容；v4（2026-08-23）相对 v3 只在相关工作中补了一句 Recurrent Memory Transformer 及其关联记忆扩展的引用，数字不变。本篇按 v4 写。
+7. **图读数**：Figure 3、6、7、8 的曲线未读数，相关结论只取正文与图注文字。
 
-## 七、可跟读结论（三句）
+## 八、与相邻笔记的分工
 
-1. **Coconut = 把 CoT 的「词回路」改成「连续 hidden 回路」**，用 `<bot>`/`<eot>` 切换模式，用多阶段课程把语言步逐步换成 $c$ 个 continuous thoughts。
-2. **在 ProsQA 这类需规划的逻辑图上**，潜表示可并行编码多下一跳并推迟承诺，行为上像 **隐式 BFS**——这与 [[推理时树搜索ABMCTS]] 的 **显式外层树** 不是同一层机制。
-3. **实证**：逻辑任务上相对 CoT **更高或持平准确率、更少 token / 更短墙钟**；GSM8k 上相对 No-CoT 大涨、相对 CoT 未超越但效率前沿更好；**无课程则几乎失败**。
+| 相邻笔记 | 本篇只取 | 本篇不写 |
+|---|---|---|
+| [[推理时扩展TestTimeScaling]] | 并列：那篇写语言空间生成长思维链的推理时扩展，本篇是把推理移到连续潜空间的替代路线 | o1/R1 产品线、长思维链 RL、采样与打分重排 |
+| [[推理时树搜索ABMCTS]] | 对照：那篇是外层显式的答案树搜索（Thompson sampling），本篇的「广度优先」发生在单个连续向量内部，没有外层控制器 | 节点生成、TreeQuest 与答案级 MCTS |
+| [[SoftThinking连续概念空间推理]] | 下游：那篇不训练、在推理期用概率加权的连续概念代替离散 token，以本篇的训练式潜推理为对照 | 免训练的连续概念解码与停止判据 |
+| [[机制可解释性入门]] | 方法接口：本篇 §4.3 用词表分布读出连续思维中的候选概念，属于对内部表征的探针，只作行为证据 | SAE、电路、归因图等方法论 |
+| [[SiLVR与ChainOfFrames]] | 下游：那篇补充的 TORM 第二阶段只用答案监督，让推理在隐向量里完成，并把本篇列为相关工作；本篇写文本侧，那篇是它在视频上的用法 | 视频推理流水线 |
+| [[对齐与强化学习发展时间线]] | 时间索引：2024-12 节点指向本篇 | 其余推理训练节点 |
 
-## 相关笔记
+## 九、延伸阅读
 
-- [[测试时训练]]
-- [[潜空间推理Coconut]]
-- [[审慎对齐与断路器]]
-- [[DeepSeekV4技术报告深读]]
-- [[SiLVR与ChainOfFrames]]：那篇附记的 TORM 第二阶段采用类 Coconut 设定，只监督最终答案、让隐向量内化视频时空推理；本篇写文本侧的连续隐向量推理，那篇是它在视频上的用法。
-
+- [Coconut（v4）](https://arxiv.org/abs/2412.06769v4)：§4 的潜搜索分析与附录 C 的讨论是本篇第四、五节的出处。
+- [From Explicit CoT to Implicit CoT](https://arxiv.org/abs/2405.14838)：iCoT 基线与课程设计的来源。
+- [Recurrent Depth](https://arxiv.org/abs/2502.05171)：用循环深度在潜空间扩展测试时计算的另一条路线。
+- [AGCLR](https://arxiv.org/abs/2606.07720)：针对 Coconut 概念瓶颈的门控持久记忆改进。
+- [Coconut 代码](https://github.com/facebookresearch/coconut)：官方实现。

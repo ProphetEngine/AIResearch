@@ -7,7 +7,7 @@ status: archived
 sources:
  - https://arxiv.org/abs/2503.04412
 arxiv: ["2503.04412"]
-related: ["推理时扩展TestTimeScaling", "自适应测试时算力", "过程奖励模型PRM谱系", "形式化验证与LLM", "DeepSeekR1推理训练深读", "MixtureOfAgents与TUMIX", "多智能体辩论"]
+related: ["推理时扩展TestTimeScaling", "自适应测试时算力", "过程奖励模型PRM谱系", "形式化验证与LLM", "DeepSeekR1推理训练深读", "MixtureOfAgents与TUMIX", "多智能体辩论", "潜空间推理Coconut"]
 blog: "https://sakana.ai/ab-mcts/"
 github: "https://github.com/SakanaAI/treequest"
 github_arc2: "https://github.com/SakanaAI/ab-mcts-arc2"
@@ -100,6 +100,7 @@ AB-MCTS 把「推理时多花算力」从单一的采样数或修订轮数，推
 | [[推理时扩展TestTimeScaling]] | 推理时扩展的总背景在那篇；AB-MCTS 属于其中「多答案生成 + 选择」一族，与训练出长思维链的路线互补 | o1 / R1 产品线与训练配方 |
 | [[DeepSeekR1推理训练深读]] | R1 论文自述按难度动态分配思考 token，并与多数投票、MCTS 这类外层搜索对照；AB-MCTS 正是外层搜索一侧 | R1 训练管线 |
 | [[自适应测试时算力]] | 两者都在固定预算下自适应分配算力：那篇按查询难度分配 token 与样本，AB-MCTS 在单题内分配宽与深 | 难度估计与路由方法 |
+| [[潜空间推理Coconut]] | 对照：AB-MCTS 在外层显式展开答案树、用 Thompson sampling 决定加宽还是加深；那篇训练模型在单个连续思维向量里同时保留多个候选，作者称其类似广度优先搜索，没有外层搜索控制器 | 连续思维训练课程与探针 |
 | [[过程奖励模型PRM谱系]] | 都用信号引导搜索：PRM 是训练出的逐步判别器，AB-MCTS 用可执行的外部评分；论文把答案选择的缺口列为可用奖励模型补足的方向 | PRM 训练与 ORM / PRM 谱系 |
 | [[形式化验证与LLM]] | 「树搜索 + 外部校验」作推理时扩展的另一形态：那里的校验器是证明器内核，这里是测例与验证集 | Lean 证明搜索 |
 | [[MixtureOfAgents与TUMIX]]、[[多智能体辩论]] | 都是多模型协作：MoA / 辩论按层聚合或互相批评，Multi-LLM AB-MCTS 用后验在树里选生成器；两者关系 Sakana 博客列为开放问题 | MoA / 辩论的机制与评测 |
