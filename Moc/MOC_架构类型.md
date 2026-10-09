@@ -18,6 +18,7 @@ status: active
 - [[DecoderOnly与GPT路线]]
 - [[混合专家架构]]
 - [[MoE路由与负载均衡]]
+- [[条件记忆与查表稀疏Engram]]
 - [[Transformer至今发展脉络]]
 - [[扩散语言模型]]
 - [[AdaptiveSpec与Goose]]
