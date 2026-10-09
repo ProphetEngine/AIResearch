@@ -17,6 +17,7 @@ related:
  - "智能体工具与长程任务"
  - "推理时树搜索ABMCTS"
  - "浏览与深研Agent基准"
+ - "视觉文本压缩与文档理解"
 code_promised: "https://github.com/ATH-MaaS/Marco-DeepResearch"
 retrieval_cutoff: 2026-09-02
 timezone: Asia/Shanghai (CST)
@@ -125,6 +126,7 @@ CHIME 把强化学习中的信用分配问题搬到了不训练参数的记忆�
 | [[推理时树搜索ABMCTS]] | 对照：测试时搜索是 CHIME 列出的三条路径之一，每题探索候选、不跨任务留经验 | 树搜索算法 |
 | [[智能体工具与长程任务]] | 背景：四个基准都是长程工具任务 | 工具协议与产品 |
 | [[浏览与深研Agent基准]] | 评测背景：CHIME 的四个基准之一是中文网页浏览基准 BrowseComp-ZH；BrowseComp 本身的构造与评测在该篇 | 浏览基准与排行 |
+| [[视觉文本压缩与文档理解]] | 对照：第六节的 MEM1、ReSum 在文本侧压缩交互历史，那篇写把历史渲染成图像的视觉侧压缩 | 光学历史压缩 |
 
 ## 十、延伸阅读
 

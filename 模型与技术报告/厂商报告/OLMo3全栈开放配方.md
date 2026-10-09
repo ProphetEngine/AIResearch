@@ -19,6 +19,7 @@ related:
  - "推理时扩展TestTimeScaling"
  - "可验证过程监督"
  - "ToolLoop工具数据合成"
+ - "视觉文本压缩与文档理解"
 contact: "olmo@allenai.org"
 retrieval_cutoff: 2026-04-14
 timezone: Asia/Shanghai (CST)
@@ -128,6 +129,7 @@ timezone: Asia/Shanghai (CST)
 | [[推理时扩展TestTimeScaling]] | Think 分支先生成思考痕迹再作答 | 推理时扩展通论 |
 | [[可验证过程监督]] | OlmoRL 只用结果验证器，过程监督的做法在那篇 | 过程监督方法 |
 | [[ToolLoop工具数据合成]] | Instruct 分支的函数调用数据与评测，工具数据合成的方法在那篇 | 工具数据的合成流程 |
+| [[视觉文本压缩与文档理解]] | 工具：预训练与长上下文数据中的科学 PDF 经 olmOCR 转为纯文本；olmOCR 作为文档解析模型的做法在那篇 | 文档解析模型与视觉文本压缩 |
 
 ## 十、延伸阅读
 
