@@ -125,6 +125,7 @@ V4 是「压缩注意力」路线在开放权重旗舰上较完整的一次落�
 |---|---|---|
 | [[DeepSeekV3训练与MoE基建]] | V4 继承的 MoE、MTP 基座；本篇只写 V4 的差分 | DualPipe、FP8 配方 |
 | [[DeepSeekV32技术报告深读]] | CSA 即「压缩 + DSA」；1M 效率以 V3.2 为基线；OPD 取代其混合 RL 合并 | DSA 继续训练与 GRPO 细节 |
+| [[归一化与残差连接设计]] | V4 所用 mHC 属于残差加宽路线，从 HC 到 mHC 的约束及其与 AttnRes、门控残差的对照在那篇 | 归一化位置与残差设计谱系 |
 | [[DeepSeekV41Flash深读]] | V4.1-Flash 以 V4-Flash 为基线改为纯 CSA2 并压主 KV | CED、CSA2、FP4 主 KV、Bounded Replay |
 | [[分块KV压缩的相位敏感性]] | 该研究以 V4 家族为主要对象，测得 base 检查点随 token 相位的检索差距最大约 40 个百分点 | 现象的机制与理论 |
 | [[KV缓存量化与压缩]] | V4 的 KV 混合精度与 indexer FP4 是该通史中的一个产品解 | 量化误差轴与通史 |

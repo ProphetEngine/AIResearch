@@ -28,6 +28,7 @@ status: active
 - [[推理时扩展TestTimeScaling]]
 - [[推理时树搜索ABMCTS]]
 - [[注意力与Transformer核心思想]]
+- [[归一化与残差连接设计]]
 - [[检索式注意力]]
 - [[原生稀疏注意力NSA]]
 - [[线性注意力与状态空间模型谱系]]
