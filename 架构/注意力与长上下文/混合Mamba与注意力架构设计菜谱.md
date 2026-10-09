@@ -16,6 +16,7 @@ related:
   - "KimiK3技术报告"
   - "MiniMaxM1技术报告深读"
   - "长上下文与注意力效率时间线"
+  - "门控注意力与注意力汇"
 retrieval_cutoff: 2026-08-31
 timezone: Asia/Shanghai (CST)
 boundary: "≠ Nemotron3Ultra技术报告深读 单机 Hybrid+LatentMoE 配方深读；≠ Qwen38Next架构深读 的 GDN/QSA 产品深读"
@@ -136,6 +137,7 @@ archived: 2026-09-28
 | [[KimiK3技术报告]] | 下游实例：KDA–MLA 混合骨干的旗舰报告 | KDA、AttnRes、LatentMoE 细节 |
 | [[MiniMaxM1技术报告深读]] | 下游实例：每 7 个 lightning attention 块接 1 个 softmax 注意力块，与本篇「低注意力比例兼顾效率」的结论同向 | Lightning Attention 实现与 CISPO |
 | [[长上下文与注意力效率时间线]] | 时间索引：2024-03（Jamba）与 2025-10（本篇主文、Kimi Linear）两个节点指向本篇 | 其余长上下文节点 |
+| [[门控注意力与注意力汇]] | 原语：局限第 2 条列为开放问题的门控注意力，其机制在该篇 | 门控注意力的机制与实验 |
 
 ## 九、延伸阅读
 

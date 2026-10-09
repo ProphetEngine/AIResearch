@@ -218,4 +218,5 @@ LLaMA-7B **nuq2** 单卡 A100-80GB 约 **1M** ctx（KV ≈ 64 GB 量级），8 �
 - [[SpinQuant与ARCQuant量化]]：部署侧权重·激活 PTQ，与本篇 KV 量化同属量化三角；那篇的 NVFP4（g=16，E2M1+E4M3）格式可对照本篇第四节 V4.1 的类 NVFP4 main KV。
 - [[注意力效率族MQA到MLA]]：MQA / GQA / MLA 从架构上减少每 token 的 KV；本篇误区 5 说它与低比特量化正交，可以相乘。
 - [[检索式注意力]]：本篇降低每个 KV 元素的比特数；那篇不改精度、也不永久丢弃 KV，而是把 KV 放到 CPU 内存建索引，解码时按查询只取回少量 key 参与注意力（RetrievalAttention），减少的是每步要读的 KV 个数。
+- [[门控注意力与注意力汇]]：本篇第 3.1 节 Attention Sink-Aware 单独保护首 token；首 token 为什么会成为注意力汇，在该篇。
 - [[AI基础设施总览]]：本篇是总览 4.3 末「KV 布局 × 每 token KV 体积 × 位宽」三层中位宽一层的专线。

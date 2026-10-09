@@ -27,6 +27,7 @@ status: active
 - [[混合Mamba与注意力架构设计菜谱]]
 - [[分块KV压缩的相位敏感性]]
 - [[DuoAttention与KVzip]]
+- [[门控注意力与注意力汇]]
 - [[上下文蒸馏]]
 - [[Prompt前缀缓存]]
 - [[HiCache层次化KV缓存]]

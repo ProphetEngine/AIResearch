@@ -9,7 +9,7 @@ sources:
  - https://arxiv.org/abs/2608.30181
  - https://huggingface.co/skt/A.X-K2
 arxiv: "2608.30181"
-related: ["DeepSeekV32技术报告深读", "DeepSeekV3训练与MoE基建", "注意力效率族MQA到MLA", "KimiK2技术报告深读", "Qwen3技术报告深读", "GLM45技术报告深读", "MiniMaxM1技术报告深读", "长上下文位置编码与系统侧", "EAGLE3投机解码", "混合专家架构"]
+related: ["DeepSeekV32技术报告深读", "DeepSeekV3训练与MoE基建", "注意力效率族MQA到MLA", "KimiK2技术报告深读", "Qwen3技术报告深读", "GLM45技术报告深读", "MiniMaxM1技术报告深读", "长上下文位置编码与系统侧", "EAGLE3投机解码", "混合专家架构", "门控注意力与注意力汇"]
 archived: 2026-09-22
 ---
 
@@ -112,6 +112,7 @@ A.X K2 展示了中等算力团队的一条路线：骨干沿用 MLA 与细粒�
 | [[长上下文位置编码与系统侧]] | ABF 调 RoPE base 加 YaRN 外推的组合 | 位置编码与长上下文的通论 |
 | [[EAGLE3投机解码]] | 服务时用 EAGLE3 草稿模型加速 | 投机解码算法本身 |
 | [[混合专家架构]] | 256 专家、激活 8 个的路由设定 | MoE 的通史 |
+| [[门控注意力与注意力汇]] | 原理：第 3.2 节在 MLA 输出上加头特异门控，门控为何能压低 sink，在该篇 | 门控注意力的原理与来源 |
 
 ## 八、延伸阅读
 
