@@ -110,6 +110,7 @@ timezone: Asia/Shanghai (CST)
 |---|---|---|
 | [[形式化验证与LLM]] | 同用 Lean：AlphaProof 只用证明成败与长度做 AlphaZero 式强化学习，本篇把阐述报错接进训练信号 | AlphaProof、VeriCoT 与 IMO |
 | [[可验证过程监督]] | 同一思路的另一领域：那篇用引擎与指南规则给中间步骤打分 | 棋类与医学的规则奖励 |
+| [[自然语言证明与自验证推理]] | 对照：本篇的奖励来自 Lean 报错，那篇的奖励来自检查自然语言证明的学习式验证器 | 证明验证器的训练与评测 |
 | [[过程奖励模型PRM谱系]] | 对照：两文的过程信号来自 Lean，不训练神经逐步打分器 | PRM 的标注与训练 |
 | [[GRPO与DAPO算法族]] | Process-Verified 改造 GRPO 式的优势，Leanabell-V2 直接使用 DAPO | 算法配方本身 |
 | [[推理时扩展TestTimeScaling]] | Leanabell-V2 的 pass@128 接近基座 pass@1024，相当于把推理时采样预算换成训练期学到的纠错 | 推理时扩展的方法谱系 |
