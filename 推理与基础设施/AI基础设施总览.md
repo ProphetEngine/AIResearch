@@ -222,3 +222,4 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 - [[DeepSeekV3训练与MoE基建]]：V3 报告的配方与机制深读；本篇只取 DualPipe、FP8、分阶段部署几项，细节和数字对表看那篇。
 - [[NVSHMEM与DeepEP通信]]：本篇 2.4 说跨节点 EP 下 all-to-all 通信可与算力同量级；那篇讲 DeepEP 如何在 NVSHMEM 设备侧通信上自建 dispatch / combine。
 - [[推理引擎生态]]：vLLM / SGLang / TRT-LLM 选型地图；以本篇 4.2 的 PagedAttention 为基线，不重写分页本身。
+- [[RL训练系统与异步Rollout]]：本篇第二节的训练并行与第四节的推理 serving 各自成章；那篇写 RL 后训练中两者同处一个环路时，训练后端与推理引擎如何共置或分离、权重如何同步。
