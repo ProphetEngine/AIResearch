@@ -8,7 +8,7 @@ sources:
  - https://arxiv.org/abs/2406.08464
  - https://arxiv.org/abs/2603.09692
 arxiv: ["2406.08464", "2603.09692"]
-related: ["对齐脉络RLHF与偏好优化", "SimPO与ORPO偏好优化", "SafeDPO与RePO", "合成数据与教科书式数据", "BeyondWeb合成预训练", "NemotronCC数据策展"]
+related: ["对齐脉络RLHF与偏好优化", "SimPO与ORPO偏好优化", "SafeDPO与RePO", "合成数据与教科书式数据", "BeyondWeb合成预训练", "NemotronCC数据策展", "指令微调与SFT数据"]
 project:
  - https://magpie-align.github.io/
  - https://hf.co/magpie-align
@@ -177,6 +177,7 @@ Magpie 把对齐数据的瓶颈从「写题」转到「挑题」：已对齐模�
 | [[合成数据与教科书式数据]] | 同为「合成数据」，但该篇是预训练阶段的教科书与代码合成，本篇是对齐阶段 | 预训练合成通史 |
 | [[BeyondWeb合成预训练]] | 同为合成，该篇是预训练阶段对网页的改写合成及其缩放消融 | 预训练改写合成 |
 | [[NemotronCC数据策展]] | 同为数据侧：该篇是预训练网页语料的分类器过滤与合成改写，本篇是对齐阶段的指令与偏好数据 | Nemotron-CC 管线 |
+| [[指令微调与SFT数据]] | 下游：本篇合成的指令数据用于 SFT，SFT 数据的选择方法与 SFT 在后训练中的角色归该篇 | SFT 数据选择 |
 
 ## 九、延伸阅读
 

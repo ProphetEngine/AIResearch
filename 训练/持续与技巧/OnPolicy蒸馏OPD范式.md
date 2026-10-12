@@ -22,6 +22,7 @@ related:
   - KimiK3技术报告
   - 持续学习
   - QwenOmni音视频原生
+  - 指令微调与SFT数据
 github: https://github.com/nick7nlp/Awesome-LLM-On-Policy-Distillation
 retrieval_cutoff: 2026-08-07
 timezone: Asia/Shanghai (CST)
@@ -153,6 +154,7 @@ Hinton 等、MiniLLM、GKD 三行据各自论文；MiniLLM 的 arXiv 现行题�
 | [[持续学习]] | 那篇写持续学习的地图与抗遗忘方法，本篇补一种新工具：在学新知识后用旧版模型作教师做 OPD，恢复被冲掉的后训练行为 | 持续学习场景分类与 Lifelong-MoE |
 | [[RL训练系统与异步Rollout]] | 系统接口：本篇的 OPD 同样要让学生在线采样，生成与训练怎样排布、陈旧样本怎样处理，看那篇 | RL 训练系统的架构与调度 |
 | [[模型合并]] | 把多个专家能力合成单模型的两条路：本篇的多教师 OPD 用学生采样加教师信号再训练，那篇直接在权重空间合并，不需再训练 | 合并算法与 MergeBench |
+| [[指令微调与SFT数据]] | 对照：本篇的 OPD 让学生在自身采样上受教师监督，在现成指令—回复对上做 SFT 的数据与角色归该篇 | SFT 数据与数据选择 |
 
 ## 十、延伸阅读
 
