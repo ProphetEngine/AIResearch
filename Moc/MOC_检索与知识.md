@@ -24,6 +24,7 @@ status: active
 - [[SelfRAG与CorrectiveRAG]]
 - [[HippoRAG2与CatRAG]]
 - [[AgenticRAG分层检索接口]]
+- [[文本嵌入与重排序模型]]
 
 ## 相关主题
 

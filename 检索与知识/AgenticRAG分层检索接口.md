@@ -5,7 +5,7 @@ title: "Agentic RAG：分层检索接口（A-RAG）"
 lines: [架构思想, 评测字段]
 sources:
  - https://arxiv.org/abs/2602.03442
-related: ["检索增强与知识外挂", "SelfRAG与CorrectiveRAG", "HippoRAG2与CatRAG", "图谱检索GraphRAG", "上下文工程与智能体技能"]
+related: ["检索增强与知识外挂", "SelfRAG与CorrectiveRAG", "HippoRAG2与CatRAG", "图谱检索GraphRAG", "上下文工程与智能体技能", "文本嵌入与重排序模型"]
 retrieval_cutoff: 2026-02-03
 timezone: Asia/Shanghai (CST)
 status: archived
@@ -140,6 +140,7 @@ ReAct 式循环，每轮只调用一个工具，观察结果后再决定下一�
 | [[HippoRAG2与CatRAG]] | HippoRAG2 是 A-RAG 主表里的图检索强基线；两篇代表「索引侧更聪明」与「接口侧更自主」两条路线 | OpenIE、PPR、动态边权 |
 | [[图谱检索GraphRAG]] | GraphRAG 同为 A-RAG 的图检索基线；论文 §2.2 认为这类方法结构丰富但仍依赖预定义检索算法 | 社区摘要、map-reduce |
 | [[上下文工程与智能体技能]] | 那篇 §4.1「即时检索与渐进披露」主张只留轻量引用、运行时按需读取；A-RAG 的「先给片段、再按需 chunk_read 整块」加已读块追踪，是这一原则在语料检索上的具体做法 | 上下文压缩、子智能体、技能机制 |
+| [[文本嵌入与重排序模型]] | 组件：本篇 semantic_search 工具背后的句向量编码属于嵌入模型；嵌入与重排模型的结构、训练与评测归该篇 | 嵌入模型本身 |
 
 ## 八、延伸阅读
 

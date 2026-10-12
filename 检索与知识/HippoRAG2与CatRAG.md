@@ -7,7 +7,7 @@ sources:
  - https://arxiv.org/abs/2502.14802
  - https://arxiv.org/abs/2602.01965
  - https://aclanthology.org/2026.findings-acl.290/
-related: ["检索增强与知识外挂", "图谱检索GraphRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "智能体长程记忆", "CHIME长程规划记忆", "持续学习"]
+related: ["检索增强与知识外挂", "图谱检索GraphRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "智能体长程记忆", "CHIME长程规划记忆", "持续学习", "文本嵌入与重排序模型"]
 retrieval_cutoff: 2026-09-02
 timezone: Asia/Shanghai (CST)
 status: archived
@@ -160,6 +160,7 @@ QA F1（Table 2，节选）：
 | [[智能体长程记忆]] | 那篇写 MemGPT 分页与 A-Mem 卡片盒式记忆，本篇走检索图路线，两者同问「长期记忆怎样组织与取回」 | 分页与记忆演化 |
 | [[CHIME长程规划记忆]] | 同属不改模型参数、只更新外部存储的非参数记忆：本篇把文档语料写成知识图谱供检索，那篇把智能体轨迹提炼成规划与执行经验，并按信用归因决定写入哪条 | 轨迹经验库与信用归因 |
 | [[持续学习]] | 那篇的综述把检索列为持续学习的「外部知识」路线；HippoRAG 2 正是把 RAG 定位为非参数持续学习 | 持续学习的参数路线 |
+| [[文本嵌入与重排序模型]] | 组件：本篇三元组匹配与段落节点重置概率都按向量相似度计算；提供相似度的嵌入模型本身归该篇 | 嵌入模型的结构与训练 |
 
 ## 九、延伸阅读
 

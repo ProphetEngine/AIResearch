@@ -6,7 +6,7 @@ lines: [架构思想, AI Infra]
 sources:
  - https://arxiv.org/abs/2404.16130
  - https://arxiv.org/abs/2506.20963
-related: ["检索增强与知识外挂", "HippoRAG2与CatRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "MemoryR1强化学习记忆维护", "智能体长程记忆"]
+related: ["检索增强与知识外挂", "HippoRAG2与CatRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "MemoryR1强化学习记忆维护", "智能体长程记忆", "文本嵌入与重排序模型"]
 timezone: Asia/Shanghai (CST)
 status: archived
 arxiv: ["2404.16130", "2506.20963"]
@@ -147,6 +147,7 @@ archived: 2026-09-22
 | [[Mem0与Zep生产级记忆]] | Zep 的社区层受 GraphRAG 启发，但对象是对话的时序知识图谱，检索也不用 map-reduce | 对话记忆的写入与失效 |
 | [[MemoryR1强化学习记忆维护]] | 同问「外部存储怎样随新信息更新」：那篇用 RL 学习对记忆条目做增删改，EraRAG 用固定分桶做确定性的局部重建 | RL 动作空间与奖励 |
 | [[智能体长程记忆]] | A-Mem 在新记忆加入时更新已有笔记之间的链接，与 EraRAG 的局部重建同属「结构随数据增长而维护」，对象是智能体记忆而非文档语料 | 分页与记忆演化细节 |
+| [[文本嵌入与重排序模型]] | 对照：本篇的对照条件 SS 是向量 RAG；向量检索所依赖的嵌入与重排模型，以及单向量表示的上限，归该篇 | 嵌入与重排模型 |
 
 ## 九、延伸阅读
 
