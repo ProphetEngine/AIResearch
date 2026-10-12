@@ -8,7 +8,7 @@ sources:
  - https://arxiv.org/abs/2412.02595
  - https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html
 arxiv: ["2412.02595"]
-related: ["分词器与数据配比", "合成数据与教科书式数据", "合成对齐数据Magpie", "BeyondWeb合成预训练", "Inspect评测Harness", "评测数据污染检测与可靠性", "Nemotron3Ultra技术报告深读"]
+related: ["分词器与数据配比", "合成数据与教科书式数据", "合成对齐数据Magpie", "BeyondWeb合成预训练", "Inspect评测Harness", "评测数据污染检测与可靠性", "Nemotron3Ultra技术报告深读", "数据配比优化方法"]
 project:
  - https://data.commoncrawl.org/contrib/Nemotron/Nemotron-CC/index.html
  - https://github.com/NVIDIA-NeMo/Curator
@@ -100,6 +100,7 @@ archived: 2026-09-22
 | [[Inspect评测Harness]] | 本篇的消融用 lm-eval-harness 评十项任务，是那篇脉络中静态基准框架的使用实例 | 评测框架设计 |
 | [[评测数据污染检测与可靠性]] | 本篇作者未做去污染，属于那篇讨论的训练方责任一侧 | 污染检测方法 |
 | [[Nemotron3Ultra技术报告深读]] | 同为 NVIDIA 的预训练侧报告：那篇记 Nemotron 3 旗舰的数据集与配比，网页语料的过滤、去重与合成改写在本篇 | 旗舰模型的数据配比与训练 |
+| [[数据配比优化方法]] | 下游：以本篇语料为源数据之一做聚类与配比搜索的方法归该篇 | 配比搜索方法 |
 
 ## 十、延伸阅读
 
