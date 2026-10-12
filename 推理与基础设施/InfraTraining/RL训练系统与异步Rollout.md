@@ -69,7 +69,7 @@ related: ["分布式训练并行策略", "AI基础设施总览", "推理引擎�
 | 2025-05 | [LlamaRL](https://arxiv.org/abs/2505.24034)、[AReaL](https://arxiv.org/abs/2505.24298) | 工业级与开源的全异步系统：生成不等训练；陈旧度上限与解耦 PPO |
 | 2025-06 | [ROLL](https://arxiv.org/abs/2506.06122)、[MiniMax-M1](https://arxiv.org/abs/2506.13585) | 面向智能体 RL 的库，rollout 调度器管理单个样本的生命周期；M1 把输出头提到 FP32 以对齐训推概率 |
 | 2025-07 | [slime](https://www.lmsys.org/blog/2025-07-09-slime/) | SGLang 原生的 RL 框架，用一个参数切换共置或分离，借助 Ray 的异步执行支持异步训练 |
-| 2025-08 至 2025-10 | Yao 等的博文（见 6.2）、[Thinking Machines 博文](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/)、[R3](https://arxiv.org/abs/2510.11370)、[FP16 论文](https://arxiv.org/abs/2510.26788) | 训推不一致被系统识别：截断重要性采样修正、推理非确定性的来源与批不变内核、MoE 路由回放、改用 FP16 |
+| 2025-08 至 2025-10 | [Yao 等的博文](https://fengyao.notion.site/off-policy-rl)（见 6.2）、[Thinking Machines 博文](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/)、[R3](https://arxiv.org/abs/2510.11370)、[FP16 论文](https://arxiv.org/abs/2510.26788) | 训推不一致被系统识别：截断重要性采样修正、推理非确定性的来源与批不变内核、MoE 路由回放、改用 FP16 |
 | 2025-09 | [PipelineRL](https://arxiv.org/abs/2509.19128) | 在途权重更新：生成途中短暂暂停换新权重，再继续生成未完成的序列 |
 | 2025-10 | [Laminar](https://arxiv.org/abs/2510.12633) | 轨迹级异步：中继 worker 作分布式参数服务，长尾轨迹动态重打包到少数实例 |
 | 2026-01 至 2026-07 | [StaleFlow](https://arxiv.org/abs/2601.12784)、[DORA](https://arxiv.org/abs/2604.26256)、[SAT](https://arxiv.org/abs/2607.18722) | 全分离架构下同时约束陈旧度与长尾倾斜；多版本流式 rollout 与滑动陈旧度窗口；按陈旧度收紧 PPO 裁剪区间 |
@@ -197,7 +197,7 @@ PipelineRL 把异步思想用到长序列生成上：生成与训练并发进行
 1. **加速比不可比**：第八节的数字来自不同基线、模型、任务与集群，多为论文作者在自选设定下的结果；各系统之间没有统一基准的对比。
 2. **收敛结论依赖设定**：「不损收敛」「表现持平」多基于数学、代码推理等可验证任务，在奖励来自评分模型的任务或长程智能体任务上是否成立，各文证据有限。Noukhovitch 等也发现进一步的算力优化会带来表现损失，存在权衡（Noukhovitch 等论文摘要）。
 3. **训推不一致的根因仍有分歧**：FP16 论文把根因归于 BF16 精度，MiniMax-M1 定位到输出头，R3 强调 MoE 路由，Thinking Machines 强调内核缺乏批不变性；这些结论来自不同模型与设定，相互之间的相对重要性未见系统比较。
-4. **Yao 等的博文未能直接读取**：该博文托管在 Notion 上，页面需脚本渲染，本篇不挂链接，关于它的描述取自 FP16 论文与 R3 论文的引述，首发时间只写到月（2025-08）。
+4. **Yao 等的博文**：[Your Efficient RL Framework Secretly Brings You Off-Policy RL Training](https://fengyao.notion.site/off-policy-rl) 托管在 Notion 上，页面标注首发于 2025-08-05、最后更新于 2025-10-13，按更新日计入截至；本篇关于它的描述取自 FP16 论文与 R3 论文的引述。
 5. **StaleFlow 改过题名**：该文 v1 题为 *Unleashing Efficient Asynchronous RL Post-Training via Staleness-Constrained Rollout Coordination*，本篇所用的 v2 改题为 *StaleFlow: Staleness-Aware Data Management for Mitigating Data Skewness in Fully Disaggregated RL Post-Training*；两版摘要中的平均加速区间也略有不同，本篇按 v2 写。
 6. **README 会变**：第八节的框架定位与后端取自当前 README，项目演进后可能变化。
 7. **未覆盖的方向**：量化 rollout、推测解码在 rollout 中的应用、容错与检查点恢复、多智能体自博弈的系统设计，本篇未展开。
