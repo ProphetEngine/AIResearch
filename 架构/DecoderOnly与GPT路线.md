@@ -151,28 +151,28 @@ GPT-3 论文把评估场景明确分成：
 
 以下均取自正文已有标注：
 
-1. **型号细节**：GPT-1 层数与参数量（约 12 层、约 1.17 亿）来自二手来源；GPT-3.5 / ChatGPT 的底座参数未见官方披露，均待对照官方 PDF。
+1. **型号细节**：GPT-1 层数与参数量（约 12 层、约 1.17 亿）来自二手来源；GPT-3.5 / ChatGPT 的底座参数未见官方披露，均未经官方来源核对。
 2. **GPT-4 不可核**：技术报告不公开架构、模型大小、硬件、训练算力、数据构造与训练方法；外传参数量不能当事实。考试百分位等能力数字是报告自述。
 3. **in-context learning 的解释**：GPT-3 自己把「推理时真正学会新任务」还是「识别预训练中见过的模式」列为开放问题；「涌现」只宜读作平滑提升加若干质变观感。
-4. **材料口径**：GPT-3 要点依据 arXiv 摘要页全文抓取与论文表格。
+4. **材料口径**：GPT-3 要点依据 arXiv 论文正文与表格。
 
 ## 七、引用
 
 ### 论文与官方页（完整 URL）
 
-1. Brown et al. (2020). *Language Models are Few-Shot Learners*. https://arxiv.org/abs/2005.14165 ；PDF: https://arxiv.org/pdf/2005.14165
+1. Brown et al. (2020). *Language Models are Few-Shot Learners*. https://arxiv.org/abs/2005.14165
 2. OpenAI (2023). GPT-4 官方介绍页. https://openai.com/index/gpt-4-research/
 3. OpenAI (2023). *GPT-4 Technical Report*. https://arxiv.org/abs/2303.08774
-4. Radford et al. (2018). *Improving Language Understanding by Generative Pre-Training*. https://openai.com/index/language-unsupervised/ ；PDF: https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf
-5. Radford et al. (2019). *Language Models are Unsupervised Multitask Learners*. https://openai.com/index/better-language-models/ ；PDF: https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+4. Radford et al. (2018). *Improving Language Understanding by Generative Pre-Training*. https://openai.com/index/language-unsupervised/
+5. Radford et al. (2019). *Language Models are Unsupervised Multitask Learners*. https://openai.com/index/better-language-models/
 6. Ouyang et al. (2022). *Training language models to follow instructions with human feedback*. https://arxiv.org/abs/2203.02155
 7. Devlin et al. (2018). *BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding*. https://arxiv.org/abs/1810.04805 （对照理解路线）
 8. Vaswani et al. (2017). *Attention Is All You Need*. https://arxiv.org/abs/1706.03762 （原始 Encoder–Decoder Transformer）
 9. Kaplan et al. (2020). *Scaling Laws for Neural Language Models*. https://arxiv.org/abs/2001.08361 （GPT-3 引用的规模定律背景）
 
-### 官方 PDF
+### 技术报告与论文页
 
-- GPT-3：https://arxiv.org/abs/2005.14165 · PDF https://arxiv.org/pdf/2005.14165
+- GPT-3：https://arxiv.org/abs/2005.14165
 - GPT-4 技术报告：https://arxiv.org/abs/2303.08774
 
 ### 撰写说明
