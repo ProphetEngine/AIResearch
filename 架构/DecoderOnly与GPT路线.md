@@ -175,12 +175,6 @@ GPT-3 论文把评估场景明确分成：
 - GPT-3：https://arxiv.org/abs/2005.14165
 - GPT-4 技术报告：https://arxiv.org/abs/2303.08774
 
-### 撰写说明
-
-- GPT-3 要点主要依据 arXiv 摘要页全文抓取与论文表格数字；GPT-4 要点依据 arXiv:2303.08774 正文抓取与官方页元信息/检索摘要。
-- GPT-4 官方页（openai.com/index/gpt-4-research/）内容已与 arXiv / CDN PDF 交叉核对。
-- 凡二手博客给出但未在本次打开的 PDF 中逐字核对的型号细节（如 GPT-1 精确参数量、GPT-3.5 具体参数），正文已标「待核实」。
-
 ## 相关笔记
 
 - [[注意力与Transformer核心思想]]：2017 年 Encoder–Decoder Transformer 的机制与数学直觉；本篇第一节从这一原始形态出发，讲为何产品形态收敛到只保留因果解码器。
