@@ -24,6 +24,7 @@ status: active
 - [[MistralLarge4短报]]：2026-10-08
 - [[GPT6SolLuna十月版系统卡短报]]：2026-10-08
 - [[ClaudeHaiku55系统卡短报]]：2026-10-08
+- [[MuseWonder模型卡深读]]：2026-10-13
 
 ## 相关主题
 

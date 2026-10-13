@@ -59,6 +59,7 @@ Google 的闭源 Gemini 线从 2.5 代的长篇技术报告，转为 10 页左�
 ## Meta
 
 - **2025-04** · Llama 4 只以博文发布，没有 Llama 1–3 那样的论文式技术报告，也没有独立 PDF 模型卡，开放权重旗舰的文档披露明显收缩（[官方博文](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)） · [[LLaMA开源生态里程碑]]
+- **2026-10** · Muse Wonder 模型卡：网页版模型卡，给出规格、评测口径与 Meta Superintelligence Scaling Framework 下的分领域判定，缓解后各领域为 moderate or lower；发布时只有博文与网页版模型卡（[模型卡](https://research.meta.ai/static/muse-wonder-model-card)） · [[MuseWonder模型卡深读]]
 
 ## Mistral
 
