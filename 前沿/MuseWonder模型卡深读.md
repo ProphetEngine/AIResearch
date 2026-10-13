@@ -25,7 +25,7 @@ timezone: Asia/Shanghai (CST)
 >
 > **意义**：Muse Wonder 是 Meta 以闭源 API 与产品形态发布的前沿模型，把「个人智能体」拆成 Active Memory 与 Active Focus 两种能力来定义和评测；模型卡按 Meta Superintelligence Scaling Framework 给出分领域风险判定。
 
-**一句话**：Muse Wonder 与 Muse Wonder Full 于 2026-10-12 发布，通过 Meta Model API 与 Muse Code 提供；模型卡给出规格、评测口径和风险判定，完整安全报告博文称即将发布。
+**一句话**：Muse Wonder 与 Muse Wonder Full 于 2026-10-12 发布，通过 Meta Model API 与 Muse Code 提供；模型卡给出规格、评测口径和风险判定，截至 2026-10-12，完整安全报告尚未发布。
 
 ---
 
