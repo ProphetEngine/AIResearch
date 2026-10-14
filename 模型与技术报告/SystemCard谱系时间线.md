@@ -50,7 +50,8 @@ Google 的闭源 Gemini 线从 2.5 代的长篇技术报告，转为 10 页左�
 - **2026-07** · Gemma 4 技术报告：开放权重族的架构、效率与量化字段，与闭源 Gemini 卡分线公开（[arXiv:2607.02770](https://arxiv.org/abs/2607.02770)） · [[Gemma4技术报告深读]]
 - **2026-08** · Gemini 3.7 Flash 模型卡：9 页增量卡，多数字段指向 3.6 Flash 卡；FSF 升级到 2026 年 4 月版，并引入 TCL 与生化、网安「预警」（alert）表述（[模型卡页](https://deepmind.google/models/model-cards/gemini-3-7-flash/)） · [[Gemini37Flash模型卡深读]]
 - **2026-09** · Gemini 3.8 Flash：基于 3.7 Flash 的 Gemini 3 族迭代，六周内第三个 Flash 版本；同时发布的 3.8 Flash Cyber 变体只经 Fairwind 计划向受信防御方开放（[官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/)、[模型卡](https://deepmind.google/models/model-cards/gemini-3-8-flash/)）
-- **2026-09** · Gemini 4 Argon：没有独立的模型卡或系统卡，只配 5 页评测文件，经 Fairwind 计划先向受信网络防御方分阶段放量（[官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)） · [[Gemini4Argon短报]]
+- **2026-09** · Gemini 4 Argon 首发：经 Fairwind 计划向受信网络防御方分阶段放量，配套评测 PDF（[官方博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)） · [[Gemini4Argon短报]]
+- **2026-10** · Gemini 4 Argon 全球 GA：发布网页模型卡与安全博文；公开版带护栏，另有 Cyber Permissive allowlist 变体（[GA 博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/)、[模型卡](https://deepmind.google/models/model-cards/gemini-4-argon/)） · [[Gemini4Argon短报]]
 
 ## xAI
 
@@ -106,7 +107,7 @@ DeepSeek 的技术报告是开放权重一侧披露最详尽的系列，主线�
 ## 局限与待核实
 
 - 模型卡同系统卡取封面日期，无封面日期时取官方索引页日期；无报告的模型取官方发布页日期。
-- Gemini 4 Argon 官方博文发布时间为 2026-09-30 20:00 UTC，折合上海时间为 2026-10-01，本时间线按页眉日期记作 2026-09。
+- Gemini 4 Argon 官方博文发布时间为 2026-09-30 20:00 UTC，折合上海时间为 2026-10-01，本时间线按页眉日期记作 2026-09；全球 GA 与网页模型卡为 2026-10-13，记作 2026-10。
 - Gemini 2.5 技术报告按 arXiv 首版（2025-07-07）记，Google 官方首次发布报告的日期未单独核对，待核实。
 - DeepSeek-V4（arXiv 2606.19348）首版为 2026-04-26，UI-Venus-2（arXiv 2609.00028）首版为 2026-08-27，编号月份与首版日期不一致，按 arXiv 首版日期记。
 - GPT-5.6 预览版封面为 2026-06-25，Deployment Safety Hub 标注发布于 2026-06-26，两者同月，不影响排序。
