@@ -13,14 +13,14 @@ related: ["天气气候基础模型", "地球系统基础模型ESFM", "多模态
 github:
  - "https://github.com/kang-wu/SkySensePlusPlus"
  - "https://github.com/LotusWhu/SkySensePlusPlus"
-retrieval_cutoff: 2025
+retrieval_cutoff: 2025-10
 timezone: Asia/Shanghai (CST)
 archived: 2026-09-22
 ---
 
 # SkySense 谱系：多模态遥感基础模型（含 SkySense++ 与 SkySense V2）
 
-> **主要来源**：[SkySense: A Multi-Modal Remote Sensing Foundation Model Towards Universal Interpretation for Earth Observation Imagery](https://openaccess.thecvf.com/content/CVPR2024/html/Guo_SkySense_A_Multi-Modal_Remote_Sensing_Foundation_Model_Towards_Universal_Interpretation_CVPR_2024_paper.html)（Guo 等，CVPR 2024，pp. 27672–27683，2024-06；预印本 [arXiv:2312.10115](https://arxiv.org/abs/2312.10115)）；[A semantic-enhanced multi-modal remote sensing foundation model for Earth observation](https://www.nature.com/articles/s42256-025-01078-8)（SkySense++，Wu 等，Nature Machine Intelligence 第 7 卷第 8 期，pp. 1235–1249，2025-08-04 在线发表，2025-08 刊期）；[SkySense V2: A Unified Foundation Model for Multi-modal Remote Sensing](https://openaccess.thecvf.com/content/ICCV2025/html/Zhang_SkySense_V2_A_Unified_Foundation_Model_for_Multi-modal_Remote_Sensing_ICCV_2025_paper.html)（Zhang 等，ICCV 2025，pp. 9136–9146；预印本 [arXiv:2507.13812](https://arxiv.org/abs/2507.13812)）（截至 2025）。SkySense++ 正文与 Methods 未能读到，只用其摘要与数据、代码说明。
+> **主要来源**：[SkySense: A Multi-Modal Remote Sensing Foundation Model Towards Universal Interpretation for Earth Observation Imagery](https://openaccess.thecvf.com/content/CVPR2024/html/Guo_SkySense_A_Multi-Modal_Remote_Sensing_Foundation_Model_Towards_Universal_Interpretation_CVPR_2024_paper.html)（Guo 等，CVPR 2024，pp. 27672–27683，2024-06；预印本 [arXiv:2312.10115](https://arxiv.org/abs/2312.10115)）；[A semantic-enhanced multi-modal remote sensing foundation model for Earth observation](https://www.nature.com/articles/s42256-025-01078-8)（SkySense++，Wu 等，Nature Machine Intelligence 第 7 卷第 8 期，pp. 1235–1249，2025-08-04 在线发表，2025-08 刊期）；[SkySense V2: A Unified Foundation Model for Multi-modal Remote Sensing](https://openaccess.thecvf.com/content/ICCV2025/html/Zhang_SkySense_V2_A_Unified_Foundation_Model_for_Multi-modal_Remote_Sensing_ICCV_2025_paper.html)（Zhang 等，ICCV 2025，pp. 9136–9146；预印本 [arXiv:2507.13812](https://arxiv.org/abs/2507.13812)）（截至 2025-10）。SkySense++ 全文需登录访问，不在本篇范围内，只用其摘要与数据、代码说明。
 > **研究线**：架构思想（主：因子化多模态时空编码器，后继分为语义增强与统一骨干两支）+ 评测字段（辅）
 > **范围与相邻笔记**：
 > - ≠ [[天气气候基础模型]]：本篇不写再分析格点场的天气预报，只写卫星与航空影像解译。
