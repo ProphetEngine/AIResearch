@@ -169,9 +169,18 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 
 **与 PagedAttention 的衔接（思想层，非原文实验）**：PagedAttention 管的是 **KV 布局与碎片**；MLA / GQA 管的是 **每 token KV 体积**；FP8 / 低精度管的是 **算与传的位宽**。三者叠乘才构成当代 serving「势」：同一 GPU、同一延迟预算下，能塞进更大有效 batch。
 
-## 五、常见误区与引用
+## 五、2025 年以来
 
-### 5.1 常见误区
+本篇前四节止于 DeepSeek-V3（2024-12）。此后的进展已在库内各有深读，这里只做串联，具体机制与数字见对应笔记：
+
+- [[低精度训练FP8与FP4]]：4.3 节的 FP8 训练要点是起点，那篇沿同一条精度轴继续写到 FP4 训练。
+- [[PrefillDecode分离与统一服务]]：4.3 节记 V3 把 prefill 与 decode 分阶段部署，那篇讨论两阶段是否分实例、以及分开后如何再统一调度。
+- [[MegaScaleInfer与UltraEP]]：2.4 节的专家并行与 all-to-all 通信在推理侧继续放大，那篇讲 MoE 服务系统如何围绕专家并行组织部署。
+- [[TEE机密推理]]：前四节只谈算力、通信、显存与精度，那篇补上推理侧的另一条约束，即在可信执行环境里服务模型时的信任边界与开销。
+
+## 六、常见误区与引用
+
+### 6.1 常见误区
 
 1. **「模型并行 = 流水线」**：Megatron 主贡献是 **层内张量并行**；流水线是正交选项。把 GPipe 与 Megatron 混称「同一种并行」会读错通信形态（all-reduce vs 激活传递 / 气泡）。
 2. **「FlashAttention 是近似注意力」**：FA2 明确 **no approximation**，正确性同标准 $\mathrm{softmax}(QK^\top)V$；省的是 HBM 上的 $S,P$，不是数学定义。
@@ -181,7 +190,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 6. **「有了 EP 就不需要 TP / 反之」**：V3 训练叙事是大 EP + DualPipe **省掉 TP**；其 **推理** prefill 仍用 **TP4**。并行维度随阶段（训 / prefill / decode）切换，不是全局唯一最优。
 7. **「博客里的 tokens/s 可直接引用」**：未写明配置的吞吐数字不能当论据；更新数字应回到对应论文表图或官方复现说明。
 
-### 5.2 核心引用
+### 6.2 核心引用
 
 - Shoeybi, M., Patwary, M., Puri, R., LeGresley, P., Casper, J., & Catanzaro, B. (2019/2020). *Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism*. arXiv:1909.08053. PDF: `https://arxiv.org/abs/1909.08053`
 - Dao, T. (2023). *FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning*. arXiv:2307.08691. PDF: `https://arxiv.org/abs/2307.08691`
@@ -189,7 +198,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 - DeepSeek-AI (2024/2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437. PDF: `https://arxiv.org/abs/2412.19437`
 - 相关背景（本议题引用链）：Huang et al., GPipe；Dao et al., FlashAttention；Vaswani et al., Attention Is All You Need；Lepikhin et al. / Fedus et al. 等 MoE 并行文献（见 V3 / Megatron 参考文献列表）。
 
-### 5.3 局限与争议
+### 6.3 局限与争议
 
 - Megatron 后续开源栈（Megatron-Core、Megatron-LM 新版本）中的 **序列并行、上下文并行、分布式优化器** 等：本笔记以 1909.08053 正文为准，未逐项对照 2024+ 代码默认策略。
 - FlashAttention-3 / 更新内核在 Hopper/Blackwell 上的占用率与精度路径：不在本篇范围内。

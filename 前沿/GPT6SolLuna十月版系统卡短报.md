@@ -27,7 +27,7 @@ timezone: Asia/Shanghai (CST)
 > - ≠ [[GPT61Sol系统卡短报]]：GPT-6.1 Sol 是挂在 Astra 卡下的附录模型，在 ChatGPT Work 与 Codex 提供；本篇与它只对照网安档位，不比数字。
 > **意义**：十月版是 GPT-6 进入 ChatGPT 对话、取代 GPT-5.6 的一步；它也展示了 OpenAI 的两种做法：同一型号按发布月份分出不同版本，以及把安全改善与回退「in aggregate」权衡后整体判定可以部署。
 
-**一句话**：2026-10-07 起，GPT-6 Sol 与 GPT-6 Luna 的十月版进入 ChatGPT 对话，官方称取代对话中的 GPT-5.6 Sol 与 GPT-5.6 Luna，并吸收了 Astra 的安全进展、更新了安全训练，加强对网安、生物、暴力三类高风险滥用的防护（系统卡 §1）；Preparedness 判定与 GPT-5.6 对应型号一致（§8），网安评测上 Sol 与 GPT-5.6 Sol 相当（§8.1.2）；系统卡只有安全与 Preparedness 内容，未报告通用能力评测。
+**一句话**：GPT-6 Sol 十月版自 2026-10-07 起、GPT-6 Luna 十月版自 2026-10-08 起进入 ChatGPT 对话，官方称取代对话中的 GPT-5.6 Sol 与 GPT-5.6 Luna，并吸收了 Astra 的安全进展、更新了安全训练，加强对网安、生物、暴力三类高风险滥用的防护（系统卡 §1）；Preparedness 判定与 GPT-5.6 对应型号一致（§8），网安评测上 Sol 与 GPT-5.6 Sol 相当（§8.1.2）；系统卡只有安全与 Preparedness 内容，未报告通用能力评测。
 
 ## 一、背景与脉络
 

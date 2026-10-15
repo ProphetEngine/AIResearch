@@ -10,13 +10,13 @@ sources:
 code: "https://github.com/Leanabell-LM/Leanabell-Prover-V2"
 arxiv: ["2606.20068", "2507.08649"]
 related: ["形式化验证与LLM", "可验证过程监督", "过程奖励模型PRM谱系", "GRPO与DAPO算法族", "推理时扩展TestTimeScaling", "对齐与强化学习发展时间线"]
-retrieval_cutoff: 2026-08-05
+retrieval_cutoff: 2026-06-18
 timezone: Asia/Shanghai (CST)
 ---
 
 # 过程可验证 RL（Lean）：Process-Verified RL 与 Leanabell-Prover-V2
 
-> **主要来源**：[Process-Verified Reinforcement Learning for Theorem Proving via Lean](https://arxiv.org/abs/2606.20068)（Kim、Yun，KAIST AI，ICLR 2026，v1 2026-06-18，以下简称 Process-Verified）；[Leanabell-Prover-V2: Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning](https://arxiv.org/abs/2507.08649)（Ji、Liu、Wang 等，快手 Klear 团队，v1 2025-07-11，以下简称 Leanabell-V2）（截至 2026-08-05）。
+> **主要来源**：[Process-Verified Reinforcement Learning for Theorem Proving via Lean](https://arxiv.org/abs/2606.20068)（Kim、Yun，KAIST AI，ICLR 2026，v1 2026-06-18，以下简称 Process-Verified）；[Leanabell-Prover-V2: Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning](https://arxiv.org/abs/2507.08649)（Ji、Liu、Wang 等，快手 Klear 团队，v1 2025-07-11，以下简称 Leanabell-V2）（截至 2026-06-18）。
 > **研究线**：架构思想（主：Lean 的细粒度反馈怎样接进强化学习的信用分配）；奖励接口与评测字段（辅：MiniF2F、ProofNet、ProverBench 上的 pass@k）
 > **范围与相邻笔记**：
 > - ≠ [[形式化验证与LLM]]：那篇写 AlphaProof 的树搜索、测试时强化学习与 IMO，以及 VeriCoT；本篇只写 Lean 作为训练期反馈来源。
@@ -100,6 +100,7 @@ timezone: Asia/Shanghai (CST)
 - **Process-Verified 的增益很小**：作者称 STP-Lean 上 MiniF2F 最多 +2.5 个百分点（pass@64），ProofNet +1.4（pass@32）、pass@64 −0.1；DeepSeek 基座上的提升为「marginal yet consistent」（§5.2）。STP-Lean 的 ProofNet pass@64 与只用结果奖励持平（都是 19%），DeepSeek 基座的 MiniF2F pass@64 与只用 tactic 奖励持平（都是 57.8%）。作者自陈没有和学习式 PRM 比较（Lean 缺少带思维链的逐步标注），模型不生成长思维链，d1、d2 是固定值且对模型和数据集较敏感。文中没有给出代码地址。只有 v1。
 - **Leanabell-V2 的收益依赖基座强弱**：对已经很强的 DeepSeek-Prover-V2-7B，ProofNet 与 ProverBench 上略低于基座。作者自陈题目越难，能激活强化学习的题越少（难题集本身小，又按通过率过滤）。多轮调用会在首轮之后追加采样，与基座的 pass@k 不是严格同预算的比较；Table 3 的首轮基线 64.7% 与 Table 1 中基座的 63.1% 口径不同，前者是本模型思维链中第一个代码块的结果。冷启动数据依赖 Claude-3.7-Sonnet。只有 v1。
 - **两文不能横比**：基座、生成形式（整份证明与长思维链）、预算和评测集都不同；两文结果均为作者自报。
+- **日期口径**：STP（arXiv 2502.00212）的编号月份为 2025-02，但 abs 页记录 v1 提交于 2025-01-31（UTC），脉络表按 v1 记作 2025-01。Process-Verified 的会议归属据 PDF 页眉「Published as a conference paper at ICLR 2026」；arXiv v1 提交于 2026-06-18。
 
 ## 七、与相邻笔记的分工
 

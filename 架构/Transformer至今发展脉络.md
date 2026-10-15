@@ -39,7 +39,7 @@ status: active
 - **2026-04** · 同策略蒸馏综述（04-01）把「学生自己采样、教师在这些状态上给信号」整理成一个范式，此后它成为开放旗舰后训练的常用环节（[arXiv:2604.00626](https://arxiv.org/abs/2604.00626)） · [[OnPolicy蒸馏OPD范式]]
 - **2026-04** · DeepSeek-V4 预览版（04-26）用 CSA 与 HCA 两种压缩注意力混合，原生支持 1M 上下文，V4-Pro 为 1.6T 总参、49B 激活。分块 KV 压缩进入旗舰架构（[arXiv:2606.19348](https://arxiv.org/abs/2606.19348)） · [[DeepSeekV4技术报告深读]]
 - **2026-06** · Nemotron 3 Ultra（06-12）以 550B 总参、55B 激活的 Mamba–注意力混合加 LatentMoE 做开放旗舰，后训练用两轮多教师同策略蒸馏（[arXiv:2606.15007](https://arxiv.org/abs/2606.15007)） · [[Nemotron3Ultra技术报告深读]]
-- **2026-06** · GPT-5.6 预览版系统卡（06-26，正式版 07-09）中，Sol、Terra、Luna 三个型号在生物和网络安全上首次全部判为 High，安全措施从模型拒答外移到激活分类器、实时扫描和受信访问（[OpenAI 系统卡页](https://deploymentsafety.openai.com/gpt-5-6)） · [[GPT56系统卡深读]]
+- **2026-06** · GPT-5.6 预览版系统卡（06-25，正式版 07-09）中，Sol、Terra、Luna 三个型号在生物和网络安全上首次全部判为 High，安全措施从模型拒答外移到激活分类器、实时扫描和受信访问（[预览版系统卡页](https://deploymentsafety.openai.com/gpt-5-6-preview)；[正式版系统卡页](https://deploymentsafety.openai.com/gpt-5-6)） · [[GPT56系统卡深读]]
 - **2026-07** · Gemma 4（arXiv 07-02）以 Apache 2.0 许可放出 E2B 至 31B 的稠密模型和 26B-A4B 的 MoE，并公开参数分项、注意力配方和 QAT、MTP 等效率组件（[arXiv:2607.02770](https://arxiv.org/abs/2607.02770)） · [[Gemma4技术报告深读]]
 - **2026-07** · Claude Opus 5（07-24）发布；同月 Kimi K3（arXiv 07-27）以 2.78T 总参、104B 激活的原生多模态 MoE 公开全部权重，注意力采用 KDA 线性注意力混合。开放权重进入 3T 级（[Anthropic 公告](https://www.anthropic.com/news/claude-opus-5)；[arXiv:2607.24653](https://arxiv.org/abs/2607.24653)） · [[ClaudeOpus5系统卡深读]] · [[KimiK3技术报告]]
 - **2026-08** · Qwen3.8-Next（08-31）把损失、下游表现、训推成本和训练稳定性当作同一个设计问题，用 Gated DeltaNet 混合与继续预训练期的 QSA 控制长文开销，原文称以约 1/9 的训练 FLOPs 逼近前代 397B-A17B 旗舰（[arXiv:2608.30320](https://arxiv.org/abs/2608.30320)） · [[Qwen38Next架构深读]]
@@ -47,6 +47,7 @@ status: active
 - **2026-09** · DeepSeek-V4.1-Flash（arXiv 09-17）从零训练稀疏注意力并把主 KV 压到 FP4；Periodic Weak Spots（09-28）随即发现分块 KV 压缩会让检索准确率随相位周期起伏，DeepSeek-V4 base 在 128K 测试中最多相差 40.2 个百分点。KV 压缩的收益与盲点在同一个月被摆上台面（[arXiv:2609.19969](https://arxiv.org/abs/2609.19969)；[arXiv:2609.36322](https://arxiv.org/abs/2609.36322)） · [[DeepSeekV41Flash深读]] · [[分块KV压缩的相位敏感性]]
 - **2026-09** · Claude 5.5 家族的 Opus 5.5（09-22）与 Sonnet 5.5（09-28）发布，网络安全护栏从 Opus 档下放到 Sonnet 档；GPT-6.1 Sol（09-29）以约 Astra 五分之一的 API 价格提供接近 Astra 的智能体能力；Gemini 4 Argon（官方博文 2026-09-30 UTC）经 Fairwind Program 先向受信的网络防御方分阶段放量，2026-10-13 全球 GA 时配套网页模型卡（Published 13 October 2026）（[Anthropic Opus 5.5 页](https://www.anthropic.com/claude-opus-5-5)；[Anthropic Sonnet 5.5 页](https://www.anthropic.com/claude-sonnet-5-5)；[OpenAI 系统卡页](https://deploymentsafety.openai.com/gpt-6-1-sol)；[Google 博文](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)） · [[ClaudeOpus55系统卡短报]] · [[ClaudeSonnet55系统卡短报]] · [[GPT61Sol系统卡短报]] · [[Gemini4Argon短报]]
 - **2026-10** · Mistral Large 4（10-06）以约 1T 总参（权重仓库标 1.05T）、52B 激活（不含嵌入层约 49B）的原生多模态 MoE 开放 API 预览，权重计划在受控红队后放出；GPT-6 Sol 与 Luna 十月版（10-07）进入 ChatGPT 对话，取代 GPT-5.6 对应型号；Claude Haiku 5.5（10-07）发布。新一代能力继续向日常与低价档位扩散（[Mistral 公告](https://mistral.ai/news/mistral-large-4/)；[OpenAI 系统卡页](https://deploymentsafety.openai.com/gpt-6-october)；[Anthropic Haiku 5.5 页](https://www.anthropic.com/claude-haiku-5-5)） · [[MistralLarge4短报]] · [[GPT6SolLuna十月版系统卡短报]] · [[ClaudeHaiku55系统卡短报]]
+- **2026-10** · Muse Wonder（10-12）：Meta 以闭源 API 与产品形态发布的前沿模型，随博文发布网页版模型卡（[模型卡](https://research.meta.ai/static/muse-wonder-model-card)） · [[MuseWonder模型卡深读]]
 
 ## 枢纽节点（通史级）
 

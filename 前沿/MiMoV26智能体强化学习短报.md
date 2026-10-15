@@ -108,6 +108,8 @@ timezone: Asia/Shanghai (CST)
 3. **每步 token 数**：报告写 2.7B–3.7B，官博写 3.5～3.7B，范围下限不一致。
 4. **token 与 GAR**：GAR 消融显示的是相对无 grader 更克制，不等于全局一定更短；主 run 总 token 仍在上升。
 5. **AA 46 分**：属产品页主张，技术报告正文未作展开；「超过 Kimi K3 与 Qwen3.8 Max」同样出自官博，不宜外推为全面 SOTA。
+6. **Live 训练的步数与轨迹数**：官博原文为「MiMo-V2.6-Flash and MiMo-V2.6-Pro completed 30 steps each with a cumulative total of approximately 750,000 trajectories」；报告 §4.1、§5.1 写每步约 25K 条轨迹。两处口径未说明是否一致，本篇照录原文，不另行换算。
+7. **alphaXiv 链接**：`2609.mimo-scaling-reinforcement-learning` 是 alphaXiv 站内标识，不是 arXiv 编号；该页题为「MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement」，标注 Submitted 21 Sep 2026。截至 2026-09-23 未见对应的 arXiv 编号。
 
 ## 八、延伸阅读
 

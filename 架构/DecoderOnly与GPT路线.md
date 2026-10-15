@@ -116,7 +116,7 @@ GPT-3 论文把评估场景明确分成：
 
 | 节点 | 公开入口 | 转折要点 |
 |------|----------|----------|
-| **GPT-1（2018）** | Radford et al., *Improving Language Understanding by Generative Pre-Training*；OpenAI: [Improving language understanding with unsupervised learning](https://openai.com/index/language-unsupervised/) | **Decoder-only + 生成式预训练 + 任务微调** 打通：一套 Transformer 解码器栈，先 LM 再微调，少改架构即可迁移到多种理解任务。相对「每任务定制网络」是范式收缩的第一步。具体层数/参数量：常见二手来源称约 12 层、约 1.17 亿参数——**截至 2026-09-22 未见官方 PDF 确认**。 |
+| **GPT-1（2018）** | Radford et al., *Improving Language Understanding by Generative Pre-Training*；OpenAI: [Improving language understanding with unsupervised learning](https://openai.com/index/language-unsupervised/) | **Decoder-only + 生成式预训练 + 任务微调** 打通：一套 Transformer 解码器栈，先 LM 再微调，少改架构即可迁移到多种理解任务。相对「每任务定制网络」是范式收缩的第一步。具体规格：GPT-1 论文 §4.1 写明为 12 层仅解码器 Transformer（768 维状态、12 个注意力头）；参数量 117M 见 GPT-2 论文表 2，该文称其中最小模型等同原始 GPT。 |
 | **GPT-2（2019）** | Radford et al., *Language Models are Unsupervised Multitask Learners*；OpenAI: [Better language models](https://openai.com/index/better-language-models/) | 目标叙事从「预训练+微调」转向 **零样本多任务**：WebText 上的下一词预测涌现初步的问答/翻译/摘要等能力；最大公开型号 **1.5B** 参数；强调容量对零样本迁移关键。发布策略上曾分阶段放模型（安全顾虑）——属产品/治理转折，亦强化「LM 已强到需管控」的社会叙事。 |
 | **GPT-3（2020）** | Brown et al., [arXiv:2005.14165](https://arxiv.org/abs/2005.14165) | **Few-shot / in-context learning** 成为主角：175B、300B tokens；系统比较 0/1/few-shot；在多项任务上逼近或超过当时部分微调 SOTA（如 TriviaQA closed-book few-shot 等，细节见论文表）。架构上公开仍跟 GPT-2 配方并加 sparse attention。污染与偏见、社会影响专章进入「必写」。 |
 | **InstructGPT / 对齐转折（2022）** | Ouyang et al., *Training language models to follow instructions with human feedback*（[arXiv:2203.02155](https://arxiv.org/abs/2203.02155)） | 公开叙事：仅靠变大不足以让模型「按用户意图行事」；**SFT + RLHF** 提升真实用户提示上的偏好胜率。ChatGPT（官方称基于 GPT-3.5 系）把对齐后的 Decoder-only 推成消费级产品——**「架构收敛」之后是「目标函数/后训练收敛」**。GPT-3.5 与 ChatGPT 的精确底座参数：**截至 2026-09-22 未见官方确认**（需对照当时 OpenAI 说明，非 GPT-4 报告核心披露）。 |
@@ -151,7 +151,7 @@ GPT-3 论文把评估场景明确分成：
 
 以下均取自正文已有标注：
 
-1. **型号细节**：GPT-1 层数与参数量（约 12 层、约 1.17 亿）来自二手来源；GPT-3.5 / ChatGPT 的底座参数未见官方披露，截至 2026-09-22 均未见官方确认。
+1. **型号细节**：GPT-1 论文本身未写参数量，117M 出自 GPT-2 论文表 2，是按「最小模型等同原始 GPT」对应得来；GPT-3.5 / ChatGPT 的底座参数未见官方披露，截至 2026-09-22 均未见官方确认。
 2. **GPT-4 不可核**：技术报告不公开架构、模型大小、硬件、训练算力、数据构造与训练方法；外传参数量不能当事实。考试百分位等能力数字是报告自述。
 3. **in-context learning 的解释**：GPT-3 自己把「推理时真正学会新任务」还是「识别预训练中见过的模式」列为开放问题；「涌现」只宜读作平滑提升加若干质变观感。
 4. **材料口径**：GPT-3 要点依据 arXiv 论文正文与表格。

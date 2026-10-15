@@ -34,7 +34,7 @@ timezone: Asia/Shanghai (CST)
 
 **背景**：Gemini 2.5 与 3.x 各型号按技术报告或模型卡发布，输入 1M、输出上限 64K（[[Gemini25技术报告深读]]、[[Gemini3Pro模型卡深读]]、[[Gemini37Flash模型卡深读]]）；Argon 是其后 Gemini 4 代的 frontier 旗舰。
 
-**一句话**：Gemini 4 Argon 于 2026-09-30 经 Fairwind 首发，2026-10-13 全球公开 GA；稀疏 MoE、原生多模态，统一 **1,048,576** token 的 input+output 窗口；introductory API 价为每百万 token 输入 **$2** / 输出 **$10**，至 **2026-11-30**，期满为 **$4** / **$20**；配套网页模型卡与安全博文，另有 allowlist 变体 `gemini-4-argon-cyber-permissive`。
+**一句话**：Gemini 4 Argon 于 2026-09-30（UTC；上海时间 2026-10-01）经 Fairwind 首发，2026-10-13 全球公开 GA；稀疏 MoE、原生多模态，统一 **1,048,576** token 的 input+output 窗口；introductory API 价为每百万 token 输入 **$2** / 输出 **$10**，至 **2026-11-30**，期满为 **$4** / **$20**；配套网页模型卡与安全博文，另有 allowlist 变体 `gemini-4-argon-cyber-permissive`。
 
 ## 一、定位与放量
 

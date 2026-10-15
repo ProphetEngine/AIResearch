@@ -99,6 +99,7 @@ GPT-6 Sol 与 Luna 此后的版本另有系统卡，见 [[GPT6SolLuna十月版�
 - **Chat 未开放**：博文明确 *not yet available in Chat*；当前渠道为 ChatGPT Work、Codex 与 API。
 - **addendum 非独立长卡**：训练数据与护栏栈细节依赖 Astra 卡，本篇不展开。
 - **能力项多为相对叙述**：DeepSWE、OSWorld 等博文未给 GPT-6.1 Sol 绝对分，本篇不补第三方或自测分。
+- **OSWorld 版本**：博文写明报告的是 OSWorld 2.0 offline set 的 partial reward，版本为 v2026.08.08；Anthropic 三篇所记 OSWorld 2.1 为 2026-09-10 版任务文件，两者的版本标识不同。
 - **评测环境**：研究环境或 API 与生产 ChatGPT 可能因 prompt、工具与 effort 不同而有差异。
 - **博文发布时刻**：博文页未标注文章自身的发布时间，页内唯一的时间 2026-09-29T10:00 属于文末 DevDay 2026 Recap 卡片，不能当作 GPT-6.1 Sol 的发布时刻；发布日以该卡 Hub 页的 September 29, 2026 为准。
 - **ExploitBench**：该卡提示公开 ExploitBench 的分数可能因历史漏洞暴露而虚高（§9.1.2.1），本篇因此只列 Internal Port。
