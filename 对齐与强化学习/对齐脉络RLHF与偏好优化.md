@@ -59,7 +59,7 @@ InstructGPT 明确说他们做的是 **fine-tuning approaches**，用 RLHF 把 G
 
 - **提示来源**：早期靠标注者手写三类提示（Plain / Few-shot / User-based）做冷启动；之后主要用 API Playground 上提交的提示（去重、按 user ID 切分、训练侧滤 PII）。三个数据集规模数量级：SFT 约 13k、RM 约 33k、PPO 约 31k training prompts（Table 6 细节见原文附录）。
 - **比较收集**：为加速，每次给标注者 $K=4$–$9$ 条回复排序，从而得到 $\binom{K}{2}$ 对比较；训练时把同一 prompt 的全部比较当作**一个 batch element**，避免「打散后一轮就过拟合」。
-- **RM 初始化（论文写到的部分）**：从 **SFT 模型去掉最后 unembedding 层**起步，输入 prompt+response，输出**标量**奖励。文中实际用 **6B RM**（省算力；并称 175B RM 训练不稳定、不太适合再当 RL 的 value function——细节指向 Appendix C，本笔记不展开未读附录）。
+- **RM 初始化（论文写到的部分）**：从 **SFT 模型去掉最后 unembedding 层**起步，输入 prompt+response，输出**标量**奖励。文中实际用 **6B RM**（省算力；并称 175B RM 训练不稳定、不太适合再当 RL 的 value function——细节指向 Appendix C，本篇不展开未读附录）。
 - **RL 设定**：环境是 bandit——随机抽客户提示，模型回一条，RM 给奖励后 episode 结束；另加 **per-token KL** 相对 SFT，减轻对 RM 的过优化；value function 从 RM 初始化。
 - **PPO-ptx**：把预训练梯度混进 PPO，缓解公开 NLP 基准上的「alignment tax」；InstructGPT 在文中默认指 PPO-ptx。
 
@@ -268,7 +268,7 @@ $$
 ## 局限与争议
 
 - InstructGPT **Appendix B/C**：标注者筛选与人口统计细节、175B RM 不稳的具体现象、PPO / PPO-ptx 超参表。
-- InstructGPT 各公开基准精确分与 Figure 1 误差条：笔记只用了摘要级叙述，复述百分比前应对照正文表图。
+- InstructGPT 各公开基准精确分与 Figure 1 误差条：笔记只用了摘要级叙述，引用百分比时以正文表图为准。
 - Constitutional AI **Appendix C** 完整 constitution 条文、Appendix D/E 流水线与 few-shot 样例。
 - **图表读数说明**：CAI 的 Crowdworker Elo 精确数值未从图中读出。
 - CAI 中 CoT 标签概率 **clamp 到 40–60%** 的消融是否在所有规模上成立——仅据 §4.1 定性描述。
