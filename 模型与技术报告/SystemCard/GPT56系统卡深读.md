@@ -93,7 +93,7 @@ GPT-5 系列此前的系统卡大多只把旗舰的推理模型判为生物化�
 1. **图中数字**：越狱曲线、CTF 与 CVE-Bench 曲线、可监控性与可控性各分组、元博弈比例、公平性 harm_overall 以及自我改进各评测的分数只在图中，本篇只用正文结论与表格。
 2. **Preview 与全面部署卡的差异**：两页目录相比，全面部署卡新增 External Evaluations for Cyber Capabilities – UK AISI、External Evaluations for Alignment – UK AISI、External Evaluations for Monitorability – UK AISI、Third Party Red-teaming for Jailbreaks、External Testing of Safeguards – UK AISI 各节，引言由五件事改为六件事；GPT-Red 结果只在全面部署卡（2026-08-03 增补）。两页未做逐段比对。
 3. **变更记录的数值口径**：2026-08-19 两页都把 GPT-5.5 在难负例蛋白结合预测上的 pass@4 从 0.4% 改为 1.5%（原值是 pass@1）；2026-08-06 发布的「GPT-5.6 — August Updates」页对同一更正写作 1.48%。
-4. **August Updates 未纳入**：该页覆盖 ChatGPT 中 8 月版的 Sol 与 Luna，判定与 7 月版相同，并首次加入未成年人专项评测；本篇不展开。
+4. **August Updates 不在本篇范围内**：该页覆盖 ChatGPT 中 8 月版的 Sol 与 Luna，判定与 7 月版相同，并首次加入未成年人专项评测；本篇不展开。
 5. **英国 AISI 的对照偏差**：英国 AISI 能看到 Sol 的完整思维链，看不到 GPT-5.5 与 GPT-5.4 的，凡依赖推理轨迹的比较都要谨慎。
 6. **部署模拟的可验证性**：作者说明模拟管线自 GPT-5.5 卡以来有重大改动，无法用 GPT-5.5 的真实数据回验当时的预测。
 

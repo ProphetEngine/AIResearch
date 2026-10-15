@@ -1,5 +1,5 @@
 ---
-title: "MedGemma 1.5 Technical Report（医学专科多模态）"
+title: "MedGemma 1.5：医学专科多模态模型"
 topic: MedGemma医学专科
 date: 2026-09-22
 lines: [架构思想, 评测字段]

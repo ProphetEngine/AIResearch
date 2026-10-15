@@ -1,5 +1,5 @@
 ---
-title: "DeepSeek-V3.2 Technical Report 专项深读卡"
+title: "DeepSeek-V3.2 Technical Report 专项深读"
 topic: DeepSeekV32技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -12,7 +12,7 @@ related: ["DeepSeekV3训练与MoE基建", "DeepSeekR1推理训练深读", "注�
 archived: 2026-09-22
 ---
 
-# DeepSeek-V3.2 Technical Report 专项深读卡
+# DeepSeek-V3.2 Technical Report 专项深读
 
 > **主要来源**：[DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models](https://arxiv.org/abs/2512.02556)；[DeepSeek-V3.2-Exp 推理参考实现](https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp/tree/main/inference)（截至 2025-12-02）。报告只有 arXiv v1；推理实现页没有更新日期，不计入时间锚点。
 > **研究线**：架构思想（主：DeepSeek Sparse Attention 与两阶段继续预训练）；AI Infra（辅：GRPO 的稳定化技巧、工具调用中的思考上下文管理）

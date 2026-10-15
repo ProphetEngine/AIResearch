@@ -114,7 +114,7 @@ V4 是「压缩注意力」路线在开放权重旗舰上较完整的一次落�
 - CSA 与 HCA 的精确层交错比正文未给，需看开源推理代码。
 - 「相对 BF16 GQA8 约 2% KV」没有逐字段的字节拆解；1M 以外长度的 FLOPs / KV 曲线只在 Fig 1 图中。
 - Table 6 / 7 中部分对照模型因 API 繁忙空缺，跨 scaffold 引用需注明设置；Terminal Bench 2.0 另有 Verified 版约 72.0 的补充句，主表为 67.9。
-- 外部模型（GPT-5.4、Gemini-3.1-Pro、Kimi-K2.6、GLM-5.1、Opus-4.6 等）分数为作者对比，本篇未核其独立来源。
+- 外部模型（GPT-5.4、Gemini-3.1-Pro、Kimi-K2.6、GLM-5.1、Opus-4.6 等）分数为作者对比，其独立来源不在本篇范围内。
 - 本报告为 preview；arXiv 最新版即 v1，正式产品与 preview 的差异未见官方文档。
 
 ## 八、与相邻笔记的分工

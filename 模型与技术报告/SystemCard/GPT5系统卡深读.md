@@ -242,7 +242,7 @@ GPT-5.1 增补的心理健康与情感依赖两项评测，引自此前的 [Adde
 | --- | --- | --- |
 | Mental health | instant 相对 oct3 略回退，仍优于 aug15；thinking 相对 gpt-5-thinking 改进 | instant 与 thinking 相对各自前代都略有改进，统计置信度低 |
 | Emotional reliance | instant 与 thinking 相对 oct3 / 前代 thinking 都略回退；instant 仍优于 aug15 | instant 相对 oct3 回退（低置信度），仍优于 aug15；thinking 相对前代改进，统计置信度高 |
-| Self harm and suicide | 离线数字见原文 Table 1 的 self-harm/intent 与 self-harm/instructions 两行，本篇未列 | instant 相对 oct3 持平；thinking 相对前代改进；均为低置信度 |
+| Self harm and suicide | 离线数字见原文 Table 1 的 self-harm/intent 与 self-harm/instructions 两行，不在本篇范围内 | instant 相对 oct3 持平；thinking 相对前代改进；均为低置信度 |
 
 ### 4.5 Preparedness（§3）
 
@@ -266,7 +266,7 @@ GPT-5.1 增补的心理健康与情感依赖两项评测，引自此前的 [Adde
 1. **日期多口径**：Hub 页标 2025-08-07（发布日），PDF 封面 2025-08-13；GPT-5.1 增补 Hub 与封面均为 2025-11-12。脉络以 Hub 发布日为节点。
 2. **图内数字未读**：Gray Swan 注入分、SWE-bench Verified pass@1、多张 Preparedness 图的精确值只在图中，本篇不写。
 3. **博客与系统卡的 SWE 差值**：系统卡（maximum verbosity）的 SWE-bench 值未在正文给出，与博客 74.9%（medium）无法直接比较。
-4. **外部报告**：Gray Swan、METR 完整报告、Apollo 报告的独立链接未核对。
+4. **外部报告**：Gray Swan、METR 完整报告、Apollo 报告的独立链接截至 2026-05-01 未见。
 5. **型号对应**：`gpt-5-instant-aug15` 对应 ChatGPT 默认模型（GPT-5 Instant）8 月 15 日版，已由敏感对话增补确认；它与主卡 `gpt-5-main` 标签是否同一模型，两份文件都没有写成等式。
 6. **在线 A/B**：GPT-5.1 增补的样本量、时间窗、不良回答的操作定义与置信区间数值均未给出。
 7. **排版疑点**：GPT-5.1 Table 3「attack planning」行的 gpt-5.1-instant 单元格为 1.00（两位小数），与同表三位小数不一致，原文如此。

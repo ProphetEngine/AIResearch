@@ -1,5 +1,5 @@
 ---
-title: Gemini 2.5 Technical Report 深读笔记
+title: "Gemini 2.5 Technical Report 深读"
 topic: Gemini25技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -11,7 +11,7 @@ related: ["Gemini3Pro模型卡深读", "Gemini37Flash模型卡深读", "开源�
 archived: 2026-09-22
 ---
 
-# Gemini 2.5 Technical Report 深读笔记
+# Gemini 2.5 Technical Report 深读
 
 > **主要来源**：[Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities](https://arxiv.org/abs/2507.06261)（Gemini Team, Google，v6，2025-12-19；首次提交 2025-07-07；73 页）（截至 2026-08-13）。
 > **研究线**：架构思想（稀疏 MoE + 原生多模态 + 长上下文 + RL 训练的 thinking，主）· AI Infra（TPUv5p 多 pod 同步训练的弹性与静默数据损坏检测，辅）
@@ -113,7 +113,7 @@ Gemini 2.5 报告汇集了此后闭源旗舰常见的组合：稀疏 MoE 骨干 
 - LiveCodeBench 的 1.5 Pro 分数正文写 30.5%、Table 3 写 29.7%，本篇采用表值，引用前以原表与评测脚注为准。
 - Table 1 中 2.0 Flash 的 Thinking 标为实验可用，而正文称其为日常 non-thinking 型号，按预览脚注理解。
 - 2.5 正式表列输入为 1M；1.5 Pro 与 2.0 Pro 实验版的 2M 未延续到 2.5 的表中。
-- 本篇按 arXiv 最新版 v6；v1–v5 之间的修订未逐版比对。
+- 本篇按 arXiv 最新版 v6；v1–v5 之间的修订比对不在本篇范围内。
 
 ## 七、与相邻笔记的分工
 

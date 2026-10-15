@@ -1,5 +1,5 @@
 ---
-title: Claude Opus 4.1 System Card Addendum 专项深读卡
+title: "Claude Opus 4.1 System Card Addendum 专项深读"
 topic: ClaudeOpus41系统卡附录深读
 date: 2026-09-22
 lines: [架构思想]
@@ -11,7 +11,7 @@ related: ["ClaudeOpus45系统卡深读", "GPT5系统卡深读", "模型卡与Sys
 archived: 2026-09-22
 ---
 
-# Claude Opus 4.1 System Card Addendum 专项深读卡
+# Claude Opus 4.1 System Card Addendum 专项深读
 
 > **主要来源**：[System Card Addendum: Claude Opus 4.1](https://www.anthropic.com/system-cards)（Anthropic 系统卡索引页，封面 2025-08，changelog 2025-09-15，23 页）；[Claude Opus 4.1](https://www.anthropic.com/news/claude-opus-4-1)（发布公告，2025-08-05）（截至 2025-11-24）。
 > **研究线**：架构思想（增量发布如何用精简与自愿评测衔接 RSP，以及主卡、附录、下一张全卡之间的文档分层）
@@ -87,7 +87,7 @@ Opus 4.1 于 2025-08-05 发布，公告称它在智能体任务、真实编码�
 
 ## 六、局限与争议
 
-- 图 4.1.A、4.2.A、4.3.A、5.A 与 6.3 节各图的精确柱高未读出，引用需回原文读图。
+- **图表读数说明**：图 4.1.A、4.2.A、4.3.A、5.A 与 6.3 节各图的精确柱高未读出，以原文图表为准。
 - Claude 4 主卡中三项 agentic coding 滥用评测的名称与口径，该卡只称「from the Claude 4 system card」。
 - 「4 倍有效算力」「六个月微调」的操作化定义以 RSP 正文 §3.1 为准，本篇只转述。
 - 参数量、知识截止与 RL 算法该卡未给。

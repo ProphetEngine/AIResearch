@@ -1,5 +1,5 @@
 ---
-title: Model Card / System Card 规范（字段谱系与体裁差异）
+title: "模型卡与系统卡规范（字段谱系与体裁差异）"
 topic: 模型卡与SystemCard规范
 date: 2026-09-22
 lines: [架构思想]
@@ -8,7 +8,7 @@ aliases: [模型卡与SystemCard规范]
 archived: 2026-09-22
 ---
 
-# Model Card / System Card 规范
+# 模型卡与系统卡规范（字段谱系与体裁差异）
 
 > **主要来源**：[Model Cards for Model Reporting](https://arxiv.org/abs/1810.03993)（Mitchell 等，FAT* ’19，arXiv v2 2019-01-14）；[Model Cards](https://huggingface.co/docs/hub/en/model-cards)（Hugging Face Hub 文档）；[Annotated Model Card Template](https://huggingface.co/docs/hub/en/model-card-annotated)（Hugging Face Hub 文档）；[Model Card Guidebook](https://huggingface.co/docs/hub/en/model-card-guidebook)（Hugging Face Hub 文档）（截至 2026-08-13）。厂商卡的体裁差异只取相邻深读笔记的目录级描述。
 > **研究线**：架构思想（文档体裁与披露字段：模型卡字段从哪里来，系统卡改变了什么）
@@ -110,7 +110,7 @@ Hub 元数据中常见的机读字段用于发现、过滤与页面小部件，�
 
 ### 4.2 章节重心对照（只标结构，不抄数字）
 
-以下为目录级对照，细节与分数一律见对应深读笔记。
+以下为目录级对照，细节与分数见对应深读笔记。
 
 | 披露轴 | Mitchell / HF 模型卡 | OpenAI GPT-5 系系统卡 | Anthropic Claude 4、Opus 4.5 系统卡 | Google Gemini 3 Pro 模型卡 | xAI Grok 4 系卡 |
 |---|---|---|---|---|---|

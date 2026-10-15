@@ -1,5 +1,5 @@
 ---
-title: "地球系统 FM 增量：ESFM 异构数据统一框架（区别于 Aurora 与 ClimateAgent）"
+title: "地球系统基础模型 ESFM：异构数据统一框架（区别于 Aurora 与 ClimateAgent）"
 topic: 地球系统基础模型ESFM
 date: 2026-09-22
 lines: [架构思想, 数据接口, 文内预报字段]
@@ -20,7 +20,7 @@ retrieval_cutoff: 2026-04-20
 timezone: Asia/Shanghai (CST)
 ---
 
-# 地球系统基础模型 ESFM：异构数据统一框架
+# 地球系统基础模型 ESFM：异构数据统一框架（区别于 Aurora 与 ClimateAgent）
 
 > **主要来源**：[Earth System Foundation Model (ESFM): A unified framework for heterogeneous data integration and forecasting](https://arxiv.org/abs/2605.00850)（Ozdemir 等，arXiv v1，2026-04-20）；[swiss-ai/ESFM README](https://github.com/swiss-ai/ESFM)（论文给出的开源代码仓库）（截至 2026-04-20）
 > **研究线**：架构思想与数据接口（主）+ 文内预报字段（辅）
@@ -75,7 +75,7 @@ ESFM 文内明说建立在 Aurora 的 3D Swin UNet 骨干之上，并用小号 A
 4. **平流层可预报性**：对流层影响的结果「令人鼓舞」，但需在十天以上的时效上用更准的预报确认（§6）。
 5. **台风强度**：数据驱动模型普遍能抓住气旋位置但低估强度，部分源于训练数据分辨率（§4.4）。
 6. **站点外推中的气压**：在未见站点的泛化与外推测试里，气压的误差上升最明显；作者认为微调时加入地表位势等静态变量可能缓解（§6）。
-7. **版本**：只有 arXiv v1（2026-04-20），无正式刊；集合预报的离散度与技巧匹配等细节本篇未展开。
+7. **版本**：只有 arXiv v1（2026-04-20），无正式刊；集合预报的离散度与技巧匹配等细节不在本篇范围内。
 
 ## 六、与相邻笔记的分工
 

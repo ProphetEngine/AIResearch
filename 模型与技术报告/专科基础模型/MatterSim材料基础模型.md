@@ -1,5 +1,5 @@
 ---
-title: "Materials FM：MatterSim（跨元素 / 温压的原子势与物性预测）"
+title: "材料基础模型：MatterSim（跨元素 / 温压的原子势与物性预测）"
 topic: MatterSim材料基础模型
 date: 2026-09-22
 lines: [架构思想]
@@ -14,7 +14,7 @@ github: "https://github.com/microsoft/mattersim"
 archived: 2026-09-22
 ---
 
-# Materials FM：MatterSim（跨元素 / 温压的原子势与物性预测）
+# 材料基础模型：MatterSim（跨元素 / 温压的原子势与物性预测）
 
 > **主要来源**：[MatterSim: A Deep Learning Atomistic Model Across Elements, Temperatures and Pressures](https://arxiv.org/abs/2405.04967)；[MatterSim 1.0.0 documentation](https://microsoft.github.io/mattersim/)；[microsoft/mattersim README](https://github.com/microsoft/mattersim)（截至 2024-05-10）。论文以 arXiv v2 为准；文档与 README 没有更新日期，不计入时间锚点。
 > **研究线**：架构思想（主：主动学习把训练分布推到宽温压离平衡构型，M3GNet 与 Graphormer 双骨干按任务分工）；评测字段（辅：能量、力、应力，声子，自由能与相图，MatBench）
