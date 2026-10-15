@@ -79,7 +79,7 @@ FCF 两档：Tier 1 为对已知手法的主动 cyber 行动提供有意义技�
 | ExploitBench（41 个 V8 环境） | 平均 capability flags：plain 11.80、AutoNudge 12.61；两臂合计 222/410 次完整利用 | — |
 | OSS-Fuzz | 17 个目标满分 1.0；非零分率 78.7% | Mythos 5：13 / 80.0%；Opus 5：4 / 79.4%（发现持平，利用原语上升） |
 | Firefox 147（250 次） | 245 次完整利用（98.0%） | Mythos 5 88.4%；Opus 5 52.4% |
-| ExploitGym | 相对 Mythos 5 有提升 | 柱高待核实读图 |
+| ExploitGym | 相对 Mythos 5 有提升 | 柱高未从图中读出（图表读数说明） |
 
 Fable 侧的护栏字段：cyber 有害类召回卡称已饱和；源码类漏洞发现的拦截率相对 Fable 5 下降、二进制类仍重拦；纯防御编码流量的误伤显著少于 Fable 5，仍多于 Opus 5 / Sonnet 5。鲁棒性上按四轴（能力增益、持久与迁移、武器化难度、可发现性）评越狱严重度，未发现 critical 级；外部 Trajectory Labs 约 74 小时、6,500 余次请求，未能仅凭 Fable 5.1 端到端完成任务利用，也未发现通用越狱；另有 Gray Swan 自动化测试。
 

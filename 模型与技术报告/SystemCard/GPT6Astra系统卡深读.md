@@ -99,7 +99,7 @@ Astra 卡把三件事放在同一份文档里：首次 Cyber Critical、对齐�
 
 ## 八、局限与争议
 
-- 大量图表的精确百分点未读出（越狱、注入、对齐 Fig.7–21、可监控性 Fig.22–41、Preparedness 多数图），待核实读图。
+- **图表读数说明**：大量图表的精确百分点未读出（越狱、注入、对齐 Fig.7–21、可监控性 Fig.22–41、Preparedness 多数图）。
 - PDF 元数据的创建日期（2025-12-18）与封面 2026-09-03 不一致，以封面与 Hub 为准。
 - SecureBio、KernelGen、NanoGPT、PostTrainBench、MLE-Bench 的精确分多在图中，本篇未收。
 - 卡未公开参数量、训练算力与数据配比；所有数字均为 OpenAI 自报，无第三方复现。
