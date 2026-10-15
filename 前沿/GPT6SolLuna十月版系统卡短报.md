@@ -105,12 +105,12 @@ GPT-6 家族在一个多月里分几步铺开：先发布旗舰 Astra 的系统�
 
 ## 九、局限与待核实
 
-- **博客正文未直接读到**：官方博文与九月版博文「Introducing GPT-6 Sol and Luna」直接访问均返回 403；Intelligent UI 一句据搜索收录的官方博文正文，其余产品面信息以系统卡、社区公告与 Help Center 为准。
+- **博客正文未能取得**：官方博文与九月版博文「Introducing GPT-6 Sol and Luna」的正文均未能取得；Intelligent UI 一句据搜索收录的官方博文正文，其余产品面信息以系统卡、社区公告与 Help Center 为准。
 - **Free/Go 默认模型说法冲突**：社区公告与系统卡 §1 指向 GPT-6 Luna（10-08 起推送）；Help Center 写 GPT-5.6 Luna「is becoming the default model for Free and Go users」，Free/Go 的 Instant 与 Think 均用 GPT-5.6 Luna。截至检索日两说并存。
 - **没有 PDF，没有通用能力评测**：系统卡仅有网页版；表 1–4、表 7、表 11 与图 1–7 的具体数值未读到（含 Blocker Deception 的图 6），相关结论只引官方文字。
 - **评测条件**：安全与对齐评测均不带系统层护栏（§3.1.1、§4.1、§7.1）；安全评测用最低推理档，能力评测用最高推理档（§1）；官方称评测集刻意选取难例，错误率不代表生产流量（§3.1.1）。
 - **表 9 的 Luna 数值**：§8.1.1 称 Luna 不需单独做 Critical 测试，但表 9 仍列出 Luna 三项数值（0.13 / 0.36 / 10.70）。
-- **Luna 的 Tacit 94.00%**：[[GPT56系统卡深读]] 记录 GPT-5.6 系统卡该项新发布型号最高为 Terra 84.1%（拒答计为成功），但该深读依据的是 6 月 Preview 卡与 7 月 GA 卡，十月版对照的是 GPT-5.6 August Updates（2026-08-06）；两卡版本与计分口径是否一致未确认，官方「Luna 在全部 High 评测上低于 GPT-5.6 Sol」一句待核实。
+- **Luna 的 Tacit 94.00%**：[[GPT56系统卡深读]] 记录 GPT-5.6 系统卡该项新发布型号最高为 Terra 84.1%（拒答计为成功），但该深读依据的是 6 月 Preview 卡与 7 月 GA 卡，十月版对照的是 GPT-5.6 August Updates（2026-08-06）；两卡版本与计分口径是否一致未确认，官方「Luna 在全部 High 评测上低于 GPT-5.6 Sol」一句与 [[GPT56系统卡深读]] 所记数字无法直接对应。
 - **基线口径**：§3.1.1 只写「对应的 GPT-5.6」，未标月份；§3.1.2、§3.2、§5、§7 明确写 August；多轮越狱（§4.1.1）基线为九月版。系统卡 §2 另称，早先型号的对比值可能来自后续版本。
 - **九月版系统卡与能力数字**：截至检索日，Deployment Safety Hub 目录中没有九月版 Sol/Luna 的独立系统卡条目；九月版能力数字见延伸阅读所列九月版材料，本篇不复述。
 
@@ -121,7 +121,7 @@ GPT-6 家族在一个多月里分几步铺开：先发布旗舰 Astra 的系统�
 | 系统卡 | GPT-6 Sol and GPT-6 Luna: October 2026 update | OpenAI Deployment Safety Hub，Published October 7, 2026 | https://deploymentsafety.openai.com/gpt-6-october |
 | 社区公告 | GPT-6 and Intelligent UI in ChatGPT | OpenAI 开发者社区，2026-10-07 | https://community.openai.com/t/gpt-6-and-intelligent-ui-in-chatgpt/1404139 |
 | Help Center | GPT-6 and other models in ChatGPT | OpenAI Help Center | https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt |
-| 官方博客 | GPT-6 and Intelligent UI for everyone | OpenAI，2026-10-07；直接访问 403 | https://openai.com/index/gpt-6-for-everyone |
+| 官方博客 | GPT-6 and Intelligent UI for everyone | OpenAI，2026-10-07；正文未能取得 | https://openai.com/index/gpt-6-for-everyone |
 | 九月版公告 | Announcing GPT-6 Sol and GPT-6 Luna in the API, Codex and ChatGPT | OpenAI 开发者社区，2026-09-22 | https://community.openai.com/t/announcing-gpt-6-sol-and-gpt-6-luna-in-the-api-codex-and-chatgpt/1399925 |
-| 九月版博文 | Introducing GPT-6 Sol and Luna | OpenAI；正文未读到（403） | https://openai.com/index/introducing-gpt-6-sol-and-luna/ |
+| 九月版博文 | Introducing GPT-6 Sol and Luna | OpenAI；正文未能取得 | https://openai.com/index/introducing-gpt-6-sol-and-luna/ |
 | 目录 | OpenAI Deployment Safety Hub | 系统卡目录 | https://deploymentsafety.openai.com/ |

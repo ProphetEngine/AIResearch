@@ -24,7 +24,7 @@ timezone: Asia/Shanghai (CST)
 > - ≠ [[GRPO与DAPO算法族]]：本篇不写 GRPO 的目标函数与变体推导。
 > **意义**：MiMo-V2.6 把「扩大 RL」从单纯堆算力拆成 batch 吞吐、环境与 harness 多样性、grader 算力三条可核对的轴，并为 grader 与 multi-harness 给出消融证据；同时开源约 7k 可验证环境、RL 代码与 9B 蒸馏基线，让同一配方可以在小模型上复现。
 
-**一句话**：MiMo-V2.6 把 Agentic RL 写成「算力三维放大」：更大 batch、更多环境与 harness、更多 grader 算力，在一次混合任务 run 里完成 You-Only-RL-Once；开源约 7k 可验证环境与 Distill-9B 基线，便于社区复现同一套路。
+**一句话**：MiMo-V2.6 把 Agentic RL 写成「算力三维放大」：更大 batch、更多环境与 harness、更多 grader 算力，在一次混合任务 run 里完成全部 RL（报告称 You-Only-RL-Once）；开源约 7k 可验证环境与 Distill-9B 基线，便于社区在小模型上复现同一配方。
 
 ## 一、背景与脉络
 

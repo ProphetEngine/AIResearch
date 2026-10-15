@@ -100,8 +100,8 @@ ExploitBench 上 plain 组平均 5.15 个 flag（Cap% 38%），AutoNudge 组 6.5
 ## 六、史与势
 
 1. **5.5 族补齐三档**：Docs 对比表并列 Fable 5.1、Opus 5.5、Sonnet 5.5、Haiku 5.5，四者同为 1M 上下文、128K 输出、知识截止 2026 年 6 月，Haiku 5.5 价格最低。各家系统卡的整体谱系见 [[SystemCard谱系时间线]]。
-2. **护栏按能力定松紧**：SC §3.2 称，由于缺少先进 cyber 能力，Haiku 5.5 的 cyber 护栏 "trigger on significantly less activity than other recent releases"；发布页称其 "Consistent with its capabilities"。
-3. **非前沿系统卡开始压缩**：执行摘要称为集中测试前沿模型，本次省略了部分需大量人工的评测并减少文字分析，"We expect system cards for our non-frontier models to be similarly condensed going forward"。
+2. **护栏按能力定松紧**：SC §3.2 称，由于缺少先进 cyber 能力，Haiku 5.5 的 cyber 护栏触发的活动明显少于其他近期发布（"trigger on significantly less activity than other recent releases"）；发布页称这与其能力相符（"Consistent with its capabilities"）。
+3. **非前沿系统卡开始压缩**：执行摘要称为集中测试前沿模型，本次省略了部分需大量人工的评测并减少文字分析，并预期今后非前沿模型的系统卡同样压缩（"We expect system cards for our non-frontier models to be similarly condensed going forward"）。
 
 ## 七、与相邻笔记的分工
 
@@ -118,7 +118,7 @@ ExploitBench 上 plain 组平均 5.15 个 flag（Cap% 38%），AutoNudge 组 6.5
 
 ## 八、局限与待核实
 
-- **生物防护说法两边不一致**（不下结论）：发布页 Safety 段称 "Haiku 5.5’s biology safeguards are the same as for Sonnet 5, Sonnet 5.5, and Opus 5."；SC §1.5 与 §2.2.4 只写与 Opus 5、Sonnet 5 部署相同，而非 Opus 5.5 那套更宽的研究生物分类器，两处都未提及 Sonnet 5.5。
+- **生物防护说法两边不一致**：发布页 Safety 段称 "Haiku 5.5’s biology safeguards are the same as for Sonnet 5, Sonnet 5.5, and Opus 5."；SC §1.5 与 §2.2.4 只写与 Opus 5、Sonnet 5 部署相同，而非 Opus 5.5 那套更宽的研究生物分类器，两处都未提及 Sonnet 5.5。
 - **系统卡为压缩版**：省略了部分需大量人工的评测（SC 执行摘要）；CB 只报告自动化评测（SC §2.2.1）；对齐评估范围窄于前沿模型（SC §6.1.1）；Mythos 5.1 审阅指出并非每项评测都注明 effort 设置，官方回应维持此前做法（SC §6.1.3）。
 - **cyber 数字不宜跨卡比较**：多数 cyber 评测框架自 2026 年 8 月起重写、旧模型已重测（SC §3.1、§3.3.3）；ExploitBench 用作者提供的统一静态框架，官方称与公开榜不可直接比较（SC §3.3.1）；CyScenarioBench 用的是发布前快照，官方称与发布版能力非常接近（SC §3.3.2），其 3.3% 与 [[ClaudeOpus5系统卡深读]] 所记 Opus 5 的 3.3%（9 题子集）数值相同但模型与口径都不同。
 - **AECI 跨拟合**：Haiku 5.5 系统卡最新拟合下 Opus 5.5 为 174.56，[[ClaudeSonnet55系统卡短报]] 所记 169.12 与 [[ClaudeOpus55系统卡短报]] 所记 169.36 出自其他拟合，不跨卡比较（SC §2.3.2）。

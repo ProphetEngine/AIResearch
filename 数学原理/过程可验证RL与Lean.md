@@ -1,5 +1,5 @@
 ---
-title: "过程可验证 RL（Lean）：Process-Verified RL + Leanabell-Prover-V2（≠ AlphaProof / ≠ VPS）"
+title: "过程可验证 RL（Lean）：Process-Verified RL 与 Leanabell-Prover-V2"
 topic: 过程可验证RL与Lean
 date: 2026-09-22
 lines: [架构思想, 奖励接口, 评测字段]
@@ -7,17 +7,14 @@ status: archived
 sources:
  - https://arxiv.org/abs/2606.20068
  - https://arxiv.org/abs/2507.08649
-aux:
- - https://arxiv.org/abs/2606.20068
- - https://arxiv.org/abs/2507.08649
- - https://github.com/Leanabell-LM/Leanabell-Prover-V2
+code: "https://github.com/Leanabell-LM/Leanabell-Prover-V2"
 arxiv: ["2606.20068", "2507.08649"]
 related: ["形式化验证与LLM", "可验证过程监督", "过程奖励模型PRM谱系", "GRPO与DAPO算法族", "推理时扩展TestTimeScaling", "对齐与强化学习发展时间线"]
 retrieval_cutoff: 2026-08-05
 timezone: Asia/Shanghai (CST)
 ---
 
-# 过程可验证 RL（Lean）：Process-Verified RL + Leanabell-Prover-V2（≠ AlphaProof / ≠ VPS）
+# 过程可验证 RL（Lean）：Process-Verified RL 与 Leanabell-Prover-V2
 
 > **主要来源**：[Process-Verified Reinforcement Learning for Theorem Proving via Lean](https://arxiv.org/abs/2606.20068)（Kim、Yun，KAIST AI，ICLR 2026，v1 2026-06-18，以下简称 Process-Verified）；[Leanabell-Prover-V2: Verifier-integrated Reasoning for Formal Theorem Proving via Reinforcement Learning](https://arxiv.org/abs/2507.08649)（Ji、Liu、Wang 等，快手 Klear 团队，v1 2025-07-11，以下简称 Leanabell-V2）（截至 2026-08-05）。
 > **研究线**：架构思想（主：Lean 的细粒度反馈怎样接进强化学习的信用分配）；奖励接口与评测字段（辅：MiniF2F、ProofNet、ProverBench 上的 pass@k）

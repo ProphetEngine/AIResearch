@@ -27,10 +27,10 @@ timezone: Asia/Shanghai (CST)
 > - ≠ [[ClaudeOpus55系统卡短报]]、[[GPT6Astra系统卡深读]]：本篇只借用两家的护栏叙事作对照，不复述其系统卡。
 > - ≠ [[AgenticRL景观与能力模块]]、[[MiMoV26智能体强化学习短报]]：ML4 只作为异步 RL 基础设施的工业实例，方法论见这两篇。
 > - ≠ [[开源与闭源前沿模型谱系]]：本篇不复述开源权重谱系。
-> - 本篇不是系统卡短报：ML4 目前没有技术报告，也没有 System Card。
+> - ML4 目前没有技术报告，也没有 System Card，本篇依据博文、文档与 HF 页。
 > **意义**：ML4 是欧洲厂商推出的约 1T 总参开源权重模型（权重尚待开放），走「API 预览、放权重前受控红队、月底开放权重」的路径；它把网安能力当作卖点，并批评服务商层面的拒答，与闭源厂商以护栏和受信访问管控网安能力的路线形成对照。
 
-**一句话**：Mistral 于 2026-10-06 以 API 公开预览形式发布 Mistral Large 4（ML4，昵称 Le Chonk），约 1T 总参、52B 激活的原生多模态 MoE；官方称它明显领先美国与欧洲开发的开源权重模型，在 AA Cyber Index 上位列全球前五，权重定于本月底开放。
+**一句话**：Mistral 于 2026-10-06 以 API 公开预览形式发布 Mistral Large 4（ML4，昵称 Le Chonk），约 1T 总参、52B 激活的原生多模态 MoE；官方称它明显领先美国与欧洲开发的开源权重模型，在 AA Cyber Index 上位列全球前五，权重计划于 2026 年 10 月底开放。
 
 ## 一、背景与发布形态
 
@@ -59,7 +59,7 @@ ML4 相对 Large 3 把总参从 675B 推到约 1T、激活从 41B 增到 52B，�
 ## 三、发布路径与权重日期
 
 - **受控红队**：官方称权重开放前先开放 API 预览，同时与 "cybersecurity leaders, vetted partners, and state authorities" 在真实场景中红队测试；这些机构使用同一模型，审核降低（reduced moderation），网安能力扩展（博文「Frontier performance」节）。
-- **权重日期三说并存**：博文写 "Weights drop end of this month"，未给具体日期；HF 页写 October 31, 2026（标「Current ETA」，仍可能调整）；The Next Web（2026-10-06）写 October 27。本篇不作判断。
+- **权重日期三说并存**：博文写 "Weights drop end of this month"，未给具体日期；HF 页写 October 31, 2026（标「Current ETA」，仍可能调整）；The Next Web（2026-10-06）写 October 27。
 - **与 Argon 对照**：Argon 经 Fairwind 计划向受信网络防御方分阶段放量、模型保持闭源（见 [[Gemini4Argon短报]]）；ML4 先预览、再受控红队，最终公开权重。
 
 ## 四、网络安全
@@ -109,7 +109,7 @@ ML4 相对 Large 3 把总参从 675B 推到约 1T、激活从 41B 增到 52B，�
 4. **自选对比与 harness**：对比模型由官方选定，编码类评测未公布 harness，不能与其他笔记的分数横比。例如 Gemini 4 Argon 的 DeepSWE v1.1 77.9% 基于 mini-swe harness，与本篇的 61.7% 口径不同。
 5. **官方说法未独立核实**：闭源模型「因拒答而近 0」的归因、拒答率「高于所有开源模型」、B3「未见更高」都是官方说法，测试设置未完整公开；82% 是 AA Cyber Index 中一项测试的得分，不是指数总分。
 6. **口径并存**：总参 1T / 1.05T、激活 49B / 52B 并存；1M 上下文只见于文档。
-7. **前代材料**：Large 3 没有独立技术报告，Ministral 3 论文的数字均为自报；Large 3 推理版的后续发布情况本篇未核。
+7. **前代材料**：Large 3 没有独立技术报告，Ministral 3 论文的数字均为自报；Large 3 推理版的后续发布情况不在本篇范围内。
 8. **媒体与博文不一致**：The Next Web 写约 4,000 张 GPU、Dense 200 两者都是 42%，与博文的 3,800 张、42% 对 41% 不同；本篇以博文为准。
 
 ## 十、与相邻笔记的分工

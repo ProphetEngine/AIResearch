@@ -52,10 +52,10 @@ GPT-6 Sol 与 Luna 此后的版本另有系统卡，见 [[GPT6SolLuna十月版�
 | 文档身份 | GPT-6 Astra System Card 的 **addendum** | 训练数据与护栏细节指向 Astra 卡 | 该卡 §1、§2 |
 | API | `gpt-6.1-sol` | — | 博文 Pricing |
 | 标准 API 价（每百万 token） | 输入 **$2** / 输出 **$10** / cached 输入 **$0.10** | Astra：$10 / $50 / $1 cached；Luna：$0.10 / $0.50 / $0.01 | 博文 Pricing；博文对照卡图注 |
-| 「约 1/5」口径 | 相对 Astra 的 **标准输入与输出** token 价（$2/$10 对 $10/$50） | **不含** cached：cached 输入 $0.10，相对 GPT-6 Sol cached −50% | 博文 og:description 与 Pricing |
+| 「约 1/5」口径 | 相对 Astra 的 **标准输入与输出** token 价（$2/$10 对 $10/$50） | **不含** cached：cached 输入 $0.10，相对 GPT-6 Sol cached −50% | 博文导语与 Pricing |
 | 可用性 | Plus / Pro / Business / Enterprise / Edu：**ChatGPT Work** 与 **Codex** | **Chat 尚未开放**（原文 *not yet available in Chat*）；Ultrafast「未来几天」上线，Codex 中称最高约 8× 生成速度 | 博文 Pricing |
 
-- **定位口号**（博文）：upgrade to GPT-6 Sol；nearly matches GPT-6 Astra on agentic coding, computer use, and professional work at one-fifth of Astra’s standard input and output token prices。
+- **定位口号**（博文）：GPT-6 Sol 的升级版，在 agentic coding、computer use 与 professional work 上接近 GPT-6 Astra，标准输入与输出 token 价为 Astra 的五分之一（原文：upgrade to GPT-6 Sol; nearly matches GPT-6 Astra on agentic coding, computer use, and professional work at one-fifth of Astra’s standard input and output token prices）。
 - **评测环境**（该卡 §1 脚注）：评测在研究环境或经 API 进行，与生产 ChatGPT 可能因 system prompt、可用工具与 effort 等不同而略有差异。
 
 ## 三、能力对照
@@ -102,7 +102,7 @@ GPT-6 Sol 与 Luna 此后的版本另有系统卡，见 [[GPT6SolLuna十月版�
 - **addendum 非独立长卡**：训练数据与护栏栈细节依赖 Astra 卡，本篇不展开。
 - **能力项多为相对叙述**：DeepSWE、OSWorld 等博文未给 GPT-6.1 Sol 绝对分，本篇不补第三方或自测分。
 - **评测环境**：研究环境或 API 与生产 ChatGPT 可能因 prompt、工具与 effort 不同而有差异。
-- **博文发布时刻**：抓取到的博文没有文章自身的 time 元素，页内唯一的 2026-09-29T10:00 属于文末 DevDay 2026 Recap 卡片，不能当作 GPT-6.1 Sol 的发布时刻；发布日以该卡 Hub 页的 September 29, 2026 为准。
+- **博文发布时刻**：博文页未标注文章自身的发布时间，页内唯一的时间 2026-09-29T10:00 属于文末 DevDay 2026 Recap 卡片，不能当作 GPT-6.1 Sol 的发布时刻；发布日以该卡 Hub 页的 September 29, 2026 为准。
 - **ExploitBench**：该卡提示公开 ExploitBench 的分数可能因历史漏洞暴露而虚高（§9.1.2.1），本篇因此只列 Internal Port。
 - **Codex 仿真**：该卡 §7.6 写明它更适合作为内部部署风险信号，不宜直接当作外部部署安全率；本篇所列取自 §7.6 的 49,650 题匹配集，与 [[GPT6Astra系统卡深读]] 所记 Astra 卡自身集合的数字不能直接比。
 - **对照列版本**：该卡写明先前模型的对照值可能来自后继版本，与发布时公布的数字可能不同（§2）。

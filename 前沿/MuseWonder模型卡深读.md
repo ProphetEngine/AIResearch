@@ -71,7 +71,7 @@ timezone: Asia/Shanghai (CST)
 
 ## 六、评测口径（模型卡第 3 节）
 
-读分数前先要分清来源和配置，模型卡对此交代得比较细：
+模型卡对评测来源与配置的说明如下：
 
 - **配置**：Muse Wonder 两档都用最高推理强度，对比对象 GPT-6 Astra、Claude Fable 5.1、Claude Opus 5.5 也取最高推理强度。内部受控的编程对比中，所有模型用同一个基准专用 harness；外部编程结果保留报告方所用的 harness 或智能体产品。
 - **取分规则**：有可比的第三方或厂商自报结果时用它；否则取内部验证运行、自报分数、官方榜单三者中最高的一个。模型拒答计零分并留在分母里，不剔除（模型卡第 3 节：「Model refusals receive zero credit and remain in the denominator rather than being dropped.」）。
@@ -102,7 +102,7 @@ timezone: Asia/Shanghai (CST)
 
 ## 八、意义
 
-Muse Wonder 的材料有两点值得记下。其一，把「个人超级智能」落到可测的 Active Memory 与 Active Focus，并配上专门的内部基准，给个人智能体评测提供了一种拆法。其二，模型卡把评测口径写得较透：拒答计零分、来源逐项标注、明说哪一行不是受控对比、给 ExploitGym 的原始分加计分注释。这些口径说明比分数本身更有助于判断结果能否横向比较。
+Muse Wonder 的材料意义有二。其一，把「个人超级智能」落到可测的 Active Memory 与 Active Focus，并配上专门的内部基准，给个人智能体评测提供了一种拆法。其二，模型卡把评测口径写得较透：拒答计零分、来源逐项标注、明说哪一行不是受控对比、给 ExploitGym 的原始分加计分注释。这些口径说明比分数本身更有助于判断结果能否横向比较。
 
 ## 九、局限与待核实
 

@@ -1,7 +1,7 @@
 ---
 date: 2026-09-22
 topic: HippoRAG2与CatRAG
-title: "RAG→记忆新范式：HippoRAG 2 + CatRAG"
+title: "从检索到记忆：HippoRAG 2 与 CatRAG"
 lines: [架构思想, 评测字段]
 sources:
  - https://arxiv.org/abs/2502.14802
@@ -17,7 +17,7 @@ code_hipporag: "https://github.com/OSU-NLP-Group/HippoRAG"
 code_catrag: "https://github.com/kwunhang/CatRAG"
 ---
 
-# RAG→记忆新范式：HippoRAG 2 + CatRAG
+# 从检索到记忆：HippoRAG 2 与 CatRAG
 
 > **主要来源**：[From RAG to Memory: Non-Parametric Continual Learning for Large Language Models](https://arxiv.org/abs/2502.14802)；[Breaking the Static Graph: Context-Aware Traversal for Robust Retrieval-Augmented Generation](https://arxiv.org/abs/2602.01965)；[Breaking the Static Graph: Context-Aware Traversal for Graph-Based RAG](https://aclanthology.org/2026.findings-acl.290/)（截至 2026-09-02）。下文「HippoRAG 2」指第一篇（Gutiérrez 等，OSU / UIUC，ICML 2025；arXiv 现行 v2 2025-06-19）；「CatRAG」指后两篇（Lau 等，Huawei HKRC / HKUST / CUHK-Shenzhen；arXiv v1 2026-02-02 为唯一版本，ACL Findings 2026 正式版改了副标题）。数字除特别注明外取自 arXiv 版。
 > **研究线**：架构思想（主）——开放知识图谱加个性化 PageRank（PPR）的记忆式检索、查询条件下的图遍历；评测字段（辅）——事实 / 联想 / 意义建构（sense-making）三类记忆任务，完整证据链指标 FCR 与 JSR。

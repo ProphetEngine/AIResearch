@@ -1,7 +1,7 @@
 ---
 date: 2026-09-22
 topic: 图谱检索GraphRAG
-title: "图谱检索：GraphRAG 社区摘要 + EraRAG 增量索引"
+title: "图谱检索：GraphRAG 社区摘要与 EraRAG 增量索引"
 lines: [架构思想, AI Infra]
 sources:
  - https://arxiv.org/abs/2404.16130
@@ -13,7 +13,7 @@ arxiv: ["2404.16130", "2506.20963"]
 archived: 2026-09-22
 ---
 
-# 图谱检索：GraphRAG 社区摘要 + EraRAG 增量索引
+# 图谱检索：GraphRAG 社区摘要与 EraRAG 增量索引
 
 > **主要来源**：[From Local to Global: A Graph RAG Approach to Query-Focused Summarization](https://arxiv.org/abs/2404.16130)；[EraRAG: Efficient and Incremental Retrieval Augmented Generation for Growing Corpora](https://arxiv.org/abs/2506.20963)（截至 2026-02-03）。下文「GraphRAG」指前者（Edge 等，Microsoft；首版 2024-04-24，现行 v2 2025-02-19）；「EraRAG」指后者（Zhang、Huang、Zhou 等；首版 2025-06-26，现行 v2 2025-07-04）。
 > **研究线**：架构思想（主）——实体图谱、层次社区摘要与全局 map-reduce 问答；AI Infra（辅）——语料增长时图索引的局部更新复杂度与 token、时间开销。
@@ -133,7 +133,7 @@ archived: 2026-09-22
 - **EraRAG 的「省 95%」**：这一说法出自摘要配图，正文给出的是一个数量级、57.6% token、77.5% 时间、相对 GraphRAG 两个数量级等具体数字，引用时应区分。
 - **计时口径**：EraRAG 的动态实验只计图构建时间，GraphRAG 的社区检测等预处理不计入。
 - **全局问题并非全面领先**：EraRAG 在抽象问答上与 GraphRAG、RAPTOR 互有胜负。
-- **开源实现与论文的差异**：GraphRAG 开源仓库的默认管线（实体类型、陈述提取开关、社区层级）可能与论文 v2 不同，本篇未跟踪。
+- **开源实现与论文的差异**：GraphRAG 开源仓库的默认管线（实体类型、陈述提取开关、社区层级）可能与论文 v2 不同，引用时以论文为准。
 - **待核实读图**：EraRAG 逐轮插入的准确率曲线（Fig.5）与 token、时间曲线（Fig.4）只取正文文字中的数字，未读图取点。
 
 ## 八、与相邻笔记的分工

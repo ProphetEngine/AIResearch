@@ -23,7 +23,7 @@ timezone: Asia/Shanghai (CST)
 
 > **主要来源**：[Gemini 4 Argon: Built to solve your hardest problems](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/)；[Gemini 4 Argon Model Card](https://deepmind.google/models/model-cards/gemini-4-argon/)；[Developing Gemini 4 Argon responsibly and safely](https://blog.google/innovation-and-ai/technology/safety-security/gemini-4-model-safety-security/)；[Gemini 4 Argon（Cloud 文档）](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon)；[Gemini 4 Argon: our next era of frontier intelligence](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)（首发）；[Fairwind Program](https://deepmind.google/fairwind-program/)（截至 2026-10-14）。下文「GA 博文」指 Introducing 页；「模型卡」指 DeepMind 网页版 Model Card；「安全博文」指 Developing responsibly 页；「Cloud 文档」指 Gemini Enterprise Agent Platform 模型页；「首发博文」指 2026-09-30 发布页；「Fairwind 页」指 Fairwind Program 官方页。完整 Safety & Security Report 仅有 PDF，正文挂安全博文与模型卡入口，不引 PDF 直链。
 > **研究线**：评测字段（官方绝对分与 harness 限定）· Fairwind / Cyber Permissive 分阶段放量 · 统一 1M 窗口与 introductory 价
-> **为何重要**：Argon 先经 Fairwind 向受信防御者放量，再于 2026-10-13 全球公开 GA，并配套网页模型卡与安全博文；公开版带护栏，另有 allowlist 的 Cyber Permissive 变体服务防御侧。
+> **意义**：Argon 先经 Fairwind 向受信防御者放量，再于 2026-10-13 全球公开 GA，并配套网页模型卡与安全博文；公开版带护栏，另有 allowlist 的 Cyber Permissive 变体服务防御侧。
 > **范围与相邻笔记**：
 > - ≠ [[GPT61Sol系统卡短报]]：本篇不写 Sol / DevDay；DeepSWE 等只引 Google 官方分与方法，不以 Sol 相对叙述覆盖 Argon。
 > - ≠ [[MiMoV26智能体强化学习短报]]：本篇不写 MiMo 的 RL batch / multi-harness / 开源环境专史；不把 MiMo 分与 Argon 拼成同一实验。
@@ -42,15 +42,15 @@ timezone: Asia/Shanghai (CST)
 
 | 项目 | 内容 | 出处 |
 |---|---|---|
-| 首发 | 首发博文 `datePublished` **2026-09-30T20:00:00Z**（≈ 上海 **2026-10-01 04:00**）；作者 Koray Kavukcuoglu | 首发博文 meta |
-| 公开 GA | GA 博文页眉 Oct 13, 2026；`datePublished` **2026-10-13T16:00:00+00:00**（≈ 上海 **2026-10-14 00:00**） | GA 博文 meta |
+| 首发 | 首发博文发布时间 **2026-09-30 20:00 UTC**（≈ 上海 **2026-10-01 04:00**）；作者 Koray Kavukcuoglu | 首发博文页面 |
+| 公开 GA | GA 博文页眉 Oct 13, 2026；发布时间 **2026-10-13 16:00 UTC**（≈ 上海 **2026-10-14 00:00**） | GA 博文页面 |
 | 定位 | Gemini 4 代 frontier 模型；强调复杂长程工作流：真实软件工程、企业知识工作（法律 / 金融等）、网络安全防御 | GA 博文；模型卡 |
 | GA 渠道 | 开发者：Gemini API paid tier（AI Studio、Android Studio）；Google AI Ultra：Antigravity、AI Studio；企业：Gemini for business、API、Antigravity；订阅用户：Gemini app、Search AI Mode（Ultra / Pro） | GA 博文 *Get started today* |
 | Fairwind | 继续向更多受信 cyber defenders 滚动扩容；公开版带护栏；无护栏防御能力经 allowlist 的 Cyber Permissive 提供（见第四节） | GA 博文；Cloud 文档 |
-| 预发布流程 | 首发时写明参与美政府自愿预发布模型访问流程 | 首发博文 |
+| 预发布流程 | 首发时写明参与美国政府自愿预发布模型访问流程 | 首发博文 |
 | 文档形态 | 网页 [Model Card](https://deepmind.google/models/model-cards/gemini-4-argon/)（Published **13 October 2026**）；安全博文为完整报告的网页入口；另有首发配套的 Model evaluation PDF（方法 + 结果） | 模型卡；安全博文 |
 
-- **内部使用索引**（各一句，细节见首发 / GA 博文）：量子算法子程序时空资源优化；机房侧 profiling 释放内存；大规模 C/C++→Rust 迁移；GA 阶段另索引 Chrome 架构重构、ADK、xTB、Gemma 推理加速等厂商自述案例，本短报不展开。
+- **内部使用索引**（细节见首发 / GA 博文）：量子算法子程序时空资源优化；机房侧 profiling 释放内存；大规模 C/C++→Rust 迁移；GA 阶段另索引 Chrome 架构重构、ADK、xTB、Gemma 推理加速等厂商自述案例。
 
 ## 二、规格与价
 
@@ -59,7 +59,7 @@ timezone: Asia/Shanghai (CST)
 | 统一窗口 | 合并 input+output 上限 **1,048,576** tokens（模型卡写作「combined input-output token context window of up to 1M」；Cloud 写作统一 **1,048,576**） | 模型卡 Inputs/Outputs；Cloud 文档 |
 | 与首发措辞差异 | 首发博文突出 **output** 上限 1M（相对此前 **64K**），主博文未单列统一 input 窗口；GA / 模型卡 / Cloud 改为统一 1M I/O | 首发博文；模型卡；Cloud |
 | Thinking levels | `LOW` / `MEDIUM`（默认）/ `HIGH`；设 `thinking_budget` 或 `thinking_level="MINIMAL"` 返回 HTTP 400 | Cloud 文档 |
-| 产品层差异（短报级） | 自定义 `temperature` / `top_p` / `top_k` **被忽略**；仅支持隐式缓存（最小 **6,144** tokens），不支持显式缓存；`GenerateContent` 可用 `continuation_token` 做 long decode | Cloud 文档 |
+| 产品层差异 | 自定义 `temperature` / `top_p` / `top_k` **被忽略**；仅支持隐式缓存（最小 **6,144** tokens），不支持显式缓存；`GenerateContent` 可用 `continuation_token` 做 long decode | Cloud 文档 |
 | Introductory 价 | 每百万 token：输入 **$2** / 输出 **$10**；缓存输入相对输入价 **95% off** | GA 博文脚注 1；与首发一致 |
 | Introductory 截止 | 至 **2026-11-30**；之后输入 **$4** / 输出 **$20**（每百万 token；适用于公开版 Argon） | GA 博文脚注 |
 | 公开价目 | [Gemini API 定价页](https://ai.google.dev/gemini-api/docs/pricing) 已挂 `gemini-4-argon`：Paid Tier 输入 **$2.00** through November 30, 2026 / **$4.00** starting December 1, 2026；输出 **$10.00** / **$20.00** 同期切换；页脚 Last updated **2026-10-13** UTC | 定价页 |
@@ -115,7 +115,7 @@ timezone: Asia/Shanghai (CST)
 | 区域 | `global` / `us` / `eu` | `global` / `us`（无 `eu`） |
 | 用途边界 | 通用 frontier | 防御向：漏洞发现、逆向、利用验证、补丁生成（Cloud 文档原句） |
 
-公开版带 cyber 护栏；受信防御侧「无 cyber 护栏」能力由 Cyber Permissive 承担，不再把公开 GA 写成 Fairwind 独家。
+公开版带 cyber 护栏；受信防御侧「无 cyber 护栏」能力由 Cyber Permissive 承担；公开 GA 版本与 Fairwind 受信访问并存。
 
 ## 五、与相邻笔记的分工
 
@@ -134,8 +134,8 @@ timezone: Asia/Shanghai (CST)
 - **知识截止**：模型卡写明 **March 2026**；部分领域可能更旧；另可能幻觉、偶发变慢或超时。
 - **安全报告形态**：完整 Safety & Security Report 仅 PDF、无独立 HTML 落地页；正文以安全博文与模型卡为入口，不挂 PDF 直链。
 - **模型卡活页**：模型卡写明 may be updated；本篇按 Published **13 October 2026** / Published: October 2026 引用。
-- **Fairwind 页措辞**：Fairwind 页仍写 partners 对 Gemini 4 Argon「独家访问」；与公开 GA 并存时，Cloud 文档以 Cyber Permissive allowlist 界定无护栏变体——两处表述并存，短报以 Cloud / GA 渠道表为准。
-- **评测口径**：非 Gemini 分多取自厂商自报 / 公开榜 / 系统卡；思考强度默认取各厂最高或可得最佳——短报不自造跨厂统一榜。ERQA **87%** 仅 GA 博文，不并入模型卡主表。
+- **Fairwind 页措辞**：Fairwind 页仍写 partners 对 Gemini 4 Argon「独家访问」；与公开 GA 并存时，Cloud 文档以 Cyber Permissive allowlist 界定无护栏变体——两处表述并存，本篇以 Cloud / GA 渠道表为准。
+- **评测口径**：非 Gemini 分多取自厂商自报 / 公开榜 / 系统卡；思考强度默认取各厂最高或可得最佳——本篇不自造跨厂统一榜。ERQA **87%** 仅 GA 博文，不并入模型卡主表。
 - **案例叙事**：GA / 首发博文中的工程与科研案例多为厂商自述，本短报只作索引。
 
 ## 七、延伸阅读
@@ -147,7 +147,7 @@ timezone: Asia/Shanghai (CST)
 
 | 类型 | 标题 | 来源 / 日期 | URL |
 |---|---|---|---|
-| GA 博文 | Gemini 4 Argon: Built to solve your hardest problems | Google，`datePublished` 2026-10-13T16:00:00+00:00 | https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/ |
+| GA 博文 | Gemini 4 Argon: Built to solve your hardest problems | Google，2026-10-13 16:00 UTC | https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/ |
 | 开发者博文 | Gemini 4 Argon is now available for developers | Google，页眉 Oct 13, 2026 | https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-4-argon/ |
 | 模型卡（网页） | Gemini 4 Argon Model Card | DeepMind，Published 13 October 2026 | https://deepmind.google/models/model-cards/gemini-4-argon/ |
 | 安全博文 | Developing Gemini 4 Argon responsibly and safely | Google，页眉 Oct 13, 2026 | https://blog.google/innovation-and-ai/technology/safety-security/gemini-4-model-safety-security/ |
@@ -155,5 +155,5 @@ timezone: Asia/Shanghai (CST)
 | 方法入口 | gemini-4-argon evals methodology | DeepMind（网页） | https://deepmind.google/models/evals-methodology/gemini-4-argon |
 | Fairwind | Fairwind Program | Google DeepMind（页面未显示更新日期，按规范不计入截至） | https://deepmind.google/fairwind-program/ |
 | 定价 | Gemini API pricing | Google AI for Developers；Last updated 2026-10-13 UTC | https://ai.google.dev/gemini-api/docs/pricing |
-| 首发博文 | Gemini 4 Argon: our next era of frontier intelligence | Google，`datePublished` 2026-09-30T20:00:00Z | https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/ |
+| 首发博文 | Gemini 4 Argon: our next era of frontier intelligence | Google，2026-09-30 20:00 UTC | https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/ |
 | 首发评测 PDF | Gemini 4 Argon Model evaluation | DeepMind；方法 September 2026，Results as of October 2026 | https://storage.googleapis.com/deepmind-media/gemini/gemini_4_argon_model_evaluation.pdf |

@@ -1,5 +1,5 @@
 ---
-title: "Formal verification for LLM：VeriCoT + AlphaProof"
+title: "形式化验证与 LLM：VeriCoT 与 AlphaProof"
 topic: 形式化验证与LLM
 date: 2026-09-22
 lines: [架构思想, 数学原理]
@@ -13,7 +13,7 @@ related: ["过程奖励模型PRM谱系", "可验证过程监督", "过程可验�
 archived: 2026-09-22
 ---
 
-# Formal verification for LLM：VeriCoT + AlphaProof
+# 形式化验证与 LLM：VeriCoT 与 AlphaProof
 
 > **主要来源**：[VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks](https://arxiv.org/abs/2511.04662)（Feng、Weir、Bostrom 等，宾夕法尼亚大学、亚马逊云科技，v1 2025-11-06，以下简称 VeriCoT）；[Olympiad-level formal mathematical reasoning with reinforcement learning](https://doi.org/10.1038/s41586-025-09833-y)（Hubert、Mehta、Sartran 等，Google DeepMind，Nature 第 651 卷，2025-11-12 在线发表，2026-03-19 刊期，以下简称 AlphaProof）（截至 2026-08-05）。
 > **研究线**：架构思想（主：外部形式系统接在推理的哪个位置、各自保证什么）；数学原理（辅：一阶逻辑的蕴涵判定，Lean 证明搜索中的状态、动作与累计奖励）
