@@ -192,7 +192,7 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 ### 5.3 局限与争议
 
 - Megatron 后续开源栈（Megatron-Core、Megatron-LM 新版本）中的 **序列并行、上下文并行、分布式优化器** 等：本笔记以 1909.08053 正文为准，未逐项对照 2024+ 代码默认策略。
-- FlashAttention-3 / 更新内核在 Hopper/Blackwell 上的占用率与精度路径：未纳入本次 PDF 精读。
+- FlashAttention-3 / 更新内核在 Hopper/Blackwell 上的占用率与精度路径：不在本篇范围内。
 - vLLM 生产版本相对论文的调度器、前缀缓存、多模态 KV：论文保证的是 PagedAttention 思想与当时评测倍率。
 - V3 报告中 DualPipe 气泡公式在 Table 2 的排版（PDF 提取有折行）；引用气泡复杂度时建议回看原表而非仅依赖文本提取。
 - 硬件建议章（V3 §3.5）对厂商通信 / 低精度原语的诉求：属作者建议，非第三方实测。

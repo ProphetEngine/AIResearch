@@ -50,7 +50,7 @@ archived: 2026-09-22
 
 **全文说明：** Nature / Addendum 全文 PDF 需 idp.nature.com 登录，未读。笔记内凡写「Nature 主张」均指着陆页摘要 + Change history；架构步骤以 arXiv 为准，并标明预印本≠期刊版可能存在差异。
 
-**一句话抓手：** AlphaChip 把 **宏布局** 做成「可预训练的序贯放置游戏」；ChipExpert 把 **IC 知识问答** 做成「CPT→SFT→DPO→RAG」专科 LLM——前者争的是 **PPA / 复现**，后者争的是 **领域 QA 分数**，二者都不是 GPU/TPU **选型**问题。
+**要点：** AlphaChip 把 **宏布局** 做成「可预训练的序贯放置游戏」；ChipExpert 把 **IC 知识问答** 做成「CPT→SFT→DPO→RAG」专科 LLM——前者争的是 **PPA / 复现**，后者争的是 **领域 QA 分数**，二者都不是 GPU/TPU **选型**问题。
 
 ## 二、议题边界：设计算法 ≠ 硬件选型
 

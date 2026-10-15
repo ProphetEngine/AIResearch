@@ -30,7 +30,7 @@ archived: 2026-09-22
 | **对照基线** | Kwon et al., *Efficient Memory Management for Large Language Model Serving with PagedAttention*（vLLM）→ `https://arxiv.org/abs/2309.06180`；笔记交叉 [[AI基础设施总览]] §4、[[推理引擎生态]] 3.3 节 |
 | **本篇不覆盖** | SGLang Radix / TRT-LLM 选型轴；KV 量化通史（→ [[KV缓存量化与压缩]]）；投机算法族正文（→ [[投机解码原理与发展脉络]]） |
 
-**一句话抓手：** 自回归生成使单请求必须跑 **多次 iteration**（每步产出一 token）；若调度仍锁在 **请求级 batch**，早结束的请求无法立刻返回、晚到的请求必须等整批结束——Orca 把调度粒度改到 **单次 iteration**，并用 **selective batching** 让「已处理 token 数不同」的请求仍能共享非 Attention 算子的批执行。
+**要点：** 自回归生成使单请求必须跑 **多次 iteration**（每步产出一 token）；若调度仍锁在 **请求级 batch**，早结束的请求无法立刻返回、晚到的请求必须等整批结束——Orca 把调度粒度改到 **单次 iteration**，并用 **selective batching** 让「已处理 token 数不同」的请求仍能共享非 Attention 算子的批执行。
 
 ## 二、请求级 vs iteration-level（理论边界）
 
@@ -153,7 +153,7 @@ Iteration-level 会自然拼出 **任意集合** 的请求：各自已处理 tok
  Orca 定义的是 **已跑 iteration 数** 上的 FCFS，不是「后到者不得先返回」；输出更短的后到请求仍可更早结束回包（§4.2）。
 
 7. **「`max_tokens` 预留已解决 KV 显存」**
- 预留避免死锁，但把 **未知输出长度** 转成 **保守占坑**；vLLM 用 Oracle/Pow2/Max 三种复现暴露该边界。真正的块级共享 / 近零碎片是 PagedAttention 要解决的问题（见 [[AI基础设施总览]] §4），不是 Orca 调度定理的推论。
+ 预留避免死锁，但把 **未知输出长度** 转成 **保守预留**；vLLM 用 Oracle/Pow2/Max 三种复现暴露该边界。真正的块级共享 / 近零碎片是 PagedAttention 要解决的问题（见 [[AI基础设施总览]] §4），不是 Orca 调度定理的推论。
 
 8. **「Orca 论文写了 continuous batching 专章 / PD disaggregation API」**
  正文关键词是 **iteration-level scheduling** 与 **selective batching**；PD 产品语汇与 continuous batching 营销语汇属后续生态，交叉时必须降级为对照而非伪引 Orca。

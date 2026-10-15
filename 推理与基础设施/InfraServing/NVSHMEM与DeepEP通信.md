@@ -127,7 +127,7 @@ DeepEP 并不把工作表达成 NVSHMEM 集合或通用 RMA 全家桶：NVSHMEM 
 
 ## 六、DeepEP V2：后端换成 NCCL GIN
 
-主文明说只分析 V1，V2 基于 NCCL GIN、不在其范围内（主文 §VIII）。以下只记 DeepEP 现版 README 能核到的设计变化（[README](https://github.com/deepseek-ai/DeepEP/blob/main/README.md)「News」「New features」「Notes」「Requirements」各节）：
+主文明说只分析 V1，V2 基于 NCCL GIN、不在其范围内（主文 §VIII）。以下只记 DeepEP 现版 README 写明的设计变化（[README](https://github.com/deepseek-ai/DeepEP/blob/main/README.md)「News」「New features」「Notes」「Requirements」各节）：
 
 - **后端**：V2 是专家并行的整体重构，通信后端改为轻量的 NCCL GIN，提供设备侧通信 API，并可复用已有的 NCCL communicator；README 要求 NCCL 2.32.3 及以上。
 - **统一 buffer**：高吞吐与低延迟两类接口合并为同一个 `EPBuffer`，并为分组专家 GEMM 提供展开布局。
