@@ -142,7 +142,7 @@ Pro 主表用 SWE-Agent 与 2025-09 的模型切片；Pro Verified 用 AgentComp
 1. **语言覆盖不均**：只有 Python、JS/TS、Go，缺 Java、C++ 等；人工增广成本高，难以全自动扩展（Pro Limitations）。
 2. **默认无歧义**：三件套全给的设定不同于真实中描述不足的 issue。
 3. **摘要数字不一致**：Scale Labs 网页摘要写 GPT-5「23.3%」「below 25%」，来自 Pro Table 5 的 2 美元预算设定；arXiv v2 摘要写「below 45%」。引用时以 arXiv v2 为准，网页摘要可能滞后。
-4. **图上读数**：Pro Verified Figure 1 中各模型在 Pro 与 Verified 上的柱高（如 Kimi-K3 89.06 → 62.93）为读图值，待核实。
+4. **图上读数**：Pro Verified Figure 1 中各模型在 Pro 与 Verified 上的柱高（如 Kimi-K3 89.06 → 62.93）为读图值，截至 2026-09-22 未见官方数值确认。
 5. **留出集未公开对照**：Held-out 858 题的结果与公开集的差距尚无公开数据。
 
 ## 八、延伸阅读

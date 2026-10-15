@@ -1,5 +1,5 @@
 ---
-title: "Privacy-preserving inference：GPU/CPU TEE 机密计算（信任边界 × CC tax）"
+title: "隐私保护推理：GPU/CPU TEE 机密计算（信任边界与机密计算开销）"
 topic: TEE机密推理
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -14,7 +14,7 @@ timezone: Asia/Shanghai (CST)
 archived: 2026-09-22
 ---
 
-# Privacy-preserving inference：GPU/CPU TEE 机密计算（信任边界 × CC tax）
+# 隐私保护推理：GPU/CPU TEE 机密计算（信任边界与机密计算开销）
 
 > **主要来源**：[Benchmarking Confidential Computing Performance on NVIDIA Blackwell GPUs](https://arxiv.org/abs/2608.26575)（Asad、Grunseid，Confidential.ai，v2 2026-09-01，以下简称 Blackwell 文）；[EnclaveX: End-to-End Confidential AI with CPU/GPU TEEs](https://arxiv.org/abs/2606.31408)（Schambach、Le、Arnautov、Fetzer，德累斯顿工业大学、STACKIT、Scontain，v1 2026-06-30）（截至 2026-09-01）。
 > **研究线**：架构思想（主：CPU 可信执行环境、GPU 机密计算模式与应用层之间的信任边界，以及远程证明链）；评测字段（辅：机密计算带来的吞吐与时延开销、证明延迟）

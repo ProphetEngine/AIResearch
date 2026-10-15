@@ -1,5 +1,5 @@
 ---
-title: "Sparse MoE 服务系统：MegaScale-Infer + UltraEP（≠ MoE 架构通史 / ≠ DeepEP 通信）"
+title: "稀疏 MoE 服务系统：MegaScale-Infer 与 UltraEP"
 topic: MegaScaleInfer与UltraEP
 date: 2026-09-22
 lines: [AI Infra, 服务架构]
@@ -23,7 +23,7 @@ retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# Sparse MoE 服务系统：MegaScale-Infer + UltraEP（≠ MoE 架构通史 / ≠ DeepEP 通信）
+# 稀疏 MoE 服务系统：MegaScale-Infer 与 UltraEP
 
 > **主要来源**：[MegaScale-Infer（Zhu, Jiang, Jin 等，ByteDance Seed / PKU）](https://arxiv.org/abs/2504.02263)，v4 2025-07-26；[UltraEP（Wei, Jin, Dai 等，PKU / 小红书 / 上海 AI Lab 等）](https://arxiv.org/abs/2606.04101)，v3 2026-06-18（截至 2026-09-22）
 > **研究线**：AI Infra / 服务架构（主）——稀疏 MoE 在服务与训练中如何摆放注意力与专家、如何实时均衡负载；文内吞吐与失衡字段（辅）

@@ -1,5 +1,5 @@
 ---
-title: "Code agents harness 史线：SWE-agent → OpenHands SDK"
+title: "代码智能体 Harness 史线：SWE-agent → OpenHands SDK"
 topic: 代码智能体Harness史线
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -16,7 +16,7 @@ related:
 archived: 2026-09-22
 ---
 
-# Code agents harness 史线：SWE-agent → OpenHands SDK
+# 代码智能体 Harness 史线：SWE-agent → OpenHands SDK
 
 > **主题立轴**：相对「旗舰工具环 / 长程产品叙述」与「SWE-bench 只作文评入口」，本篇专立 **Agent–Computer Interface（ACI）/ 沙箱 harness / 可组合生产 SDK** 子史：决定编码智能体能否**复现实验、隔离执行、上生产**。
 > **读者向范围**：架构思想为主，AI Infra（沙箱 / 远程 runtime）为辅。谱系两站：SWE-agent（LM 友好 ACI + Docker 可复现）→ OpenHands Software Agent SDK（可选沙箱、事件源状态、四包可组合、本地→远程同 API）。

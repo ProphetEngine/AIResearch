@@ -1,5 +1,5 @@
 ---
-title: "Continuous batching / iteration-level scheduling 理论边界（Orca 专线）"
+title: "连续批处理与迭代级调度的理论边界（Orca）"
 topic: 连续批处理与Orca
 date: 2026-09-22
 lines: [AI Infra]
@@ -12,7 +12,7 @@ arxiv_cross: ["2309.06180"]
 archived: 2026-09-22
 ---
 
-# Continuous batching / iteration-level scheduling 理论边界（Orca 专线）
+# 连续批处理与迭代级调度的理论边界（Orca）
 
 > **定位**：Infra 子题——划清 **请求级 vs iteration-level** 的吞吐/延迟边界，以及与 **Prefill–Decode 分离 / 投机解码** 的正交关系。
 > **为何重要**：请求级调度下，早结束的请求回不了包、晚到的请求要等整批结束。Orca 把调度粒度改到单次 iteration，在 175B、相近归一化延迟下相对 FasterTransformer 吞吐从 0.185 提到 6.81 req/s（36.9×，合成异构负载）。vLLM 论文已把这种 fine-grained batching 当作既有背景，业界口语称 continuous batching。

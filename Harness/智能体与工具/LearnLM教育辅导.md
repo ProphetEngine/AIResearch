@@ -1,5 +1,5 @@
 ---
-title: "Education tutors：LearnLM 教学法对齐与辅导交互"
+title: "教育辅导：LearnLM 教学法对齐与辅导交互"
 topic: LearnLM教育辅导
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -12,7 +12,7 @@ related: ["MedGemma医学专科", "对齐脉络RLHF与偏好优化", "模型卡�
 archived: 2026-09-22
 ---
 
-# Education tutors：LearnLM（教学法对齐 / 辅导交互）
+# 教育辅导：LearnLM 教学法对齐与辅导交互
 
 > **定位**：教育辅导主题轴——「教学法对齐 / 辅导交互」专科线。主文是 **LearnLM（2412.16429）**：把教育学行为改写成 **pedagogical instruction following（教学法系统指令遵循）**；对照早期评测驱动报告 **2407.12687**（LearnLM-Tutor / Gemini 1.0 微调）。意义在于把「好导师」从写死在权重里的固定人格，改成可由教师或开发者用系统指令指定、并能与通用后训练共训的能力；文内称其部分改进已进入 Gemini 2.0。
 > **研究线**：**架构思想（主）**——不锁死单一教学法定义，而用 System Instructions 条件化辅导行为 + 与 Gemini 后训练共训；**评测字段（辅）**——场景化多轮辅导、教学法量尺、专家偏好。

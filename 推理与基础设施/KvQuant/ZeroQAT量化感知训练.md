@@ -1,5 +1,5 @@
 ---
-title: "Quantization-aware training：ZeroQAT（端侧 QAT @ 推理成本级）"
+title: "量化感知训练：ZeroQAT（推理级成本的端侧 QAT）"
 topic: ZeroQAT量化感知训练
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -11,7 +11,7 @@ related: ["SpinQuant与ARCQuant量化", "KV缓存量化与压缩", "MobileLLM端
 archived: 2026-09-22
 ---
 
-# Quantization-aware training：ZeroQAT（端侧 QAT @ 推理成本级）
+# 量化感知训练：ZeroQAT（推理级成本的端侧 QAT）
 
 > **主要来源**：[End-to-End On-Device Quantization-Aware Training for LLMs at Inference Cost](https://arxiv.org/abs/2509.00031)（Tan、Song 等，佐治亚大学、北得克萨斯大学、东北大学等，v2 2025-09-29，以下简称 ZeroQAT）（截至 2026-08-14）。
 > **研究线**：架构思想（主：用零阶梯度估计代替反向传播，让量化感知训练绕开直通估计器，端到端联合训练模型与量化参数）；评测字段（辅：W2A16、W4A4 等设定下的困惑度与下游准确率，A100 与手机上的内存和时延）

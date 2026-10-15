@@ -1,5 +1,5 @@
 ---
-title: AI Infra「势」：训练并行、推理 serving、量化与硬件协同
+title: "AI 基础设施总览：训练并行、推理服务、量化与硬件协同"
 topic: AI基础设施总览
 date: 2026-09-22
 lines: [AI Infra, 架构思想]
@@ -7,7 +7,7 @@ status: archived
 archived: 2026-09-22
 ---
 
-# AI Infra「势」：训练并行、推理 serving、量化与硬件协同
+# AI 基础设施总览：训练并行、推理服务、量化与硬件协同
 
 入口论文 / 报告：
 
