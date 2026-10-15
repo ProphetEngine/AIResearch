@@ -1,5 +1,5 @@
 ---
-title: "Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni"
+title: "原生音频 / 全模态（Omni）增量：Qwen3-Omni → Qwen3.5-Omni"
 topic: QwenOmni音视频原生
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -12,7 +12,7 @@ related: ["SpeechLLM语音语言模型", "多模态架构脉络", "Qwen3技术�
 archived: 2026-09-22
 ---
 
-# Audio-native / Omni 增量：Qwen3-Omni → Qwen3.5-Omni
+# 原生音频 / 全模态（Omni）增量：Qwen3-Omni → Qwen3.5-Omni
 
 > **主要来源**：[Qwen3-Omni Technical Report](https://arxiv.org/abs/2509.17765)（Qwen Team，v1 2025-09-22）；[Qwen3.5-Omni Technical Report](https://arxiv.org/abs/2604.15804)（Qwen Team，v1 2026-04-17，v2 2026-04-21）（截至 2026-07-17）。
 > **研究线**：架构思想（主：Thinker–Talker 双 MoE、自研音频编码器 AuT、多码本流式语音合成、ARIA 交织对齐）；评测字段（辅：音视频基准、VoiceBench、首包延迟、与同尺寸单模态模型的对照）

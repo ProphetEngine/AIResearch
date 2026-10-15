@@ -1,5 +1,5 @@
 ---
-title: On-Policy Distillation（OPD）范式
+title: "在策略蒸馏（OPD）范式"
 topic: OnPolicy蒸馏OPD范式
 date: 2026-09-25
 lines: [架构思想, 数学原理]
@@ -29,7 +29,7 @@ timezone: Asia/Shanghai (CST)
 archived: 2026-09-28
 ---
 
-# On-Policy Distillation（OPD）范式
+# 在策略蒸馏（OPD）范式
 
 > **主要来源**：[A Survey of On-Policy Distillation for Large Language Models](https://arxiv.org/abs/2604.00626)；[On-Policy Distillation](https://thinkingmachines.ai/blog/on-policy-distillation/)（Thinking Machines 博文）；[On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes](https://arxiv.org/abs/2306.13649)；[MiniLLM: On-Policy Distillation of Large Language Models](https://arxiv.org/abs/2306.08543)；[Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531)（截至 2026-08-07）。综述为 Song 与 Zheng（腾讯）所作，首版 2026-04-01，现行 v4 2026-06-18；博文作者 Kevin Lu 等，2025-10-27 发布；GKD（Agarwal 等）与 MiniLLM（Gu 等）均为 ICLR 2024 论文，首版分别为 2023-06-23 与 2023-06-14。
 > **研究线**：架构思想（主）——轨迹由谁采样、教师信号从哪来、训练动态如何稳住；数学原理（辅）——$f$-散度族的选择与 RL 式目标。

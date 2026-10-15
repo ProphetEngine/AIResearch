@@ -1,5 +1,5 @@
 ---
-title: "Speech translation / simultaneous：SeamlessM4T 及流式同传族"
+title: "语音翻译与同传：SeamlessM4T 及流式同传族"
 topic: SeamlessM4T语音翻译
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -16,7 +16,7 @@ timezone: Asia/Shanghai (CST)
 archived: 2026-09-22
 ---
 
-# Speech translation / simultaneous：SeamlessM4T 及流式同传族
+# 语音翻译与同传：SeamlessM4T 及流式同传族
 
 > **主要来源**：[SeamlessM4T: Massively Multilingual & Multimodal Machine Translation](https://arxiv.org/abs/2308.11596)（Seamless Communication，Meta，v1 2023-08-22，v3 2023-10-25）；Nature 定稿 [Joint speech and text machine translation for up to 100 languages](https://doi.org/10.1038/s41586-024-08359-z)（2025-01-15 在线发表）；[Seamless: Multilingual Expressive and Streaming Speech Translation](https://arxiv.org/abs/2312.05187)（v1 2023-12-08）（截至 2026-04-21）。
 > **研究线**：架构思想（主：自监督语音编码器 → 多任务到文本 → 两遍解码出语音单元 → 声码器；流式同传的单调注意力策略）；评测字段（辅：BLEU、ASR-BLEU、延迟指标）

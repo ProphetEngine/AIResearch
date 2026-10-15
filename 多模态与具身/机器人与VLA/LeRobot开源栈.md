@@ -1,5 +1,5 @@
 ---
-title: "Open robotics stacks 增量：LeRobot"
+title: "开源机器人软件栈增量：LeRobot"
 topic: LeRobot开源栈
 date: 2026-09-22
 lines: [架构思想]
@@ -12,7 +12,7 @@ related: ["视觉语言动作谱系", "代码智能体Harness史线"]
 archived: 2026-09-22
 ---
 
-# Open robotics stacks 增量：LeRobot
+# 开源机器人软件栈增量：LeRobot
 
 > **定位**：开源机器人学习栈横切——在 **[[视觉语言动作谱系]]**（VLA 策略谱系：RT-2 → OpenVLA → π₀）之上，补一条 **开源端到端机器人学习栈 + 数据集标准** 增量轴；主锚为 Hugging Face **LeRobot**（arXiv **2602.22818**，ICLR 2026），对照锚为 **Open X-Embodiment（OXE）** 数据集仓（arXiv **2310.08864**）。
 > **研究线**：**架构思想（主）**——垂直集成（middleware → 数据 → 算法 → 异步推理）；**数据集标准（辅）**——`LeRobotDataset` vs OXE 的 **RLDS**。
@@ -29,7 +29,7 @@ archived: 2026-09-22
 | **主锚** | Cadene et al., *LeRobot: An Open-Source Library for End-to-End Robot Learning* | arXiv:**2602.22818v1** \[cs.RO\] **26 Feb 2026**（ICLR 2026）；`https://arxiv.org/abs/2602.22818`（**20** 页） | 开源端到端栈：硬件 middleware、数据集、SOTA 算法参考实现、异步推理 |
 | **对照锚** | Open X-Embodiment Collaboration, *Open X-Embodiment: Robotic Learning Datasets and RT-X Models* | arXiv:**2310.08864v9** \[cs.RO\] **14 May 2025**；`https://arxiv.org/abs/2310.08864`（**12** 页）；项目页 https://robotics-transformer-x.github.io/ | **数据集标准 / 跨具身仓**：22 embodiments、RLDS；RT-X 仅作「仓上模型」存在性，**不**展开策略 |
 
-**一句话抓手：** [[视觉语言动作谱系]] 回答「**策略怎么把观测变成动作**」；本篇回答「**开源社区如何用一套库把硬件控制、数据格式、训练/部署串成可复现栈**」——LeRobot 是垂直集成，OXE 是更早的跨具身 **数据集聚合标准**。
+**要点：** [[视觉语言动作谱系]] 回答「**策略怎么把观测变成动作**」；本篇回答「**开源社区如何用一套库把硬件控制、数据格式、训练/部署串成可复现栈**」——LeRobot 是垂直集成，OXE 是更早的跨具身 **数据集聚合标准**。
 
 ## 二、议题边界：相对 [[视觉语言动作谱系]] 的增量轴
 

@@ -1,5 +1,5 @@
 ---
-title: "World models 入门：V-JEPA 2 与非生成式表征预测"
+title: "世界模型入门：V-JEPA 2 与非生成式表征预测"
 topic: 世界模型与VJEPA
 date: 2026-09-22
 lines: [架构思想]
@@ -12,7 +12,7 @@ related: ["视觉语言动作谱系", "MatrixGame与Cosmos", "视频生成模型
 archived: 2026-09-22
 ---
 
-# World models 入门：V-JEPA 2 与非生成式表征预测
+# 世界模型入门：V-JEPA 2 与非生成式表征预测
 
 > **主要来源**：[V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning](https://arxiv.org/abs/2506.09985)（Assran 等，Meta FAIR，v1 2025-06-11）；[Introducing the V-JEPA 2 world model and new benchmarks for physical reasoning](https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/)（Meta 博文，2025-06-11）（截至 2026-04-24）。
 > **研究线**：架构思想（主：在表征空间做掩码预测，先用无动作视频预训练，再用少量机器人数据学动作条件动力学）

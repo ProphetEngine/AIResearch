@@ -1,5 +1,5 @@
 ---
-title: "Multimodal reasoning benchmarks：MMMU → MMMU-Pro"
+title: "多模态推理基准：MMMU → MMMU-Pro"
 topic: MMMU多模态推理基准
 date: 2026-09-22
 lines: [评测字段, 架构思想]
@@ -15,7 +15,7 @@ related: ["多模态架构脉络", "评测与排行榜可靠性", "评测数据�
 archived: 2026-09-22
 ---
 
-# Multimodal reasoning benchmarks：MMMU → MMMU-Pro
+# 多模态推理基准：MMMU → MMMU-Pro
 
 > **定位**：专家级多学科多模态推理评测 切片——主轴是评测史 **「文本捷径可破解 → 视觉必要」**，不是多模态预训练通史。
 > **研究线**：**评测字段（主）**——MMMU 规模/学科/模态协议 → MMMU-Pro 三步加固（滤文本可解、扩选项、Vision-only 截图）；**架构思想（辅）**——分数下降对「真多模态理解」的含义（感知→跨模态整合→推理）。
@@ -33,7 +33,7 @@ archived: 2026-09-22
 | **主文 B′（一手 · ACL 相机就绪）** | 同上题名；ACL 2025 Long | https://aclanthology.org/2025.acl-long.736/ · [pdf](https://aclanthology.org/2025.acl-long.736.pdf)；（**53** 页 A4；页码 **15134–15186**） | 与 arXiv v3 同题；本篇数字以 ACL Table 1 / Fig. 1–7 为主核对，arXiv 作 URL 备链 |
 | **榜 / 代码入口（文内）** | https://mmmu-benchmark.github.io/ · `#leaderboard` | live 更新；GitHub `MMMU-Benchmark/MMMU` | 只作入口；**不**用未核对手写记忆填当期分数 |
 
-**一句话抓手：**
+**要点：**
 - **MMMU**：把「Expert AGI 监控」落到 **大学级多学科交错图文题**（11.5K；6 学科 / 30 科 / 183 子领域）；GPT-4V test **55.7%**，文本-only GPT-4 **33.8%**——但后文证明部分题仍可被文本捷径啃。
 - **MMMU-Pro**：三步加压后，相对 MMMU Val 的模型掉分约 **16.8–26.9** pp；正式 overall = **Standard(10 opts) 与 Vision 的平均**；Vision 设定逼模型「同时看与读」。
 

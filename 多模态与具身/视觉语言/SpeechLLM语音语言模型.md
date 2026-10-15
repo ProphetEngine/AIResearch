@@ -1,5 +1,5 @@
 ---
-title: "Speech-LLM（语音-语言模型）深读：以 Qwen2-Audio 为锚"
+title: "语音-语言模型（Speech-LLM）深读：以 Qwen2-Audio 为锚"
 topic: SpeechLLM语音语言模型
 date: 2026-09-22
 lines: [架构思想]
@@ -12,7 +12,7 @@ related: ["多模态架构脉络", "对齐脉络RLHF与偏好优化", "QwenOmni�
 archived: 2026-09-22
 ---
 
-# Speech-LLM（语音-语言模型）深读：以 Qwen2-Audio 为锚
+# 语音-语言模型（Speech-LLM）深读：以 Qwen2-Audio 为锚
 
 > **主要来源**：[Qwen2-Audio Technical Report](https://arxiv.org/abs/2407.10759)（Qwen Team，阿里巴巴，v1 2024-07-15）；[Qwen2-Audio: Chat with Your Voice!](https://qwenlm.github.io/blog/qwen2-audio/)（Qwen 官方博文，2024-08-09）（截至 2026-07-17）。
 > **研究线**：架构思想（音频编码器的连续特征接入 LLM、只输出文本）
