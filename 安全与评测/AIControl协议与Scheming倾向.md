@@ -1,5 +1,5 @@
 ---
-title: "AI Control 协议与 scheming 倾向"
+title: "AI Control 协议与策略性欺瞒（scheming）倾向"
 topic: AIControl协议与Scheming倾向
 date: 2026-09-24
 lines: [架构思想, 评测字段]
@@ -15,7 +15,7 @@ timezone: Asia/Shanghai (CST)
 archived: 2026-09-24
 ---
 
-# AI Control 协议与 scheming 倾向
+# AI Control 协议与策略性欺瞒（scheming）倾向
 
 > **主要来源**：[AI Control: Improving Safety Despite Intentional Subversion](https://arxiv.org/abs/2312.06942)；[Evaluating and Understanding Scheming Propensity in LLM Agents](https://arxiv.org/abs/2603.01608)；[ControlArena](https://control-arena.aisi.org.uk/)（截至 2026-09-24）。下文「AI Control」指 Greenblatt 等的方法论文，「Hopman 等」指倾向评测论文。
 > **研究线**：架构思想（主）——资源三分、蓝红控制评测、micro / macro 协议；评测协议（辅）——safety–usefulness 前沿、scheming 倾向的激励分解与按配置报告。

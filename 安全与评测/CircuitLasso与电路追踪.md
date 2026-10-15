@@ -1,5 +1,5 @@
 ---
-title: "可解释电路新方法：CircuitLasso + Anthropic Circuit Tracing（≠ RepE）"
+title: "可解释电路新方法：CircuitLasso 与 Anthropic Circuit Tracing（区别于表征工程 RepE）"
 topic: CircuitLasso与电路追踪
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -18,7 +18,7 @@ retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# 可解释电路新方法：CircuitLasso + Anthropic Circuit Tracing（≠ RepE）
+# 可解释电路新方法：CircuitLasso 与 Anthropic Circuit Tracing（区别于表征工程 RepE）
 
 > **主要来源**：[Scalable Circuit Learning for Interpreting Large Language Models](https://arxiv.org/abs/2606.16939)；[Circuit Tracing: Revealing Computational Graphs in Language Models](https://transformer-circuits.pub/2025/attribution-graphs/methods.html)；[On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html)（截至 2026-09-22）。下文「CircuitLasso §x」指 Yin 等的论文，「Circuit Tracing」「Biology」指 Anthropic 的两篇 HTML 文章。
 > **研究线**：架构思想与方法接口（主）——观测式稀疏回归 vs 替换模型上的线性归因；干预 faithfulness 字段（辅）——InterpBench SHD 与墙钟、CoLA faithfulness / completeness、CLT 重构与 L0、影响–消融相关、扰动一致性。
