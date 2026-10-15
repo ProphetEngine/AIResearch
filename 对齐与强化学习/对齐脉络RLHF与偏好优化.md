@@ -13,7 +13,7 @@ archived: 2026-09-22
 > - InstructGPT / RLHF：Ouyang et al., *Training language models to follow instructions with human feedback* (arXiv:2203.02155)
 > - Constitutional AI / RLAIF：Bai et al., *Constitutional AI: Harmlessness from AI Feedback* (arXiv:2212.08073)；Anthropic 介绍页同日发布
 > - DPO：Rafailov et al., *Direct Preference Optimization: Your Language Model is Secretly a Reward Model* (arXiv:2305.18290, NeurIPS 2023)
-> 本笔记只据已读 PDF / 介绍页写要点；未在原文中读到的奖励模型层内结构细节、未核对的实验分一律标「待核实」或不写。
+> 本篇要点依据已读 PDF 与介绍页；原文未写到的奖励模型层内结构细节、未经核对的实验分数，本篇不写。
 
 ## 一、为何需要对齐流水线（基座 → 助手）
 
@@ -63,7 +63,7 @@ InstructGPT 明确说他们做的是 **fine-tuning approaches**，用 RLHF 把 G
 - **RL 设定**：环境是 bandit——随机抽客户提示，模型回一条，RM 给奖励后 episode 结束；另加 **per-token KL** 相对 SFT，减轻对 RM 的过优化；value function 从 RM 初始化。
 - **PPO-ptx**：把预训练梯度混进 PPO，缓解公开 NLP 基准上的「alignment tax」；InstructGPT 在文中默认指 PPO-ptx。
 
-主结果叙事（摘要 / §1，非本笔记复现）：1.3B InstructGPT 输出在其 prompt 分布上可被偏好于 175B GPT-3；真实性提升、毒性有小幅改善；偏见相关基准未必改善；RLHF 可能带来公开基准回退，可用预训练混合缓解。
+主结果叙事（摘要 / §1，非本篇复现）：1.3B InstructGPT 输出在其 prompt 分布上可被偏好于 175B GPT-3；真实性提升、毒性有小幅改善；偏见相关基准未必改善；RLHF 可能带来公开基准回退，可用预训练混合缓解。
 
 **架构直觉：** RLHF 把「人类相对偏好」压成一个**可打分的 RM**，再把「跟指令」建成**对 RM 的受限优化**——流水线长、组件多（SFT / RM / 策略 / 采样 / PPO），但职责清晰。
 
@@ -163,7 +163,7 @@ $$
 \;
 \mathbb{E}_{x\sim D,\,y\sim\pi_\theta(\cdot|x)}
 \bigl[r_\phi(x,y)\bigr]
-\beta\,
+-\beta\,
 D_{\mathrm{KL}}\bigl(\pi_\theta(\cdot|x)\,\|\,\pi_{\mathrm{ref}}(\cdot|x)\bigr).
 $$
 
@@ -209,7 +209,7 @@ L_{\mathrm{DPO}}(\pi_\theta;\pi_{\mathrm{ref}})
 \log\sigma
 \Biggl(
 \beta\log\frac{\pi_\theta(y_w|x)}{\pi_{\mathrm{ref}}(y_w|x)}
-\beta\log\frac{\pi_\theta(y_l|x)}{\pi_{\mathrm{ref}}(y_l|x)}
+-\beta\log\frac{\pi_\theta(y_l|x)}{\pi_{\mathrm{ref}}(y_l|x)}
 \Biggr).
 $$
 
@@ -269,10 +269,11 @@ $$
 
 - InstructGPT **Appendix B/C**：标注者筛选与人口统计细节、175B RM 不稳的具体现象、PPO / PPO-ptx 超参表。
 - InstructGPT 各公开基准精确分与 Figure 1 误差条：笔记只用了摘要级叙述，复述百分比前应对照正文表图。
-- Constitutional AI **Appendix C** 完整 constitution 条文、Appendix D/E 流水线与 few-shot 样例；Crowdworker Elo 的精确读图。
+- Constitutional AI **Appendix C** 完整 constitution 条文、Appendix D/E 流水线与 few-shot 样例。
+- **图表读数说明**：CAI 的 Crowdworker Elo 精确数值未从图中读出。
 - CAI 中 CoT 标签概率 **clamp 到 40–60%** 的消融是否在所有规模上成立——仅据 §4.1 定性描述。
-- DPO 正文 §6 与附录：情感 / TL;DR / Anthropic-HH 的 win rate 数字、与 PPO 的 KL–reward frontier（Figure 2）——未逐表誊抄。
-- DPO Theorem 1 / Proposition 1（奖励等价类与规范化）的完整假设：本笔记只用了推导直觉，证明细节待读 §5 与 Appendix A。
+- DPO 正文 §6 与附录：情感 / TL;DR / Anthropic-HH 的 win rate 数字、与 PPO 的 KL–reward frontier（Figure 2）——逐表数字不在本篇范围内。
+- DPO Theorem 1 / Proposition 1（奖励等价类与规范化）的完整假设：本篇只用了推导直觉，证明细节（§5 与 Appendix A）不在本篇范围内。
 - 介绍页以外的 Anthropic「Policy Memo」正文未取用。
 - 后续方法（IPO、KTO、ORPO、RLAIF 后续变体等）不在本篇精读范围；SimPO / ORPO 与 KTO 索引见 [[SimPO与ORPO偏好优化]]。
 

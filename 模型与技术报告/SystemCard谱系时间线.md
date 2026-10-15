@@ -1,12 +1,12 @@
 ---
-title: 时间线 · 旗舰 System Card / TR
+title: "时间线 · 旗舰系统卡与技术报告"
 topic: SystemCard谱系时间线
 date: 2026-10-08
 type: timeline
 status: active
 ---
 
-# 时间线 · 旗舰 System Card / TR
+# 时间线 · 旗舰系统卡与技术报告
 
 > 本时间线按厂商梳理旗舰模型的系统卡（System Card）、模型卡与技术报告。2025 年以来，闭源旗舰公开文档的重心从能力榜单转向风险判定与部署护栏：OpenAI 的 Preparedness 档位从生物化学域的「预防性 High」一路上调到网络安全域的「Critical」；Anthropic 从以 ASL 部署级为核心，转向按 CB 等能力阈值判定，并为分类器护栏配上回退模型（fallback）；Google 则以精简模型卡和受信放量计划取代长篇技术报告。开放权重一侧，技术报告持续公开架构与训练配方，近一年的重心转向长上下文效率与强化学习算力。通史见 [[开源与闭源前沿模型谱系]]，文档字段规范见 [[模型卡与SystemCard规范]]；完整挂载见 [[MOC_模型与技术报告]]，前沿短报见 [[MOC_前沿]]。日期口径：论文取 arXiv 首版（v1）日期，官方发布按 UTC 日期，系统卡取封面日期。
 
@@ -23,7 +23,7 @@ Anthropic 依据负责任扩展政策（RSP）发布系统卡。2025 年的卡�
 - **2025-11** · Claude Opus 4.5 系统卡：把智能体能力榜与安全、对齐、RSP 评测合为一卷，在 ASL-3 下部署，并坦言排除 AI R&D-4 与 CBRN-4 风险已越来越难（[发布公告](https://www.anthropic.com/news/claude-opus-4-5)） · [[ClaudeOpus45系统卡深读]]
 - **2026-07** · Claude Opus 5 系统卡：仍在 ASL-3 下发布，核心增量是「激活探针 → LLM 分类器」的分级网安护栏，放开源码漏洞发现、继续拦截二进制漏洞相关请求（[发布公告](https://www.anthropic.com/news/claude-opus-5)） · [[ClaudeOpus5系统卡深读]]
 - **2026-09** · Claude Fable 5.1 与 Mythos 5.1 合卡：同一套权重配两套护栏，通用面（Fable）在分类器触发时回退到 Opus 4.8，受信面（Mythos）通过验证计划向受信用户开放更多生命科学与网安能力（[发布页](https://www.anthropic.com/claude-fable-and-mythos-5-1)） · [[ClaudeFable与Mythos51]]
-- **2026-09** · Claude Opus 5.5 系统卡：5.5 族首发，多项评测追平或超过 Mythos 5.1；卡内基本不再使用 ASL 标签，风险按 CB-1 等阈值判定，生物分类器命中时回退到 Opus 5（[发布页](https://www.anthropic.com/claude-opus-5-5)） · [[ClaudeOpus55系统卡短报]]
+- **2026-09** · Claude Opus 5.5 系统卡：5.5 族首发，多项评测匹配或超过 Fable 5.1 与 Mythos 5.1；卡内基本不再使用 ASL 标签，风险按 CB-1 等阈值判定，生物分类器命中时回退到 Opus 5（[发布页](https://www.anthropic.com/claude-opus-5-5)） · [[ClaudeOpus55系统卡短报]]
 - **2026-09** · Claude Sonnet 5.5 系统卡：同价同规格下能力接近 Opus 5.5，因此成为首个带网安护栏（拦截后转交 Sonnet 5）和防推理内容提取分类器（拦截后无回退）的 Sonnet（[发布页](https://www.anthropic.com/claude-sonnet-5-5)） · [[ClaudeSonnet55系统卡短报]]
 - **2026-10** · Claude Haiku 5.5 系统卡：5.5 族最低档，RSP 结论沿用既有判定，网安护栏按能力明显收窄，且所有分类器拦截后都不再回退到其他模型（[发布页](https://www.anthropic.com/claude-haiku-5-5)） · [[ClaudeHaiku55系统卡短报]]
 
@@ -108,7 +108,7 @@ DeepSeek 的技术报告是开放权重一侧披露最详尽的系列，主线�
 
 - 模型卡同系统卡取封面日期，无封面日期时取官方索引页日期；无报告的模型取官方发布页日期。
 - Gemini 4 Argon 官方博文发布时间为 2026-09-30 20:00 UTC，折合上海时间为 2026-10-01，本时间线按页眉日期记作 2026-09；全球 GA 与网页模型卡为 2026-10-13，记作 2026-10。
-- Gemini 2.5 技术报告按 arXiv 首版（2025-07-07）记，Google 官方首次发布报告的日期未单独核对，待核实。
+- Gemini 2.5 技术报告按 arXiv 首版（2025-07-07）记，Google 官方首次发布报告的日期截至 2026-10-08 未见单独说明。
 - DeepSeek-V4（arXiv 2606.19348）首版为 2026-04-26，UI-Venus-2（arXiv 2609.00028）首版为 2026-08-27，编号月份与首版日期不一致，按 arXiv 首版日期记。
 - GPT-5.6 预览版封面为 2026-06-25，Deployment Safety Hub 标注发布于 2026-06-26，两者同月，不影响排序。
-- MiMo-V2.6 官方页标注「更新时间 2026-09-22」，具体发布日待核实，此处只记到月。
+- MiMo-V2.6 官方页标注「更新时间 2026-09-22」，具体发布日截至 2026-10-08 未见官方说明，此处只记到月。
