@@ -34,8 +34,6 @@ archived: 2026-09-22
 > - **不写成「已证实碾压商业工具」**：Nature 主张、独立评估（Kahng 等 / MacroPlacement）、Markov 元分析、作者 Addendum / 辩护文须**并列呈现**，不替任一侧下最终裁判。
 > - **主要来源**：[Chip Placement with Deep Reinforcement Learning](https://arxiv.org/abs/2004.10746)；[A graph placement methodology for fast chip design](https://www.nature.com/articles/s41586-021-03544-w)（Nature 着陆页摘要 / Change history）（截至 2026-09-22）；Nature 全文 PDF 需登录，未读。
 
----
-
 ## 一、材料元信息
 
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
@@ -53,8 +51,6 @@ archived: 2026-09-22
 **全文说明：** Nature / Addendum 全文 PDF 需 idp.nature.com 登录，未读。笔记内凡写「Nature 主张」均指着陆页摘要 + Change history；架构步骤以 arXiv 为准，并标明预印本≠期刊版可能存在差异。
 
 **一句话抓手：** AlphaChip 把 **宏布局** 做成「可预训练的序贯放置游戏」；ChipExpert 把 **IC 知识问答** 做成「CPT→SFT→DPO→RAG」专科 LLM——前者争的是 **PPA / 复现**，后者争的是 **领域 QA 分数**，二者都不是 GPU/TPU **选型**问题。
-
----
 
 ## 二、议题边界：设计算法 ≠ 硬件选型
 
@@ -75,8 +71,6 @@ archived: 2026-09-22
 本篇 A 宏布局 RL ：给定 netlist，宏放在哪 → proxy / 后路由 PPA
 本篇 B IC 专科 LLM ：IC 知识问答 / 教学助手（非自动布局器）
 `
-
----
 
 ## 三、AlphaChip / Nature 线：宏布局作为 RL 游戏
 
@@ -114,8 +108,6 @@ netlist →（可选）标准单元聚类 / soft macros
 ### 3.4 作者侧影响叙事（blog，2024-09-26；非独立审计）
 
 Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 布局；扩展至 **Axion** 等；**MediaTek** 称扩展用于先进工艺芯片。本篇**只索引主张，不视为已证实的产业优势**。
-
----
 
 ## 四、Nature 争议 / 复现争议字段
 
@@ -155,8 +147,6 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 2. Markov 的「integrity substantially undermined」**不是**已被 Nature 编辑采纳的最终判决——编辑部选择了 **Addendum + 撤 Editor’s Note**。
 3. 可核事实：Editor’s Note 曾挂一年；News & Views 已撤；公开 MacroPlacement 评估**未**复现「碾压商业/人类」的顶线故事，且报告 SA/人类在多指标上仍强。
 4. **Circuit Training** = 社区可触达的方法近似实现；**≠** Nature 专有实验的充分复现包。
-
----
 
 ## 五、ChipExpert：IC 设计专科开源 LLM
 
@@ -202,8 +192,6 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 
 **划界：** 这些数字衡量的是 **IC 知识问答**，**不能**外推为「ChipExpert 能自动做出比商业工具更好的 floorplan」。
 
----
-
 ## 六、两条线如何并列、如何不混写
 
 | | AlphaChip / CT | ChipExpert |
@@ -216,9 +204,7 @@ Blog 主张（**待第三方同口径核验**）：用于 Google **多代 TPU** 
 
 共同教训：**高影响力设计 AI 主张必须自带复现包与公开基准**；专科 LLM 降低的是**知识获取门槛**，不自动降低**物理设计 NP-hard 优化**的验证成本。
 
----
-
-## 七、局限与待核实
+## 七、局限与争议
 
 1. **Nature / Addendum 全文 PDF**：需登录，未读；若后续取得，应对照 arXiv 做「期刊版 vs 预印本」diff（尤其表格与预训练描述）。
 2. **CT-AC 预训练数据清单**：公开指导有，完整数据与「是否污染测试块」在批评侧仍为开放指控——本笔记不裁决。

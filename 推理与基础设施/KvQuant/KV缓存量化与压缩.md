@@ -20,8 +20,6 @@ archived: 2026-09-22
 > - ≠ [[SpinQuant与ARCQuant量化]]：本篇不写 AWQ、GPTQ、SmoothQuant 等权重量化方法的机制与演进。
 > 两文互相称 concurrent，不以「谁先谁后」叙事替代方法差异。
 
----
-
 ## 一、问题动机：为何 KV 成为瓶颈、为何「对称 per-token」不够
 
 ### 1.1 瓶颈从权重迁到 KV
@@ -48,8 +46,6 @@ archived: 2026-09-22
 | **RoPE** | 旋转把成对 channel 混在一起 → post-RoPE Key 的通道一致性变差（KVQuant Fig 2） | 是否在 **RoPE 前**量化 Key，成为第二误差轴 |
 
 **共同结论（OB / 消融口径）：** 把 K、V 都做成「按 token 的均匀 INT」在 **≤3–4 bit** 会崩；**K per-channel + V per-token** 是两文共享的非对称起点。分歧在：流式残差窗 vs 离线标定 / 非均匀数据类型 / 稀疏 outlier / Attention Sink。
-
----
 
 ## 二、KIVI（Liu et al.）— Tuning-Free 非对称 2-bit
 
@@ -105,8 +101,6 @@ LongBench 均值：Llama2-7B 16bit **44.52** / KIVI-2 **44.27**；Mistral-7B **4
 
 **一句话：** KIVI = **无微调**的「K 通道 / V token + 局部 FP 残差窗」，把 **2-bit** 推到可服务；硬任务靠 $R$ 窗兜底，不是靠假量化全量 2-bit。
 
----
-
 ## 三、KVQuant（Hooper et al.）— 标定 + 非均匀 + Dense-Sparse 冲长上下文
 
 | 项 | 值 |
@@ -161,8 +155,6 @@ LLaMA-7B **nuq2** 单卡 A100-80GB 约 **1M** ctx（KV ≈ 64 GB 量级），8 �
 
 **一句话：** KVQuant = **离线敏感码本 + Pre-RoPE per-channel Key + per-vector 1% sparse + Sink token**，主打 **3-bit 近无损 PPL** 与极端上下文显存账；与 KIVI 共享非对称轴，系统处方不同。
 
----
-
 ## 四、与 V4.1-Flash 部署交叉（只串轴，不重写 [[DeepSeekV41Flash深读]]）
 
 权威数字与机制全文见 [[DeepSeekV41Flash深读]] §3.3 / Abstract。本处只立 **对照轴**：
@@ -183,8 +175,6 @@ LLaMA-7B **nuq2** 单卡 A100-80GB 约 **1M** ctx（KV ≈ 64 GB 量级），8 �
 2. **V4.1** 在已稀疏/复用的 main KV 上再做 **硬件友好 FP4 QAT**，并显式留下 SWA 高精——是 **架构压缩 × 格式压缩** 的部署解，不是对 KIVI/KVQuant 的逐条复刻。
 3. RoPE 前后结论 **相反方向都有文献支持**：KVQuant（开源 RoPE 模型、标定路径）vs V4.1（自家 QAT + 解码开销权衡）。以 **各自问题设定** 为准，不合成「统一最优 RoPE 时机」。
 
----
-
 ## 五、误区
 
 1. **「KV 量化 = 权重量化缩小版」** — 流式追加、无法随便 GPTQ；K/V 下游算子不同，轴必须非对称（KIVI OB1–3）。
@@ -195,16 +185,12 @@ LLaMA-7B **nuq2** 单卡 A100-80GB 约 **1M** ctx（KV ≈ 64 GB 量级），8 �
 6. **「890 B/token 可从 KIVI 2-bit 外推」** — 890 是 V4.1 **CSA2+FP4** 产品足迹，不能用 Llama 稠密 KV 公式反推。
 7. **「10M context 已等于生产 SLA」** — KVQuant 为显存估算 + 质量评测叙事；落地仍受内核、页表、调度、前缀缓存等约束（见 [[推理引擎生态]] / [[DeepSeekV41Flash深读]] 部署章）。
 
----
-
-## 六、局限与待核实
+## 六、局限与争议
 
 - KIVI Table 3 全模型逐格、LongBench 分任务、KVQuant RULER/Passkey 全表：本篇只摘主结论与代表性格。
 - 两文后续开源实现是否已并入 vLLM/SGLang 默认路径：**不跟代码默认值**。
 - MLA / DSA / CSA2 与「per-channel Key」在 **压缩 latent** 上是否同构：V4.1 PDF 未用 KIVI 术语复述 → **不作类推证明**。
 - 权重 INT4 + KVQuant 联合表（KVQuant Table 5 等）未展开。
-
----
 
 ## 七、引用
 

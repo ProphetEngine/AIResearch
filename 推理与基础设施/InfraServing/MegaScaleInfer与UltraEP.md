@@ -36,8 +36,6 @@ timezone: Asia/Shanghai (CST)
 
 **一句话**：MegaScale-Infer 把注意力复制、专家切开、用微批乒乓填空闲；UltraEP 在机架级高带宽域内，按每层每个微批的真实负载当场复制和重路由。
 
----
-
 ## 一、问题背景
 
 **稀疏饿死专家（MegaScale-Infer §1–2）**：decode 主导服务成本。稠密模型增大 batch 就能让 FFN 吃满算力；MoE 在同样 batch 下，每个专家分到的 token 约为 B × topk / 专家数，稀疏度越高专家侧利用率越低；内存与 TBT SLO 又限制了全局 batch。
@@ -151,7 +149,7 @@ timezone: Asia/Shanghai (CST)
 | [[推理引擎生态]] | 那篇的 vLLM、SGLang、TensorRT-LLM 在本篇只作基线 | 引擎选型 |
 | [[AI基础设施总览]] | 那篇讲专家并行的 all-to-all 可与算力同量级，本篇讲如何在系统层面摊平它 | 基础设施通论 |
 
-## 八、局限与待核实
+## 八、局限与争议
 
 - **部署与生产数字为自述**：MegaScale-Infer 的成本降 1.5–2.0×、UltraEP 的长期 92% 以上都来自作者部署段，无第三方复现。
 - **硬件前提强**：UltraEP 依赖机架级 scale-up 域，标准 8 卡节点集群上不适用；MegaScale-Infer 的异构结论只对所测机型成立，不外推。

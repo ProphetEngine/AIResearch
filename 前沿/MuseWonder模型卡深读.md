@@ -27,8 +27,6 @@ timezone: Asia/Shanghai (CST)
 
 **一句话**：Muse Wonder 与 Muse Wonder Full 于 2026-10-12 发布，通过 Meta Model API 与 Muse Code 提供；模型卡给出规格、评测口径和风险判定，截至 2026-10-12，完整安全报告尚未发布。
 
----
-
 ## 一、问题背景
 
 个人智能体要替用户在消息、日历、私人文档之间行动，单看几个领域的热门基准不足以说明它能否应付各种没见过的组合任务。博文把这种落差概括为「benchmaxxing」与「big model smell」之争：分数相近的两个模型，泛化广度可能差得很远。Muse Wonder 的发布材料围绕三个问题展开：如何定义并测量记忆与持续执行；怎样论证能力能泛化到训练未覆盖的任务；在能代用户行动的前提下，如何判定滥用风险。
@@ -104,7 +102,7 @@ timezone: Asia/Shanghai (CST)
 
 Muse Wonder 的材料意义有二。其一，把「个人超级智能」落到可测的 Active Memory 与 Active Focus，并配上专门的内部基准，给个人智能体评测提供了一种拆法。其二，模型卡把评测口径写得较透：拒答计零分、来源逐项标注、明说哪一行不是受控对比、给 ExploitGym 的原始分加计分注释。这些口径说明比分数本身更有助于判断结果能否横向比较。
 
-## 九、局限与待核实
+## 九、局限与争议
 
 - 完整安全报告尚未发布，博文原句为「A full report with additional safety evaluations will be available soon.」；目前没有独立的系统卡，只有博文与网页版模型卡。
 - 泛化论证是 Meta 的官方解释，分布外任务集未公开，未经独立复现；对比曲线只见于图中，具体读数不写入本篇。

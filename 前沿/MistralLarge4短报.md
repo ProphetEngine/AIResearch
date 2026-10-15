@@ -101,7 +101,7 @@ ML4 相对 Large 3 把总参从 675B 推到约 1T、激活从 41B 增到 52B，�
 - **网安能力与拒答的取舍**：闭源系统卡以护栏、分类器和受信访问管控网安能力（见 [[ClaudeOpus55系统卡短报]]、[[GPT6Astra系统卡深读]]）。Mistral 则称服务商层面的拒答可能阻碍合法的漏洞研究与事件响应，主张让组织 "under their own policies" 运行网安工作（博文「Forged in Europe. Built for AI sovereignty.」节），同时称其对恶意网安提示的拒答率高于开源同类。
 - **欧洲主权算力**：官方称提供由 Mistral 端到端运营、"independently of other digital service providers and under European law" 的欧洲部署（博文「Forged in Europe. Built for AI sovereignty.」节），算力仍在扩建（博文「What comes next」节）。
 
-## 九、局限与待核实
+## 九、局限与争议
 
 1. **没有技术报告和系统卡**：架构、更多基准和后训练方法要等权重开放时公布；本篇不作架构推测。
 2. **权重日期和许可证未定**：博文写「月底」，HF 页写 10-31（Current ETA），媒体写 10-27；文档许可证只标「Open」，具体条款未公布。

@@ -25,8 +25,6 @@ archived: 2026-09-24
 > **为何重要**：聚合与解聚各擅一端。TaiChi 的仿真里，平衡 SLO（6s / 100ms）下聚合只有 16%、解聚只有 50% 达标；而交互场景大量要求的正是平衡。TaiChi 在同一 vLLM 实现上相对聚合 goodput +9–47%、相对解聚 +29–77%，说明「分不分池」不必二选一。
 > **边界**：本篇不是 [[连续批处理与Orca]]（iteration-level 批内进出）；也不是 [[MegaScaleInfer与UltraEP]] 的 Attention–Expert 节点解耦。PD 池化 / 再统一回答的是「两阶段算力画像是否分实例」；连续批回答的是「一步内如何拼请求」——二者正交、可叠加。
 
----
-
 ## 一、问题设定：两阶段资源画像与双 SLO
 
 自回归 LLM 推理拆成两阶段（TaiChi §2.1；亦见 DistServe 摘要）：
@@ -39,8 +37,6 @@ archived: 2026-09-24
 **Goodput** 定义为：在同时满足 TTFT 与 TPOT 约束下，单位资源可支撑的最大请求吞吐（TaiChi 摘要；DistServe 以每 GPU 最大合规速率表述同一思想）。应用 SLO 谱很宽：有的紧 TTFT、松 TPOT；有的紧 TPOT、松 TTFT；大量交互场景要求二者 **平衡**。
 
 同机混跑时，新 prefill 可占满一整次 iteration，拖慢同批 decode（Orca / Sarathi-Serve 叙事）；拆池后可消干涉并独立扩缩，但 prefill 总算力池变小，易在 TTFT 上排队。
-
----
 
 ## 二、演化：colocated → disaggregation → 再统一
 
@@ -75,8 +71,6 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 - 紧 TTFT → 调成近似全聚合（各实例同 chunk）；
 - 紧 TPOT → 调成近似全解聚（D-heavy 侧禁止 / 极小 chunk prefill）；
 - 平衡双 SLO → **hybrid-mode**，做跨阶段、跨请求的 latency shifting。
-
----
 
 ## 三、TaiChi 机制要点
 
@@ -116,8 +110,6 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 
 实现于 vLLM：不同 chunk 的 chunked prefill；扩展 KV transfer，实例间经 **NCCL** 互传，并与关键路径异步解耦；接收侧用融合 CUDA 算子写入 paged KV（§3.5）。
 
----
-
 ## 四、证据（文内实验，非外推）
 
 **设定（§4.1）**：单节点 8× A100-80GB（NVLINK）；Qwen2.5-14B / 32B（FP16；32B 用 TP=2）；基线同在 vLLM 上实现的 **PD aggregation（chunked prefill）** 与 **PD disaggregation**。工作负载与 SLO（Table 3）：
@@ -137,8 +129,6 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 
 **开销（§4.5）**：单请求时间中，KV 传输 / prefill 调度 / decode 调度约占 **0.20% / 0.01% / 0.89%**。
 
----
-
 ## 五、与 Orca / MegaScale 的分工
 
 | 议题 | 动什么 | 本篇角色 |
@@ -151,8 +141,6 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 
 一句话：Orca 管「批怎么连续」；MegaScale 管「Attention 与 Expert 分不分机」；本篇管「Prefill 与 Decode 分不分池、平衡 SLO 时如何把余量挪给濒危请求」。
 
----
-
 ## 六、开放问题
 
 1. **输出长度先验**：流动 decode 用「当前最长」启发式规避预测器；文内称长度预测准确率常见仅约 60%–81%，误差会直接吃掉 SLO 达标率——生产级预测是否可嵌进水位策略，仍开放。
@@ -160,8 +148,6 @@ TaiChi 不在「永远聚合」与「永远解聚」间二选一，而是用 **�
 3. **规模外推**：主评测为单节点 8×A100、Qwen2.5 14B/32B；多节点、更强互联、MLA/GQA 下 KV 传输占比变化后，hybrid 相对纯解聚的优势幅度需重测。
 4. **与其他解耦轴叠乘**：PD 统一服务与 Attention–Expert 解耦、前缀缓存、投机解码叠乘时的联合调度，主文未系统评价。
 5. **开源与可复现**：文称基于 vLLM 实现并计划开源；本篇以 arXiv 叙述为准，不以未核验仓库状态作事实。
-
----
 
 ## 七、文献
 

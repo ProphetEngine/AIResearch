@@ -102,7 +102,7 @@ ExploitBench 上 AutoNudge 组平均拿到 11.53 个 flag（Cap% 80%），两组
 
 Sonnet 5 没有单独的笔记，本篇涉及 Sonnet 5 的内容只限系统卡与官方页给出的对照数字。
 
-## 七、局限与待核实
+## 七、局限与争议
 
 - **生物护栏的说法两边不一致**：官方页两处称与 Sonnet 5 相同（"Its biology safeguards are the same as Sonnet 5’s."）；SC §1.5 与 §2.2.4 写与 Opus 5 部署相同，而非 Opus 5.5 那套更宽的研究生物分类器。两边都没有说明 Sonnet 5 与 Opus 5 的生物护栏是否为同一套。
 - **cyber 护栏的对照对象措辞不一**：SC §1.5 写拦截分类器与 Opus 5 相似（"similar blocking classifiers to those on Opus 5"），SC Executive summary 与 §3.3 写三阶段护栏同 Opus 5.5，官方页写与 Opus 5.5 相似（"similar to those on Opus 5.5"）。

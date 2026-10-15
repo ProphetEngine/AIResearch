@@ -20,8 +20,6 @@ archived: 2026-09-22
 
 **为何重要**：这几层决定同一份模型能训多大、能服多少并发。Megatron 在 512 GPU 上维持 76% 扩展效率；vLLM 剖析出既有系统 KV 内存只有约 20.4%–38.2% 真正存了 token 状态，分页后近零浪费；DeepSeek-V3 用 FP8 与 DualPipe 把 671B MoE 的全流程压到约 2.788M H800 GPU hours。
 
----
-
 ## 一、为何 Infra 从幕后变战略变量
 
 早期深度学习叙事里，Infra 常被当成「把模型跑起来的工程细节」。当代大模型把三件事同时推到极限之后，Infra 本身成为**能力与成本的一阶变量**：
@@ -35,8 +33,6 @@ archived: 2026-09-22
 > **训练并行（切参数 / 切层 / 切数据）→ 注意力核（IO-aware，少搬 HBM）→ 推理 KV 管理（分页，近零浪费）→ 低精度与网络拓扑协同（FP8、all-to-all、NVLink/IB）**。
 
 Megatron 把「层内张量切分」做成少通信的 PyTorch 原语；FlashAttention 族把注意力从「算力问题」重写为「带宽 / 占用率问题」；PagedAttention 把 OS 虚拟内存思想搬进 serving；DeepSeek-V3 则在 MoE + 跨节点通信已经接近 1:1 算通比时，用 DualPipe、定制 all-to-all 与 FP8 把 Infra 写成可复现的训练报告章节。
-
----
 
 ## 二、训练侧：张量 / 流水线 / 数据并行（Megatron 思想）与专家并行衔接
 
@@ -85,8 +81,6 @@ V3 报告给出一条公开的「后 Megatron」组合（§3.2）：训练用 **
 
 **要点**：Megatron 解决的是「一层矩阵怎么切才少同步」；MoE 时代的 Infra 还必须回答「专家散落在多机时，**通信能否被算力盖住**」——DualPipe / 定制 all-to-all 是对后者的公开答案，不是对前者的否定。
 
----
-
 ## 三、注意力核：FlashAttention-2 解决什么（IO-aware）
 
 ### 3.1 问题重述：标准注意力为何「算得慢」
@@ -127,8 +121,6 @@ FA2 §2.3 转述 FlashAttention：
 - 端到端训 GPT 风格模型：最高约 **225 TFLOPs/s per A100**（约 **72%** model FLOPs utilization）（摘要、§1、§4 叙述）。
 
 **架构思想一句**：注意力 Infra 的主线不是「换公式」，而是承认 **HBM↔SRAM 的不对称**，用 tiling + 重计算 + 占用率友好的并行，把二次中间态留在片上——这与 Megatron「少通信、保持 compute-bound」是同一哲学在不同层级的投影。
-
----
 
 ## 四、推理 serving：PagedAttention 与量化 / 低精度（衔 DeepSeek-V3 FP8 等公开要点）
 
@@ -177,8 +169,6 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 
 **与 PagedAttention 的衔接（思想层，非原文实验）**：PagedAttention 管的是 **KV 布局与碎片**；MLA / GQA 管的是 **每 token KV 体积**；FP8 / 低精度管的是 **算与传的位宽**。三者叠乘才构成当代 serving「势」：同一 GPU、同一延迟预算下，能塞进更大有效 batch。
 
----
-
 ## 五、常见误区与引用
 
 ### 5.1 常见误区
@@ -199,15 +189,13 @@ Prefill 用双 micro-batch 重叠 attention/MoE 与 dispatch/combine；decode �
 - DeepSeek-AI (2024/2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437. PDF: `https://arxiv.org/abs/2412.19437`
 - 相关背景（本议题引用链）：Huang et al., GPipe；Dao et al., FlashAttention；Vaswani et al., Attention Is All You Need；Lepikhin et al. / Fedus et al. 等 MoE 并行文献（见 V3 / Megatron 参考文献列表）。
 
-### 5.3 局限与待核实
+### 5.3 局限与争议
 
 - Megatron 后续开源栈（Megatron-Core、Megatron-LM 新版本）中的 **序列并行、上下文并行、分布式优化器** 等：本笔记以 1909.08053 正文为准，未逐项对照 2024+ 代码默认策略。
 - FlashAttention-3 / 更新内核在 Hopper/Blackwell 上的占用率与精度路径：未纳入本次 PDF 精读。
 - vLLM 生产版本相对论文的调度器、前缀缓存、多模态 KV：论文保证的是 PagedAttention 思想与当时评测倍率。
 - V3 报告中 DualPipe 气泡公式在 Table 2 的排版（PDF 提取有折行）；引用气泡复杂度时建议回看原表而非仅依赖文本提取。
 - 硬件建议章（V3 §3.5）对厂商通信 / 低精度原语的诉求：属作者建议，非第三方实测。
-
----
 
 ## 相关笔记
 

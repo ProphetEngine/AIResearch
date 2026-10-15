@@ -103,7 +103,7 @@ GPT-6 家族在一个多月里分几步铺开：先发布旗舰 Astra 的系统�
 | [[ClaudeSonnet55系统卡短报]] | 跨厂商口径对照：ExploitBench 在 Anthropic 卡中的计分口径 | Sonnet 5.5 本身 |
 | [[SystemCard谱系时间线]] | 所在时间线：各厂商系统卡的整体脉络 | 时间线中的其余节点 |
 
-## 九、局限与待核实
+## 九、局限与争议
 
 - **博客正文未能取得**：官方博文与九月版博文「Introducing GPT-6 Sol and Luna」的正文均未能取得；Intelligent UI 一句据搜索收录的官方博文正文，其余产品面信息以系统卡、社区公告与 Help Center 为准。
 - **Free/Go 默认模型说法冲突**：社区公告与系统卡 §1 指向 GPT-6 Luna（10-08 起推送）；Help Center 写 GPT-5.6 Luna「is becoming the default model for Free and Go users」，Free/Go 的 Instant 与 Think 均用 GPT-5.6 Luna。截至检索日两说并存。

@@ -33,8 +33,6 @@ note_deepep_arxiv: "DeepEP 无独立 arXiv 主文；主文以 GitHub [33] 引用
 
 **一句话**：NVSHMEM 把多 GPU 显存变成一张「对称堆 + 一侧 put/get/atomic」的地址空间，可在 kernel 内发起；DeepEP V1 只在跨节点关键点薄用 NVSHMEM/IBGDA，其余多段传输和 warp 分工全部自建。
 
----
-
 ## 一、问题背景：主机发起的集合通信不够用
 
 NCCL 是 CUDA 分布式训练与推理的默认集合通信后端，传统接口由主机发起：CPU 把集合操作排进 stream，再调度 NCCL kernel。它对规则、大批量、同步的集合（AllReduce 等）极强，但对三类场景不自然（主文 §I–II）：
@@ -146,7 +144,7 @@ README 没有给出 V2 相对 V1 的性能数字，本篇因此不写倍数。V2
 - **对编程模型**：专家并行这类数据依赖通信，需要「kernel 内发起、按拓扑分流」的一侧通信；NVSHMEM 提供了这种能力的通用库形态，NCCL 后来也吸收了同类概念。
 - **对系统设计**：真正决定性能的是自建流水（两段转发、SM 分工、信用流控），通信库只提供原语；这与 NVIDIA 在 GIN 工作中把 DeepEP 后端换成 NCCL GIN、性能与 NVSHMEM 基线通常相差约 1–2% 的结果相符（主文 §VIII-C 转述；该数出自 NVIDIA 自己的 GIN 工作，不是 DeepEP V2 的实测）。DeepEP V2 随后正式把后端换成了 NCCL GIN（见第六节）。
 
-## 八、局限与待核实
+## 八、局限与争议
 
 - **DeepEP V1 已从主分支移除**：主 README 写明已完全移除 V1、其 API、NVSHMEM 后端与旧文档，NVSHMEM 不再是依赖；V1 资料只剩 v1.2.1 标签。主文分析的正是 V1。
 - **README 未给 V2 相对 V1 的性能数**：第六节只记设计变化；README 早先版本给过的倍数说法现版已删去，本篇不引用。

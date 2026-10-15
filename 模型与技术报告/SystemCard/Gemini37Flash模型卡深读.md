@@ -23,8 +23,6 @@ archived: 2026-09-22
 
 **一句话**：Gemini 3.7 Flash 基于 3.6 Flash，主打核心推理算法改进、agentic 视频理解与可配置 thinking；输入 1M、输出 64K，知识截止名义上为 2026 年 3 月；相对 3.6，DeepSWE +16.7 pp、OSWorld-2.0 +14.1 pp、AutomationBench +13.4 pp，CharXiv 两项各降 0.7 pp；安全自动评测与 3.6 相近，Frontier Safety 各域均未达 TCL / CCL，但 CBRN 与 Cyber 触及 alert 阈值。
 
----
-
 ## 一、问题背景
 
 Gemini 的 Flash 线定位于成本与延迟优先的主力型号。2.5 代起 Google 用技术报告讲架构与 Infra（[[Gemini25技术报告深读]]），3 代改为十页左右的模型卡加外链评测方法文档（[[Gemini3Pro模型卡深读]]）。到 3.x 的 Flash 迭代，模型卡进一步缩成「只报变化量」：凡与前代相同的字段一律写「see Gemini 3.6 Flash model card」。
@@ -95,7 +93,7 @@ Gemini 的 Flash 线定位于成本与延迟优先的主力型号。2.5 代起 G
 
 3.7 Flash 卡说明，前沿厂商的 Flash 级型号也已进入「需按框架逐域报告危险能力」的阶段：一个价格为旗舰数分之一的型号同时在 CBRN 与 Cyber 触及 alert 阈值。另一方面，增量卡把架构与数据信息全部外包给前一张卡，单读该卡无法回答「改了什么结构」，只能回答「变好了多少、风险档在哪」。
 
-## 七、局限与待核实
+## 七、局限与争议
 
 - Gemini 3.6 Flash 模型卡未收：该卡架构、数据、硬件、软件与政策全部指向它。
 - *Gemini 3.7 Frontier Safety Framework Report* 未读，alert 判定的具体评测与分数不在本篇。

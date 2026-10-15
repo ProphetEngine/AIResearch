@@ -95,7 +95,7 @@ timezone: Asia/Shanghai (CST)
 
 两文把 Lean 的作用从「最后判对错」扩展到训练过程本身，路线互补。Process-Verified 不改变生成形式，把 Lean 已经产生的阐述信息变成 tactic 级的稠密奖励，代价几乎为零，因为两种训练都要调用 Lean REPL，额外的排序与打分开销可忽略。Leanabell-V2 改变生成形式，让验证器进入推理轨迹，模型在一次回答里就能看到报错并改写，用较小的采样预算换来接近大预算的效果。两文的过程信号都来自形式系统本身而不是神经打分器，这与可验证过程监督在棋类、医学领域的思路一致。Leanabell-V2 在语法树细粒度奖励上没有成功，而 Process-Verified 在不用思维链、只奖第一个 token 的设定下把类似的细粒度信号用了起来；两文没有联合实验，不能直接推出两者可以叠加。
 
-## 六、局限与待核实
+## 六、局限与争议
 
 - **Process-Verified 的增益很小**：作者称 STP-Lean 上 MiniF2F 最多 +2.5 个百分点（pass@64），ProofNet +1.4（pass@32）、pass@64 −0.1；DeepSeek 基座上的提升为「marginal yet consistent」（§5.2）。STP-Lean 的 ProofNet pass@64 与只用结果奖励持平（都是 19%），DeepSeek 基座的 MiniF2F pass@64 与只用 tactic 奖励持平（都是 57.8%）。作者自陈没有和学习式 PRM 比较（Lean 缺少带思维链的逐步标注），模型不生成长思维链，d1、d2 是固定值且对模型和数据集较敏感。文中没有给出代码地址。只有 v1。
 - **Leanabell-V2 的收益依赖基座强弱**：对已经很强的 DeepSeek-Prover-V2-7B，ProofNet 与 ProverBench 上略低于基座。作者自陈题目越难，能激活强化学习的题越少（难题集本身小，又按通过率过滤）。多轮调用会在首轮之后追加采样，与基座的 pass@k 不是严格同预算的比较；Table 3 的首轮基线 64.7% 与 Table 1 中基座的 63.1% 口径不同，前者是本模型思维链中第一个代码块的结果。冷启动数据依赖 Claude-3.7-Sonnet。只有 v1。

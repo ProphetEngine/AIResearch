@@ -23,8 +23,6 @@ archived: 2026-09-22
 > - **相对 [[安全红队与对抗评测]] 正交**：本篇不写红队流程、ASR、攻击面聚类与 mitigation 闭环；评测只作 **能力门槛证据**，**不**复述任务逐步操作或隐蔽破坏步骤。
 > - **不写成攻击剧本**：stealth / situational awareness 挑战只保留 **名称 + 在 safety case 中的负载角色**；不写 covert 操作路径、工具调用序列或可复用的破坏配方。
 
----
-
 ## 一、材料元信息
 
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
@@ -34,8 +32,6 @@ archived: 2026-09-22
 | **可选 C（基础再校准）** | Feakins, Habli, Morgan (York / SAINTS), *Clear, Compelling Arguments: Rethinking the Foundations of Frontier AI Safety Cases* | IASEAI’26；White Rose ePrints **238521**；`https://eprints.whiterose.ac.uk/id/eprint/238521/`（**22** 页 A4；CreationDate **2026-09-16** CST） | 对齐社区「alignment safety case」相对安全保证学的基础落差；危害识别 / 风险降低 / 通篇生命周期 |
 
 **一句话抓手：** Safety case ≠ 又一份评测报告——是把 **「即便误对齐也不会造成严重 scheming 伤害」** 拆成可评审的 **主张树**，用能力评测当 **证据节点**，再用外部 Assurance 2.0 审查 **范围、系统模型、证据确证强度与残余怀疑**。
-
----
 
 ## 二、议题边界：论证结构，不是监督协议，也不是红队剧本
 
@@ -64,8 +60,6 @@ Top claim（inability）
 
 **关键语义：** inability 是 **保守**论证——绕过「证明已对齐」的难题，改证「即便坏也做不成」。主文 A 明确：随能力上升，宜与 **propensity** 类论证并用。
 
----
-
 ## 三、结构化 safety case：CAE / Assurance 2.0 是什么
 
 ### 3.1 定义与用途（两文共识）
@@ -85,8 +79,6 @@ Top claim（inability）
 | 评测报告 / 卡章节 | 分数、发现、缓解摘要 | 覆盖面与指标诚实性 |
 | **Safety case** | **主张树** + 负载证据 + 显式 defeater | 逻辑有效性、范围、残余风险、是否决策就绪 |
 | **外部评审** | 对主张树的挑战 / counter-case / 过程建议 | 确认偏误、证据确证强度、系统与环境模型 |
-
----
 
 ## 四、站 1：GDM scheming inability 模板（主文 A）
 
@@ -145,8 +137,6 @@ Top claim（inability）
 - 评测偏「失败即明确缺能力」、现实性不足；成功 ≠ 真实部署高能力。
 - 人类基线样本小，分位数噪声大。
 
----
-
 ## 五、站 2：外部评审（主文 B）——同一棵树如何被拆
 
 ### 5.1 评审设置
@@ -195,8 +185,6 @@ Top claim（inability）
 
 **给开发者的信息公开底线（文内 / Appendix M 方向）：** 结构化 safety case；用途与决策；系统与环境模型；危害与风险路径；主张临界性；证据与限制；失效条件等（具体清单以原文 Appendix 为准）。
 
----
-
 ## 六、可选站 3：安全保证学基础再校准（White Rose / IASEAI’26）
 
 ### 6.1 诊断：alignment safety case 与 assurance 传统的落差
@@ -214,8 +202,6 @@ Top claim（inability）
 ### 6.2 与本篇主轴的接口
 
 可选 C 的 case study 触及 Deceptive Alignment 与 CBRN——本篇 **只取方法论**：inability 模板应坐落在 **危害日志 + 风险降低论证 + 通篇更新** 之上，而不是孤立的两套代理任务分数。这与主文 B「需要安全工程制品 / 过程保证」同向，与主文 A「集中式 → 分布式」自我改进方向相容。
-
----
 
 ## 七、综合：一张图
 
@@ -237,8 +223,6 @@ Top claim（inability）
 | 证据够吗？ | 2/5、2/11 远低于 80% 聚合阈值 | 对真实伤害主张仅弱确认；缺 sandbagging 抗辩 |
 | 何时失效？ | 四个月同族；监管变弱 / 类比破裂时迁 control | 产品会主动训练相关能力 → 需观测触发失效 |
 | 还缺什么？ | 更现实评测、分布式证据、propensity | 系统模型、危害路径、过程/组织保证 |
-
----
 
 ## 八、开放问题
 

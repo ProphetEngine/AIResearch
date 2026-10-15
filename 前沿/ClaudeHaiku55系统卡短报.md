@@ -116,7 +116,7 @@ ExploitBench 上 plain 组平均 5.15 个 flag（Cap% 38%），AutoNudge 组 6.5
 | [[SHADEArena隐瞒与监控]] | 同类评测：主任务之外隐蔽完成有害副任务、由监控判定（第五节 LinuxArena 一条） | 隐蔽破坏评测方法 |
 | [[SystemCard谱系时间线]] | 所在时间线：各厂商系统卡的整体脉络 | 时间线中的其余节点 |
 
-## 八、局限与待核实
+## 八、局限与争议
 
 - **生物防护说法两边不一致**：发布页 Safety 段称 "Haiku 5.5’s biology safeguards are the same as for Sonnet 5, Sonnet 5.5, and Opus 5."；SC §1.5 与 §2.2.4 只写与 Opus 5、Sonnet 5 部署相同，而非 Opus 5.5 那套更宽的研究生物分类器，两处都未提及 Sonnet 5.5。
 - **系统卡为压缩版**：省略了部分需大量人工的评测（SC 执行摘要）；CB 只报告自动化评测（SC §2.2.1）；对齐评估范围窄于前沿模型（SC §6.1.1）；Mythos 5.1 审阅指出并非每项评测都注明 effort 设置，官方回应维持此前做法（SC §6.1.3）。

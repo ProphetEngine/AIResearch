@@ -31,8 +31,6 @@ timezone: Asia/Shanghai (CST)
 
 **一句话**：GPT-6.1 Sol 是 GPT-6 Sol 的升级，官方称在 agentic coding、computer use 与 professional work 上接近 GPT-6 Astra，标准 API 输入、输出价约为 Astra 的五分之一；文档形态是 Astra System Card 的 addendum，Preparedness 判定与护栏栈都与 Astra 相同。
 
----
-
 ## 一、背景与脉络
 
 GPT-6 家族按能力与价位分档：Astra 是旗舰，Sol 与 Luna 是更快、更便宜的两档，官方称它们建立在 Astra 的进展之上，把 Astra 的大部分长处带进可规模化使用的模型（GPT-6 Sol 与 Luna 社区公告）。Astra 在网安上被判为 Critical 之后，较低价位的模型一旦能力逼近 Astra，就要回答是否也要按 Critical 处理、套用同一套护栏。GPT-6.1 Sol 是这一问题的第一个实例：该卡称它的能力与 Astra 相当，速度与价格更有优势（§1）。它在 DevDay 2026 当天随其他产品线一起发布。
@@ -96,7 +94,7 @@ GPT-6 Sol 与 Luna 此后的版本另有系统卡，见 [[GPT6SolLuna十月版�
 - **短增补记录同代迭代**：训练数据、评测方法与护栏都指回 Astra 卡，该卡只报基线安全指标与评测结果的更新（§1、§2）。
 - **可监控性逐版本报告**：CoT controllability 在 GPT-6 Sol、GPT-6.1 Sol 与 Astra 之间差别明显（见第四节），该卡对每个版本单独报告（§8.1.1）。
 
-## 六、局限与待核实
+## 六、局限与争议
 
 - **Chat 未开放**：博文明确 *not yet available in Chat*；当前渠道为 ChatGPT Work、Codex 与 API。
 - **addendum 非独立长卡**：训练数据与护栏栈细节依赖 Astra 卡，本篇不展开。

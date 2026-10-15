@@ -26,8 +26,6 @@ archived: 2026-09-22
 > - GUI 基础智能体、合成用户仿真 → 各自专篇，本篇不展开。
 > **主要来源**：[SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering](https://arxiv.org/abs/2405.15793)；[The OpenHands Software Agent SDK: A Composable and Extensible Foundation for Production Agents](https://arxiv.org/abs/2511.03690)（截至 2026-09-22）。
 
----
-
 ## 一、材料元信息
 
 | 材料 | 标识 / URL | 角色 |
@@ -38,8 +36,6 @@ archived: 2026-09-22
 **代码 / 评测入口（论文自报）：** swe-agent.com；https://github.com/OpenHands/software-agent-sdk ；https://github.com/OpenHands/benchmarks ；OpenHands Index https://index.openhands.dev
 
 **一句话抓手：** 编码智能体的瓶颈不只是「更会想」，而是 **给 LM 什么动作面、什么反馈、什么隔离与状态合同**——SWE-agent 证明 **为人设计的 Linux shell / IDE 搜索 UI 不直接等于好 ACI**，专用 viewer/edit/search + lint guardrail 把 SWE-bench Lite resolve 从 Shell-only **11.00%** 拉到 **18.00%**；OpenHands SDK 则把「单体、处处沙箱」的研究 harness 改成 **本地默认、沙箱可选、Conversation/Workspace 同 API 切远程** 的生产基础，并在 15 天并行上线里把系统归因失败率降约 **61%**。
-
----
 
 ## 二、问题立轴：为何是 harness，而不是「又一个 agent 提示词」
 
@@ -64,8 +60,6 @@ OpenHands V0（开源软件 agent 栈，沙箱中心）
  ↓
 OpenHands Software Agent SDK / V1（四包、事件源、opt-in 沙箱、REST/WS）
 `
-
----
 
 ## 三、站 1：SWE-agent — Agent–Computer Interface（2405.15793）
 
@@ -133,8 +127,6 @@ Abstract / §1–2：LM agent 常被塞进 **已有人类界面**（Linux shell�
 
 SWE-agent 把「编码 agent」从 **提示词 + 裸 shell** 提升为 **可消融的界面工程问题**：动作语义、观测带宽、护栏与上下文折叠是一阶杠杆。Docker 把该 ACI 钉在可复现沙箱上——这是 harness，还不是可组合生产 SDK。
 
----
-
 ## 四、站 2：OpenHands Software Agent SDK — 可组合生产 harness（2511.03690）
 
 ### 4.1 从 OpenHands V0 到 V1：为何必须重写
@@ -191,8 +183,6 @@ SWE-agent 把「编码 agent」从 **提示词 + 裸 shell** 提升为 **可消�
 
 OpenHands SDK 把 SWE-agent 时代的问题从「**设计一个好 ACI**」推进到「**把 ACI + 工具 + 状态 + 沙箱做成可版本化、可远程、可确认、可测的 SDK 合同**」。沙箱从 **默认枷锁** 变为 **部署旋钮**；状态从 **散落可变配置** 变为 **事件源单源真相**。
 
----
-
 ## 五、两站对照：同一史线的升级维度
 
 | 维度 | SWE-agent（2024） | OpenHands Software Agent SDK（2025–26 文） |
@@ -207,9 +197,7 @@ OpenHands SDK 把 SWE-agent 时代的问题从「**设计一个好 ACI**」推�
 
 **连续读法：** SWE-agent 回答「LM 需要什么样的 **计算机界面**」；OpenHands SDK 回答「这个界面如何变成 **可复用库 + 可选沙箱 + 远程服务**，而不绑死在一个单体研究仓库」。
 
----
-
-## 六、局限与待核实
+## 六、局限与争议
 
 | 项 | 说明 |
 |---|---|
@@ -220,14 +208,10 @@ OpenHands SDK 把 SWE-agent 时代的问题从「**设计一个好 ACI**」推�
 | GUI 基础智能体（UI-Venus-2 等） | → 「UIVenus2GUI智能体」 |
 | 合成用户 / ToolEmu / τ-bench | → 「合成用户仿真」 |
 
----
-
 ## 七、小结
 
 > **架构思想上**，编码智能体史线的关键变量是 **界面与运行时合同**：SWE-agent 用 ACI 四原则证明「少而高效的动作 + 简洁反馈 + guardrail」可在不改权重下显著抬升真实仓库修复率；OpenHands SDK 用四包与事件源把同一问题提升为 **可组合、可确认、可本地/远程切换** 的生产基础。
 > **AI Infra 辅线上**，Docker/进程边界、状态持久化开销、跨 pod 认证失败、opt-in 沙箱与 REST/WebSocket 服务，决定的是 **复现与上线**，不是榜面文案——换 harness 仍可能换故事，但合同应可审计。
-
----
 
 **材料版本：** arXiv 2405.15793v3 + 2511.03690v2（官方 PDF）；笔记日期 2026-09-22（Asia/Shanghai）。
 

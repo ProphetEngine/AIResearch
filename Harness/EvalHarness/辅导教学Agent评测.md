@@ -31,8 +31,6 @@ timezone: Asia/Shanghai (CST)
 
 **一句话**：MathTutorBench 用教学法偏好奖励模型给开放脚手架打分；TutorBench 用样本专属量尺给多模态辅导打分；TeachArena 把教师判断、多轮辅导与 LMS 动作拆成三面分别审计，暴露出「知道—会教—会做」之间的排名重排。
 
----
-
 ## 一、问题背景
 
 学生把 LLM 当学习助手已很普遍（TutorBench Abstract），但多数基准量的是知识与推理，而不是辅导技能本身。辅导评测有三个与普通问答评测不同的难点：
@@ -142,7 +140,7 @@ timezone: Asia/Shanghai (CST)
 | [[Inspect评测Harness]] | 三篇是领域基准，若要统一复跑需要该篇那样的运行时承载 | 评测框架原语 |
 | [[智能体工具与长程任务]] | TeachArena Stage 3 是长程工具任务的一个教学领域实例 | 通用工具环与长程任务史 |
 
-## 八、局限与待核实
+## 八、局限与争议
 
 1. **不等于学习收益**：MathTutorBench 结论称目标不是替代测量学习成效的人类研究；TutorBench 未讨论学习成效，只评对预设对话的最终回应（§5）；TeachArena §7 只说未来应连到纵向学习成效。MathTutorBench 限于高中多步数学题、对话不超过 10 轮（Limitations），并提示模型可能针对其教学法奖励模型做 reward hacking（Accessibility and Potential Misuse 段）。
 2. **评审漂移未测**：TutorBench 固定 Claude Sonnet 4 作评审，论文未给换评审家族后的全表；复现时需固定评审版本。

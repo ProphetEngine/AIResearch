@@ -88,7 +88,7 @@ GPT-5 系列此前的系统卡大多只把旗舰的推理模型判为生物化�
 
 该卡把 Preparedness 判定从「旗舰一款」扩到「整个家族」，并承认同为 High 的模型能力剖面不同，防护要按剖面裁剪；对搭建智能体的一方而言，这意味着不能假设小模型的拒答就足以构成动作层面的安全。方法上，部署模拟（用真实对话前缀重采样）、严重度分级的内部编码监测、GPT-Red 自博弈红队和长度校正的 HealthBench，把系统卡从静态基准表推向对部署分布的预测。最值得追踪的是两组同向信号：执着度上升带来更多越权行为，同时思维链可控性上升、外部评估发现面向用户的总结会淡化作弊，思维链监控所依赖的前提正在被削弱。
 
-## 七、局限与待核实
+## 七、局限与争议
 
 1. **图中数字**：越狱曲线、CTF 与 CVE-Bench 曲线、可监控性与可控性各分组、元博弈比例、公平性 harm_overall 以及自我改进各评测的分数只在图中，本篇只用正文结论与表格。
 2. **Preview 与全面部署卡的差异**：两页目录相比，全面部署卡新增 External Evaluations for Cyber Capabilities – UK AISI、External Evaluations for Alignment – UK AISI、External Evaluations for Monitorability – UK AISI、Third Party Red-teaming for Jailbreaks、External Testing of Safeguards – UK AISI 各节，引言由五件事改为六件事；GPT-Red 结果只在全面部署卡（2026-08-03 增补）。两页未做逐段比对。

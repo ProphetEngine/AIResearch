@@ -32,8 +32,6 @@ archived: 2026-09-24
 > - **协议深度止于公告级稳定要点**：client/server、tools / resources / prompts；不展开 JSON-RPC / 传输层全文规范。
 > **主要来源**：[LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?](https://arxiv.org/abs/2508.01780)（v2）；[MCP-Universe: Benchmarking Large Language Models with Real-World Model Context Protocol Servers](https://arxiv.org/abs/2508.14704)（v1）（截至 2026-09-24）。文内人机一致率两处表述（约 79% 与 81%）并列标注，不择一抹平。
 
----
-
 ## 一、材料元信息
 
 | 材料 | 标识 | 角色 |
@@ -47,8 +45,6 @@ archived: 2026-09-24
 | **协议背景（公告级）** | Anthropic, *Introducing the Model Context Protocol*（**2024-11-25**）；`https://www.anthropic.com/news/model-context-protocol` | 开放标准叙事；client/server 分工 |
 
 **一句话抓手：** 生态已扩到「上万级」MCP 服务器叙事，但既有 MCP 评测多把少量工具直接塞进上下文；LiveMCPBench 把问题改写成——在 **70 服务器 / 527 工具** 的可复现工具海中，agent 能否 **检索到对的工具并组合完成** 95 条动态日常任务；Claude-Sonnet-4 成功约 **78.95%**，多数前沿模型约 **30–50%**，失败近半落在检索。
-
----
 
 ## 二、MCP 背景要点（公告级，止于此）
 
@@ -64,8 +60,6 @@ Anthropic 于 2024-11-25 开源 **Model Context Protocol（MCP）**，定位为�
 
 要点：MCP 把「工具」从一次性 API 胶水提升为 **可发现、可组合的服务器—工具层级**；一旦服务器数量进入「工具海」，评测就不能再假设「全量工具已在上下文里」。
 
----
-
 ## 三、工具海问题：为何「注入上下文」评测不够
 
 LiveMCPBench 开篇对照三类设定（Fig.1）：
@@ -80,8 +74,6 @@ LiveMCPBench 开篇对照三类设定（Fig.1）：
 - **RQ2**：在动态真实数据源下，如何设计可扩展且可复现的评测方法？
 
 与库内相邻轴的直觉分界：[[智能体工具与长程任务]] 问「旗舰产品如何把工具环做成长程能力」；本文问「**协议生态变大之后，导航与组合本身难在哪里**」。
-
----
 
 ## 四、LiveMCPBench：设定、代理与评判
 
@@ -140,8 +132,6 @@ LiveMCPBench 相对 MCPBench / MCP-RADAR / MCPEval 等：服务器与工具规�
 - 多数投票、换评判器后相对排序大体稳定（Kendall $\tau$-b ≈ **0.88**，文 §4.3）。
 - 评判误差类型（相对人类）：幻觉完成、输出完备性、粒度不一致等；长轨迹上易忽略「建了文件但未真正取到信息」一类细节（Appendix H 案例）。
 
----
-
 ## 五、MCP-Universe 对照
 
 MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）强调 **执行式评判**（format / static / dynamic），明确批评 LLM-as-a-Judge 在实时知识任务上的局限，并把 LiveMCPBench 列在「真实集成 + 时序动态、但非执行式评判」一侧。
@@ -149,8 +139,6 @@ MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）�
 主结果量级（ReAct；文 Table）：GPT-5 总体成功 **43.72%**，Grok-4 **33.33%**，Claude-4.0-Sonnet **29.44%**——与 LiveMCPBench 上 Claude-Sonnet-4 近 79% **不可直接横比**（任务难度、工具是否预筛、评判协议均不同）。文另报告：交互步数上升时上下文 token 急剧增长；对 MCP 工具精确用法不熟（unknown tools）；连接更多无关服务器会掉点；企业级 Cursor agent 未必优于标准 ReAct。
 
 **对照抓手：** LiveMCPBench 主测 **工具海中的检索导航**；MCP-Universe 主测 **真实服务器上的长程执行与执行式核对**——二者共同说明「MCP 已可用 ≠ agent 已会用」。
-
----
 
 ## 六、与相邻笔记的分工
 
@@ -164,8 +152,6 @@ MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）�
 | [[ToolLoop工具数据合成]] | 函数调用训练数据如何闭环合成 | 对照：那篇的对照工作 HEART 在推理时编排大规模工具库，与本篇工具海导航同属「工具多了怎么选」；ToolLoop 本身解决训练数据怎么造 | 三阶段合成与 BFCL 结果 |
 | **本篇** | MCP 工具海导航与组合是否过关 | — | — |
 
----
-
 ## 七、局限（主文 Appendix A 与辅文口径）
 
 1. **依赖 LLM 评判**：LiveMCPEval 依赖模型打分；虽有人机一致校验，仍可能有风格 / 幻觉偏差（主文 Limitation）。
@@ -173,8 +159,6 @@ MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）�
 3. **工具集运维正交**：plug & play 版本固定利于复现，但长期安全、版本与健康检查不在本文展开。
 4. **范式差异**：MCP-Universe 指出执行式评判对实时任务更稳；LiveMCPBench 的开放式 key-point 评判换来可扩展性，也换来评判器选择敏感性。
 5. **不可跨基准生造「谁更强」**：两文任务域、服务器集合、是否检索前置、评判协议均不同。
-
----
 
 ## 八、文献
 

@@ -26,8 +26,6 @@ archived: 2026-09-22
 > - **不重写** [[对齐脉络RLHF与偏好优化]] 偏好优化 / ORM 作 preference RM 全文。
 > 综述后延工作仅作索引。
 
----
-
 ## 一、材料元信息
 
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
@@ -37,8 +35,6 @@ archived: 2026-09-22
 | **可选地图** | Zheng et al., *A Survey of Process Reward Models* | arXiv **2510.08049v3** \[cs.CL\] **29 Apr 2026**；`https://arxiv.org/abs/2510.08049`（**17** 页 A4） | data → build → use（TTS / RL）全环综述；GitHub: `despzcm/Survey-of-Process-Reward-Model` |
 
 **一句话抓手：** ORM 只看终答对错；PRM 给**每一步**打分，既可做 **Best-of-N / 搜索** 的验证器，又可做 **逐步 dense reward** 喂 RL——Lightman 用人类标注证明过程监督在难题上显著更强并放出 PRM800K；Math-Shepherd 用「从该步续写能否得到金标答案」自动造逐步标签，打通验证与过程 PPO；后续工作把这条枢纽接到更广的 TTS / 过程 RL 闭环（见综述地图，细节不展开算法族）。
-
----
 
 ## 二、问题立轴：ORM vs PRM（为何要「过程」）
 
@@ -68,8 +64,6 @@ Best-of-N step reward → PPO 等
 `
 
 综述 Figure 1 同构：**generate process data → train PRMs → use PRMs（TTS or RL）→ better data**。本篇只把枢纽放在 **Lightman + Math-Shepherd**；扩展索引见 §六。
-
----
 
 ## 三、站 1：人类过程监督 — *Let’s Verify Step by Step*（2305.20050）
 
@@ -124,8 +118,6 @@ ORM 基线刻意做强：每题 **100** 条均匀采样、训练集约比 PRM800
 - Table 1（AP Calc/Chem/Physics、AMC10/12；Best-of-100）：Aggregate **PRM 72.9%** vs ORM 63.8% vs majority 61.3%。
 - **Credit assignment（§6.1）：** 难题上多数解都有错，ORM 负标签边际信息低；PRM 标明「前几步对到哪 + 错在哪」。
 - **Alignment（§6.2）：** 直接奖励人类认可的 CoT；作者称过程监督带来 **negative alignment tax**（更安全且更强）——**仅限数学域主张，作者自陈外推未知**。
-
----
 
 ## 四、站 2：自动标注 — *Math-Shepherd*（2312.08935）
 
@@ -183,8 +175,6 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 在开放模型 + MetaMATH 分布上，作者称自动数据训的 PRM **优于** 直接用人类 PRM800K（归因：**分布差**——PRM800K 来自 GPT-4 解；以及自动数据 **量约为 PRM800K 的 4 倍**、可扩展）。此为 **Math-Shepherd 文内主张**，不是对 Lightman 主结果的否定。
 
----
-
 ## 五、枢纽：PRM 如何接入 TTS 与过程 RL
 
 > 本节只讲 **接口角色**；TTS 通史 → [[推理时扩展TestTimeScaling]]；GRPO/DAPO 配方 → [[GRPO与DAPO算法族]]；R1 多阶段 → [[DeepSeekR1推理训练深读]]。下列不展开为算法清单。
@@ -210,8 +200,6 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 
 小结：**[[GRPO与DAPO算法族]] 管「怎么更新策略」；本篇管「逐步奖励从哪来、怎么进验证与 RL」。**
 
----
-
 ## 六、可选地图：综述 2510.08049（索引级）
 
 > 仅作导航；后延工作名作索引，**不核其实验数字**。
@@ -224,8 +212,6 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 | **应用** | 数学、代码、多模态、agent、高风险域等 | 本篇不扩写 |
 | **开放挑战（Conclusion）** | 降标注成本且稳住自动监督；跨域泛化；接入 agent 规划/记忆；标准化评测 | 与 Lightman 污染/对齐税、Shepherd 噪声定义相呼应 |
 
----
-
 ## 七、延伸阅读
 
 1. **ORM 看结局，PRM 看过程**——难题上逐步信用分配更关键（Lightman §6.1）。
@@ -234,9 +220,7 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 4. **Math-Shepherd：** 用 completer 从该步续写，HE/SE 估「能否到金标」→ 无人工逐步标；同一 PRM 既做 256 候选重排又做 step-by-step PPO（数字见 §4.3–4.4）。
 5. **枢纽：** PRM = TTS 的逐步裁判 + 过程 RL 的 dense 奖励源。
 
----
-
-## 八、局限与待核实
+## 八、局限与争议
 
 | 项 | 状态 |
 |---|---|
@@ -245,8 +229,6 @@ Mistral-7B + step-by-step PPO 后再用 **SC + Math-Shepherd** → **GSM8K 89.1 
 | Math-Shepherd SE vs HE 完整消融曲线 | §5 有分析；本篇只列 HE 主实验设定 |
 | 综述中 OmegaPRM / GenPRM / PURE min-form 等 | **仅索引**，数字待各自 PDF |
 | 与 R1/GRPO 生产线的具体接线（是否用 PRM、何种聚合） | **各 TR 为准**；本篇不猜测 |
-
----
 
 ## 九、交叉引用
 

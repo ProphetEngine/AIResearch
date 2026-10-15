@@ -36,8 +36,6 @@ timezone: Asia/Shanghai (CST)
 
 **一句话**：Gemini 4 Argon 于 2026-09-30 经 Fairwind 首发，2026-10-13 全球公开 GA；稀疏 MoE、原生多模态，统一 **1,048,576** token 的 input+output 窗口；introductory API 价为每百万 token 输入 **$2** / 输出 **$10**，至 **2026-11-30**，期满为 **$4** / **$20**；配套网页模型卡与安全博文，另有 allowlist 变体 `gemini-4-argon-cyber-permissive`。
 
----
-
 ## 一、定位与放量
 
 | 项目 | 内容 | 出处 |
@@ -129,7 +127,7 @@ timezone: Asia/Shanghai (CST)
 | [[Prompt注入架构防御]] / [[安全论证SafetyCases]] | IPI **0.7%**、模型卡 FSF 表结论级交叉 | 注入防御架构或 FSF 通史；不展开 safety case 机制 |
 | [[ClaudeSonnet55系统卡短报]] / [[ClaudeOpus55系统卡短报]] | 模型卡已列的 Opus / Fable 等对照列身份 | 重做 Anthropic 系统卡 |
 
-## 六、局限与待核实
+## 六、局限与争议
 
 - **知识截止**：模型卡写明 **March 2026**；部分领域可能更旧；另可能幻觉、偶发变慢或超时。
 - **安全报告形态**：完整 Safety & Security Report 仅 PDF、无独立 HTML 落地页；正文以安全博文与模型卡为入口，不挂 PDF 直链。

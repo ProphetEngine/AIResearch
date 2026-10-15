@@ -126,7 +126,7 @@ Table 5 中 Gemma 4 为 thinking 模式，Gemma 3 27B 为 non-thinking。报告�
 
 Gemma 4 把 Google 的多模态与推理能力落成一套可下载、可复现的权重族，并公开了闭源 Gemini 不给的工程配方：local/global 注意力加 p-RoPE 与 KV 复用，用来控制长上下文的 KV 缓存；mobile 与 Q4_0 两种 QAT 格式，加上同训的 MTP drafter，用来压内存与提解码速度。12B 去掉独立编码器、直接投影原始图块与音频，是多模态架构上值得跟踪的一个开源样本。
 
-## 七、局限与待核实
+## 七、局限与争议
 
 1. **26B-A4B 激活参数的写法不一**：正文写 3.8B activated，Table 1 Einsums 列写 2,800M (active)，型号名与 Arena 表写 4B；引用时须标明出处。
 2. **未公开项**：训练 token 总量、MoE 专家配置、thinking 预算的数值均未给出。

@@ -15,8 +15,6 @@ archived: 2026-09-22
 > - DPO：Rafailov et al., *Direct Preference Optimization: Your Language Model is Secretly a Reward Model* (arXiv:2305.18290, NeurIPS 2023)
 > 本笔记只据已读 PDF / 介绍页写要点；未在原文中读到的奖励模型层内结构细节、未核对的实验分一律标「待核实」或不写。
 
----
-
 ## 一、为何需要对齐流水线（基座 → 助手）
 
 ### 1.1 预训练目标与「跟用户意图」不对齐
@@ -44,8 +42,6 @@ DPO 从另一侧说同一件事：无监督 LM 在海量、目标混杂的人类
 InstructGPT 明确说他们做的是 **fine-tuning approaches**，用 RLHF 把 GPT-3 调到能跟随宽广指令；并坦承：这是对齐到「特定一群人（标注者与研究者）陈述的偏好」，而非任何更广的「人类价值观」抽象。Constitutional AI 则把「原则列表（constitution）」推到前台，试图让治理规则更显式、更少依赖海量有害性人工标注。
 
 **要点：**「基座会说话」≠「助手会按意图、按约束说话」；对齐流水线是在**改目标与反馈来源**，而不只是继续堆参数。
-
----
 
 ## 二、架构思想
 
@@ -125,8 +121,6 @@ DPO 的诊断：标准 RLHF 先拟合奖励模型，再用 RL（常 PPO）在「
 - **任务形态（Agentic RL）**：把规划、工具、记忆、推理、自改进当成可学习策略，在长程、部分可观测环境里联合优化，不再只对单轮文本打分（[[AgenticRL景观与能力模块]]）。
 
 偏好优化本身也继续分叉：无参考 / 单阶段变体见 [[SimPO与ORPO偏好优化]]，把硬安全约束写进 DPO 形目标见 [[SafeDPO与RePO]]。
-
----
 
 ## 三、数学原理辅线（直觉为主，关键公式注明出处）
 
@@ -225,8 +219,6 @@ $$
 
 **推导小结：** BT 吃「分差」→ KL 约束最优策略让「分」≈「β·log 策略比 + 常数」→ 分差里常数消掉 → 直接对策略做分类。
 
----
-
 ## 四、常见误区
 
 1. **「对齐 = 再预训练一轮 / 只做 SFT」**
@@ -256,8 +248,6 @@ $$
 9. **把论文主结果数字当可复现承诺**
  各方评测协议、标注者指令、prompt 分布不同；笔记引用数量级时需回指向图表，复现前应重读实验节与附录。
 
----
-
 ## 五、引用
 
 1. Long Ouyang et al. *Training language models to follow instructions with human feedback*. arXiv:2203.02155, 2022.
@@ -275,9 +265,7 @@ $$
 
 4. 脉络前置（文中引用、本议题不展开精读）：Christiano et al. 2017（RLHF 偏好）；Ziegler et al. 2019；Stiennon et al. 2020（摘要 RLHF）；Askell et al. 2021（HHH）；Bai et al. 2022（HH RLHF / red team，CAI 前置）；Schulman et al. 2017（PPO）；Bradley & Terry 1952（BT 模型）。
 
----
-
-## 局限与待核实
+## 局限与争议
 
 - InstructGPT **Appendix B/C**：标注者筛选与人口统计细节、175B RM 不稳的具体现象、PPO / PPO-ptx 超参表。
 - InstructGPT 各公开基准精确分与 Figure 1 误差条：笔记只用了摘要级叙述，复述百分比前应对照正文表图。

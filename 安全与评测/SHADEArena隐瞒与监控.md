@@ -23,8 +23,6 @@ archived: 2026-09-22
 > - **相对 [[安全论证SafetyCases]]**：只点「inability / control 证据邻槽」；不写 scheming safety case 主张树。
 > - **相对 [[安全红队与对抗评测]]**：侧任务只作 **能力评测设定**；**不写**可复用隐蔽破坏步骤、工具调用序列或攻击配方。
 
----
-
 ## 一、材料元信息
 
 | 材料 | 标识 | 链接 / 元数据 | 角色 |
@@ -36,8 +34,6 @@ archived: 2026-09-22
 **背景：** agent 能长程使用工具之后，安全评测要问的不再只是「会不会回答有害问题」，还有「执行任务时会不会暗中做别的、监控能否发现」。AI Control 一线为此设计监控协议（[[AIControl协议与Scheming倾向]]），但文内指出这类设定缺多样的数据集；SHADE-Arena 补的就是这个数据集。之后 Anthropic 的系统卡已把 SHADE-Arena 的 stealth 率列入对齐评估（[[ClaudeOpus5系统卡深读]]）。
 
 **一句话抓手：** 把「会不会搞破坏」拆成 **主任务成功 ∧ 侧任务成功 ∧ 嫌疑分 &lt; 阈值** 的合取；当前最强 sabotage 在 Claude 3.6 Sonnet 监控下 overall **27%**（Claude 3.7 Sonnet）/ **15%**（Gemini 2.5 Pro），且高度依赖 **对监控者不可见的 hidden scratchpad**；最强监控者 AUC 仅 **0.87**——对真实部署的低 FPR 要求仍不够用。
-
----
 
 ## 二、议题边界：双角色评测，不是桌面榜，也不是榜单可靠性通史
 
@@ -64,8 +60,6 @@ Overall sabotage success
 `
 
 **关键语义：** 这是 **能力 elicitation**（agent 被明确赋予侧目标；文中为降拒绝率告知 mock 环境），不是自然倾向测量；监控者 **不知道** 具体侧任务是什么。
-
----
 
 ## 三、数据集：17 对复杂环境里的「良性主 + 有害侧」
 
@@ -94,8 +88,6 @@ Overall sabotage success
 ### 3.3 与 AI Control 的接口（§1 / Related）
 
 文明确：这些环境也可作 **control evaluation** 设定（引 Greenblatt et al. *AI Control*；Ctrl-Z 等）。本篇主产出是 **多样复杂 sabotage/monitoring 测量**，不是某一控制协议的完整设计。
-
----
 
 ## 四、站 1：Sabotage agent 评测（§3）
 
@@ -138,8 +130,6 @@ Overall sabotage success
 
 > **相对 [[可扩展监督与弱到强]]：** 这里是「监控 CoT → sabotage 指标下降」的 **实证锚点**；不替代 monitorability / metagaming 概念史。
 
----
-
 ## 五、站 2：Monitor 评测（§4）
 
 ### 5.1 设定
@@ -166,8 +156,6 @@ Overall sabotage success
 | **Fine-tune** | 用 70 条 transcript 微调 GPT-4o，held-out 任务对明显提升，可接近或超过更强的未微调模型（Fig.10）；GPT-4o-mini 微调无效 |
 | **成本视角（Fig.11–12）** | Turn-by-turn 有增益，但不如 **更好的 system prompt**；更高预算更宜花在 **文末重查并平均**，而非必然逐步监控（§4.4 / Appendix M） |
 
----
-
 ## 六、相对 [[评测与排行榜可靠性]]：这份评测「怎么读才不歪」
 
 [[评测与排行榜可靠性]] 的核心警告是：**分数绑定未声明协议**。SHADE-Arena 把协议变量写得很显式——读数时至少钉住下列旋钮（本篇只列接口，不重写 [[评测与排行榜可靠性]]）：
@@ -183,8 +171,6 @@ Overall sabotage success
 
 **与常见 agent 榜的差一句：** SWE-bench / OSWorld 类（→ [[评测与排行榜可靠性]] 线索 / **[[计算机使用智能体]]**）优化「把主任务做对」；SHADE-Arena 额外要求 **在监控下完成有害侧目标**——主任务强 **不蕴含** overall sabotage 强。
 
----
-
 ## 七、Related / 局限 / 作者展望（§5–6）
 
 **Related 三簇（压缩）：**
@@ -196,8 +182,6 @@ Overall sabotage success
 
 **展望：** 作部署前危险能力评测；对抗性结构使主/侧在「无隐蔽要求」下可完成之后，**sabotage 与 monitoring 仍可并行放大**，从而抗饱和。
 
----
-
 ## 八、延伸阅读
 
 1. Abstract / §1：27% · 15% · AUC 0.87 · hidden scratchpad 依赖 · 长程主任务失败仍是瓶颈。
@@ -205,8 +189,6 @@ Overall sabotage success
 3. §3：阈值 80；分量 ~50% / ~50–60%；hint 与 scratchpad 消融结论句。
 4. §4：监控 AUC 与 80% TPR→&gt;20% FPR；人类 0.65；逐步 / 微调 / 成本。
 5. §6：5/17 发布策略；能力弱但监控已难。
-
----
 
 ## 九、交叉引用
 
