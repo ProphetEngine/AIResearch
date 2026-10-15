@@ -65,7 +65,7 @@ OpenHands Software Agent SDK / V1（四包、事件源、opt-in 沙箱、REST/WS
 
 ### 3.1 主张：LM 是新一类终端用户
 
-Abstract / §1–2：LM agent 常被塞进 **已有人类界面**（Linux shell、Python 解释器）；但复杂 SE 任务上，人类靠 IDE 等应用提效。作者提出 **agent-computer interface（ACI）**：介于 LM 与计算机之间的抽象层——**既规定可用命令，也规定环境状态如何回传**；并管理历史如何拼进下一步输入。
+Abstract / §1–2：LM agent 常被置于 **已有人类界面**（Linux shell、Python 解释器）；但复杂 SE 任务上，人类靠 IDE 等应用提效。作者提出 **agent-computer interface（ACI）**：介于 LM 与计算机之间的抽象层——**既规定可用命令，也规定环境状态如何回传**；并管理历史如何拼进下一步输入。
 
 相对 HCI：GUI 富视觉对当代 LM 不友好；人类可忽略冗余，LM 则对无关上下文付 **固定记忆/算力成本**。故 ACI 应：帮助理解变更后状态、管理历史以免过时观测占窗、提供 **高效且可靠** 的动作。
 
@@ -201,7 +201,7 @@ OpenHands SDK 把 SWE-agent 时代的问题从「**设计一个好 ACI**」推�
 
 | 项 | 说明 |
 |---|---|
-| SWE-agent 之后社区 ACI 变体（更多 viewer/编辑 DSL）与 2025–26 私有 coding agent 内部 harness | 非本 PDF → **待核实 / 不写入数字** |
+| SWE-agent 之后社区 ACI 变体（更多 viewer/编辑 DSL）与 2025–26 私有 coding agent 内部 harness | 不在本篇来源范围内，**未写入数字** |
 | OpenHands Index 上晚于 PDF 表 5 的刷新分数 | 以 PDF 钉死；线上榜 **待同步核实** |
 | MCP / ReAct / Claude Code / 旗舰 System Card 工具环 | 范围外 → 「智能体工具与长程任务」 |
 | SWE-bench 污染、scaffold 公平性方法论 | 点到即止 → 「评测与排行榜可靠性」及相关污染专篇 |

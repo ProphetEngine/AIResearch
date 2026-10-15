@@ -44,7 +44,7 @@ archived: 2026-09-24
 | **辅·代码** | `https://github.com/SalesforceAIResearch/MCP-Universe` | 可扩展评测框架（文内） |
 | **协议背景（公告级）** | Anthropic, *Introducing the Model Context Protocol*（**2024-11-25**）；`https://www.anthropic.com/news/model-context-protocol` | 开放标准叙事；client/server 分工 |
 
-**一句话抓手：** 生态已扩到「上万级」MCP 服务器叙事，但既有 MCP 评测多把少量工具直接塞进上下文；LiveMCPBench 把问题改写成——在 **70 服务器 / 527 工具** 的可复现工具海中，agent 能否 **检索到对的工具并组合完成** 95 条动态日常任务；Claude-Sonnet-4 成功约 **78.95%**，多数前沿模型约 **30–50%**，失败近半落在检索。
+**要点：** 生态已扩到「上万级」MCP 服务器叙事，但既有 MCP 评测多把少量工具直接放入上下文；LiveMCPBench 把问题改写成——在 **70 服务器 / 527 工具** 的可复现工具海中，agent 能否 **检索到对的工具并组合完成** 95 条动态日常任务；Claude-Sonnet-4 成功约 **78.95%**，多数前沿模型约 **30–50%**，失败近半落在检索。
 
 ## 二、MCP 背景要点（公告级，止于此）
 
@@ -138,7 +138,7 @@ MCP-Universe（231 任务 / 6 域 / **11** 真实服务器 / **133** 工具）�
 
 主结果量级（ReAct；文 Table）：GPT-5 总体成功 **43.72%**，Grok-4 **33.33%**，Claude-4.0-Sonnet **29.44%**——与 LiveMCPBench 上 Claude-Sonnet-4 近 79% **不可直接横比**（任务难度、工具是否预筛、评判协议均不同）。文另报告：交互步数上升时上下文 token 急剧增长；对 MCP 工具精确用法不熟（unknown tools）；连接更多无关服务器会掉点；企业级 Cursor agent 未必优于标准 ReAct。
 
-**对照抓手：** LiveMCPBench 主测 **工具海中的检索导航**；MCP-Universe 主测 **真实服务器上的长程执行与执行式核对**——二者共同说明「MCP 已可用 ≠ agent 已会用」。
+**对照要点：** LiveMCPBench 主测 **工具海中的检索导航**；MCP-Universe 主测 **真实服务器上的长程执行与执行式核对**——二者共同说明「MCP 已可用 ≠ agent 已会用」。
 
 ## 六、与相邻笔记的分工
 
