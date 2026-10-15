@@ -1,5 +1,5 @@
 ---
-title: "DeepSeek-V4 Technical Report 深读"
+title: "DeepSeek-V4 技术报告深读"
 topic: DeepSeekV4技术报告深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -13,7 +13,7 @@ related: ["DeepSeekV3训练与MoE基建", "DeepSeekV32技术报告深读", "Deep
 archived: 2026-09-22
 ---
 
-# DeepSeek-V4 Technical Report 深读
+# DeepSeek-V4 技术报告深读
 
 > **主要来源**：[DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence](https://arxiv.org/abs/2606.19348)（DeepSeek-AI，v1，2026-04-26，58 页）；[DeepSeek-V4 权重集合](https://huggingface.co/collections/deepseek-ai/deepseek-v4)（截至 2026-09-28）。
 > **研究线**：架构思想（CSA + HCA 混合注意力、mHC、Muon，主）· 评测字段（长上下文与智能体表，辅）

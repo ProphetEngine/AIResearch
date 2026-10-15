@@ -1,5 +1,5 @@
 ---
-title: "GLM-4.5 Technical Report 深读"
+title: "GLM-4.5 技术报告深读"
 topic: GLM45技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -12,7 +12,7 @@ related: ["DeepSeekV3训练与MoE基建", "KimiK2技术报告深读", "混合专
 archived: 2026-09-22
 ---
 
-# GLM-4.5 Technical Report 深读
+# GLM-4.5 技术报告深读
 
 > **主要来源**：[GLM-4.5: Agentic, Reasoning, and Coding (ARC) Foundation Models](https://arxiv.org/abs/2508.06471)；[zai-org/GLM-4.5 README](https://github.com/zai-org/GLM-4.5)（仅用于核对型号名）；[THUDM/slime README](https://github.com/THUDM/slime)（报告 §3.5 所附框架地址）（截至 2025-08-08）。报告只有 arXiv v1；两个 README 不引事实，不计入截至，slime 的内容均取自报告。
 > **研究线**：架构思想（主：「窄而深」的 MoE、专家模型迭代的后训练）；AI Infra（辅：Muon 预训练设定、slime RL 框架）

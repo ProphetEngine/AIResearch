@@ -1,5 +1,5 @@
 ---
-title: "UI-Venus-2 Technical Report：跨端 GUI 基础智能体与可验证 RL 信号"
+title: "UI-Venus-2 技术报告：跨端 GUI 基础智能体与可验证 RL 信号"
 topic: UIVenus2GUI智能体
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -14,7 +14,7 @@ appendix_index:
 archived: 2026-09-22
 ---
 
-# UI-Venus-2 Technical Report：跨端 GUI 基础智能体与可验证 RL 信号
+# UI-Venus-2 技术报告：跨端 GUI 基础智能体与可验证 RL 信号
 
 > **主要来源**：[UI-Venus-2 Technical Report](https://arxiv.org/abs/2609.00028)（Venus Team, Ant Group，v1，2026-08-27）（截至 2026-08-27）
 > **研究线**：架构思想（主：跨 mobile、web、desktop 的统一截图到动作闭环、三阶段管线、动作结构感知的多教师蒸馏）；评测字段（辅：轨迹级与样本级可验证信号、跨端基准表）

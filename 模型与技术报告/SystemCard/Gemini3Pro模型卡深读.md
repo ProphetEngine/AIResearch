@@ -1,5 +1,5 @@
 ---
-title: Gemini 3 Pro Model Card 深读
+title: Gemini 3 Pro 模型卡深读
 topic: Gemini3Pro模型卡深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -11,7 +11,7 @@ related: ["Gemini25技术报告深读", "Gemini37Flash模型卡深读", "模型�
 archived: 2026-09-22
 ---
 
-# Gemini 3 Pro Model Card 深读
+# Gemini 3 Pro 模型卡深读
 
 > **主要来源**：[Gemini 3 Pro Model Card](https://deepmind.google/models/model-cards/)（Google DeepMind，Model Release: November 2025，Last Updated: May 2026，仅有 PDF 版，此处挂官方模型卡索引页，以下简称该卡）；[A new era of intelligence with Gemini 3](https://blog.google/products-and-platforms/products/gemini/gemini-3/)（Google 发布博文，2025-11-18，以下简称博文）（截至 2026-05）。
 > **研究线**：架构思想（模型卡公开了哪些架构与数据字段）+ AI Infra（训练硬件与软件栈的公开程度）

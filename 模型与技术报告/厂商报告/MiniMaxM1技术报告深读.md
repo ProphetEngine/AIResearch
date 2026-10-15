@@ -1,5 +1,5 @@
 ---
-title: MiniMax-M1 Technical Report 深读
+title: MiniMax-M1 技术报告深读
 topic: MiniMaxM1技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -9,7 +9,7 @@ related: ["推理时扩展TestTimeScaling", "长上下文位置编码与系统�
 archived: 2026-09-22
 ---
 
-# MiniMax-M1 Technical Report 深读
+# MiniMax-M1 技术报告深读
 
 > **主要来源**：[MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention](https://arxiv.org/abs/2506.13585)（MiniMax，v1，2025-06-16）（截至 2025-06-16）
 > **研究线**：架构思想（主：混合注意力使推理时算力近线性扩展、CISPO）；AI Infra（辅：混合注意力下的 RL 训练稳定性与算力账本）

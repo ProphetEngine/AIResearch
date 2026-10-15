@@ -1,5 +1,5 @@
 ---
-title: "A.X K2 Technical Report 深读"
+title: "A.X K2 技术报告深读"
 topic: AXK2技术报告深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -13,7 +13,7 @@ related: ["DeepSeekV32技术报告深读", "DeepSeekV3训练与MoE基建", "注�
 archived: 2026-09-22
 ---
 
-# A.X K2 Technical Report 深读
+# A.X K2 技术报告深读
 
 > **主要来源**：[A.X K2 Technical Report](https://arxiv.org/abs/2608.30181)；[skt/A.X-K2 模型页](https://huggingface.co/skt/A.X-K2)（仅用于核对型号名）（截至 2026-08-31）。报告只有 arXiv v1；模型页不引事实，不计入截至。
 > **研究线**：架构思想（主：Sparse Gated Attention、Gated Norm、稀疏预热）；评测字段（辅：对照表、长上下文与韩语评测、部署吞吐）

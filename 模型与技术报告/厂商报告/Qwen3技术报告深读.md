@@ -1,5 +1,5 @@
 ---
-title: Qwen3 Technical Report 深读
+title: Qwen3 技术报告深读
 topic: Qwen3技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -10,7 +10,7 @@ related: ["DeepSeekV3训练与MoE基建", "DeepSeekR1推理训练深读", "混�
 archived: 2026-09-22
 ---
 
-# Qwen3 Technical Report 深读
+# Qwen3 技术报告深读
 
 > **主要来源**：[Qwen3 Technical Report](https://arxiv.org/abs/2505.09388)（Qwen Team，v1，2025-05-14）（截至 2025-05-14）
 > **研究线**：架构思想（主：Dense 与 MoE 模型族、同一权重内的思考与非思考模式、思考预算）；AI Infra（辅：三阶段预训练、旗舰四阶段后训练与小模型蒸馏的算力取舍）

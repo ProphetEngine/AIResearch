@@ -1,5 +1,5 @@
 ---
-title: GPT-5.2 System Card Update 深读
+title: GPT-5.2 系统卡更新深读
 topic: GPT52SystemCard更新
 date: 2026-09-22
 lines: [架构思想]
@@ -11,7 +11,7 @@ related: ["GPT5系统卡深读", "GPT56系统卡深读", "GPT6Astra系统卡深�
 archived: 2026-09-22
 ---
 
-# GPT-5.2 System Card Update 深读
+# GPT-5.2 系统卡更新深读
 
 > **主要来源**：[Update to GPT-5 System Card: GPT-5.2](https://deploymentsafety.openai.com/gpt-5-2)（OpenAI Deployment Safety Hub，2025-12-11 发布，§4 思维链评测于 2026-04-24 增补，以下简称该卡）；[Introducing GPT-5.2](https://openai.com/index/introducing-gpt-5-2/)（OpenAI 发布博文，2025-12-11，以下简称博文）（截至 2026-04-24）。
 > **研究线**：架构思想（Instant / Thinking 双线下的安全回归与 Preparedness 判定，以及后补的思维链可监控性；相对 GPT-5.1 的并列分数表只作对照）

@@ -1,5 +1,5 @@
 ---
-title: "Claude Opus 4.1 System Card Addendum 专项深读"
+title: "Claude Opus 4.1 系统卡附录专项深读"
 topic: ClaudeOpus41系统卡附录深读
 date: 2026-09-22
 lines: [架构思想]
@@ -11,7 +11,7 @@ related: ["ClaudeOpus45系统卡深读", "GPT5系统卡深读", "模型卡与Sys
 archived: 2026-09-22
 ---
 
-# Claude Opus 4.1 System Card Addendum 专项深读
+# Claude Opus 4.1 系统卡附录专项深读
 
 > **主要来源**：[System Card Addendum: Claude Opus 4.1](https://www.anthropic.com/system-cards)（Anthropic 系统卡索引页，封面 2025-08，changelog 2025-09-15，23 页）；[Claude Opus 4.1](https://www.anthropic.com/news/claude-opus-4-1)（发布公告，2025-08-05）（截至 2025-11-24）。
 > **研究线**：架构思想（增量发布如何用精简与自愿评测衔接 RSP，以及主卡、附录、下一张全卡之间的文档分层）

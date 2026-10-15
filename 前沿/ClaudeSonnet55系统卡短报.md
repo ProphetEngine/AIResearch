@@ -3,7 +3,7 @@ date: 2026-09-29
 status: archived
 archived: 2026-09-29
 topic: ClaudeSonnet55系统卡短报
-title: "Claude Sonnet 5.5 System Card（前沿短报）"
+title: "Claude Sonnet 5.5 系统卡（前沿短报）"
 lines: [评测字段]
 sources:
  - https://www-cdn.anthropic.com/870c8f525702625d2c62fc6dd04c857e3250bec1/Claude%20Sonnet%205.5%20System%20Card.pdf
@@ -16,7 +16,7 @@ retrieval_cutoff: 2026-10-07
 timezone: Asia/Shanghai (CST)
 ---
 
-# Claude Sonnet 5.5 System Card（前沿短报）
+# Claude Sonnet 5.5 系统卡（前沿短报）
 
 > **主要来源**：[Claude Sonnet 5.5 System Card](https://www-cdn.anthropic.com/870c8f525702625d2c62fc6dd04c857e3250bec1/Claude%20Sonnet%205.5%20System%20Card.pdf)；[Introducing Claude Sonnet 5.5](https://www.anthropic.com/claude-sonnet-5-5)（截至 2026-10-07）。下文「SC §x」指系统卡原文章节，「官方页」指上列发布页，「Docs」指 Claude Platform 模型文档，「AWS 博文」指 AWS 发布博文。
 > **研究线**：评测字段（能力汇总表、RSP 阈值、cyber 能力与护栏）· 部署形态（fallback、防推理提取）

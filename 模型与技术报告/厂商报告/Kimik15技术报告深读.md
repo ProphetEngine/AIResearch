@@ -1,5 +1,5 @@
 ---
-title: Kimi k1.5 Technical Report 深读
+title: Kimi k1.5 技术报告深读
 topic: Kimik15技术报告深读
 date: 2026-09-22
 lines: [架构思想, 数学原理]
@@ -9,7 +9,7 @@ related: ["KimiK2技术报告深读", "KimiK3技术报告", "对齐脉络RLHF与
 archived: 2026-09-22
 ---
 
-# Kimi k1.5 Technical Report 深读
+# Kimi k1.5 技术报告深读
 
 > **主要来源**：[Kimi k1.5: Scaling Reinforcement Learning with LLMs](https://arxiv.org/abs/2501.12599)（Kimi Team，v4，2025-06-03；首次提交 2025-01-22）（截至 2025-06-03）
 > **研究线**：架构思想（主：长上下文作为 RL 的新缩放轴、用长思维链近似隐式规划）；数学原理（辅：在线策略镜像下降的近似目标、长度奖励）

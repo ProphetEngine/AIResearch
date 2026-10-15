@@ -1,5 +1,5 @@
 ---
-title: Kimi K2 Technical Report 深读
+title: Kimi K2 技术报告深读
 topic: KimiK2技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -13,7 +13,7 @@ related: ["DeepSeekV3训练与MoE基建", "混合专家架构", "MoE路由与负
 archived: 2026-09-22
 ---
 
-# Kimi K2 Technical Report 深读
+# Kimi K2 技术报告深读
 
 > **主要来源**：[Kimi K2: Open Agentic Intelligence](https://arxiv.org/abs/2507.20534)（Kimi Team，v2，2026-02-03；首次提交 2025-07-28）；[Kimi-K2-Instruct 权重页](https://huggingface.co/moonshotai/Kimi-K2-Instruct)（仅用于核对型号名）；[checkpoint-engine](https://github.com/MoonshotAI/checkpoint-engine)（报告 v2 所附代码地址）（截至 2026-02-03）。两个仓库页不引事实，不计入截至。
 > **研究线**：架构思想（主：更稀疏的 MLA-MoE、MuonClip）；AI Infra（辅：万亿参数训练的并行与显存方案、RL 权重同步）

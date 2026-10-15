@@ -1,5 +1,5 @@
 ---
-title: "Claude Fable 5.1 & Mythos 5.1 System Card：安全评测字段 × 访问边界"
+title: "Claude Fable 5.1 & Mythos 5.1 系统卡：安全评测字段 × 访问边界"
 topic: ClaudeFable与Mythos51
 date: 2026-09-22
 lines: [评测字段, 架构思想]
@@ -13,7 +13,7 @@ timezone: Asia/Shanghai (CST)
 archived: 2026-09-22
 ---
 
-# Claude Fable 5.1 & Mythos 5.1 System Card：安全评测字段 × 访问边界
+# Claude Fable 5.1 & Mythos 5.1 系统卡：安全评测字段 × 访问边界
 
 > **主要来源**：[System Card: Claude Fable 5.1 & Claude Mythos 5.1](https://www.anthropic.com/system-cards)（Anthropic 系统卡索引页，封面 2026-09-01，212 页）；[Introducing Claude Fable 5.1 and Claude Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1)（截至 2026-09-22）。
 > **研究线**：评测字段（RSP、cyber 能力梯与护栏覆盖、safeguards / agentic / alignment 的可核对指标，主）· 架构思想（同一权重两套护栏 + 受信访问计划 + fallback，辅）

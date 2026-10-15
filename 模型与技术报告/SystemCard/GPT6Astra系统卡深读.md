@@ -1,5 +1,5 @@
 ---
-title: GPT-6 Astra System Card 深读
+title: GPT-6 Astra 系统卡深读
 topic: GPT6Astra系统卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -10,7 +10,7 @@ related: ["GPT56系统卡深读", "GPT61Sol系统卡短报", "GPT6SolLuna十月�
 archived: 2026-09-22
 ---
 
-# GPT-6 Astra System Card 深读
+# GPT-6 Astra 系统卡深读
 
 > **主要来源**：[GPT-6 Astra System Card](https://deploymentsafety.openai.com/gpt-6-astra)（OpenAI Deployment Safety Hub，2026-09-03 发布，2026-09-09 更新对齐章节，2026-09-22 修订 HealthBench 数值、增补 GPT-6 Sol / Luna 附录并注明部分对齐评测已更新，2026-09-29 增补 dots 附录；118 页）（截至 2026-10-07）。
 > **研究线**：架构思想（对齐与监控叙事，主）· 评测字段（Preparedness 与 agentic safety，辅）

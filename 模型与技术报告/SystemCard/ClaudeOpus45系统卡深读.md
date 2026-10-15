@@ -1,5 +1,5 @@
 ---
-title: "Claude Opus 4.5 System Card 专项深读"
+title: "Claude Opus 4.5 系统卡专项深读"
 topic: ClaudeOpus45系统卡深读
 date: 2026-09-22
 lines: [架构思想]
@@ -11,7 +11,7 @@ related: ["ClaudeOpus41系统卡附录深读", "ClaudeOpus5系统卡深读", "�
 archived: 2026-09-22
 ---
 
-# Claude Opus 4.5 System Card 专项深读
+# Claude Opus 4.5 系统卡专项深读
 
 > **主要来源**：[System Card: Claude Opus 4.5](https://www.anthropic.com/system-cards)（Anthropic，封面 November 2025，变更记录至 2025-12-05，仅有 PDF 版，此处挂官方系统卡索引页，以下简称该卡）；[Introducing Claude Opus 4.5](https://www.anthropic.com/news/claude-opus-4-5)（Anthropic 发布公告，2025-11-24，以下简称公告）（截至 2025-12-05）。
 > **研究线**：架构思想（智能体能力、effort 旋钮与 RSP 安全评测如何同卷呈现；能力表与奖励黑客率只作对照）

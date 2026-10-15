@@ -1,5 +1,5 @@
 ---
-title: "Grok 4 Model Card 专项深读"
+title: "Grok 4 模型卡专项深读"
 topic: Grok4模型卡深读
 date: 2026-09-22
 lines: [架构思想]
@@ -12,7 +12,7 @@ related: ["模型卡与SystemCard规范", "SystemCard谱系时间线", "审慎�
 archived: 2026-09-22
 ---
 
-# Grok 4 Model Card 专项深读
+# Grok 4 模型卡专项深读
 
 > **主要来源**：[Grok 4 Model Card](https://x.ai/news/grok-4)（xAI，Last updated: August 20, 2025，仅有 PDF 版，此处挂官方 Grok 4 发布页，以下简称该卡）；[Grok 4.1 Model Card](https://x.ai/news/grok-4-1)（xAI，November 17, 2025，仅有 PDF 版，此处挂官方 Grok 4.1 发布页）；Grok 4.20 System Card（xAI，April 7, 2026，仅有 PDF 版，无官方落地页）；[Grok Models & Pricing](https://docs.x.ai/developers/models)（xAI 开发者文档，仅用于核对型号名 grok-4.20）（截至 2026-04-07）。
 > **研究线**：架构思想（xAI 如何用风险框架把推理加工具调用模型的风险拆成滥用、倾向与双用途能力，以及系统提示、输入过滤与拒绝训练如何充当主要缓解）

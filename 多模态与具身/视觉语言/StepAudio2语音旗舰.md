@@ -1,5 +1,5 @@
 ---
-title: "语音旗舰：Step-Audio 2 Technical Report（≠ Qwen-Omni / ≠ Speech-LLM 入门）"
+title: "语音旗舰：Step-Audio 2 技术报告（≠ Qwen-Omni / ≠ Speech-LLM 入门）"
 topic: StepAudio2语音旗舰
 date: 2026-09-22
 lines: [架构思想, 训练数据接口, 评测字段]
@@ -13,7 +13,7 @@ retrieval_cutoff: 2026-07-17
 timezone: Asia/Shanghai (CST)
 ---
 
-# 语音旗舰：Step-Audio 2 Technical Report（≠ Qwen-Omni / ≠ Speech-LLM 入门）
+# 语音旗舰：Step-Audio 2 技术报告（≠ Qwen-Omni / ≠ Speech-LLM 入门）
 
 > **主要来源**：[Step-Audio 2 Technical Report](https://arxiv.org/abs/2507.16632)（StepFun Audio Team，阶跃星辰，v1 2025-07-22，v3 2025-08-27）；[stepfun-ai/Step-Audio2](https://github.com/stepfun-ai/Step-Audio2)（代码、mini 版权重与自建评测集）（截至 2026-07-17）。
 > **研究线**：架构思想（主：单一 LLM 解码器输出交织的文本与音频 token，接入检索与工具）；训练数据接口（续预训练、监督微调与强化学习的数据构成）；评测字段（辅：语音识别、副语言理解、MMAU、语音翻译、工具调用、语音对话）

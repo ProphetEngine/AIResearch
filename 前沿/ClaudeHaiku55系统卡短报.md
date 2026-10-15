@@ -3,7 +3,7 @@ date: 2026-10-08
 status: archived
 archived: 2026-10-08
 topic: ClaudeHaiku55系统卡短报
-title: "Claude Haiku 5.5 System Card（前沿短报）"
+title: "Claude Haiku 5.5 系统卡（前沿短报）"
 lines: [评测字段]
 sources:
  - https://www-cdn.anthropic.com/e1080d6bf5ae2018ea3c2f414064be03232f5be5/Claude%20Haiku%205.5%20System%20Card.pdf
@@ -14,7 +14,7 @@ retrieval_cutoff: 2026-10-08
 timezone: Asia/Shanghai (CST)
 ---
 
-# Claude Haiku 5.5 System Card（前沿短报）
+# Claude Haiku 5.5 系统卡（前沿短报）
 
 > **主要来源**：[System Card: Claude Haiku 5.5](https://www-cdn.anthropic.com/e1080d6bf5ae2018ea3c2f414064be03232f5be5/Claude%20Haiku%205.5%20System%20Card.pdf)；[Introducing Claude Haiku 5.5](https://www.anthropic.com/claude-haiku-5-5)；[Claude Haiku 5.5](https://platform.claude.com/docs/en/models/haiku-5-5/overview)（截至 2026-10-08）。下文「SC §x」指系统卡原文章节，「发布页」指上列 Anthropic 发布页，「Docs」指 Claude Platform 模型文档。
 > **研究线**：评测字段（分段价目、能力选项、RSP 阈值）· 部署形态（无 fallback 的分类器、按能力收窄的 cyber 护栏）

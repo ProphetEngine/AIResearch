@@ -1,5 +1,5 @@
 ---
-title: Gemini 3.7 Flash Model Card 深读
+title: Gemini 3.7 Flash 模型卡深读
 topic: Gemini37Flash模型卡深读
 date: 2026-09-22
 lines: [架构思想]
@@ -10,7 +10,7 @@ related: ["Gemini3Pro模型卡深读", "Gemini25技术报告深读", "Gemini4Arg
 archived: 2026-09-22
 ---
 
-# Gemini 3.7 Flash Model Card 深读
+# Gemini 3.7 Flash 模型卡深读
 
 > **主要来源**：[Gemini 3.7 Flash — Model Card](https://deepmind.google/models/model-cards/gemini-3-7-flash/)（Google DeepMind，2026-08-13 发布，PDF 版 9 页）（截至 2026-09-30）。
 > **研究线**：架构思想（产品字段与 Frontier Safety 字段）

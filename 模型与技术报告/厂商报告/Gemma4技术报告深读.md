@@ -3,7 +3,7 @@ topic: Gemma4技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
-title: Gemma 4 Technical Report 深读
+title: Gemma 4 技术报告深读
 sources:
  - https://arxiv.org/abs/2607.02770
  - https://ai.google.dev/gemma/docs/core
@@ -11,7 +11,7 @@ related: ["Gemini25技术报告深读", "端侧小模型", "ZeroQAT量化感知�
 archived: 2026-09-22
 ---
 
-# Gemma 4 Technical Report 深读
+# Gemma 4 技术报告深读
 
 > **主要来源**：[Gemma 4 Technical Report](https://arxiv.org/abs/2607.02770)（Gemma Team, Google DeepMind，v2，2026-07-24；首次提交 2026-07-02）；[Gemma 4 开发者概述](https://ai.google.dev/gemma/docs/core)（Last updated 2026-07-08）（截至 2026-07-24）。
 > **研究线**：架构思想（主：local/global 注意力与 KV 复用、12B 无编码器架构）；AI Infra（辅：QAT、MTP drafter、TPU 分片表）

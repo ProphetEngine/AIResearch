@@ -1,5 +1,5 @@
 ---
-title: gpt-oss-120b / gpt-oss-20b Model Card 深读
+title: gpt-oss-120b / gpt-oss-20b 模型卡深读
 topic: GPToss模型卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -11,7 +11,7 @@ related: ["混合专家架构", "长上下文位置编码与系统侧", "推理�
 archived: 2026-09-22
 ---
 
-# gpt-oss-120b / gpt-oss-20b Model Card 深读
+# gpt-oss-120b / gpt-oss-20b 模型卡深读
 
 > **主要来源**：[gpt-oss-120b & gpt-oss-20b Model Card](https://arxiv.org/abs/2508.10925)（OpenAI，封面日期 2025-08-05，arXiv v1 2025-08-08，以下简称该卡）；[Introducing gpt-oss](https://openai.com/index/introducing-gpt-oss/)（OpenAI 发布博文，2025-08-05，以下简称博文）（截至 2025-08-08）。
 > **研究线**：架构思想（主：开放权重 MoE、MXFP4 量化、harmony 对话格式与三档推理强度）；评测字段（辅：Table 3 的分档能力表与开放权重的 Preparedness 剖面）

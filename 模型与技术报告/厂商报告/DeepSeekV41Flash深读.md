@@ -1,5 +1,5 @@
 ---
-title: "DeepSeek-V4.1-Flash Technical Report 深读"
+title: "DeepSeek-V4.1-Flash 技术报告深读"
 topic: DeepSeekV41Flash深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -13,7 +13,7 @@ related: ["DeepSeekV4技术报告深读", "DeepSeekV32技术报告深读", "Deep
 archived: 2026-09-22
 ---
 
-# DeepSeek-V4.1-Flash Technical Report 深读
+# DeepSeek-V4.1-Flash 技术报告深读
 
 > **主要来源**：[DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression](https://arxiv.org/abs/2609.19969)；[deepseek-ai/DeepSeek-V4.1-Flash 模型页](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash)（仅用于核对型号名）（截至 2026-09-17）。报告只有 arXiv v1；模型页不引事实，不计入截至。
 > **研究线**：架构思想（主：Causal Encoder-Decoder、CSA2、FP4 主 KV）；AI Infra（辅：SWA Bounded Replay 与持久化 KV 管理）

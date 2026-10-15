@@ -1,5 +1,5 @@
 ---
-title: Kimi K3 Technical Report 深读
+title: Kimi K3 技术报告深读
 topic: KimiK3技术报告
 date: 2026-09-22
 lines: [架构思想, AI Infra, 评测字段]
@@ -17,7 +17,7 @@ retrieval_cutoff: 2026-08-07
 timezone: Asia/Shanghai (CST)
 ---
 
-# Kimi K3 Technical Report 深读
+# Kimi K3 技术报告深读
 
 > **主要来源**：[Kimi K3: Open Frontier Intelligence](https://arxiv.org/abs/2607.24653)（Kimi Team，v2，2026-08-07；首次提交 2026-07-27）；[Kimi-K3 权重页](https://huggingface.co/moonshotai/Kimi-K3)（报告所附权重地址，仅用于核对型号名）；[MoonEP](https://github.com/MoonshotAI/MoonEP) 与 [AgentENV](https://github.com/kvcache-ai/AgentENV)（报告脚注所附代码地址）（截至 2026-08-07）。三个仓库页不引事实，不计入截至。
 > **研究线**：架构思想（主：混合 KDA–MLA、注意力残差、Stable LatentMoE、从零训练的视觉编码器、逐头 Muon）；AI Infra（辅：KDA 内核与上下文并行、MoonEP、1M 上下文智能体 RL 与 AgentENV、在线服务）；评测字段（辅：§6 正文给出的主结果）

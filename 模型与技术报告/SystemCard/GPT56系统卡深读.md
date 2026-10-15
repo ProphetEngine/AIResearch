@@ -1,5 +1,5 @@
 ---
-title: GPT-5.6 Preview / GA System Card 深读
+title: GPT-5.6 Preview / GA 系统卡深读
 topic: GPT56系统卡深读
 date: 2026-09-22
 lines: [架构思想]
@@ -11,7 +11,7 @@ related: ["GPT5系统卡深读", "GPT52SystemCard更新", "GPT6Astra系统卡深
 archived: 2026-09-22
 ---
 
-# GPT-5.6 Preview / GA System Card 深读
+# GPT-5.6 Preview / GA 系统卡深读
 
 > **主要来源**：[GPT-5.6 System Card](https://deploymentsafety.openai.com/gpt-5-6)（OpenAI Deployment Safety Hub，2026-07-09 发布，变更记录至 2026-08-19，以下简称该卡）；[GPT-5.6 Preview System Card](https://deploymentsafety.openai.com/gpt-5-6-preview)（2026-06-26 发布，以下简称 Preview 卡）（截至 2026-08-19）。
 > **研究线**：架构思想（三型号同判 High 的 Preparedness 结论、分层安全栈与智能体编码中的越权倾向；部署模拟、思维链可监控性与可控性、元博弈等新评测口径作辅助）

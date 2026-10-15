@@ -3,7 +3,7 @@ date: 2026-09-22
 status: archived
 archived: 2026-09-22
 topic: GPT5系统卡深读
-title: "GPT-5 System Card 深读（含 GPT-5.1 增补）"
+title: "GPT-5 系统卡深读（含 GPT-5.1 增补）"
 lines: [架构思想, AI Infra]
 sources:
   - https://deploymentsafety.openai.com/gpt-5
@@ -14,7 +14,7 @@ sources:
 related: ["开源与闭源前沿模型谱系", "智能体工具与长程任务", "评测与排行榜可靠性", "模型卡与SystemCard规范", "SystemCard谱系时间线", "GPT52SystemCard更新", "GPT56系统卡深读", "GPToss模型卡深读", "ClaudeOpus41系统卡附录深读", "ClaudeOpus45系统卡深读", "Gemini25技术报告深读", "Gemini3Pro模型卡深读", "Qwen3技术报告深读", "DeepSeekR1推理训练深读", "安全红队与对抗评测"]
 ---
 
-# GPT-5 System Card 深读（含 GPT-5.1 增补）
+# GPT-5 系统卡深读（含 GPT-5.1 增补）
 
 > **主要来源**：[GPT-5 System Card](https://deploymentsafety.openai.com/gpt-5)（OpenAI Deployment Safety Hub，标 Published August 7, 2025；PDF 封面 August 13, 2025）；[OpenAI GPT-5 System Card](https://arxiv.org/abs/2601.03267)（arXiv 镜像，v2 2026-05-01）；[GPT-5.1 Instant and GPT-5.1 Thinking System Card Addendum](https://deploymentsafety.openai.com/gpt-5-1)（Hub，Published November 12, 2025）（截至 2026-05-01）。arXiv v2 注明「Added monitorability evals and authors」。
 > **研究线**：架构思想（主）+ AI Infra（辅）

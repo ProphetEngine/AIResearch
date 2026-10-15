@@ -1,5 +1,5 @@
 ---
-title: Qwen3-Coder-Next Technical Report 深读
+title: Qwen3-Coder-Next 技术报告深读
 topic: Qwen3CoderNext技术报告深读
 date: 2026-09-22
 lines: [架构思想, 训练—agent 反馈接口, 评测字段]
@@ -17,7 +17,7 @@ retrieval_cutoff: 2026-03-03
 timezone: Asia/Shanghai (CST)
 ---
 
-# Qwen3-Coder-Next Technical Report 深读
+# Qwen3-Coder-Next 技术报告深读
 
 > **主要来源**：[Qwen3-Coder-Next Technical Report](https://arxiv.org/abs/2603.00729)（Qwen Team，v1，2026-02-28）；[Qwen3-Coder-Next 权重页](https://huggingface.co/Qwen/Qwen3-Coder-Next)（仅用于核对型号名）；[Qwen3-Coder 代码仓库](https://github.com/QwenLM/Qwen3-Coder)（报告所附地址）（截至 2026-03-03）。权重页与仓库页不引事实，不计入截至。
 > **研究线**：训练与智能体反馈接口（主：可验证任务合成、执行基建、多专家 RL 与蒸馏、奖励黑客拦截）；评测字段（辅：SWE 系列与 Terminal-Bench）；架构思想（只记底座与规模）

@@ -3,7 +3,7 @@ date: 2026-09-30
 status: archived
 archived: 2026-09-30
 topic: GPT61Sol系统卡短报
-title: "GPT-6.1 Sol System Card（addendum · 前沿短报）"
+title: "GPT-6.1 Sol 系统卡（附录 · 前沿短报）"
 lines: [评测字段]
 sources:
  - https://deploymentsafety.openai.com/gpt-6-1-sol
@@ -16,7 +16,7 @@ retrieval_cutoff: 2026-09-29
 timezone: Asia/Shanghai (CST)
 ---
 
-# GPT-6.1 Sol System Card（addendum · 前沿短报）
+# GPT-6.1 Sol 系统卡（附录 · 前沿短报）
 
 > **主要来源**：[Addendum to GPT-6 Astra System Card: GPT-6.1 Sol](https://deploymentsafety.openai.com/gpt-6-1-sol)；[Introducing GPT-6.1 Sol](https://openai.com/index/introducing-gpt-6-1-sol)（截至 2026-09-29）。下文「该卡 §x」指 Deployment Safety Hub 上的这份 addendum，「博文」指上列发布页。
 > **研究线**：评测字段（能力对照、Preparedness、相对 GPT-6 Sol 与 Astra 的安全增量）· 部署形态（API 价、ChatGPT Work 与 Codex 可用性）

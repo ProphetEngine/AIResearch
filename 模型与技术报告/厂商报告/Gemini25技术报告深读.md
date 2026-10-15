@@ -1,5 +1,5 @@
 ---
-title: "Gemini 2.5 Technical Report 深读"
+title: "Gemini 2.5 技术报告深读"
 topic: Gemini25技术报告深读
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -11,7 +11,7 @@ related: ["Gemini3Pro模型卡深读", "Gemini37Flash模型卡深读", "开源�
 archived: 2026-09-22
 ---
 
-# Gemini 2.5 Technical Report 深读
+# Gemini 2.5 技术报告深读
 
 > **主要来源**：[Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities](https://arxiv.org/abs/2507.06261)（Gemini Team, Google，v6，2025-12-19；首次提交 2025-07-07；73 页）（截至 2026-08-13）。
 > **研究线**：架构思想（稀疏 MoE + 原生多模态 + 长上下文 + RL 训练的 thinking，主）· AI Infra（TPUv5p 多 pod 同步训练的弹性与静默数据损坏检测，辅）

@@ -1,5 +1,5 @@
 ---
-title: Claude Opus 5 System Card 深读
+title: Claude Opus 5 系统卡深读
 topic: ClaudeOpus5系统卡深读
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -11,7 +11,7 @@ related: ["ClaudeOpus45系统卡深读", "ClaudeFable与Mythos51", "ClaudeOpus55
 archived: 2026-09-22
 ---
 
-# Claude Opus 5 System Card 深读
+# Claude Opus 5 系统卡深读
 
 > **主要来源**：[System Card: Claude Opus 5](https://www.anthropic.com/system-cards)（Anthropic，封面 July 24, 2026，变更记录至 2026-08-19，仅有 PDF 版，此处挂官方系统卡索引页，以下简称该卡）；[Introducing Claude Opus 5](https://www.anthropic.com/news/claude-opus-5)（Anthropic 发布公告，2026-07-24，以下简称公告）（截至 2026-08-19）。
 > **研究线**：架构思想（RSP 威胁模型与对齐风险的写法）+ 评测字段（cyber 能力梯与分类器分层）

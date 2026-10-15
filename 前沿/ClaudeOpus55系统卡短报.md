@@ -3,7 +3,7 @@ date: 2026-09-23
 status: archived
 archived: 2026-09-23
 topic: ClaudeOpus55系统卡短报
-title: "Claude Opus 5.5 System Card（前沿短报）"
+title: "Claude Opus 5.5 系统卡（前沿短报）"
 lines: [评测字段]
 sources:
  - https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf
@@ -14,7 +14,7 @@ retrieval_cutoff: 2026-10-07
 timezone: Asia/Shanghai (CST)
 ---
 
-# Claude Opus 5.5 System Card（前沿短报）
+# Claude Opus 5.5 系统卡（前沿短报）
 
 > **主要来源**：[Claude Opus 5.5 System Card](https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdf)；[Introducing Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)（截至 2026-10-07）。下文「卡 §x」指系统卡原文章节，「产品页」指上列发布页。
 > **研究线**：评测字段（能力汇总表、RSP 阈值、cyber 与对齐）· 部署形态（fallback、护栏）
