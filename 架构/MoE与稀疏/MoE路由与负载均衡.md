@@ -62,7 +62,7 @@ timezone: Asia/Shanghai (CST)
 | 2025-01 | [Global-batch LBL](https://arxiv.org/abs/2501.11873) | 在全局批而非微批上计算均衡损失，显著改善领域特化；Qwen3 采用 |
 | 2025-07 | [Kimi K2](https://arxiv.org/abs/2507.20534)、[Efficiency Leverage](https://arxiv.org/abs/2507.17702) | 稀疏度（总专家/激活专家）作为缩放变量：K2 取 48；以激活比例与粒度预测 MoE 相对稠密模型的算力优势 |
 
-近一年的产品级演进：DeepSeek-V4 把亲和分改为 Sqrt(Softplus)、去掉目标节点数约束并在前 3 层改用按 token ID 的哈希路由（[[DeepSeekV4技术报告深读]]）；Kimi K3 以 Quantile Balancing 做无辅助损失路由，稀疏度约 56（[[KimiK3技术报告]]）。
+截至 2026-10-08 一年内的产品级演进：DeepSeek-V4 把亲和分改为 Sqrt(Softplus)、去掉目标节点数约束并在前 3 层改用按 token ID 的哈希路由（[[DeepSeekV4技术报告深读]]）；Kimi K3 以 Quantile Balancing 做无辅助损失路由，稀疏度约 56（[[KimiK3技术报告]]）。
 
 ## 三、核心机制
 

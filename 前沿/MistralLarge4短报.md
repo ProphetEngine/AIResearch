@@ -40,7 +40,7 @@ timezone: Asia/Shanghai (CST)
 - **Large 3**：稀疏 MoE，41B 激活、675B 总参，在 3000 张 NVIDIA H200 上从零训练，是 Mistral 自 Mixtral 系列以来的第一个 MoE；后训练后具备图像理解与多语言对话能力。公告称它在 LMArena 开源非推理模型类首发排第 2（开源模型总榜第 6），发布 base 与指令微调两版，称推理版「coming soon」。模型文档标 granular MoE、多模态、上下文 256k。
 - **部署**：公告称与 vLLM、Red Hat 合作发布 NVFP4 checkpoint，可在 Blackwell NVL72 系统或单个 8×A100 / 8×H100 节点上用 vLLM 运行；本篇不把它延伸为通用部署保证。
 - **Ministral 3**：每个尺寸都有 base、instruct、reasoning 三个版本，均具图像理解能力，定位边缘与本地部署（公告）。
-- **技术文档**：公告末尾链接的论文只覆盖 Ministral 3（arXiv 首版 2026-01-13），Large 3 没有独立技术报告，更深的训练与评测细节待核实。论文要点：用 Cascade Distillation（迭代剪枝 → 蒸馏 → 再剪枝）从 Mistral Small 3.1 派生 3 个尺寸 × 3 个版本共 9 个 dense 模型；训练量 1–3T tokens；上下文最长 256k（reasoning 版 128k）；14B Base 在部分基准上接近 Mistral Small 3.1 Base，参数少 40% 以上；架构为 decoder-only Transformer + GQA；视觉编码器是从 Mistral Small 3.1 复制并冻结的 410M ViT。以上均为论文自报。
+- **技术文档**：公告末尾链接的论文只覆盖 Ministral 3（arXiv 首版 2026-01-13），Large 3 没有独立技术报告，更深的训练与评测细节截至 2026-10-08 未见公开。论文要点：用 Cascade Distillation（迭代剪枝 → 蒸馏 → 再剪枝）从 Mistral Small 3.1 派生 3 个尺寸 × 3 个版本共 9 个 dense 模型；训练量 1–3T tokens；上下文最长 256k（reasoning 版 128k）；14B Base 在部分基准上接近 Mistral Small 3.1 Base，参数少 40% 以上；架构为 decoder-only Transformer + GQA；视觉编码器是从 Mistral Small 3.1 复制并冻结的 410M ViT。以上均为论文自报。
 
 ### 1.2 ML4 的发布形态
 

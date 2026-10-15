@@ -9,7 +9,7 @@ archived: 2026-09-22
 
 # Decoder-only / GPT 路线如何成为主流
 
-> 研究线：架构思想（主）+ AI Infra（辅，数据与训练栈）。入口论文为 Brown et al., *Language Models are Few-Shot Learners*（GPT-3, 2020）；产品与后训练节点以 OpenAI GPT-4 官方页与技术报告为准。未核实处统一标「待核实」。
+> 研究线：架构思想（主）+ AI Infra（辅，数据与训练栈）。入口论文为 Brown et al., *Language Models are Few-Shot Learners*（GPT-3, 2020）；产品与后训练节点以 OpenAI GPT-4 官方页与技术报告为准。截至 2026-09-22 未见官方确认之处均另行注明。
 
 ## 一、从 Encoder / Encoder-Decoder / Decoder-only 三分到产品形态收敛
 
@@ -112,14 +112,14 @@ GPT-3 论文把评估场景明确分成：
 
 ## 四、关键节点：GPT-1/2/3/4 公开叙述中的转折
 
-以下时间与主张以官方博文 / 论文为准；参数等数字凡来自二手综述且未经官方 PDF 核对者，标「待核实」。
+以下时间与主张以官方博文 / 论文为准；参数等数字凡来自二手综述且未见官方 PDF 确认者，均注明「截至 2026-09-22 未见官方确认」。
 
 | 节点 | 公开入口 | 转折要点 |
 |------|----------|----------|
-| **GPT-1（2018）** | Radford et al., *Improving Language Understanding by Generative Pre-Training*；OpenAI: [Improving language understanding with unsupervised learning](https://openai.com/index/language-unsupervised/) | **Decoder-only + 生成式预训练 + 任务微调** 打通：一套 Transformer 解码器栈，先 LM 再微调，少改架构即可迁移到多种理解任务。相对「每任务定制网络」是范式收缩的第一步。具体层数/参数量：常见二手来源称约 12 层、约 1.17 亿参数——**待核实（需对照官方 PDF）**。 |
+| **GPT-1（2018）** | Radford et al., *Improving Language Understanding by Generative Pre-Training*；OpenAI: [Improving language understanding with unsupervised learning](https://openai.com/index/language-unsupervised/) | **Decoder-only + 生成式预训练 + 任务微调** 打通：一套 Transformer 解码器栈，先 LM 再微调，少改架构即可迁移到多种理解任务。相对「每任务定制网络」是范式收缩的第一步。具体层数/参数量：常见二手来源称约 12 层、约 1.17 亿参数——**截至 2026-09-22 未见官方 PDF 确认**。 |
 | **GPT-2（2019）** | Radford et al., *Language Models are Unsupervised Multitask Learners*；OpenAI: [Better language models](https://openai.com/index/better-language-models/) | 目标叙事从「预训练+微调」转向 **零样本多任务**：WebText 上的下一词预测涌现初步的问答/翻译/摘要等能力；最大公开型号 **1.5B** 参数；强调容量对零样本迁移关键。发布策略上曾分阶段放模型（安全顾虑）——属产品/治理转折，亦强化「LM 已强到需管控」的社会叙事。 |
 | **GPT-3（2020）** | Brown et al., [arXiv:2005.14165](https://arxiv.org/abs/2005.14165) | **Few-shot / in-context learning** 成为主角：175B、300B tokens；系统比较 0/1/few-shot；在多项任务上逼近或超过当时部分微调 SOTA（如 TriviaQA closed-book few-shot 等，细节见论文表）。架构上公开仍跟 GPT-2 配方并加 sparse attention。污染与偏见、社会影响专章进入「必写」。 |
-| **InstructGPT / 对齐转折（2022）** | Ouyang et al., *Training language models to follow instructions with human feedback*（[arXiv:2203.02155](https://arxiv.org/abs/2203.02155)） | 公开叙事：仅靠变大不足以让模型「按用户意图行事」；**SFT + RLHF** 提升真实用户提示上的偏好胜率。ChatGPT（官方称基于 GPT-3.5 系）把对齐后的 Decoder-only 推成消费级产品——**「架构收敛」之后是「目标函数/后训练收敛」**。GPT-3.5 与 ChatGPT 的精确底座参数：**待核实**（需对照当时 OpenAI 说明，非 GPT-4 报告核心披露）。 |
+| **InstructGPT / 对齐转折（2022）** | Ouyang et al., *Training language models to follow instructions with human feedback*（[arXiv:2203.02155](https://arxiv.org/abs/2203.02155)） | 公开叙事：仅靠变大不足以让模型「按用户意图行事」；**SFT + RLHF** 提升真实用户提示上的偏好胜率。ChatGPT（官方称基于 GPT-3.5 系）把对齐后的 Decoder-only 推成消费级产品——**「架构收敛」之后是「目标函数/后训练收敛」**。GPT-3.5 与 ChatGPT 的精确底座参数：**截至 2026-09-22 未见官方确认**（需对照当时 OpenAI 说明，非 GPT-4 报告核心披露）。 |
 | **GPT-4（2023-03）** | 官方页 [GPT-4](https://openai.com/index/gpt-4-research/)；[GPT-4 Technical Report](https://arxiv.org/abs/2303.08774) | 仍宣称 **Transformer-style、下一 token 预训练**；新增 **图文多模态输入、文本输出**；强调专业/学术考试表现（如模拟律师资格考试约前 10% 百分位，对比叙述中 GPT-3.5 约后 10%）；**RLHF 后训练**；**可预测扩展** Infra；**故意不公开** 模型尺寸、硬件、算力、数据与训练细节。产品形态上，通用助手 + API 成为默认，Decoder-only（外加视觉前端）成为产业默认假设。 |
 
 **收敛一句话**：架构上从「三种 Transformer 用法并存」收束到「因果 Decoder 做通用接口」；目标上从「为每个基准微调」收束到「预训练续写 + 提示/少样本 + 指令与偏好对齐」；披露上从 GPT-3 的相对透明缩放表，收到 GPT-4 的能力与安全报告。
@@ -136,7 +136,7 @@ GPT-3 论文把评估场景明确分成：
  过度解读。GPT-3 多任务随规模大致变好；GPT-4 反而强调 **用小规模实验预测大训练结果**。部分能力曲线可能陡峭，但不等于无法做工程外推。
 
 4. **「GPT-4 已公开与 GPT-3 同级的架构表」**
- 误。技术报告写明因竞争与安全考虑，**无架构（含模型大小）、硬件、训练算力、数据构造、训练方法等细节**。外传参数量均应标 **待核实**，不能当事实写入决策材料。
+ 误。技术报告写明因竞争与安全考虑，**无架构（含模型大小）、硬件、训练算力、数据构造、训练方法等细节**。外传参数量截至 2026-09-22 均未见官方确认，不能当作事实引用。
 
 5. **「下一词预测只学表面统计，对推理无贡献」或反之「只靠续写就等于可靠推理」**
  两端都过绝对。公开评测显示规模与后训练能提升考试与部分推理基准，但也明确保留幻觉、校准变差（GPT-4 称后训练后校准不如基座）、知识截止等限制。
@@ -151,7 +151,7 @@ GPT-3 论文把评估场景明确分成：
 
 以下均取自正文已有标注：
 
-1. **型号细节**：GPT-1 层数与参数量（约 12 层、约 1.17 亿）来自二手来源；GPT-3.5 / ChatGPT 的底座参数未见官方披露，均未经官方来源核对。
+1. **型号细节**：GPT-1 层数与参数量（约 12 层、约 1.17 亿）来自二手来源；GPT-3.5 / ChatGPT 的底座参数未见官方披露，截至 2026-09-22 均未见官方确认。
 2. **GPT-4 不可核**：技术报告不公开架构、模型大小、硬件、训练算力、数据构造与训练方法；外传参数量不能当事实。考试百分位等能力数字是报告自述。
 3. **in-context learning 的解释**：GPT-3 自己把「推理时真正学会新任务」还是「识别预训练中见过的模式」列为开放问题；「涌现」只宜读作平滑提升加若干质变观感。
 4. **材料口径**：GPT-3 要点依据 arXiv 论文正文与表格。

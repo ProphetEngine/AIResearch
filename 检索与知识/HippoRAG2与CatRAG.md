@@ -144,7 +144,7 @@ QA F1（Table 2，节选）：
 - **基线随版本变化**：ACL 版新增 PropRAG、LightRAG、HyperGraphRAG 等基线，CatRAG 自身数字与 arXiv 版相同；但在新增基线下它不再全部最好，例如 PropRAG 在 MuSiQue F1（46.1 对 45.0）、HotpotQA Recall@5（90.0 对 89.5）与 HotpotQA FCR / JSR（81.0 / 58.2 对 80.4 / 56.8）上更高。
 - **代码并非论文原版**：CatRAG 论文称因专有数据政策不能公开完整源码，只给超参数表；GitHub 仓库是 2026-08-20 发布的复现实现，与论文原实现的差异未核对。
 - **上限未测**：CatRAG 刻意用较小的检索器，换更强编码器后的绝对水平未知。
-- **待核实读图**：HippoRAG 2 增量语料模拟（Fig.3）与 CatRAG 枢纽强度分布（Fig.2）只取论文文字描述，未读图取点。
+- **图表读数说明**：HippoRAG 2 增量语料模拟（Fig.3）与 CatRAG 枢纽强度分布（Fig.2）只取论文文字描述，未读图取点。
 
 ## 八、与相邻笔记的分工
 
