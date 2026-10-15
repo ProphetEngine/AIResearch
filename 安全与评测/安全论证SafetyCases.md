@@ -31,7 +31,7 @@ archived: 2026-09-22
 | **主文 B（外部评审）** | Barrett, Campos Zabala, Fillingham et al., *Lessons from External Review of DeepMind’s Scheming Inability Safety Case* | arXiv:**2604.21964v1** \[cs.CY\] **23 Apr 2026**；`https://arxiv.org/abs/2604.21964`（**39** 页 letter） | Assurance 2.0 + CAE Declare；对主文 A 的外部评审；过程建议与三则 counter-case |
 | **可选 C（基础再校准）** | Feakins, Habli, Morgan (York / SAINTS), *Clear, Compelling Arguments: Rethinking the Foundations of Frontier AI Safety Cases* | IASEAI’26；White Rose ePrints **238521**；`https://eprints.whiterose.ac.uk/id/eprint/238521/`（**22** 页 A4；CreationDate **2026-09-16** CST） | 对齐社区「alignment safety case」相对安全保证学的基础落差；危害识别 / 风险降低 / 通篇生命周期 |
 
-**要点：** Safety case ≠ 又一份评测报告——是把 **「即便误对齐也不会造成严重 scheming 伤害」** 拆成可评审的 **主张树**，用能力评测当 **证据节点**，再用外部 Assurance 2.0 审查 **范围、系统模型、证据确证强度与残余怀疑**。
+**一句话：** Safety case ≠ 又一份评测报告——是把 **「即便误对齐也不会造成严重 scheming 伤害」** 拆成可评审的 **主张树**，用能力评测当 **证据节点**，再用外部 Assurance 2.0 审查 **范围、系统模型、证据确证强度与残余怀疑**。
 
 ## 二、议题边界：论证结构，不是监督协议，也不是红队剧本
 

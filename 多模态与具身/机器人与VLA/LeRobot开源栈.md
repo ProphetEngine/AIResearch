@@ -29,7 +29,7 @@ archived: 2026-09-22
 | **主锚** | Cadene et al., *LeRobot: An Open-Source Library for End-to-End Robot Learning* | arXiv:**2602.22818v1** \[cs.RO\] **26 Feb 2026**（ICLR 2026）；`https://arxiv.org/abs/2602.22818`（**20** 页） | 开源端到端栈：硬件 middleware、数据集、SOTA 算法参考实现、异步推理 |
 | **对照锚** | Open X-Embodiment Collaboration, *Open X-Embodiment: Robotic Learning Datasets and RT-X Models* | arXiv:**2310.08864v9** \[cs.RO\] **14 May 2025**；`https://arxiv.org/abs/2310.08864`（**12** 页）；项目页 https://robotics-transformer-x.github.io/ | **数据集标准 / 跨具身仓**：22 embodiments、RLDS；RT-X 仅作「仓上模型」存在性，**不**展开策略 |
 
-**要点：** [[视觉语言动作谱系]] 回答「**策略怎么把观测变成动作**」；本篇回答「**开源社区如何用一套库把硬件控制、数据格式、训练/部署串成可复现栈**」——LeRobot 是垂直集成，OXE 是更早的跨具身 **数据集聚合标准**。
+**一句话：** [[视觉语言动作谱系]] 回答「**策略怎么把观测变成动作**」；本篇回答「**开源社区如何用一套库把硬件控制、数据格式、训练/部署串成可复现栈**」——LeRobot 是垂直集成，OXE 是更早的跨具身 **数据集聚合标准**。
 
 ## 二、议题边界：相对 [[视觉语言动作谱系]] 的增量轴
 

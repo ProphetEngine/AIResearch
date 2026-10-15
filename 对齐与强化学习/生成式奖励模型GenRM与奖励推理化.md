@@ -38,7 +38,7 @@ archived: 2026-09-28
 **开源（主）：** 文称代码与模型 `https://github.com/RM-R1-UIUC/RM-R1`。  
 **开源（辅 GRM）：** 文称 Hugging Face / ModelScope 发布 DeepSeek-GRM。
 
-**要点：** 标量 RM 只吐一个数；普通 GenRM 能写 critique 但仍常「浅想」；RM-R1 / DeepSeek-GRM 把**长推理链**（rubric 或自适应 principle）写进奖励过程，并用可验证对错做 RL——前者重**结构化打分**，后者重**推理时把奖励算力砸大**。
+**一句话：** 标量 RM 只吐一个数；普通 GenRM 能写 critique 但仍常「浅想」；RM-R1 / DeepSeek-GRM 把**长推理链**（rubric 或自适应 principle）写进奖励过程，并用可验证对错做 RL——前者重**结构化打分**，后者重**推理时把奖励算力砸大**。
 
 ## 二、三代对照：标量 → 生成式 critique → 奖励即推理
 

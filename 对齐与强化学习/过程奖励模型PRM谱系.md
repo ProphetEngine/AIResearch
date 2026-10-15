@@ -34,7 +34,7 @@ archived: 2026-09-22
 | **主文 B** | Wang et al., *Math-Shepherd* | arXiv **2312.08935v3** \[cs.AI\] **19 Feb 2024**；`https://arxiv.org/abs/2312.08935`（**15** 页） | **无人工标注**的自动过程监督；**验证 + step-by-step PPO** |
 | **可选地图** | Zheng et al., *A Survey of Process Reward Models* | arXiv **2510.08049v3** \[cs.CL\] **29 Apr 2026**；`https://arxiv.org/abs/2510.08049`（**17** 页 A4） | data → build → use（TTS / RL）全环综述；GitHub: `despzcm/Survey-of-Process-Reward-Model` |
 
-**要点：** ORM 只看终答对错；PRM 给**每一步**打分，既可做 **Best-of-N / 搜索** 的验证器，又可做 **逐步 dense reward** 喂 RL——Lightman 用人类标注证明过程监督在难题上显著更强并放出 PRM800K；Math-Shepherd 用「从该步续写能否得到金标答案」自动造逐步标签，打通验证与过程 PPO；后续工作把这条枢纽接到更广的 TTS / 过程 RL 闭环（见综述地图，细节不展开算法族）。
+**一句话：** ORM 只看终答对错；PRM 给**每一步**打分，既可做 **Best-of-N / 搜索** 的验证器，又可做 **逐步 dense reward** 喂 RL——Lightman 用人类标注证明过程监督在难题上显著更强并放出 PRM800K；Math-Shepherd 用「从该步续写能否得到金标答案」自动造逐步标签，打通验证与过程 PPO；后续工作把这条枢纽接到更广的 TTS / 过程 RL 闭环（见综述地图，细节不展开算法族）。
 
 ## 二、问题立轴：ORM vs PRM（为何要「过程」）
 
