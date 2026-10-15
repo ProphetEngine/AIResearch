@@ -1,5 +1,5 @@
 ---
-title: "Prompt injection 架构防御：CaMeL + StruQ（≠ 红队通史 / ≠ 多模态越狱）"
+title: "提示注入的架构防御：CaMeL 与 StruQ"
 topic: Prompt注入架构防御
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -21,7 +21,7 @@ retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)
 ---
 
-# Prompt injection 架构防御：CaMeL + StruQ（≠ 红队通史 / ≠ 多模态越狱）
+# 提示注入的架构防御：CaMeL 与 StruQ
 
 > **主要来源**：[Defeating Prompt Injections by Design](https://arxiv.org/abs/2503.18813)；[StruQ: Defending Against Prompt Injection with Structured Queries](https://arxiv.org/abs/2402.06363)；[Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents](https://arxiv.org/abs/2503.00061)（截至 2026-09-22）。下文「CaMeL §x」「StruQ §x」「Adaptive」分别指三文。
 > **研究线**：架构思想与系统接口（主）——把不可信数据从控制平面拆开；安全—效用字段（辅）——AgentDojo、AlpacaEval 与各攻击族的聚合 ASR。

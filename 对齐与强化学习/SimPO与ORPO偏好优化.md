@@ -1,5 +1,5 @@
 ---
-title: "Preference optimization 新变体族：SimPO + ORPO（KTO 索引）"
+title: "偏好优化新变体族：SimPO 与 ORPO（KTO 索引）"
 topic: SimPO与ORPO偏好优化
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -13,7 +13,7 @@ related: ["对齐脉络RLHF与偏好优化", "SafeDPO与RePO", "合成对齐数�
 archived: 2026-09-22
 ---
 
-# Preference optimization 新变体族：SimPO + ORPO（KTO 索引）
+# 偏好优化新变体族：SimPO 与 ORPO（KTO 索引）
 
 > **主要来源**：[SimPO: Simple Preference Optimization with a Reference-Free Reward](https://arxiv.org/abs/2405.14734)（Meng、Xia、Chen，简称 SimPO，v3，NeurIPS 2024）；[ORPO: Monolithic Preference Optimization without Reference Model](https://arxiv.org/abs/2403.07691)（Hong、Lee、Thorne，简称 ORPO，v2）；[KTO: Model Alignment as Prospect Theoretic Optimization](https://arxiv.org/abs/2402.01306)（Ethayarajh 等，简称 KTO，v5，ICML 2024，仅作索引）（截至 2026-09-08）。
 > **研究线**：架构思想（隐式奖励的写法、是否需要参考模型、数据形态，主）· 评测字段（AlpacaEval、Arena-Hard、MT-Bench，辅）

@@ -139,7 +139,7 @@ ProRL 从 DeepSeek-R1-Distill-Qwen-1.5B 出发，在数学、代码、STEM、逻
 - **三种走势**。一部分基准（尤其数学）出现边界缩小，一部分在训练早期就饱和，代码等更复杂的基准随训练延长持续扩展（§4.2）。
 - **域外任务**。训练中未见过的 boxnet 任务上，论文称基座完全不会做，ProRL 模型能明显解出（§4.3）。
 
-这里有一处值得对照：The Invisible Leash 把 boxnet 的扩张归因于 RLVR 纠正了输出格式，基座其实已部分具备能力（Invisible Leash §4.3）。同一现象，两篇的解读不同。
+这里有一处值得对照：The Invisible Leash 把 boxnet 的扩张归因于 RLVR 纠正了输出格式，基座已部分具备能力（Invisible Leash §4.3）。同一现象，两篇的解读不同。
 
 ### 5.2 Wen 等：改换度量后的扩展证据
 

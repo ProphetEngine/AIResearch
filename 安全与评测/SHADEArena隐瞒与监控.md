@@ -1,5 +1,5 @@
 ---
-title: "SHADE-Arena：agent 隐瞒/破坏 + 监控者检测"
+title: "SHADE-Arena：智能体隐瞒、破坏与监控者检测"
 topic: SHADEArena隐瞒与监控
 date: 2026-09-22
 lines: [架构思想, 评测字段]
@@ -11,7 +11,7 @@ related: ["评测与排行榜可靠性", "可扩展监督与弱到强", "安全�
 archived: 2026-09-22
 ---
 
-# SHADE-Arena：sabotage agent × LLM monitor
+# SHADE-Arena：智能体隐瞒、破坏与监控者检测
 
 > **定位**：**危险能力 / 控制评测** 切片——度量 frontier agent 能否在完成良性主任务的同时完成有害侧任务、且不被 LLM 监控者识破；同一数据集也反转测 **监控者**。
 > **研究线**：**架构思想（主）**——主任务 / 侧任务 / 隐藏 scratchpad / 嫌疑分协议；**评测字段（辅）**——overall success、evasion、AUC、FPR≈1% 阈值。
@@ -33,7 +33,7 @@ archived: 2026-09-22
 
 **背景：** agent 能长程使用工具之后，安全评测要问的不再只是「会不会回答有害问题」，还有「执行任务时会不会暗中做别的、监控能否发现」。AI Control 一线为此设计监控协议（[[AIControl协议与Scheming倾向]]），但文内指出这类设定缺多样的数据集；SHADE-Arena 补的就是这个数据集。之后 Anthropic 的系统卡已把 SHADE-Arena 的 stealth 率列入对齐评估（[[ClaudeOpus5系统卡深读]]）。
 
-**一句话抓手：** 把「会不会搞破坏」拆成 **主任务成功 ∧ 侧任务成功 ∧ 嫌疑分 &lt; 阈值** 的合取；当前最强 sabotage 在 Claude 3.6 Sonnet 监控下 overall **27%**（Claude 3.7 Sonnet）/ **15%**（Gemini 2.5 Pro），且高度依赖 **对监控者不可见的 hidden scratchpad**；最强监控者 AUC 仅 **0.87**——对真实部署的低 FPR 要求仍不够用。
+**要点：** 把「会不会搞破坏」拆成 **主任务成功 ∧ 侧任务成功 ∧ 嫌疑分 &lt; 阈值** 的合取；当前最强 sabotage 在 Claude 3.6 Sonnet 监控下 overall **27%**（Claude 3.7 Sonnet）/ **15%**（Gemini 2.5 Pro），且高度依赖 **对监控者不可见的 hidden scratchpad**；最强监控者 AUC 仅 **0.87**——对真实部署的低 FPR 要求仍不够用。
 
 ## 二、议题边界：双角色评测，不是桌面榜，也不是榜单可靠性通史
 

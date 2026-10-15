@@ -1,5 +1,5 @@
 ---
-title: "Process Reward Models（PRM）谱系：过程监督 → 自动标注 → 用于 TTS/RL"
+title: "过程奖励模型（PRM）谱系：过程监督 → 自动标注 → 用于 TTS/RL"
 topic: 过程奖励模型PRM谱系
 date: 2026-09-22
 lines: [数学原理, 架构思想]
@@ -13,7 +13,7 @@ related: ["推理时扩展TestTimeScaling", "GRPO与DAPO算法族", "对齐脉�
 archived: 2026-09-22
 ---
 
-# Process Reward Models（PRM）谱系
+# 过程奖励模型（PRM）谱系：过程监督 → 自动标注 → 用于 TTS/RL
 
 > **定位**：横切——仓库缺「逐步奖励模型」独立笔记。本篇只立 **PRM 作为逐步奖励枢纽**：连接 **验证（rerank / Best-of-N）**、**test-time scaling**、**过程 RL（dense step reward）**。
 > **为何重要**：Lightman 在 MATH500 子集上 Best-of-1860 选解，PRM 78.2% 对 ORM 72.4%、多数投票 69.6%，且候选数 N 越大差距越大；Math-Shepherd 用自动标注把同一信号接进 step-by-step PPO（Mistral-7B GSM8K 77.9→84.1）。推理时多采样候选要靠逐步裁判来选，RL 要靠逐步奖励做信用分配，PRM 两头都接得上。
@@ -34,7 +34,7 @@ archived: 2026-09-22
 | **主文 B** | Wang et al., *Math-Shepherd* | arXiv **2312.08935v3** \[cs.AI\] **19 Feb 2024**；`https://arxiv.org/abs/2312.08935`（**15** 页） | **无人工标注**的自动过程监督；**验证 + step-by-step PPO** |
 | **可选地图** | Zheng et al., *A Survey of Process Reward Models* | arXiv **2510.08049v3** \[cs.CL\] **29 Apr 2026**；`https://arxiv.org/abs/2510.08049`（**17** 页 A4） | data → build → use（TTS / RL）全环综述；GitHub: `despzcm/Survey-of-Process-Reward-Model` |
 
-**一句话抓手：** ORM 只看终答对错；PRM 给**每一步**打分，既可做 **Best-of-N / 搜索** 的验证器，又可做 **逐步 dense reward** 喂 RL——Lightman 用人类标注证明过程监督在难题上显著更强并放出 PRM800K；Math-Shepherd 用「从该步续写能否得到金标答案」自动造逐步标签，打通验证与过程 PPO；后续工作把这条枢纽接到更广的 TTS / 过程 RL 闭环（见综述地图，细节不展开算法族）。
+**要点：** ORM 只看终答对错；PRM 给**每一步**打分，既可做 **Best-of-N / 搜索** 的验证器，又可做 **逐步 dense reward** 喂 RL——Lightman 用人类标注证明过程监督在难题上显著更强并放出 PRM800K；Math-Shepherd 用「从该步续写能否得到金标答案」自动造逐步标签，打通验证与过程 PPO；后续工作把这条枢纽接到更广的 TTS / 过程 RL 闭环（见综述地图，细节不展开算法族）。
 
 ## 二、问题立轴：ORM vs PRM（为何要「过程」）
 

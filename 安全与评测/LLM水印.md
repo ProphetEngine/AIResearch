@@ -1,5 +1,5 @@
 ---
-title: "LLM watermarking：SynthID-Text（Nature）+ 理论/鲁棒性复核"
+title: "LLM 水印：SynthID-Text（Nature）与理论、鲁棒性复核"
 topic: LLM水印
 date: 2026-09-22
 lines: [数学原理, 评测字段]
@@ -14,7 +14,7 @@ related: ["模型卡与SystemCard规范", "评测数据污染检测与可靠性"
 archived: 2026-09-22
 ---
 
-# LLM watermarking：SynthID-Text（Nature）+ 理论/鲁棒性复核
+# LLM 水印：SynthID-Text（Nature）与理论、鲁棒性复核
 
 > **主要来源**：[Scalable watermarking for identifying large language model outputs](https://doi.org/10.1038/s41586-024-08025-4)；[On Google’s SynthID-Text LLM Watermarking System: Theoretical Analysis and Empirical Validation](https://arxiv.org/abs/2603.03410)；[Robustness Assessment and Enhancement of Text Watermarking for Google’s SynthID](https://arxiv.org/abs/2508.20228)（截至 2026-09-22）。下文「Nature」指 SynthID-Text 主文，「理论复核」「鲁棒性复核」分别指后两篇。
 > **研究线**：数学原理（主）——Tournament 采样、g-value、Mean Score 与 Bayesian Score、TPR@FPR；评测字段（辅）——质量中性、延迟、意义保持变换下的 TPR / FPR / F1。
@@ -123,8 +123,8 @@ $$
 
 - **Nature 自述的边界**（Nature Discussion）：需要服务方配合嵌入水印，难以约束开源权重的去中心化部署；对 stealing、spoofing、scrubbing 仍是开放问题；编辑与 LLM 释义会削弱信号（Supplementary C.6 有评估）。
 - **低熵场景**：低温、确定性强的大模型或 mode collapse 后，可检测性下降，短文本也更难检测。
-- **未读部分**：Nature Supplementary Information（打分细节、复杂度、speculative 的证明、C.6 编辑评估等）本篇未补读，相关细节待核实。
-- **生产参数**：Gemini 实际使用的层数、密钥管理、是否对外开放检测 API，主文没有给出可复现的数字，待核实。
+- **未纳入部分**：Nature Supplementary Information（打分细节、复杂度、speculative 的证明、C.6 编辑评估等）不在本篇范围内。
+- **生产参数**：Gemini 实际使用的层数、密钥管理、是否对外开放检测 API，主文没有给出可复现的数字，截至 2026-09-22 未见官方公开。
 - **版本**：两篇复核均为 arXiv 预印本，若日后正式出版以出版版本为准。
 
 ## 八、延伸阅读
