@@ -8,7 +8,7 @@ status: active
 
 # MOC · 对齐与强化学习
 
-从 RLHF/DPO 到 GRPO/DAPO、过程奖励与可验证监督，以及 test-time training / 形式化验证等后训练与推理期算力。部署防御与红队主挂 [[MOC_安全与评测]]。
+从 RLHF/DPO 到 GRPO/DAPO、过程奖励与可验证监督，以及测试时训练（test-time training）/ 形式化验证等后训练与推理期算力。部署防御与红队主挂 [[MOC_安全与评测]]。
 
 ## 时间线入口
 

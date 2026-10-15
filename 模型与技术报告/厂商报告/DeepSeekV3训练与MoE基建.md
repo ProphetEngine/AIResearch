@@ -1,5 +1,5 @@
 ---
-title: "技术报告专项：DeepSeek-V3 报告深读切片"
+title: "DeepSeek-V3 技术报告深读：训练与 MoE 基建"
 topic: DeepSeekV3训练与MoE基建
 date: 2026-09-22
 lines: [架构思想, AI Infra]
@@ -12,7 +12,7 @@ related: ["混合专家架构", "注意力效率族MQA到MLA", "MTP训练范式"
 archived: 2026-09-22
 ---
 
-# 技术报告专项：DeepSeek-V3 报告深读切片
+# DeepSeek-V3 技术报告深读：训练与 MoE 基建
 
 > **主要来源**：[DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437)（DeepSeek-AI，v2，2025-02-18；首次提交 2024-12-27）；[deepseek-ai/DeepSeek-V3 README](https://github.com/deepseek-ai/DeepSeek-V3)（GitHub 仓库说明，活页面，无更新日期）（截至 2026-04-26）。
 > **研究线**：架构思想（DeepSeekMoE 路由与无辅助损失均衡、MTP，主）· AI Infra（PP × EP × ZeRO-1、DualPipe、跨节点 all-to-all、FP8 训练，辅）
