@@ -200,7 +200,7 @@ PipelineRL 把异步思想用到长序列生成上：生成与训练并发进行
 4. **Yao 等的博文**：[Your Efficient RL Framework Secretly Brings You Off-Policy RL Training](https://fengyao.notion.site/off-policy-rl) 托管在 Notion 上，页面标注首发于 2025-08-05、最后更新于 2025-10-13，按更新日计入截至；本篇关于它的描述取自 FP16 论文与 R3 论文的引述。
 5. **StaleFlow 改过题名**：该文 v1 题为 *Unleashing Efficient Asynchronous RL Post-Training via Staleness-Constrained Rollout Coordination*，本篇所用的 v2 改题为 *StaleFlow: Staleness-Aware Data Management for Mitigating Data Skewness in Fully Disaggregated RL Post-Training*；两版摘要中的平均加速区间也略有不同，本篇按 v2 写。
 6. **README 会变**：第八节的框架定位与后端取自当前 README，项目演进后可能变化。
-7. **未覆盖的方向**：量化 rollout、推测解码在 rollout 中的应用、容错与检查点恢复、多智能体自博弈的系统设计，本篇未展开。
+7. **未覆盖的方向**：量化 rollout、投机解码在 rollout 中的应用、容错与检查点恢复、多智能体自博弈的系统设计，本篇未展开。
 
 ## 十一、与相邻笔记的分工
 

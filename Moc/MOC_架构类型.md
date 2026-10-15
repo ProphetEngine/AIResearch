@@ -7,7 +7,7 @@ status: active
 
 # MOC · 架构类型
 
-注意力 / Decoder-only / MoE / 长上下文 / 推测解码 / 推理时扩展等结构向入口。
+注意力 / Decoder-only / MoE / 长上下文 / 投机解码 / 推理时扩展等结构向入口。
 
 ## 中小主题
 
