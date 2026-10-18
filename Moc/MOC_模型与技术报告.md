@@ -49,7 +49,6 @@ status: active
 - [[Gemini37Flash模型卡深读]]
 - [[Gemma4技术报告深读]]
 - [[AXK2技术报告深读]]
-- [[UIVenus2GUI智能体]]
 - [[GPToss模型卡深读]]
 - [[ClaudeFable与Mythos51]]
 - [[DeepSeekV4技术报告深读]]
