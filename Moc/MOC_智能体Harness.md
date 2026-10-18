@@ -27,11 +27,11 @@ status: active
 - [[多智能体辩论]]
 - [[计算机使用智能体]]
 - [[ToRL工具集成强化学习]]
-- [[MixtureOfAgents与TUMIX]]
+- [[MixtureOfAgents与TUMIX]]（副挂，主挂 [[MOC_推理时计算]]）
 - [[MemoryR1强化学习记忆维护]]
 - [[科研智能体]]
 - [[AgentBazaar经济对齐]]
-- [[推理时树搜索ABMCTS]]
+- [[推理时树搜索ABMCTS]]（副挂，主挂 [[MOC_推理时计算]]）
 - [[Mem0与Zep生产级记忆]]
 - [[浏览与深研Agent基准]]：BrowseComp / Online-Mind2Web
 - [[ToolLoop工具数据合成]]
