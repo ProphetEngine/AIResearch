@@ -13,7 +13,7 @@ aux:
  - https://github.com/NVIDIA-NeMo/Gym
  - https://github.com/NVIDIA-NeMo/Skills
 arxiv: ["2606.15007"]
-related: ["NemotronCC数据策展", "SEA-LION低资源区域模型", "OLMo3全栈开放配方", "MTP训练范式", "混合专家架构", "混合Mamba与注意力架构设计菜谱", "线性注意力与状态空间模型谱系", "OnPolicy蒸馏OPD范式", "KimiK3技术报告"]
+related: ["NemotronCC数据策展", "SEA-LION低资源区域模型", "OLMo3全栈开放配方", "MTP训练范式", "混合专家架构", "混合Mamba与注意力架构设计菜谱", "线性注意力与状态空间模型谱系", "OnPolicy蒸馏OPD范式", "KimiK3技术报告", "Beam10模型卡与安全技术报告深读"]
 retrieval_cutoff: 2026-06-12
 timezone: Asia/Shanghai (CST)
 ---
@@ -124,6 +124,7 @@ MTP 头在所有训练阶段都参与训练；共享头按多步递归使用，�
 | [[线性注意力与状态空间模型谱系]] | Ultra 的 Mamba 层是那篇状态空间模型一支的工业节点 | 状态空间模型通史 |
 | [[OnPolicy蒸馏OPD范式]] | 两轮 MOPD 与预热，归入多教师 on-policy 蒸馏 | OPD 的方法谱系 |
 | [[KimiK3技术报告]] | 两篇同属 2026 年开放权重的混合注意力 MoE 旗舰报告，本篇不比较两者配方 | K3 的配方与结果 |
+| [[Beam10模型卡与安全技术报告深读]] | 对照：两篇可对照混合架构的不同路线与多教师在策略蒸馏的用法 | Beam 的架构、配方、评测与 OSF 评级 |
 
 ## 九、延伸阅读
 

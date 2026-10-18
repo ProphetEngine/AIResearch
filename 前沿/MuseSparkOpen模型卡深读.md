@@ -11,7 +11,7 @@ sources:
  - https://research.meta.ai/static/muse-spark-open-evaluation-methodology
  - https://dev.meta.ai/models/muse-spark-open
  - https://huggingface.co/blog/meta-muse-spark-open
-related: ["MuseWonder模型卡深读", "混合专家架构", "开源与闭源前沿模型谱系", "模型卡与SystemCard规范", "GPToss模型卡深读"]
+related: ["MuseWonder模型卡深读", "混合专家架构", "开源与闭源前沿模型谱系", "模型卡与SystemCard规范", "GPToss模型卡深读", "Beam10模型卡与安全技术报告深读"]
 retrieval_cutoff: 2026-10-15
 timezone: Asia/Shanghai (CST)
 ---
@@ -130,6 +130,7 @@ HF 博文补充三点结构细节：每个块用可学习的残差门控而非�
 | [[开源与闭源前沿模型谱系]] | 所在谱系：本篇是开放权重一侧的新节点，可与该篇的开放权重与闭源格局对照 | 各家谱系全表 |
 | [[模型卡与SystemCard规范]] | 体裁背景：本篇的模型卡与方法文档分开发布、完整评估报告后发，可对照该篇的字段谱系 | 模型卡与系统卡的字段规范 |
 | [[GPToss模型卡深读]] | 先例：该篇是开放权重安全评估的先例，本篇的「无护栏条件下评估」可与之对照 | gpt-oss 的架构、对抗微调与评测 |
+| [[Beam10模型卡与安全技术报告深读]] | 同期对照：Beam 是本篇方法文档的对比对象之一；两篇可对照两种开放权重发布在许可、模态与安全披露形态上的差异 | Beam 的规格、训练配方、安全报告与 OSF 评级 |
 
 ## 十、延伸阅读
 

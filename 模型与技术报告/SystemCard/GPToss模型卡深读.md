@@ -7,7 +7,7 @@ status: archived
 sources:
  - https://arxiv.org/abs/2508.10925
  - https://openai.com/index/introducing-gpt-oss/
-related: ["混合专家架构", "长上下文位置编码与系统侧", "推理时扩展TestTimeScaling", "审慎对齐与断路器", "GPT5系统卡深读", "GPT6Astra系统卡深读", "模型卡与SystemCard规范", "开源与闭源前沿模型谱系", "OLMo3全栈开放配方", "智能体工具与长程任务", "SystemCard谱系时间线", "门控注意力与注意力汇"]
+related: ["混合专家架构", "长上下文位置编码与系统侧", "推理时扩展TestTimeScaling", "审慎对齐与断路器", "GPT5系统卡深读", "GPT6Astra系统卡深读", "模型卡与SystemCard规范", "开源与闭源前沿模型谱系", "OLMo3全栈开放配方", "智能体工具与长程任务", "SystemCard谱系时间线", "门控注意力与注意力汇", "Beam10模型卡与安全技术报告深读"]
 archived: 2026-09-22
 ---
 
@@ -128,6 +128,7 @@ gpt-oss 把闭源推理模型的接口约定（角色层级、通道、推理强
 | [[智能体工具与长程任务]] | 浏览、Python 与自定义函数三类工具的训练与 harmony 中的调用方式 | 智能体工具的通论与长程评测 |
 | [[SystemCard谱系时间线]] | 时间线 OpenAI 段的 2025-08 节点（gpt-oss 模型卡） | 各家文档的时间排列 |
 | [[门控注意力与注意力汇]] | 谱系：第三节注意力中每头的 softmax 分母偏置，属于给 softmax 一个「不看任何 token」出口的一类设计，这类设计的来龙去脉在该篇 | 分母偏置、汇 token 与门控的比较 |
+| [[Beam10模型卡与安全技术报告深读]] | 后继对照：本篇第四节的 harmony 格式与第六节的开放权重安全评估，可与该篇的对应做法对照 | Beam 的聊天模板、架构、训练配方与 OSF 评级 |
 
 ## 十、延伸阅读
 
