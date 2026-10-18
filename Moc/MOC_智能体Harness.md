@@ -36,7 +36,7 @@ status: active
 - [[浏览与深研Agent基准]]：BrowseComp / Online-Mind2Web
 - [[ToolLoop工具数据合成]]
 - [[SWEBenchPro代码修复评测]]
-- [[开放式与发现基础模型]]
+- [[开放式与发现基础模型]]（副挂，主挂 [[MOC_专科基础模型]]）
 - [[CHIME长程规划记忆]]
 
 ## 评测（子节）
