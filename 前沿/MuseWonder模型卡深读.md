@@ -8,7 +8,7 @@ lines: [评测字段, 风险框架]
 sources:
  - https://research.meta.ai/blog/muse-wonder
  - https://research.meta.ai/static/muse-wonder-model-card
-related: ["开源与闭源前沿模型谱系", "GPT6Astra系统卡深读", "ClaudeFable与Mythos51", "ClaudeOpus55系统卡短报", "SystemCard谱系时间线"]
+related: ["开源与闭源前沿模型谱系", "GPT6Astra系统卡深读", "ClaudeFable与Mythos51", "ClaudeOpus55系统卡短报", "SystemCard谱系时间线", "MuseSparkOpen模型卡深读"]
 retrieval_cutoff: 2026-10-12
 timezone: Asia/Shanghai (CST)
 ---
@@ -120,6 +120,7 @@ Muse Wonder 的材料意义有二。其一，把「个人超级智能」落到�
 | [[ClaudeFable与Mythos51]] | Claude Fable 5.1 是本篇模型卡的对比对象之一，其系统卡字段在那篇 | Fable 的字段 |
 | [[ClaudeOpus55系统卡短报]] | Claude Opus 5.5 是本篇模型卡的对比对象之一，其系统卡字段在那篇 | Opus 5.5 的字段 |
 | [[SystemCard谱系时间线]] | 本篇提供「网页模型卡、完整安全报告后发」这一披露形态，可与那篇的各厂系统卡序列对照 | 各厂系统卡全表 |
+| [[MuseSparkOpen模型卡深读]] | 同一模型家族的开放权重一侧：两篇可对照阅读 Meta 在闭源与开放权重两种发布形态下的模型卡写法与风险判定 | Muse Spark Open 的规格、评测方法与许可证 |
 
 ## 十一、延伸阅读
 

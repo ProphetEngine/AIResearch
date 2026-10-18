@@ -20,11 +20,14 @@ status: active
 - [[MiMoV26智能体强化学习短报]]：2026-09-23
 - [[ClaudeSonnet55系统卡短报]]：2026-09-29
 - [[GPT61Sol系统卡短报]]：2026-09-29
-- [[Gemini4Argon短报]]：2026-10-14
 - [[MistralLarge4短报]]：2026-10-08
 - [[GPT6SolLuna十月版系统卡短报]]：2026-10-08
 - [[ClaudeHaiku55系统卡短报]]：2026-10-08
 - [[MuseWonder模型卡深读]]：2026-10-13
+- [[Gemini4Argon短报]]：2026-10-14
+- [[MuseSparkOpen模型卡深读]]：2026-10-16
+- [[Step5Preview架构与训练短报]]：2026-10-16
+- [[MAIBase2预训练报告短报]]：2026-10-16
 
 ## 相关主题
 
