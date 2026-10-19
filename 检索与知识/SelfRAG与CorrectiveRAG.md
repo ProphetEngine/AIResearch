@@ -7,7 +7,6 @@ sources:
  - https://arxiv.org/abs/2310.11511
  - https://arxiv.org/abs/2401.15884
 related: ["检索增强与知识外挂", "图谱检索GraphRAG", "AgenticRAG分层检索接口", "HippoRAG2与CatRAG", "持续学习"]
-timezone: Asia/Shanghai (CST)
 status: archived
 arxiv: ["2310.11511", "2401.15884"]
 code:

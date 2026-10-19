@@ -7,7 +7,6 @@ sources:
  - https://arxiv.org/abs/2404.16130
  - https://arxiv.org/abs/2506.20963
 related: ["检索增强与知识外挂", "HippoRAG2与CatRAG", "SelfRAG与CorrectiveRAG", "AgenticRAG分层检索接口", "Mem0与Zep生产级记忆", "MemoryR1强化学习记忆维护", "智能体长程记忆", "文本嵌入与重排序模型"]
-timezone: Asia/Shanghai (CST)
 status: archived
 arxiv: ["2404.16130", "2506.20963"]
 archived: 2026-09-22
