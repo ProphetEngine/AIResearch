@@ -5,7 +5,7 @@ date: 2026-09-22
 lines: [架构思想, AI Infra]
 status: archived
 source_url: https://arxiv.org/abs/2506.13585
-related: ["推理时扩展TestTimeScaling", "长上下文位置编码与系统侧", "注意力效率族MQA到MLA", "线性注意力与状态空间模型谱系", "混合Mamba与注意力架构设计菜谱", "混合专家架构", "DeepSeekR1推理训练深读", "Qwen3技术报告深读", "Gemini25技术报告深读", "开源与闭源前沿模型谱系"]
+related: ["推理时扩展TestTimeScaling", "长上下文位置编码与系统侧", "注意力效率族MQA到MLA", "线性注意力与状态空间模型谱系", "混合Mamba与注意力架构设计菜谱", "混合专家架构", "DeepSeekR1推理训练深读", "Qwen3技术报告深读", "Gemini25技术报告深读", "开源与闭源前沿模型谱系", "MiniMaxM31Flash短报"]
 archived: 2026-09-22
 ---
 
@@ -114,6 +114,7 @@ CISPO（Clipped IS-weight Policy Optimization）裁剪的是重要性采样权�
 | [[Qwen3技术报告深读]] | Table 1 与 Table 2 把 Qwen3-235B 列为开放权重对照 | Qwen3 的配方 |
 | [[Gemini25技术报告深读]] | Table 1 与 Table 2 把 Gemini 2.5 Pro 列为闭源对照，长上下文上报告只排在它之后 | Gemini 的报告内容 |
 | [[开源与闭源前沿模型谱系]] | M1 在那篇中作为开放权重推理模型的一个节点 | 各厂代际坐标 |
+| [[MiniMaxM31Flash短报]] | 关系：同厂后续 Flash 产品节点，非同代；本篇不写其规格与基准 | M3.1 Flash 的产品声明与披露边界 |
 
 ## 九、延伸阅读
 
