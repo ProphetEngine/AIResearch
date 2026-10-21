@@ -61,6 +61,7 @@ status: active
 - [[PrefillDecode分离与统一服务]]
 - [[推理引擎生态]]
 - [[MegaScaleInfer与UltraEP]]
+- [[DeepInfer短报]]
 
 ## 量化
 

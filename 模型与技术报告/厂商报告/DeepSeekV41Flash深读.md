@@ -13,7 +13,7 @@ sources:
  - https://x.com/deepseek_ai/status/2111375640717033777
  - https://x.com/deepseek_ai/status/2111375646223933650
 arxiv: "2609.19969"
-related: ["DeepSeekV4技术报告深读", "DeepSeekV32技术报告深读", "DeepSeekV3训练与MoE基建", "KV缓存量化与压缩", "注意力效率族MQA到MLA", "长上下文位置编码与系统侧", "混合专家架构", "推理引擎生态", "投机解码原理与发展脉络", "ClaudeOpus5系统卡深读", "推理时扩展TestTimeScaling"]
+related: ["DeepSeekV4技术报告深读", "DeepSeekV32技术报告深读", "DeepSeekV3训练与MoE基建", "KV缓存量化与压缩", "注意力效率族MQA到MLA", "长上下文位置编码与系统侧", "混合专家架构", "推理引擎生态", "投机解码原理与发展脉络", "ClaudeOpus5系统卡深读", "推理时扩展TestTimeScaling", "DeepInfer短报"]
 archived: 2026-09-22
 ---
 

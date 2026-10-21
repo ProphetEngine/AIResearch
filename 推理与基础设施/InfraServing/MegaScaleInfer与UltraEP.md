@@ -18,6 +18,7 @@ related:
  - "硬件软件协同部署"
  - "MoE路由与负载均衡"
  - "分布式训练并行策略"
+ - "DeepInfer短报"
 note_deepep: "DeepEP 无独立 arXiv 主文；本篇仅作集成/对照接口一句；内核分析见 NVSHMEM与DeepEP通信"
 retrieval_cutoff: 2026-09-22
 timezone: Asia/Shanghai (CST)

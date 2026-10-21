@@ -65,6 +65,7 @@ status: active
 - [[Gemma4技术报告深读]]
 - [[AXK2技术报告深读]]
 - [[Gemini25技术报告深读]]
+- [[Ornith15-122B短报]]
 
 ## 下一步读什么
 

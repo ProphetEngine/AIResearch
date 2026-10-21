@@ -13,7 +13,7 @@ sources:
  - https://github.com/deepseek-ai/DeepEP/commit/b306af06afd412c88e51e71802951606e40b7358
  - https://github.com/deepseek-ai/DeepEP/commit/def865146e95aa9ea223e277c0a8a4c6b81e5ac7
 arxiv: ["2606.05951"]
-related: ["AI基础设施总览", "混合专家架构", "DeepSeekV3训练与MoE基建", "DeepSeekV4技术报告深读", "MegaScaleInfer与UltraEP", "硬件软件协同部署", "分布式训练并行策略", "MoE路由与负载均衡"]
+related: ["AI基础设施总览", "混合专家架构", "DeepSeekV3训练与MoE基建", "DeepSeekV4技术报告深读", "MegaScaleInfer与UltraEP", "硬件软件协同部署", "分布式训练并行策略", "MoE路由与负载均衡", "DeepInfer短报"]
 retrieval_cutoff: 2026-09-30
 timezone: Asia/Shanghai (CST)
 github_deepep: "https://github.com/deepseek-ai/DeepEP"

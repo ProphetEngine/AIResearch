@@ -65,6 +65,7 @@ MoE 旗舰把专家并行推到机架规模，FP4 成为部署的主力精度，
 - **2026-06** · 「Demystifying NVSHMEM」系统剖析对称内存与设备端发起的通信，解释了稀疏专家并行为什么适合在其上自建 dispatch 与 combine（[arXiv:2606.05951](https://arxiv.org/abs/2606.05951)） · [[NVSHMEM与DeepEP通信]]
 - **2026-06** · EnclaveX 打通 CPU 与 GPU 的可信执行环境，实现端到端机密推理，并给出远程证明链（[arXiv:2606.31408](https://arxiv.org/abs/2606.31408)） · [[TEE机密推理]]
 - **2026-08** · 在 Blackwell B200 上实测机密计算模式的吞吐开销，机密推理从可行性论证进入成本测量（[arXiv:2608.26575](https://arxiv.org/abs/2608.26575)） · [[TEE机密推理]]
+- **2026-10** · DeepInfer 开源离线推理核心（厂商自述）（[deepseek-ai/DeepInfer](https://github.com/deepseek-ai/DeepInfer)） · [[DeepInfer短报]]
 
 ## 相关
 
